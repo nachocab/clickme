@@ -17,9 +17,6 @@ mat <- function(elements=NULL, num_elements=nrow*ncol, nrow=5, ncol=2, scale_by=
     mat
 }
 
-one_col <- mat(ncol=1)
-
-
 test_that("scatterplot", {
 
     expect_true(all(c("x","y","name") %in% colnames(prepare_for_template(mat(ncol=3)))))
