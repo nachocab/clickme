@@ -40,9 +40,10 @@ save_visualization <- function(visualization, visualization_path){
 #'
 #' @export
 #' @import knitr
-clickme <- function(data, template_name, opts = NULL){
+clickme <- function(data, template_id, opts = NULL){
+    if (is.null(.clickme_env$path)) clickme_path()
 
-    opts <- populate_opts(data, template_name, opts)
+    opts <- populate_opts(data, template_id, opts)
 
     visualization <- generate_visualization(data, opts)
     save_visualization(visualization, opts$visualization_path)
