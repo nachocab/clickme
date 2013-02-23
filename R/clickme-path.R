@@ -25,14 +25,14 @@ create_template <- function(template_id) {
 
     dirs <-  c("", "scripts", "styles")
     sapply(dirs, function(dir){
-        path <- file.path(.clickme_env$path, template_id, dir)
+        path <- file.path(.clickme_env$path, "templates", template_id, dir)
         dir.create(path)
         message("Created directory: ", path)
     })
 
     files <- c("template.Rmd", "config.yml")
     sapply(files, function(file){
-        path <- file.path(.clickme_env$path, template_id, file)
+        path <- file.path(.clickme_env$path, "templates", template_id, file)
         file.create(path)
         message("Created file: ", path)
     })

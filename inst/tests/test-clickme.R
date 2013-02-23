@@ -1,15 +1,14 @@
 context("clickme")
 
-test_that("uses default templates", {
+test_that("error when the template doesn't exist", {
 
-    # ensure that these don't exist before testing
-    file.remove(file.path(system.file(file.path("data","data.json"), package = "clickme")))
-    file.remove(file.path(system.file(file.path("data_nachocab_scatterplot.html"), package = "clickme")))
+    # cleanup_files(system.file("", package="clickme"), c(file.path("data", "data.json"), "data_nachocab_scatterplot.html"))
 
     data <- data.frame(logFC=c(1,2,3), y=c(.01,.1,.009))
     clickme(data, "nachocab_scatterplot")
-    expect_true(system.file(file.path("data","data.json"), package = "clickme"))
-    expect_true(system.file(file.path("data_nachocab_scatterplot.html"), package = "clickme"))
+
+    # expect_true(system.file(file.path("data","data.json"), package = "clickme"))
+    # expect_true(system.file(file.path("data_nachocab_scatterplot.html"), package = "clickme"))
 
 })
 
