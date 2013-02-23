@@ -1,5 +1,7 @@
 context("populate_opts")
 
+library(yaml)
+
 test_that("default opts are respected", {
 
     data <- mat()
