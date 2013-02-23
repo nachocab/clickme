@@ -1,4 +1,7 @@
-prepare_for_template <- function(data, template = "scatterplot"){
+#'
+#'
+#' Depending on the template, the columns of data will be renamed one way or another, which minimizes the time from idea to implementation.
+prepare_data <- function(data, template){
     data <- as.data.frame(data, stringsAsFactors=FALSE)
     if (template == "scatterplot" | template == "scatterplot_canvas"){
         scatterplot_numeric_columns <- c("x","y")

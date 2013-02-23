@@ -1,12 +1,18 @@
 context("clickme")
 
-test_that("clickme", {
-    data <- data.frame(logFC=c(1,2,3), y=c(.01,.1,.009))
-    clickme(data, "scatterplot")
+test_that("uses default templates", {
 
-    expect_true(file.exists("data.json"))
-    expect_equal(to_JSON(prepare_for_template(data)), paste(readLines("data.json"), collapse="\n"))
-        # fills the template with the file path
-        # creates a server
-        # generates a URL for this template
+    # ensure that these don't exist before testing
+    file.remove(file.path(system.file(file.path("data","data.json"), package = "clickme")))
+    file.remove(file.path(system.file(file.path("data_nachocab_scatterplot.html"), package = "clickme")))
+
+    data <- data.frame(logFC=c(1,2,3), y=c(.01,.1,.009))
+    clickme(data, "nachocab_scatterplot")
+    expect_true(system.file(file.path("data","data.json"), package = "clickme"))
+    expect_true(system.file(file.path("data_nachocab_scatterplot.html"), package = "clickme"))
+
 })
+
+# TODO: don't overwrite existing data.json files
+# TODO: creates a server
+# TODO: embed or link

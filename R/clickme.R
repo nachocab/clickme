@@ -1,26 +1,53 @@
-TEMPLATES_PATH <- "/Users/nacho/Documents/Code/my_knitr_reports/d3/templates/"
-get_template_path <- function(template){
-    paste0(TEMPLATES_PATH, template,".Rmd")
+#' Ensures the data is ready for its template, converts it to JSON and writes it to a file.
+#'
+#'
+save_data <- function(data, data_path, template_config){
+    data <- prepare_data(data, template_config)
+    writeLines(to_JSON(data), data_path)
 }
 
-#' Generates an interactive plot
+#' Generate the HTML elements needed by the template
+#'
+#'
+render_skeleton <- function(opts){
+    knit_expand(opts$skeleton, opts = opts)
+}
+
+#' Customize the template code to the current opts, including the data
+#'
+#'
+render_template <- function(opts){
+    knit_expand(opts$template, opts = opts)
+}
+
+#' Generate the JavaScript visualization
+#'
+#' Write the input data.frame to a file, for easier JavaScript consumption
+generate_visualization <- function(data, opts){
+    save_data(data, opts$data_path, opts$template_config)
+    render_skeleton(opts)
+}
+
+#' Write the output html file with the JavaScript code embedded
+#'
+#' we use capture.output to hide the knitr progress bars, how should we deal with errors?
+save_visualization <- function(visualization, visualization_path){
+    capture.output(knit2html(text = visualization, output = visualization_path))
+}
+
+#' Generates a JavaScript visualization
+#'
+#'
 #' @export
 #' @import knitr
-clickme <- function(data, template, path = ".", opts = list(width=800, height=500)){
-    data_path <- file.path(path, "data.json")
-    JSON_data <- to_JSON(prepare_for_template(data))
-    message("writing: ",data_path)
-    writeLines(JSON_data, data_path)
+clickme <- function(data, template_name, opts = NULL){
 
-    template_path <- get_template_path(template)
+    opts <- populate_opts(data, template_name, opts)
 
-    # TODO: consigue que importe knitr, devtools check seems to overwrite NAMESPACEm
-    .blank_env <- new.env()
-    .blank_env$src <- knit_expand(template_path, data="data.json", plot_width = opts$width, plot_height = opts$height)
+    visualization <- generate_visualization(data, opts)
+    save_visualization(visualization, opts$visualization_path)
 
-    blank_interactive_path <- "/Users/nacho/Documents/Code/my_knitr_reports/d3/blank_d3.Rmd"
-    knit2html(blank_interactive_path, output="/Users/nacho/Documents/Code/my_knitr_reports/d3/paco.html")
+    # make server and open visualization
 
-    # make server and return url?
-
+    opts$visualization_path
 }
