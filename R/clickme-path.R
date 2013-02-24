@@ -20,7 +20,7 @@ clickme_path <- function(path=getwd()) {
 #'      |- styles
 #'      |- template.Rmd
 #'      |- config.yml
-create_template <- function(template_id) {
+new_template <- function(template_id) {
     if (is.null(.clickme_env$path)) clickme_path()
 
     dirs <-  c("", "scripts", "styles")

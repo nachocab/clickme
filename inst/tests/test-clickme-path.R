@@ -2,7 +2,7 @@ context("clickme_path")
 
 test_that("sets the default folder structure", {
 
-    dirs <- c("data", "templates")
+    dirs <- c(.clickme_env$data_dir_name, .clickme_env$templates_dir_name)
 
     cleanup_files(getwd(), dirs)
     clickme_path()
@@ -22,18 +22,3 @@ test_that("sets the default folder structure", {
     cleanup_files(.clickme_env$path)
 })
 
-context("create_template")
-
-test_that("creates a blank template", {
-
-    clickme_path()
-
-    files <- c("template.Rmd", "config.yml")
-    cleanup_files(file.path(.clickme_env$path, "tmp_template"), files)
-    create_template("tmp_template")
-    sapply(files, function(file){
-        expect_true(file.exists(file.path(.clickme_env$path, "templates", "tmp_template", file)))
-    })
-    cleanup_files(file.path(.clickme_env$path), c("templates", "data"))
-
-})

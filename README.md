@@ -17,6 +17,10 @@ What is great about JS viz is that you can interact, but they are a pain to adap
 
 you have to specify the list of scripts and styles (order is important)
 
+JS (especially D3) visualizations are awesome, interactive, but I'd like to access them from R, providing my own R objects as input. Roadblock: static variable names, so we build templates with a defined folder structure that can interpret R objects, use knit_expand to substitute the curly braces.
+
+templates are self-contained
+
 It is a way to take an R data.frame and visualize it using JS.
 It is a way to add interactivity into your workflow, by building reusable JS interactive plots.
 
