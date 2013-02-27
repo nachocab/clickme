@@ -2,7 +2,7 @@
 #'
 #' The clickme folder structure is:
 #'
-#' |- clickme                       <= .clickme_env$path
+#' |- USER_VISUALIZATIONS_FOLDER    <= .clickme_env$path
 #'    |- data_name_template_id.html
 #'    |- data                       <= .clickme_env$data_dir_name
 #'    |   |- data_name.json
@@ -23,6 +23,7 @@ NULL
 
 .clickme_env$templates_dir_name <- "templates"
 .clickme_env$data_dir_name <- "data"
+
 .clickme_env$scripts_dir_name <- "scripts"
 .clickme_env$styles_dir_name <- "styles"
 

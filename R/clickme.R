@@ -1,31 +1,26 @@
-#' Generate the HTML elements needed by the template
-#'
-#'
-render_skeleton <- function(opts){
-    knit_expand(opts$skeleton, opts = opts)
-}
-
 #' Customize the template code to the current opts, including the data
 #'
 #'
 render_template <- function(opts){
-    knit_expand(opts$template, opts = opts)
+    knit_expand(opts$template_path, opts = opts)
 }
 
-#' Ensures the data is ready for its template, converts it to JSON and writes it to a file.
+#' Writes the data to a file for more efficient JavaScript processing
 #'
 #'
 save_data <- function(data, data_path, template_config){
     data <- prepare_data(data, template_config)
-    writeLines(to_JSON(data), data_path)
+    writeLines(data, data_path)
 }
 
 #' Generate the JavaScript visualization
 #'
 #' Write the input data.frame to a file, for easier JavaScript consumption
+#' we use capture.output to hide the knitr progress bars, how should we deal with errors?
 generate_visualization <- function(data, opts){
     save_data(data, opts$data_path, opts$template_config)
-    render_skeleton(opts)
+    expanded_skeleton <- knit_expand(opts$skeleton_path, opts = opts)
+    capture.output(knit2html(text = expanded_skeleton, output = opts$viz_path))
 }
 
 #' Set up the default paths and the custom names for the input data and the visualization file names.
@@ -51,12 +46,8 @@ populate_opts <- function(data, template_id, opts) {
     opts
 }
 
-#' Write the output html file with the JavaScript code embedded
-#'
-#' we use capture.output to hide the knitr progress bars, how should we deal with errors?
-save_visualization <- function(visualization, visualization_path){
-    capture.output(knit2html(text = visualization, output = visualization_path))
-}
+
+
 
 
 #' Generates a JavaScript visualization
@@ -69,12 +60,11 @@ clickme <- function(data, template_id, opts = NULL){
 
     opts <- populate_opts(data, template_id, opts)
 
-    visualization <- generate_visualization(data, opts)
-    save_visualization(visualization, opts$visualization_path)
+    generate_visualization(data, opts)
 
     # make server and open visualization, option interactive by default
 
-    opts$visualization_path
+    opts$viz_path
 }
 
 # clickme_embed: returns code

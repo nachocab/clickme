@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title></title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<script src="templates/nachocab_scatterplot/scripts/d3.min.js"></script>
+<script src="templates/nachocab_scatterplot/scripts/d3_aux.js"></script>
+<script src="templates/nachocab_scatterplot/scripts/jquery.min.js"></script>
+<script src="templates/nachocab_scatterplot/scripts/bootstrap-tooltip.v2_3.js"></script>
+
+<p><link href="templates/nachocab_scatterplot/styles/bootstrap-tooltip.css" rel="stylesheet"></p>
+
+<script type="text/javascript">
+(function() {
+  var dec_format;
+
+  dec_format = d3.format(".2f");
+
+  d3.json("data/data.json", function(data) {
+    var change, circles, names, plot, radius, semantic_zoom, show_names_button, svg, transform, update;
+    plot = append_plot({
+      width: 800,
+      height: 500
+    });
+    plot.scales.x.domain([
+      d3.min(data, function(d) {
+        return d.x;
+      }), d3.max(data, function(d) {
+        return d.x;
+      })
+    ]);
+    plot.scales.x = add_padding(plot.scales.x);
+    plot.scales.y.domain([
+      d3.min(data, function(d) {
+        return d.y;
+      }), d3.max(data, function(d) {
+        return d.y;
+      })
+    ]);
+    plot.scales.y = add_padding(plot.scales.y);
+    plot = draw_axes(plot);
+    radius = 5;
+    svg = plot.append("svg:g").call(d3.behavior.zoom().x(plot.scales.x).y(plot.scales.y).scaleExtent([1, Infinity]).on("zoom", function() {
+      return semantic_zoom();
+    }));
+    svg.append("rect").attr("class", "overlay").attr("width", plot.width).attr("height", plot.height).attr("fill", "none").attr("pointer-events", "all").style("cursor", "move");
+    transform = function(d) {
+      return "translate(" + (plot.scales.x(d.x)) + "," + (plot.scales.y(d.y)) + ")";
+    };
+    circles = svg.selectAll("circle").data(data).enter().append("svg:circle").attr("r", radius).attr("title", function(d) {
+      return "<strong>" + d.name + "</strong><br>x: " + (dec_format(d.x)) + "<br>y: " + (dec_format(d.y));
+    }).attr("class", "circle_tooltip").attr("transform", transform);
+    names = svg.selectAll("text").data(data, function(d) {
+      return d.name;
+    }).enter().append("text").attr("dy", ".32em").attr("dx", "8").attr("text-anchor", "left").text(function(d) {
+      return d.name;
+    }).attr("transform", transform).attr("display", "none");
+    semantic_zoom = function() {
+      circles.attr("transform", transform);
+      return names.attr("transform", transform);
+    };
+    $(".circle_tooltip").tooltip({
+      html: true,
+      container: "body",
+      placement: "top"
+    });
+    show_names_button = plot.append("g").attr("transform", "translate(" + plot.width + "," + 0 + ")").style("cursor", "pointer").style("font-size", "15px").on("click", function() {
+      return change();
+    });
+    d3.select(window).on("keydown", function() {
+      var _ref;
+      if (((_ref = d3.event.keyCode) === 78 || _ref === 32)) {
+        return change();
+      }
+    });
+    show_names_button.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2);
+    show_names_button.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12');
+    change = function() {
+      if (show_names_button.classed("show_names")) {
+        show_names_button.attr("class", "");
+        return update();
+      } else {
+        show_names_button.attr("class", "show_names");
+        return update();
+      }
+    };
+    update = function() {
+      if (show_names_button.classed("show_names")) {
+        names.attr("display", "inline");
+        return show_names_button.select("circle").attr("fill", "black");
+      } else {
+        names.attr("display", "none");
+        show_names_button.select("circle").attr("fill", "white");
+        return show_names_button.select("text").text("Show names");
+      }
+    };
+    return update();
+  });
+
+}).call(this);
+
+</script>
+
+</body>
+
+</html>

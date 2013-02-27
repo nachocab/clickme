@@ -14,11 +14,12 @@ Suggests:
     roxygen2
 Collate:
     'utils.R'
+    'append.R'
     'utils-test.R'
     'to-JSON.R'
     'prepare-data.R'
     'clickme-path.R'
-    'create-template.R'
+    'new-template.R'
     'clickme.R'
     'server.R'
     'clickme-package.R'

@@ -1,17 +1,14 @@
-numeric:
-- x
-- y
-character:
-- name
+required: {numeric: [x, y], character: [name]}
+optional: {character: [color]}
 width: 800
 height: 500
 scripts:
-- d3.min.js
-- d3_aux.js
-- jquery.min.js
-- bootstrap-tooltip.v2_3.js
+    - d3.min.js
+    - d3_aux.js
+    - jquery.min.js
+    - bootstrap-tooltip.v2_3.js
 styles:
-- bootstrap-tooltip.css
+    - bootstrap-tooltip.css
 
 # TODO: ADD THIS
 # .axis text{ font-size: 25px; }

@@ -2,11 +2,11 @@
     # data should have x, y and name
     dec_format = d3.format(".2f")
 
-    d3.json("{{opts$data}}", (data) ->
+    d3.json("{{opts$relative_data_path}}", (data) ->
 
         plot = append_plot(
-            width: {{opts$width %||% 800}}
-            height: {{opts$height %||% 500}}
+            width: {{opts$template_config$width}}
+            height: {{opts$template_config$height}}
         )
 
         plot.scales.x.domain([d3.min(data, (d) -> d.x), d3.max(data, (d) -> d.x)])

@@ -21,6 +21,11 @@ JS (especially D3) visualizations are awesome, interactive, but I'd like to acce
 
 templates are self-contained
 
+template config
+    numeric
+    character
+    logical
+
 It is a way to take an R data.frame and visualize it using JS.
 It is a way to add interactivity into your workflow, by building reusable JS interactive plots.
 
