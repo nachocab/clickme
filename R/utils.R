@@ -6,3 +6,9 @@
 "%||%" <- function(a, b) {
   if (!is.null(a)) a else b
 }
+
+source_dir <- function(path){
+    sapply(list.files(path), function(file){
+        source(file.path(path, file))
+    })
+}

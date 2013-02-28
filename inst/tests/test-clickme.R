@@ -1,12 +1,12 @@
 context("clickme")
 
 test_that("creates visualization", {
-    cleanup_files(system.file("", package="clickme"), c(file.path("data", "data.json"), "data_nachocab_scatterplot.html"))
+    cleanup_files(system.file("", package="clickme"), c(file.path("data", "data.json"), "data-force_directed.html"))
 
-    data <- data.frame(logFC=c(1,2,3), y=c(.01,.1,.009))
+    data <- read.csv(system.file(file.path("demo", "templates", "force_directed", "data", "lawsuits.txt"), package="clickme"))
     clickme_path(system.file("demo", package="clickme"))
-    clickme(data, "nachocab_scatterplot")
+    clickme(data, "force_directed", opts=list(data_name="data"))
 
-    expect_true(file.exists(system.file(file.path("demo", .clickme_env$data_dir_name, "data.json"), package="clickme")))
-    expect_true(file.exists(system.file(file.path("demo", "data_nachocab_scatterplot.html"), package = "clickme")))
+    expect_true(file.exists(system.file(file.path("demo", "data-force_directed.html"), package = "clickme")))
 })
+

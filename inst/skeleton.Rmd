@@ -1,7 +1,0 @@
-`r append_scripts(opts)`
-
-`r append_styles(opts)`
-
-<script type="text/javascript">
-`r knit(text=render_template(opts))`
-</script>

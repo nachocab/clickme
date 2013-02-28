@@ -1,44 +1,69 @@
-#' Customize the template code to the current opts, including the data
 #'
 #'
-render_template <- function(opts){
-    knit_expand(opts$template_path, opts = opts)
+#'
+append_scripts <- function(opts) {
+    paste(sapply(opts$template_config$scripts, function(script_path){
+        script_path <- file.path(opts$relative_scripts_path, script_path) # we could add a is_local option to config.yml so URLs can be used
+        paste0("<script src=\"", script_path, "\"></script>")
+    }), collapse="\n")
 }
 
-#' Writes the data to a file for more efficient JavaScript processing
 #'
 #'
-save_data <- function(data, data_path, template_config){
-    data <- prepare_data(data, template_config)
-    writeLines(data, data_path)
+#'
+append_styles <- function(opts) {
+    paste(sapply(opts$template_config$styles, function(style_path){
+        style_path <- file.path(opts$relative_styles_path, style_path)
+        paste0("<link href=\"", style_path, "\" rel=\"stylesheet\">")
+    }), collapse="\n")
+}
+
+#'
+#'
+#' translate is a function defined in template_id/lib/ it might return a JSON object or a file path
+translate_data <- function(data, opts) {
+    translator_path <- file.path(.clickme_env$path, opts$relative_translator_path)
+    source_dir(translator_path)
+    data <- translate(data)
+    data
 }
 
 #' Generate the JavaScript visualization
 #'
 #' Write the input data.frame to a file, for easier JavaScript consumption
 #' we use capture.output to hide the knitr progress bars, how should we deal with errors?
+#' @import knitr
 generate_visualization <- function(data, opts){
-    save_data(data, opts$data_path, opts$template_config)
-    expanded_skeleton <- knit_expand(opts$skeleton_path, opts = opts)
-    capture.output(knit2html(text = expanded_skeleton, output = opts$viz_path))
+    visualization_template <- knit_expand(opts$template_path, opts = opts)
+    skeleton_template <- "`r append_scripts(opts)`
+`r append_styles(opts)`
+<script type=\"text/javascript\">
+`r knit(text = visualization_template)`
+</script>"
+    visualization <- knit_expand(text = skeleton_template, visualization_template = visualization_template)
+
+    capture.output(knit2html(text = visualization, output = opts$viz_path))
 }
 
 #' Generates a JavaScript visualization
 #'
-#'
+#' @ param data
+#' @ param template_id
+#' @ param opts
 #' @export
-#' @import knitr
-clickme <- function(data, template_id, opts = NULL){
+#' @examples
+clickme <- function(data, template_id, opts = list()){
     if (is.null(.clickme_env$path)) clickme_path()
 
-    opts <- populate_opts(data, template_id, opts)
+    opts$template_id <- template_id
+    opts <- add_paths(opts)
+    opts$template_config <- get_template_config(opts)
+    opts$data <- translate_data(data, opts)
 
     generate_visualization(data, opts)
-
-    # make server and open visualization, option interactive by default
 
     opts$viz_path
 }
 
-# clickme_embed: returns code
-# clickme_link: builds a link <a href>
+# TODO: clickme_embed: returns code
+# TODO: clickme_link: builds a link <a href>

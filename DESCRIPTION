@@ -7,19 +7,15 @@ Title: A way to generate interactive plots using R data
 Description: The default interactivity comes from the D3 javascript library.
 Imports:
     knitr,
-    yaml,
-    Rook
+    yaml
 Suggests:
     testthat,
     stringr,
     roxygen2
 Collate:
     'utils.R'
-    'append.R'
     'utils-test.R'
-    'dataframe-to-JSON.R'
-    'populate-opts.R'
-    'prepare-data.R'
+    'opts.R'
     'clickme-path.R'
     'new-template.R'
     'clickme.R'
