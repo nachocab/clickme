@@ -46,11 +46,20 @@ check_names <- function(data, template_config) {
     data
 }
 
+#' @import rjson
+prepare_data <- function(data, template_config){
+    if (is.matrix(data) || is.data.frame(data)){
+        prepare_data_dataframe(data, template_config)
+    } else {
+        toJSON(data)
+    }
+}
+
 #' Check data column names and convert to JSON
 #'
 #'
-prepare_data <- function(data, template_config){
+prepare_data_dataframe <- function(data, template_config){
     data <- check_names(data, template_config)
-    data <- to_JSON(data)
+    data <- dataframe_to_JSON(data)
     data
 }

@@ -2,6 +2,34 @@
 
 clickme integrates R objects with JavaScript visualizations.
 
+I love R and I love JavaScript visualizations (especially those made with the D3 library).
+
+What you need:
+A computer with a UNIX terminal (Windows support is coming)
+A template
+R
+
+clickme is an R package that lets you plot your data on the browser using JavaScript visualizations. So you can do
+
+```r
+library(clickme)
+df <- data.frame(a=rnorm(50), b=rnorm(50), names=paste0("point_", 1:50))
+clickme(df, "nachocab_scatterplot")
+```
+
+```
+Create a server in the path ~/my_viz (by doing, for example: python -m SimpleHTTPServer)
+and browse to http://localhost:8888/data_nachocab_scatterplot.html
+```
+
+
+Which generates the html file containing your visualization. To open it start a server in the location indicated. See here for a live example.
+
+
+## Motivation
+Setting up all those scripts and styles is a pain, but with clickme templates you only have to set it up once.
+
+## Usage
 
 ## Installation
 

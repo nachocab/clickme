@@ -1,6 +1,6 @@
 context("check_names")
 
-test_that("data column names match template_config column names", {
+test_that("dataframe column names match template_config column names", {
 
     clickme_path(system.file("demo", package="clickme"))
     template_id <- "nachocab_scatterplot"
@@ -45,4 +45,13 @@ test_that("data column names match template_config column names", {
     # missing canonical columns
     data <- data.frame(logFC=c(1,2,3))
     expect_error(check_names(data, template_config))
+})
+
+
+context("prepare_data")
+
+test_that("prepares data correctly when it is not a dataframe", {
+    data <- list(logFC=c(1,2,3), y=c(.01,.1,.009))
+    data_prepared <- prepare_data(data, template_config)
+    expect_equal("{\"logFC\":[1,2,3],\"y\":[0.01,0.1,0.009]}", data_prepared)
 })

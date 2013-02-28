@@ -13,6 +13,7 @@ populate_opts <- function(data, template_id, opts) {
     }
 
     opts$data_name <- opts$data_name %||% paste0(deparse(substitute(data)), ".json")
+
     opts$relative_data_path <- file.path(.clickme_env$data_dir_name, opts$data_name)
     opts$data_path <- file.path(.clickme_env$path, opts$relative_data_path)
 

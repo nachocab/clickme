@@ -18,35 +18,35 @@ tt, code, pre {
    font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
 }
 
-h1 {
-   font-size:2.2em;
+h1 { 
+   font-size:2.2em; 
 }
 
-h2 {
-   font-size:1.8em;
+h2 { 
+   font-size:1.8em; 
 }
 
-h3 {
-   font-size:1.4em;
+h3 { 
+   font-size:1.4em; 
 }
 
-h4 {
-   font-size:1.0em;
+h4 { 
+   font-size:1.0em; 
 }
 
-h5 {
-   font-size:0.9em;
+h5 { 
+   font-size:0.9em; 
 }
 
-h6 {
-   font-size:0.8em;
+h6 { 
+   font-size:0.8em; 
 }
 
 a:visited {
    color: rgb(50%, 0%, 50%);
 }
 
-pre {
+pre {	
    margin-top: 0;
    max-width: 95%;
    border: 1px solid #ccc;
@@ -81,54 +81,54 @@ hr {
 }
 
 @media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
    }
 
-   body {
-      font-size:12pt;
-      max-width:100%;
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
    }
 
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
+   hr { 
       visibility: hidden;
       page-break-before: always;
    }
 
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
    }
 
-   tr, img {
-      page-break-inside: avoid;
+   tr, img { 
+      page-break-inside: avoid; 
    }
 
-   img {
-      max-width: 100% !important;
+   img { 
+      max-width: 100% !important; 
    }
 
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
    }
 
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
    }
 
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
+   h2, h3 { 
+      page-break-after: avoid; 
    }
 }
 </style>
@@ -141,8 +141,11 @@ hr {
 
 <body>
 <script src="templates/nachocab_scatterplot/scripts/d3.min.js"></script>
+
 <script src="templates/nachocab_scatterplot/scripts/d3_aux.js"></script>
+
 <script src="templates/nachocab_scatterplot/scripts/jquery.min.js"></script>
+
 <script src="templates/nachocab_scatterplot/scripts/bootstrap-tooltip.v2_3.js"></script>
 
 <p><link href="templates/nachocab_scatterplot/styles/bootstrap-tooltip.css" rel="stylesheet"></p>

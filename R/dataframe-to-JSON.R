@@ -33,7 +33,7 @@ prepare_for_JSON <- function(data){
     as.data.frame(data)
 }
 
-to_JSON <- function(data){
+dataframe_to_JSON <- function(data){
     data <- prepare_for_JSON(data)
     objects <- apply(data, 1, function(row) {paste(row, collapse = ',')})
     objects <- paste0('{', objects, '}')

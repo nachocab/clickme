@@ -10,7 +10,3 @@ test_that("creates visualization", {
     expect_true(file.exists(system.file(file.path("demo", .clickme_env$data_dir_name, "data.json"), package="clickme")))
     expect_true(file.exists(system.file(file.path("demo", "data_nachocab_scatterplot.html"), package = "clickme")))
 })
-
-# TODO: don't overwrite existing data.json files
-# TODO: creates a server
-# TODO: embed or link
