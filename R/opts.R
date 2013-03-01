@@ -1,12 +1,11 @@
 add_names <- function(opts, template_id) {
     # folders
+    opts$name$template_id <- template_id
     opts$name$templates <- opts$name$templates %||% "templates"
     opts$name$data <- opts$name$data %||% "data"
     opts$name$translator <- opts$name$translator %||% "translator"
     opts$name$scripts <- opts$name$scripts %||% "scripts"
     opts$name$styles <- opts$name$styles %||% "styles"
-
-    opts$name$template_id <- template_id
 
     # files
     opts$name$translator_file <- opts$name$translator_file %||% "translator.R"
@@ -52,3 +51,9 @@ get_template_config <- function(opts){
     template_config
 }
 
+
+initialize_opts <- function(opts, template_id) {
+    opts <- add_names(opts, template_id)
+    opts <- add_paths(opts)
+    opts
+}

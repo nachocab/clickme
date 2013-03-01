@@ -48,19 +48,18 @@ generate_visualization <- function(data, opts){
 #' Generates a JavaScript visualization
 #'
 #' @param data input data
-#' @param template_id template id, it must match a folder within \code{clickme_path}
+#' @param template_id template id, it must match a folder within \code{set_root_path}
 #' @param opts optional, list of options
 #' @export
 #' @examples
 #'
 #' data <- read.csv(system.file(file.path("demo", "templates", "force_directed_local", "data", "lawsuits.txt"), package="clickme"))
-#' clickme_path(system.file("demo", package="clickme"))
+#' set_root_path(system.file("demo", package="clickme"))
 #' clickme(data, "force_directed_local", opts=list(name$data="data"))
 clickme <- function(data, template_id, opts = list(), browse = interactive()){
-    if (is.null(.clickme_env$path)) clickme_path()
+    if (is.null(.clickme_env$path)) set_root_path()
 
-    opts <- add_names(opts, template_id)
-    opts <- add_paths(opts)
+    opts <- initialize_opts(opts, template_id)
     opts$template_config <- get_template_config(opts)
     opts$data <- translate_data(data, opts)
 

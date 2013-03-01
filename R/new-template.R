@@ -2,7 +2,7 @@
 #'
 #'
 new_template <- function(template_id) {
-    if (is.null(.clickme_env$path)) clickme_path()
+    if (is.null(.clickme_env$path)) set_root_path()
 
     path$template_id <- file.path(.clickme_env$path, .clickme_env$name$templates, template_id)
     if (file.exists(path$template_id)) {

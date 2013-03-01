@@ -10,7 +10,7 @@ test_that("error when the template doesn't exist", {
 test_that("default options", {
 
     data <- data.frame(logFC=c(1,2,3), y=c(.01,.1,.009))
-    clickme_path(system.file("demo", package="clickme"))
+    set_root_path(system.file("demo", package="clickme"))
     opts <- list(data=data, template_id="force_directed_local", name$data="data")
     opts <- add_paths(opts)
 
@@ -31,7 +31,7 @@ context("template_config")
 
 test_that("config is correctly loaded", {
         data <- data.frame(logFC=c(1,2,3), y=c(.01,.1,.009))
-        clickme_path(system.file("demo", package="clickme"))
+        set_root_path(system.file("demo", package="clickme"))
 
         opts <- list(data=data, template_id="force_directed_local")
         opts <- add_paths(opts)

@@ -17,7 +17,7 @@ df <- data.frame(a=rnorm(50), b=rnorm(50), names=paste0("point_", 1:50))
 clickme(df, "nachocab_scatterplot")
 ```
 
-You should put clickme_path() in your .Rprofile
+You should put set_clickme_path() in your .Rprofile
 
 ```
 Create a server in the path ~/my_viz (by doing, for example: python -m SimpleHTTPServer)
