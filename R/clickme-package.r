@@ -2,7 +2,7 @@
 #'
 #' The clickme folder structure is:
 #'
-#' |- USER_VISUALIZATIONS_FOLDER    <= .clickme_env$root_path - set with set_root_path(USER_VISUALIZATIONS_FOLDER)
+#' |- USER_VISUALIZATIONS_FOLDER    <= get_root_path() - server is run from here
 #'    |- data_name-template_id.html <= opts$name$viz_file
 #'    |- templates                  <= opts$name$templates
 #'       |- template_id             <= opts$name$template_id
@@ -17,4 +17,4 @@
 NULL
 
 .clickme_env <- new.env()
-.clickme_env$root_path <- NULL
+.clickme_env$templates_dir_name <- "templates"

@@ -3,7 +3,7 @@
 #'
 append_scripts <- function(opts) {
     paste(sapply(opts$template_config$scripts, function(script_path){
-        script_path <- file.path(opts$relative_path$scripts, script_path) # we could add a is_local option to config.yml so URLs can be used
+        script_path <- file.path(opts$relative_path$scripts, script_path)
         paste0("<script src=\"", script_path, "\"></script>")
     }), collapse="\n")
 }
@@ -16,16 +16,6 @@ append_styles <- function(opts) {
         style_path <- file.path(opts$relative_path$styles, style_path)
         paste0("<link href=\"", style_path, "\" rel=\"stylesheet\">")
     }), collapse="\n")
-}
-
-#'
-#'
-#' translate is a function defined in template_id/lib/ it might return a JSON object or a file path
-translate_data <- function(data, opts) {
-    translator_path <- file.path(.clickme_env$path, opts$relative_path$translator)
-    source_dir(translator_path)
-    data <- translate(data, opts)
-    data
 }
 
 #' Generate the JavaScript visualization
@@ -53,26 +43,36 @@ generate_visualization <- function(data, opts){
 #' @export
 #' @examples
 #'
-#' data <- read.csv(system.file(file.path("demo", "templates", "force_directed_local", "data", "lawsuits.txt"), package="clickme"))
+#' data <- read.csv(system.file(file.path("demo", "templates", "force_directed", "data", "lawsuits.txt"), package="clickme"))
 #' set_root_path(system.file("demo", package="clickme"))
-#' clickme(data, "force_directed_local", opts=list(name$data="data"))
-clickme <- function(data, template_id, opts = list(), browse = interactive()){
-    if (is.null(.clickme_env$path)) set_root_path()
+#' clickme(data, "force_directed", opts=list(name$data="data"))
+clickme <- function(data, template_id, data_file_name = NULL, viz_file_name = NULL, browse = interactive()){
+    if (is.null(get_root_path())) set_root_path()
+    opts <- get_opts(template_id, data_file_name, viz_file_name)
+    if (!file.exists(opts$path$template_file)) stop("Template ", opts$name$template_id, " not found in: ", opts$path$template_file)
 
-    opts <- initialize_opts(opts, template_id)
-    opts$template_config <- get_template_config(opts)
     opts$data <- translate_data(data, opts)
 
     generate_visualization(data, opts)
 
     if (browse) browseURL(opts$path$viz_file)
 
-    if (opts$template_config$require_server){
-        message("Run a local server in folder: ", .clickme_env$path,"\nand browse to http://LOCALHOST:PORT/", opts$name$viz_file)
-        return(opts$name$viz_file)
+    if (!is.null(opts$template_config$require_server) && opts$template_config$require_server){
+        message("Run a local server in folder: ", get_root_path(),"\nand browse to http://LOCALHOST:PORT/", opts$name$viz_file)
+        output <- opts$name$viz_file
     } else {
-        return(opts$path$viz_file)
+        output <- opts$path$viz_file
     }
+    output
+}
+
+#'
+#'
+#' translate is a function defined in template_id/lib/ it might return a JSON object or a file path
+translate_data <- function(data, opts) {
+    source_dir(opts$path$translator)
+    data <- translate(data, opts)
+    data
 }
 
 # TODO: clickme_embed: returns code

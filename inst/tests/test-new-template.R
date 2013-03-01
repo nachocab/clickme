@@ -1,29 +1,29 @@
 context("new_template")
 
-test_that("creates a blank template", {
-
-    set_root_path()
-    template_id <- "tmp_template"
-    dirs <- c(.clickme_env$name$template_file, .clickme_env$name$config_file)
-    cleanup_files(path=file.path(.clickme_env$root_path, template_id), dirs) # make sure they were not created previously
-
-    new_template(template_id)
-    sapply(dirs, function(file){
-        expect_true(file.exists(file.path(.clickme_env$root_path, .clickme_env$name$templates, template_id, file)))
-    })
-    cleanup_files(path=file.path(.clickme_env$root_path), c(.clickme_env$name$templates, .clickme_env$name$data))
-
+test_that("root path is set before creating a new template", {
+    .clickme_env$root_path <- NULL
+    expect_error(new_template("tmp_template"))
 })
 
-test_that("raises error if using an existing template_id", {
+test_that("doesn't overwrite an existing template", {
+    expect_error(new_template("force_directed_local"))
+})
 
-    set_root_path()
+test_that("creates a new blank template", {
+    set_root_path(system.file("demo", package="clickme"))
     template_id <- "tmp_template"
-    dirs <- c(.clickme_env$name$template_file, .clickme_env$name$config_file)
-    cleanup_files(path=file.path(.clickme_env$root_path, template_id), dirs) # make sure they were not created previously
+
+    cleanup_files(file.path(system.file("demo", package="clickme"), .clickme_env$templates_dir_name, template_id)) # to be sure it doesn't exist
 
     new_template(template_id)
-    expect_error(new_template(template_id))
+    opts <- add_template_opts(template_id)
+    expect_true(file.exists(file.path(opts$path$scripts)))
+    expect_true(file.exists(file.path(opts$path$styles)))
+    expect_true(file.exists(file.path(opts$path$data)))
+    expect_true(file.exists(file.path(opts$path$translator_file)))
+    expect_true(file.exists(file.path(opts$path$config_file)))
+    expect_true(file.exists(file.path(opts$path$template_file)))
 
-    cleanup_files(path=file.path(.clickme_env$root_path), c(.clickme_env$name$templates, .clickme_env$name$data))
+    cleanup_files(file.path(system.file("demo", package="clickme"), .clickme_env$templates_dir_name, template_id))
+
 })

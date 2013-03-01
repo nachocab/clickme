@@ -16,7 +16,7 @@ Collate:
     'utils.R'
     'utils-test.R'
     'opts.R'
-    'clickme-path.R'
+    'set-root-path.R'
     'new-template.R'
     'clickme.R'
     'clickme-package.R'

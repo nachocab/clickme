@@ -1,24 +1,28 @@
 context("clickme")
 
-test_that("creates local visualization", {
-    cleanup_files(path=system.file("", package="clickme"), "data-force_directed_local.html")
-
-    data <- read.csv(system.file(file.path("demo", "templates", "force_directed_local", "data", "lawsuits.txt"), package="clickme"))
+test_that("creates visualization", {
     set_root_path(system.file("demo", package="clickme"))
-    path$viz <- clickme(data, "force_directed_local", opts=list(name$data_file="data"), browse=FALSE)
+    template_id <- "force_directed"
+    opts <- get_opts(template_id, data_file_name = "data")
+    cleanup_files(path=opts$path$viz_file)
 
-    expect_equal(system.file(file.path("demo", "data-force_directed_local.html"), package = "clickme"), path$viz)
-    expect_true(file.exists(system.file(file.path("demo", "data-force_directed_local.html"), package = "clickme")))
+    data <- read.csv(file.path(opts$path$data, "lawsuits.txt"))
+    viz_path <- clickme(data, "force_directed", data_file_name = "data", browse=FALSE)
+
+    expect_equal(viz_path, opts$path$viz_file)
+    expect_true(file.exists(opts$path$viz_file))
 })
 
-test_that("creates server visualization", {
-    cleanup_files(path=system.file("", package="clickme"), "data-force_directed_server.html")
-
-    data <- read.csv(system.file(file.path("demo", "templates", "force_directed_server", "data", "lawsuits.txt"), package="clickme"))
+test_that("creates local server visualization", {
     set_root_path(system.file("demo", package="clickme"))
-    path$viz <- clickme(data, "force_directed_server", opts=list(name$data_file="data"), browse=FALSE)
+    template_id <- "force_directed_local_server"
+    opts <- get_opts(template_id, data_file_name = "data")
+    cleanup_files(path=opts$path$viz_file)
 
-    expect_equal("data-force_directed_server.html", path$viz)
-    expect_true(file.exists(system.file(file.path("demo", "data-force_directed_server.html"), package = "clickme")))
+    data <- read.csv(file.path(opts$path$data, "lawsuits.txt"))
+    viz_path <- clickme(data, "force_directed_local_server", data_file_name="data", browse=FALSE)
+
+    expect_equal(viz_path, opts$name$viz_file)
+    expect_true(file.exists(opts$path$viz_file))
 })
 

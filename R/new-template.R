@@ -2,29 +2,26 @@
 #'
 #'
 new_template <- function(template_id) {
-    if (is.null(.clickme_env$path)) set_root_path()
+    opts <- add_template_opts(template_id)
+    if (is.null(get_root_path())) stop("Root path not set, use set_root_path(\"path/to/root\")")
 
-    path$template_id <- file.path(.clickme_env$path, .clickme_env$name$templates, template_id)
-    if (file.exists(path$template_id)) {
-        stop("Template already exists: ", path$template_id)
-    }
+    if (file.exists(opts$path$template_id)) stop("Template already exists: ", opts$path$template_id)
 
-    sapply(c("",
-             .clickme_env$name$translator,
-            .clickme_env$name$scripts,
-            .clickme_env$name$styles), function(dir){
-        path <- file.path(path$template_id, dir)
-        dir.create(path)
-        message("Created directory: ", path)
-    })
+    sapply(c(opts$path$template_id,
+             opts$path$translator,
+             opts$path$scripts,
+             opts$path$styles,
+             opts$path$data), function(path){
+                dir.create(path)
+                message("Created directory: ", path)
+             })
 
-    sapply(c(.clickme_env$name$template_file,
-             .clickme_env$name$config_file,
-             file.path(.clickme_env$name$translator, .clickme_env$name$translator_file)), function(file){
-        path <- file.path(path$template_id, file)
-        file.create(path)
-        message("Created file: ", path)
-    })
+    sapply(c(opts$path$template_file,
+             opts$path$config_file,
+             opts$path$translator_file), function(path){
+                file.create(path)
+                message("Created file: ", path)
+             })
 
-    return()
+    invisible()
 }

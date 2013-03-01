@@ -140,12 +140,12 @@ hr {
 </head>
 
 <body>
-<script src="templates/force_directed_server/scripts/d3.min.js"></script>
+<script src="templates/force_directed_local_server/scripts/d3.min.js"></script>
 
-<p><link href="templates/force_directed_server/styles/main.css" rel="stylesheet"></p>
+<p><link href="templates/force_directed_local_server/styles/main.css" rel="stylesheet"></p>
 
 <script type="text/javascript">
-d3.json("/Users/nacho/Documents/Code/Rprojects/clickme/inst/demo/templates/force_directed_server/.json", function(links){
+d3.json("data/data.json", function(links){
   var nodes = {};
   // Compute the distinct nodes from the links.
   links.forEach(function(link) {

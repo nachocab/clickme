@@ -23,12 +23,12 @@
   |- USER_VISUALIZATIONS_FOLDER <= .clickme_env$root_path - set
   with set_root_path(USER_VISUALIZATIONS_FOLDER) |-
   name$data-template_id.html |- templates <=
-  .clickme_env$name$templates |- template_id <=
-  template_id |- data <= .clickme_env$name$data |-
-  scripts <= .clickme_env$name$scripts |- styles <=
-  .clickme_env$name$styles |- template.Rmd <=
-  .clickme_env$name$template_file |- config.yml <=
-  .clickme_env$name$config_file
+  opts$name$templates |- template_id <=
+  template_id |- data <= opts$name$data |-
+  scripts <= opts$name$scripts |- styles <=
+  opts$name$styles |- template.Rmd <=
+  opts$name$template_file |- config.yml <=
+  opts$name$config_file
 }
 \examples{
 data <- data <- read.csv(system.file(file.path("demo", "templates", "force_directed", "data", "lawsuits.txt"), package="clickme"))
