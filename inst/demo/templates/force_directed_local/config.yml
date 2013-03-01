@@ -3,4 +3,5 @@ height: 500
 scripts:
     - d3.min.js
 styles:
-    - force_directed.css
+    - main.css
+

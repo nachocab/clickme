@@ -6,7 +6,7 @@ Motorola,Apple,suit
 Nokia,Apple,resolved
 HTC,Apple,suit
 Kodak,Apple,suit
-Microsoft,BarnesNoble,suit
+Microsoft,Barnes & Noble,suit
 Microsoft,Foxconn,suit
 Oracle,Google,suit
 Apple,HTC,suit

@@ -1,2 +1,4 @@
 export(clickme)
+export(clickme_path)
 import(knitr)
+import(yaml)

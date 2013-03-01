@@ -1,23 +1,42 @@
+add_names <- function(opts, template_id) {
+    # folders
+    opts$name$templates <- opts$name$templates %||% "templates"
+    opts$name$data <- opts$name$data %||% "data"
+    opts$name$translator <- opts$name$translator %||% "translator"
+    opts$name$scripts <- opts$name$scripts %||% "scripts"
+    opts$name$styles <- opts$name$styles %||% "styles"
+
+    opts$name$template_id <- template_id
+
+    # files
+    opts$name$translator_file <- opts$name$translator_file %||% "translator.R"
+    opts$name$template_file <- opts$name$template_file %||% "template.Rmd"
+    opts$name$config_file <- opts$name$config_file %||% "config.yml"
+    opts$name$data_file <- opts$name$data_file %||% basename(tempfile("data"))
+    opts$name$viz_file <- opts$name$viz_file %||% paste0(opts$name$data_file, "-", opts$name$template_id, ".html")
+
+    opts
+}
+
 #' Set up the default paths and the custom names for the input data and the visualization file names.
 #'
 #' @import yaml
 add_paths <- function(opts) {
-    opts$template_path <- file.path(.clickme_env$path, .clickme_env$templates_dir_name, opts$template_id, .clickme_env$template_file_name)
-    if (!file.exists(opts$template_path)) stop("Template", opts$template_id, "not in: ", opts$template_path)
+    # absolute paths
+    opts$path$templates <- file.path(.clickme_env$path, opts$name$templates)
+    opts$path$template_id <- file.path(opts$name$templates, opts$name$template_id)
+    opts$path$viz_file <- file.path(.clickme_env$path, opts$name$viz_file)
 
-    opts$config_path <- file.path(.clickme_env$path, .clickme_env$templates_dir_name, opts$template_id, .clickme_env$config_file_name)
+    opts$path$config_file <- file.path(opts$path$template_id, opts$name$config_file)
+    opts$path$template_file <- file.path(opts$path$template_id, opts$name$template_file)
+    if (!file.exists(opts$path$template_file)) stop("Template ", opts$name$template_id, " not in: ", opts$path$template_file)
 
-    opts$data_name <- opts$data_name %||% basename(tempfile("data"))
-
-    opts$relative_data_path <- file.path(.clickme_env$templates_dir_name, opts$template_id, .clickme_env$data_dir_name)
-    opts$relative_translator_path <- file.path(.clickme_env$templates_dir_name, opts$template_id, .clickme_env$translator_dir_name)
-    opts$relative_scripts_path <- file.path(.clickme_env$templates_dir_name, opts$template_id, .clickme_env$scripts_dir_name)
-    opts$relative_styles_path <- file.path(.clickme_env$templates_dir_name, opts$template_id, .clickme_env$styles_dir_name)
-
-    opts$viz_name <- opts$viz_name %||% paste0(opts$data_name, "-", opts$template_id, ".html")
-
-    # viz_path must be in the same folder as templates, so the relative paths to scripts and styles are correct
-    opts$viz_path <- file.path(.clickme_env$path, opts$viz_name)
+    # relative paths hang below opts$path$templates
+    opts$relative_path$template_id <- file.path(opts$name$templates, opts$name$template_id)
+    opts$relative_path$data <- file.path(opts$relative_path$template_id, opts$name$data)
+    opts$relative_path$translator <- file.path(opts$relative_path$template_id, opts$name$translator)
+    opts$relative_path$scripts <- file.path(opts$relative_path$template_id, opts$name$scripts)
+    opts$relative_path$styles <- file.path(opts$relative_path$template_id, opts$name$styles)
 
     opts
 }
@@ -27,8 +46,8 @@ add_paths <- function(opts) {
 #'
 get_template_config <- function(opts){
     template_config <- NULL
-    if (file.exists(opts$config_path)){
-        template_config <- yaml.load_file(opts$config_path)
+    if (file.exists(opts$path$config_file)){
+        template_config <- yaml.load_file(opts$path$config_file)
     }
     template_config
 }

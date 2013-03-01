@@ -1,7 +1,0 @@
-This comes from Mike Bostock
-
-
-library(rjson)
-
-df <- read.csv("data/lawsuits.txt")
-clickme(df, "line_with_focus") # generates PREFIX_line_with_focus.html under templates/ because it uses relative paths
