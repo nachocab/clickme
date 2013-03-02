@@ -4,12 +4,13 @@
 \alias{clickme-package}
 \title{Generates a JavaScript visualization}
 \usage{
-  clickme(data, template_id, opts = list())
+  clickme(data, ractive, data_file_name = NULL,
+    viz_file_name = NULL, browse = interactive())
 }
 \arguments{
   \item{data}{input data}
 
-  \item{template_id}{template id, it must match a folder
+  \item{ractive}{template id, it must match a folder
   within \code{set_root_path}}
 
   \item{opts}{optional, list of options}
@@ -20,19 +21,18 @@
   The clickme folder structure is:
 }
 \details{
-  |- USER_VISUALIZATIONS_FOLDER <= .clickme_env$root_path - set
-  with set_root_path(USER_VISUALIZATIONS_FOLDER) |-
-  name$data-template_id.html |- templates <=
-  opts$name$templates |- template_id <=
-  template_id |- data <= opts$name$data |-
-  scripts <= opts$name$scripts |- styles <=
-  opts$name$styles |- template.Rmd <=
+  |- USER_VISUALIZATIONS_FOLDER <= get_root_path() - server
+  is run from here |- data_name-ractive.html <=
+  opts$name$viz_file |- templates <= opts$name$templates |-
+  ractive <= opts$name$ractive |- data <=
+  opts$name$data |- scripts <= opts$name$scripts |- external
+  <= opts$name$external |- template.Rmd <=
   opts$name$template_file |- config.yml <=
   opts$name$config_file
 }
 \examples{
-data <- data <- read.csv(system.file(file.path("demo", "templates", "force_directed", "data", "lawsuits.txt"), package="clickme"))
-set_root_path(system.file("demo", package="clickme"))
-clickme(data, "force_directed", opts=list(name$data="data"))
+data(lawsuits)
+set_root_path(system.file("examples", package="clickme"))
+clickme(lawsuits, "force_directed")
 }
 

@@ -6,8 +6,8 @@ links.forEach(function(link) {
   link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
 });
 
-var w = {{opts$template_config$width}},
-    h = {{opts$template_config$height}};
+var w = {{opts$ractive_config$width}},
+    h = {{opts$ractive_config$height}};
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
@@ -22,7 +22,7 @@ var svg = d3.select("body").append("svg:svg")
     .attr("width", w)
     .attr("height", h);
 
-// Per-type markers, as they don’t inherit styles.
+// Per-type markers, as they don’t inherit external.
 svg.append("svg:defs").selectAll("marker")
     .data(["suit", "licensing", "resolved"])
   .enter().append("svg:marker")

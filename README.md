@@ -29,7 +29,7 @@ Which generates the html file containing your visualization. To open it start a 
 
 
 ## Motivation
-Setting up all those scripts and styles is a pain, but with clickme templates you only have to set it up once.
+Setting up all those scripts and external is a pain, but with clickme ractives you only have to set it up once.
 
 ## Usage
 
@@ -45,11 +45,11 @@ install_github("clickme","nachocab")
 How can we enjoy the flexibility of JS without straying from our R workflow. clickme.
 What is great about JS viz is that you can interact, but they are a pain to adapt to a new dataset. R makes reusing plots with different datasets easy, but the plots are static. Clickme bridges the gap between static R plots and dynamic JS visualizations. If you are allergic to JS, you can write them in CoffeeScript using the knitr engine (thanks Yihui)
 
-you have to specify the list of scripts and styles (order is important)
+you have to specify the list of scripts and external (order is important)
 
-JS (especially D3) visualizations are awesome, interactive, but I'd like to access them from R, providing my own R objects as input. Roadblock: static variable names, so we build templates with a defined folder structure that can interpret R objects, use knit_expand to substitute the curly braces.
+JS (especially D3) visualizations are awesome, interactive, but I'd like to access them from R, providing my own R objects as input. Roadblock: static variable names, so we build ractives with a defined folder structure that can interpret R objects, use knit_expand to substitute the curly braces.
 
-templates are self-contained
+ractives are self-contained
 
 template config
     numeric
@@ -71,8 +71,8 @@ Uses knitr for templating and the CoffeeScript engine
 
 ## Loading a visualization template
 A visualization template is an Rmd file with embedded javascript or CoffeeScript code. It is populated with an R data.frame. It specifies how this data.frame should be prepared and the default opts (width, height, etc.)
-Templates are the backbone behind clickme, they can use any javascript library, although I have only tested D3 so far. Once you make a visualization you like to use you can share it [here](linkto clickme_templates)
-The templates that come by default are in D3
+ractives are the backbone behind clickme, they can use any javascript library, although I have only tested D3 so far. Once you make a visualization you like to use you can share it [here](linkto clickme_ractives)
+The ractives that come by default are in D3
 
 ## Creating a visualization template
 Converting data.frames to JSON is ideal because it means you can refer to each column by name, irrespective of the order. This isn't true for CSV files, where each column has a number.

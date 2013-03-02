@@ -1,4 +1,4 @@
 export(clickme)
-export(set_clickme_path)
+export(set_root_path)
 import(knitr)
 import(yaml)

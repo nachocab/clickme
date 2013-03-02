@@ -1,16 +1,15 @@
-#' Creates the folder structure for a template
+#' Creates the folder structure for a ractive
 #'
 #'
-new_template <- function(template_id) {
-    opts <- add_template_opts(template_id)
+new_ractive <- function(ractive) {
+    opts <- add_ractive_opts(ractive)
     if (is.null(get_root_path())) stop("Root path not set, use set_root_path(\"path/to/root\")")
 
-    if (file.exists(opts$path$template_id)) stop("Template already exists: ", opts$path$template_id)
+    if (file.exists(opts$path$ractive)) stop("ractive already exists: ", opts$path$ractive)
 
-    sapply(c(opts$path$template_id,
-             opts$path$translator,
-             opts$path$scripts,
-             opts$path$styles,
+    sapply(c(opts$path$ractive,
+             opts$path$external,
+             opts$path$template,
              opts$path$data), function(path){
                 dir.create(path)
                 message("Created directory: ", path)

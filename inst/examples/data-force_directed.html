@@ -140,9 +140,7 @@ hr {
 </head>
 
 <body>
-<script src="templates/force_directed/scripts/d3.min.js"></script>
-
-<p><link href="templates/force_directed/styles/main.css" rel="stylesheet"></p>
+<script src=""></script>
 
 <script type="text/javascript">
 var links = [{"source":"Microsoft","target":"Amazon","type":"licensing"},
@@ -180,8 +178,8 @@ links.forEach(function(link) {
   link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
 });
 
-var w = 800,
-    h = 500;
+var w = ,
+    h = ;
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
@@ -196,7 +194,7 @@ var svg = d3.select("body").append("svg:svg")
     .attr("width", w)
     .attr("height", h);
 
-// Per-type markers, as they don’t inherit styles.
+// Per-type markers, as they don’t inherit external.
 svg.append("svg:defs").selectAll("marker")
     .data(["suit", "licensing", "resolved"])
   .enter().append("svg:marker")

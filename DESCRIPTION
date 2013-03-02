@@ -17,6 +17,6 @@ Collate:
     'utils-test.R'
     'opts.R'
     'set-root-path.R'
-    'new-template.R'
+    'new-ractive.R'
     'clickme.R'
     'clickme-package.R'
