@@ -62,11 +62,11 @@ get_opts <- function(ractive, data_file_name = NULL, viz_file_name = NULL){
     opts$template_config <- get_template_config(opts$path$template_config_file)
 
     # file names
-    opts$name$data_file <- data_file_name %||% basename(tempfile("data"))
-    opts$name$viz_file <- viz_file_name %||% paste0(opts$name$data_file, "-", opts$name$ractive, ".html")
+    opts$name$data_file <- data_file_name %||% paste0(basename(tempfile("data"), ".json")
+    opts$name$viz_file <- viz_file_name %||% paste0(strsplit(opts$name$data_file, "\\.")[[1]], "-", opts$name$ractive, ".html")
 
     # file absolute paths
-    opts$path$data_file <- file.path(opts$path$data, paste0(opts$name$data_file, ".json"))
+    opts$path$data_file <- file.path(opts$path$data, opts$name$data_file)
     opts$path$viz_file <- file.path(get_root_path(), opts$name$viz_file)
 
     opts
