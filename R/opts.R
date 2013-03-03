@@ -18,11 +18,11 @@ initialize_opts <- function() {
     opts
 }
 
-add_ractive_opts <- function(ractive) {
+add_ractive_opts <- function(ractive_name) {
     opts <- initialize_opts()
 
     # folder names
-    opts$name$ractive <- ractive
+    opts$name$ractive <- ractive_name
     opts$name$data <- "data"
     opts$name$template <- "template"
     opts$name$external <- "external"

@@ -2,20 +2,24 @@
 #'
 #'
 append_scripts <- function(opts) {
-    paste(sapply(opts$template_config$scripts, function(script_path){
-        script_path <- file.path(opts$relative_path$scripts, script_path)
+    scripts <- paste(sapply(opts$template_config$scripts, function(script_path){
+        script_path <- file.path(opts$relative_path$external, script_path)
         paste0("<script src=\"", script_path, "\"></script>")
     }), collapse="\n")
+
+    scripts
 }
 
 #'
 #'
 #'
-append_external <- function(opts) {
-    paste(sapply(opts$template_config$external, function(style_path){
+append_styles <- function(opts) {
+    styles <- paste(sapply(opts$template_config$styles, function(style_path){
         style_path <- file.path(opts$relative_path$external, style_path)
-        paste0("<link href=\"", style_path, "\" rel=\"externalheet\">")
+        paste0("<link href=\"", style_path, "\" rel=\"stylesheet\">")
     }), collapse="\n")
+
+    styles
 }
 
 #' Generate the JavaScript visualization
@@ -25,10 +29,11 @@ append_external <- function(opts) {
 #' @import knitr
 generate_visualization <- function(data, opts){
     scaffold <- "`r append_scripts(opts)`
-`r append_external(opts)`
+`r append_styles(opts)`
 <script type=\"text/javascript\">
 `r knit(text = expanded_template)`
 </script>"
+
     expanded_template <- knit_expand(opts$path$template_file, opts = opts)
 
     visualization <- knit_expand(text = scaffold, expanded_template = expanded_template)
@@ -57,7 +62,6 @@ clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, 
 
     generate_visualization(data, opts)
 
-
     if (!is.null(opts$template_config$require_server) && opts$template_config$require_server){
         message("Run a local server in folder: ", get_root_path(),"\nand browse to http://LOCALHOST:PORT/", opts$name$viz_file)
         output <- opts$name$viz_file
@@ -68,12 +72,12 @@ clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, 
     output
 }
 
+#' Translate data object to be used in the ractive (usually into JSON or a file path)
 #'
-#'
-#' translate is a function defined in ractive/lib/ it might return a JSON object or a file path
+#' \code{clickme_translate} is a function defined in opts$path$translator_file
 translate_data <- function(data, opts) {
     source(opts$path$translator_file)
-    data <- translate(data, opts)
+    data <- clickme_translate(data, opts)
     data
 }
 

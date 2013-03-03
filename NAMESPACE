@@ -1,4 +1,5 @@
 export(clickme)
+export(new_ractive)
 export(set_root_path)
 import(knitr)
 import(yaml)
