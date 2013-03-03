@@ -1,0 +1,3 @@
+This is an [nvd3 visualization](http://nvd3.org/ghpages/lineWithFocus.html).
+
+The format of the expected input is not very natural in R, we would use a long dataframe with line, x and y columns (instead of a list of 3 lists, each containing a key attribute with the line name, and a values attribute with contains a list of lists of x and y values!).

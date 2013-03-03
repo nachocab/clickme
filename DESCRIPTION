@@ -18,5 +18,7 @@ Collate:
     'opts.R'
     'set-root-path.R'
     'new-ractive.R'
+    'validate-ractive.R'
+    'validate-data-names.R'
     'clickme.R'
     'clickme-package.R'

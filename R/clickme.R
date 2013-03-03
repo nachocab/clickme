@@ -55,9 +55,11 @@ generate_visualization <- function(data, opts){
 #' clickme(lawsuits, "force_directed")
 clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, browse = interactive()){
     if (is.null(get_root_path())) set_root_path()
-    opts <- get_opts(ractive, data_file_name, viz_file_name)
-    if (!file.exists(opts$path$template_file)) stop("Template ", opts$name$ractive, " not found in: ", opts$path$template_file)
 
+    opts <- get_opts(ractive, data_file_name, viz_file_name)
+
+    validate_ractive(opts)
+    data <- validate_data_names(data, opts)
     opts$data <- translate_data(data, opts)
 
     generate_visualization(data, opts)
@@ -80,6 +82,3 @@ translate_data <- function(data, opts) {
     data <- clickme_translate(data, opts)
     data
 }
-
-# TODO: clickme_embed: returns code
-# TODO: clickme_link: builds a link <a href>

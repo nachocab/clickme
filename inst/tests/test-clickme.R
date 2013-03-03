@@ -19,16 +19,5 @@ test_that("creates visualization", {
     expect_equal(styles[1], paste0("<link href=\"", file.path(opts$relative_path$external, opts$template_config$styles[1]), "\" rel=\"stylesheet\">"))
 })
 
-test_that("creates local server visualization", {
-    set_root_path(system.file("examples", package="clickme"))
-    ractive <- "force_directed_local_server"
-    opts <- get_opts(ractive, data_file_name = "data")
-    cleanup_files(path=opts$path$viz_file)
 
-    data <- read.csv(file.path(opts$path$data, "lawsuits.txt"))
-    viz_file_path <- clickme(data, "force_directed_local_server", data_file_name = "data", browse=FALSE)
-
-    expect_equal(viz_file_path, opts$name$viz_file)
-    expect_true(file.exists(opts$path$viz_file))
-})
 

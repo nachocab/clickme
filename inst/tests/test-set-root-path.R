@@ -7,7 +7,7 @@ test_that("root path can be set", {
 })
 
 test_that("root path exists", {
-    expect_error(set_root_path("non_existent_path"))
+    expect_error(set_root_path("non_existent_path"), "Path doesn't exist")
 })
 
 test_that("root path contains a ractives folder", {

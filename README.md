@@ -9,6 +9,10 @@ A computer with a UNIX terminal (Windows support is coming)
 A template
 R
 
+It is easier to write a translator function than to modify the javascript visualization.
+
+We encourage using tests to make sure the format is correct.
+
 clickme is an R package that lets you plot your data on the browser using JavaScript visualizations. So you can do
 
 ```r

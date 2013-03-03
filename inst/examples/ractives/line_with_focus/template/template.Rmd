@@ -1,0 +1,30 @@
+var data = {{opts$data}};
+
+nv.addGraph(function() {
+
+    var w = {{opts$template_config$width}},
+        h = {{opts$template_config$height}};
+
+    var chart = nv.models.lineWithFocusChart();
+
+    chart.xAxis
+        .tickFormat(d3.format(',f'));
+
+    chart.yAxis
+        .tickFormat(d3.format(',.2f'));
+
+   chart.y2Axis
+       .tickFormat(d3.format(',.2f'));
+
+   var svg = d3.select("body").append("svg:svg")
+         .style("width", w)
+         .style("height", h);
+
+   svg.datum(data)
+     .transition().duration(500)
+       .call(chart);
+
+   nv.utils.windowResize(chart.update);
+
+   return chart;
+ });

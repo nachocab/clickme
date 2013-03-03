@@ -1,10 +1,10 @@
 #' Read ractive configuration from yaml file
 #'
 #' @import yaml
-get_template_config <- function(config_file_path){
+get_template_config <- function(template_config_file_path){
     template_config <- NULL
-    if (file.exists(config_file_path)){
-        template_config <- yaml.load_file(config_file_path)
+    if (file.exists(template_config_file_path)){
+        template_config <- yaml.load_file(template_config_file_path)
     }
     template_config
 }
@@ -26,10 +26,11 @@ add_ractive_opts <- function(ractive_name) {
     opts$name$data <- "data"
     opts$name$template <- "template"
     opts$name$external <- "external"
+    opts$name$tests <- "tests"
 
     # file names
     opts$name$translator_file <- "translator.R"
-    opts$name$config_file <- "config.yml"
+    opts$name$template_config_file <- "config.yml"
     opts$name$template_file <- "template.Rmd"
 
     # folder absolute paths - for now, ractive is directly below opts$path$ractives, maybe in the future we can allow nested paths (simple is better)
@@ -37,10 +38,11 @@ add_ractive_opts <- function(ractive_name) {
     opts$path$data <- file.path(opts$path$ractive, opts$name$data)
     opts$path$template <- file.path(opts$path$ractive, opts$name$template)
     opts$path$external <- file.path(opts$path$ractive, opts$name$external)
+    opts$path$tests <- file.path(opts$path$ractive, opts$name$tests)
 
     # file absolute paths
     opts$path$translator_file <- file.path(opts$path$template, opts$name$translator_file)
-    opts$path$config_file <- file.path(opts$path$template, opts$name$config_file)
+    opts$path$template_config_file <- file.path(opts$path$template, opts$name$template_config_file)
     opts$path$template_file <- file.path(opts$path$template, opts$name$template_file)
 
     # paths relative to opts$path$ractives
@@ -53,7 +55,7 @@ add_ractive_opts <- function(ractive_name) {
 
 get_opts <- function(ractive, data_file_name = NULL, viz_file_name = NULL){
     opts <- add_ractive_opts(ractive)
-    opts$template_config <- get_template_config(opts$path$config_file)
+    opts$template_config <- get_template_config(opts$path$template_config_file)
 
     # file names
     opts$name$data_file <- data_file_name %||% basename(tempfile("data"))

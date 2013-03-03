@@ -11,7 +11,7 @@
 #'          |- template           <= opts$name$template
 #'             |- template.Rmd    <= opts$name$template_file
 #'             |- translator.R    <= opts$name$translator_file
-#'             |- config.yml      <= opts$name$config_file
+#'             |- config.yml      <= opts$name$template_config_file
 #'
 #' @name clickme
 #' @docType package

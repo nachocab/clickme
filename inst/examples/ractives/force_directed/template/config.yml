@@ -1,7 +1,16 @@
+valid_names:
+    - source
+    - target
+    - type
+
+require:
+    - df2json
+
 width: 800
 height: 500
+
 scripts:
     - d3.min.js
+
 styles:
     - main.css
-

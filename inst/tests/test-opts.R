@@ -15,8 +15,9 @@ test_that("add ractive options", {
     expect_equal(opts$path$data, file.path(opts$path$ractive, opts$name$data))
     expect_equal(opts$path$external, file.path(opts$path$ractive, opts$name$external))
     expect_equal(opts$path$template, file.path(opts$path$ractive, opts$name$template))
+    expect_equal(opts$path$tests, file.path(opts$path$ractive, opts$name$tests))
 
-    expect_equal(opts$path$config_file, file.path(opts$path$template, opts$name$config_file))
+    expect_equal(opts$path$template_config_file, file.path(opts$path$template, opts$name$template_config_file))
     expect_equal(opts$path$template_file, file.path(opts$path$template, opts$name$template_file))
     expect_equal(opts$path$translator_file, file.path(opts$path$template, opts$name$translator_file))
 
@@ -35,10 +36,12 @@ test_that("add visualization options", {
 })
 
 
-test_that("get ractive configuration", {
+test_that("get template configuration", {
         set_root_path(system.file("examples", package="clickme"))
         opts <- get_opts("force_directed")
 
+        expect_true(is.character(opts$template_config$valid_names))
+        expect_true(is.character(opts$template_config$require))
         expect_true(is.numeric(opts$template_config$width))
         expect_true(is.numeric(opts$template_config$height))
         expect_true(is.character(opts$template_config$scripts))

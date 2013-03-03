@@ -12,3 +12,7 @@ source_dir <- function(path){
         source(file.path(path, file))
     })
 }
+
+is.installed <- function(package) {
+    is.element(package, installed.packages()[,1])
+}
