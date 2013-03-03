@@ -20,6 +20,8 @@ new_ractive <- function(ractive_name) {
 
     sapply(c(opts$path$template_file,
              opts$path$template_config_file,
+             opts$path$run_tests_file,
+             opts$path$translator_test_file,
              opts$path$translator_file), function(path){
                 file.create(path)
                 message("Created file: ", path)
@@ -34,6 +36,19 @@ new_ractive <- function(ractive_name) {
 clickme_translate <- function(data, opts) {
     data
 }", opts$path$translator_file)
+
+    writeLines("context(\"clickme_translate\")
+
+test_that(\"dataframes are translated to the format expected by the ractive\", {
+
+})", opts$path$translator_test_file)
+
+    writeLines("library(\"testthat\")
+
+# setwd(\"path/to/tests\")
+source(file.path(\"..\", \"template\", \"translator.R\"))
+test_file(\"test-translator.R\")
+", opts$path$run_tests_file)
 
     invisible()
 }

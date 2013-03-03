@@ -32,6 +32,8 @@ add_ractive_opts <- function(ractive_name) {
     opts$name$translator_file <- "translator.R"
     opts$name$template_config_file <- "config.yml"
     opts$name$template_file <- "template.Rmd"
+    opts$name$translator_test_file <- "translator-test.R"
+    opts$name$run_tests_file <- "run-tests.R"
 
     # folder absolute paths - for now, ractive is directly below opts$path$ractives, maybe in the future we can allow nested paths (simple is better)
     opts$path$ractive <- file.path(opts$path$ractives, opts$name$ractive)
@@ -44,6 +46,8 @@ add_ractive_opts <- function(ractive_name) {
     opts$path$translator_file <- file.path(opts$path$template, opts$name$translator_file)
     opts$path$template_config_file <- file.path(opts$path$template, opts$name$template_config_file)
     opts$path$template_file <- file.path(opts$path$template, opts$name$template_file)
+    opts$path$translator_test_file <- file.path(opts$path$tests, opts$name$translator_test_file)
+    opts$path$run_tests_file <- file.path(opts$path$tests, opts$name$run_tests_file)
 
     # paths relative to opts$path$ractives
     opts$relative_path$ractive <- file.path(opts$name$ractives, opts$name$ractive)

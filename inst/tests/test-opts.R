@@ -20,6 +20,8 @@ test_that("add ractive options", {
     expect_equal(opts$path$template_config_file, file.path(opts$path$template, opts$name$template_config_file))
     expect_equal(opts$path$template_file, file.path(opts$path$template, opts$name$template_file))
     expect_equal(opts$path$translator_file, file.path(opts$path$template, opts$name$translator_file))
+    expect_equal(opts$path$translator_test_file, file.path(opts$path$tests, opts$name$translator_test_file))
+    expect_equal(opts$path$run_tests_file, file.path(opts$path$tests, opts$name$run_tests_file))
 
     expect_equal(opts$relative_path$ractive, file.path(opts$name$ractives, opts$name$ractive))
     expect_equal(opts$relative_path$data, file.path(opts$relative_path$ractive, opts$name$data))
