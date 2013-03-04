@@ -1,30 +1,45 @@
-var data = {{opts$data}};
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Line with focus</title>
+    `r append_scripts(opts)`
+    `r append_styles(opts)`
+  </head>
 
-nv.addGraph(function() {
+  <body>
+    <script type="text/javascript">
+      var data = {{opts$data}};
 
-    var w = {{opts$template_config$width}},
-        h = {{opts$template_config$height}};
+      nv.addGraph(function() {
 
-    var chart = nv.models.lineWithFocusChart();
+          var w = {{opts$template_config$width}},
+              h = {{opts$template_config$height}};
 
-    chart.xAxis
-        .tickFormat(d3.format(',f'));
+          var chart = nv.models.lineWithFocusChart();
 
-    chart.yAxis
-        .tickFormat(d3.format(',.2f'));
+          chart.xAxis
+              .tickFormat(d3.format(',f'));
 
-   chart.y2Axis
-       .tickFormat(d3.format(',.2f'));
+          chart.yAxis
+              .tickFormat(d3.format(',.2f'));
 
-   var svg = d3.select("body").append("svg:svg")
-         .style("width", w)
-         .style("height", h);
+         chart.y2Axis
+             .tickFormat(d3.format(',.2f'));
 
-   svg.datum(data)
-     .transition().duration(500)
-       .call(chart);
+         var svg = d3.select("body").append("svg:svg")
+               .style("width", w)
+               .style("height", h);
 
-   nv.utils.windowResize(chart.update);
+         svg.datum(data)
+           .transition().duration(500)
+             .call(chart);
 
-   return chart;
- });
+         nv.utils.windowResize(chart.update);
+
+         return chart;
+       });
+    </script>
+
+  </body>
+</html>

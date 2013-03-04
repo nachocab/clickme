@@ -16,7 +16,6 @@ scripts:
     - utils.js
     - legend.js
     - axis.js
-    - scatter.js
     - line.js
     - lineWithFocusChart.js
 

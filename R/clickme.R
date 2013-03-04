@@ -28,17 +28,9 @@ append_styles <- function(opts) {
 #' we use capture.output to hide the knitr progress bars, how should we deal with errors?
 #' @import knitr
 generate_visualization <- function(data, opts){
-    scaffold <- "`r append_scripts(opts)`
-`r append_styles(opts)`
-<script type=\"text/javascript\">
-`r knit(text = expanded_template)`
-</script>"
+    visualization <- knit_expand(opts$path$template_file)
 
-    expanded_template <- knit_expand(opts$path$template_file, opts = opts)
-
-    visualization <- knit_expand(text = scaffold, expanded_template = expanded_template)
-
-    capture.output(knit2html(text = visualization, output = opts$path$viz_file))
+    capture.output(knit(text = visualization, output = opts$path$viz_file))
 }
 
 #' Generates a JavaScript visualization
