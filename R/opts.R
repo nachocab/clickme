@@ -26,28 +26,22 @@ add_ractive_opts <- function(ractive_name) {
     opts$name$data <- "data"
     opts$name$template <- "template"
     opts$name$external <- "external"
-    opts$name$tests <- "tests"
 
     # file names
     opts$name$translator_file <- "translator.R"
     opts$name$template_config_file <- "config.yml"
     opts$name$template_file <- "template.Rmd"
-    opts$name$translator_test_file <- "translator-test.R"
-    opts$name$run_tests_file <- "run-tests.R"
 
     # folder absolute paths - for now, ractive is directly below opts$path$ractives, maybe in the future we can allow nested paths (simple is better)
     opts$path$ractive <- file.path(opts$path$ractives, opts$name$ractive)
     opts$path$data <- file.path(opts$path$ractive, opts$name$data)
     opts$path$template <- file.path(opts$path$ractive, opts$name$template)
     opts$path$external <- file.path(opts$path$ractive, opts$name$external)
-    opts$path$tests <- file.path(opts$path$ractive, opts$name$tests)
 
     # file absolute paths
     opts$path$translator_file <- file.path(opts$path$template, opts$name$translator_file)
     opts$path$template_config_file <- file.path(opts$path$template, opts$name$template_config_file)
     opts$path$template_file <- file.path(opts$path$template, opts$name$template_file)
-    opts$path$translator_test_file <- file.path(opts$path$tests, opts$name$translator_test_file)
-    opts$path$run_tests_file <- file.path(opts$path$tests, opts$name$run_tests_file)
 
     # paths relative to opts$path$ractives
     opts$relative_path$ractive <- file.path(opts$name$ractives, opts$name$ractive)
@@ -62,7 +56,7 @@ get_opts <- function(ractive, data_file_name = NULL, viz_file_name = NULL){
     opts$template_config <- get_template_config(opts$path$template_config_file)
 
     # file names
-    opts$name$data_file <- data_file_name %||% paste0(basename(tempfile("data"), ".json")
+    opts$name$data_file <- data_file_name %||% paste0(basename(tempfile("data")), ".json")
     opts$name$viz_file <- viz_file_name %||% paste0(strsplit(opts$name$data_file, "\\.")[[1]], "-", opts$name$ractive, ".html")
 
     # file absolute paths

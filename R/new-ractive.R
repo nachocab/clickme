@@ -3,10 +3,21 @@
 #' This creates the folder structure with the files that a ractive needs.
 #' @export
 new_ractive <- function(ractive_name) {
-    opts <- add_ractive_opts(ractive_name)
-
     if (is.null(get_root_path())) stop("Root path not set, see ?set_root_path")
+
+    opts <- add_ractive_opts(ractive_name)
     if (file.exists(opts$path$ractive)) stop("The ", opts$name$ractive, " ractive already exists: ", opts$path$ractive)
+
+    opts$name$tests <- "tests"
+
+    opts$name$translator_test_file <- "test-translator.R"
+    opts$name$run_tests_file <- "run-tests.R"
+
+    opts$path$tests <- file.path(opts$path$ractive, opts$name$tests)
+
+    opts$path$translator_test_file <- file.path(opts$path$tests, opts$name$translator_test_file)
+    opts$path$run_tests_file <- file.path(opts$path$tests, opts$name$run_tests_file)
+
 
     message("Adding new ractive: ", opts$name$ractive)
     sapply(c(opts$path$ractive,
@@ -50,5 +61,5 @@ source(file.path(\"..\", \"template\", \"translator.R\"))
 test_file(\"test-translator.R\")
 ", opts$path$run_tests_file)
 
-    invisible()
+    invisible(opts)
 }
