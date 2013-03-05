@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>PCP Heatmap</title>
+    `r append_scripts(opts)`
+    `r append_styles(opts)`
+  </head>
+
+  <body>
+
+    <div id='dashboard'>
+      <div class='clusters'></div>
+      <h1></h1>
+    </div>
+    <main>
+      <svg id='heatmap'></svg>
+      <svg id='pcp'></svg>
+    </main>
+
+    <script type="text/javascript">
+      var urlVars = getUrlVars();
+
+      urlVars["groups"] = 1;
+      urlVars["clusters"] = 1;
+
+      $(document).ready(function() {
+        d3.text({{opts$data}}, function(text) {
+          var parsedGenes = d3.csv.parse(text);
+
+          var userOptions = { urlVars: urlVars, rowNameColumn: "gene_symbol", rowType: "DE genes", specialColumnNames: ["cluster", "p_value_day_3", "p_value_day_6"] };
+          var model = new window.LongitudinalModel(parsedGenes, userOptions);
+
+          var dashboardView = new window.DashboardView({ el: "#dashboard", model: model});
+          var heatmapView = new window.HeatmapView({ el: "#heatmap", model: model});
+          var pcpView = new window.PcpView({ el: "#pcp", model: model});
+
+          d3.select("body").style("padding-top", d3.select("#dashboard").node().offsetHeight);
+
+          resetOnClick(model);
+        });
+      });
+    </script>
+
+  </body>
+</html>

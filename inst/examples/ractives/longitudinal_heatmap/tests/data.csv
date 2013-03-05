@@ -1,0 +1,11 @@
+column_group,column_name,row_name,cell_value
+flu,0,ABC,11
+flu,0,DEF,12
+flu,3,ABC,13
+flu,3,DEF,14
+ebola,0,ABC,15
+ebola,0,DEF,16
+ebola,2,ABC,17
+ebola,2,DEF,18
+ebola,4,ABC,19
+ebola,4,DEF,20

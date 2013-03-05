@@ -1,0 +1,22 @@
+valid_names:
+    - gene_symbol
+    - cluster
+
+scripts:
+    - http://html5shim.googlecode.com/svn/trunk/html5.js
+    - http://code.jquery.com/jquery-1.7.1.min.js
+    - http://documentcloud.github.com/underscore/underscore.js
+    - http://documentcloud.github.com/backbone/backbone.js
+    - http://twitter.github.com/bootstrap/assets/js/bootstrap-tooltip.js
+    - http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js
+    - http://mbostock.github.com/d3/d3.js
+    - aux.js
+    - models/longitudinal_model.js
+    - views/dashboard_view.js
+    - views/heatmap_view.js
+    - views/pcp_view.js
+
+styles:
+    - https://fonts.googleapis.com/css?family=Lobster
+    - leanback_style.css
+    - longitudinal.css
