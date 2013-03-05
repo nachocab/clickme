@@ -30,7 +30,7 @@ test_that("add visualization options", {
     opts <- get_opts("force_directed")
 
     expect_equal(opts$path$data_file, file.path(opts$path$data, opts$name$data_file))
-    expect_equal(opts$name$viz_file, paste0(strsplit(opts$name$data_file, "\\.")[[1]], "-", opts$name$ractive, ".html"))
+    expect_equal(opts$name$viz_file, paste0(strsplit(opts$name$data_file, "\\.")[[1]][1], "-", opts$name$ractive, ".html"))
     expect_equal(opts$path$viz_file, file.path(get_root_path(), opts$name$viz_file))
 })
 

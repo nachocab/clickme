@@ -16,3 +16,7 @@ source_dir <- function(path){
 is.installed <- function(package) {
     is.element(package, installed.packages()[,1])
 }
+
+clickme_quote <- function(data) {
+    paste0("\"", data, "\"")
+}

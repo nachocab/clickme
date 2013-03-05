@@ -3,7 +3,9 @@
 #'
 append_scripts <- function(opts) {
     scripts <- paste(sapply(opts$template_config$scripts, function(script_path){
-        script_path <- file.path(opts$relative_path$external, script_path)
+        if (!grepl("^http", script_path)){
+            script_path <- file.path(opts$relative_path$external, script_path)
+        }
         paste0("<script src=\"", script_path, "\"></script>")
     }), collapse="\n")
 
@@ -15,7 +17,9 @@ append_scripts <- function(opts) {
 #'
 append_styles <- function(opts) {
     styles <- paste(sapply(opts$template_config$styles, function(style_path){
-        style_path <- file.path(opts$relative_path$external, style_path)
+        if (!grepl("^http", style_path)){
+            style_path <- file.path(opts$relative_path$external, style_path)
+        }
         paste0("<link href=\"", style_path, "\" rel=\"stylesheet\">")
     }), collapse="\n")
 
@@ -45,13 +49,15 @@ generate_visualization <- function(data, opts){
 #' head(lawsuits)
 #' set_root_path(system.file("examples", package="clickme"))
 #' clickme(lawsuits, "force_directed")
-clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, browse = interactive()){
+clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, browse = interactive(), validate_names = TRUE){
     if (is.null(get_root_path())) set_root_path()
 
     opts <- get_opts(ractive, data_file_name, viz_file_name)
 
     validate_ractive(opts)
-    data <- validate_data_names(data, opts)
+    if (validate_names){
+        data <- validate_data_names(data, opts)
+    }
     opts$data <- translate_data(data, opts)
 
     generate_visualization(data, opts)
