@@ -6,6 +6,9 @@ get_template_config <- function(template_config_file_path){
     if (file.exists(template_config_file_path)){
         template_config <- yaml.load_file(template_config_file_path)
     }
+
+    template_config$server <- template_config$server %||% FALSE
+
     template_config
 }
 

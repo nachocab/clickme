@@ -46,7 +46,6 @@ generate_visualization <- function(data, opts){
 #' @examples
 #'
 #' data(lawsuits)
-#' head(lawsuits)
 #' set_root_path(system.file("examples", package="clickme"))
 #' clickme(lawsuits, "force_directed")
 clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, browse = interactive(), validate_names = TRUE){
@@ -55,6 +54,7 @@ clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, 
     opts <- get_opts(ractive, data_file_name, viz_file_name)
 
     validate_ractive(opts)
+
     if (validate_names){
         data <- validate_data_names(data, opts)
     }
@@ -62,7 +62,7 @@ clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, 
 
     generate_visualization(data, opts)
 
-    if (!is.null(opts$template_config$require_server) && opts$template_config$require_server){
+    if (opts$template_config$server){
         message("Run a local server in folder: ", get_root_path(),"\nand browse to http://LOCALHOST:PORT/", opts$name$viz_file)
         output <- opts$name$viz_file
     } else {

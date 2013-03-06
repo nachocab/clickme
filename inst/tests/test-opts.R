@@ -45,4 +45,5 @@ test_that("get template configuration", {
         expect_true(is.numeric(opts$template_config$height))
         expect_true(is.character(opts$template_config$scripts))
         expect_true(is.character(opts$template_config$styles))
+        expect_false(opts$template_config$server)
 })
