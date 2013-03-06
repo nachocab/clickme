@@ -48,7 +48,7 @@ test_that("creates longitudinal_heatmap visualization", {
     cleanup_files(path=opts$path$viz_file)
 
     data <- read.csv(file.path(opts$path$data, "original_data.csv"))
-    viz_file_path <- clickme(data, ractive, data_file_name = "data.csv", browse=FALSE, validate_names=FALSE)
+    expect_message(viz_file_path <- clickme(data, ractive, data_file_name = "data.csv", browse=FALSE, validate_names=FALSE), "Run a local server")
 
     expect_equal(viz_file_path, opts$path$viz_file)
     expect_true(file.exists(opts$path$viz_file))

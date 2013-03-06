@@ -20,3 +20,5 @@ styles:
     - https://fonts.googleapis.com/css?family=Lobster
     - leanback_style.css
     - longitudinal.css
+
+require_server: true
