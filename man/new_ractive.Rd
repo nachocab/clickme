@@ -1,10 +1,11 @@
 \name{new_ractive}
 \alias{new_ractive}
-\title{Creates the folder structure for a ractive}
+\title{Creates a new ractive}
 \usage{
-  new_ractive(ractive)
+  new_ractive(ractive_name)
 }
 \description{
-  Creates the folder structure for a ractive
+  This creates the folder structure with the files that a
+  ractive needs.
 }
 

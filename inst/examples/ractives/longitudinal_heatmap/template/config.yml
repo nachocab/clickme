@@ -10,7 +10,7 @@ scripts:
     - http://twitter.github.com/bootstrap/assets/js/bootstrap-tooltip.js
     - http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js
     - http://mbostock.github.com/d3/d3.js
-    - aux.js
+    - helper.js
     - models/longitudinal_model.js
     - views/dashboard_view.js
     - views/heatmap_view.js
@@ -21,4 +21,5 @@ styles:
     - leanback_style.css
     - longitudinal.css
 
-require_server: true
+server: true
+

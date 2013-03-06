@@ -5,7 +5,8 @@
 \title{Generates a JavaScript visualization}
 \usage{
   clickme(data, ractive, data_file_name = NULL,
-    viz_file_name = NULL, browse = interactive())
+    viz_file_name = NULL, browse = interactive(),
+    validate_names = TRUE)
 }
 \arguments{
   \item{data}{input data}
@@ -33,7 +34,6 @@
 }
 \examples{
 data(lawsuits)
-head(lawsuits)
 set_root_path(system.file("examples", package="clickme"))
 clickme(lawsuits, "force_directed")
 }
