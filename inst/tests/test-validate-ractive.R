@@ -1,8 +1,9 @@
 context("validate_ractive")
 
 test_that("ractive is valid", {
-    set_root_path(system.file("examples", package="clickme"))
     ractive <- "force_directed"
+
+    set_root_path(system.file("examples", package="clickme"))
     opts <- get_opts(ractive, data_file_name = "data")
 
     opts$path$template <- "fake_template_path"

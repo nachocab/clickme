@@ -1,7 +1,12 @@
 context("root_path")
 
-test_that("root path can be set", {
-    path <- system.file("examples", package="clickme")
+test_that("examples is the default root path", {
+    expect_message(set_root_path(), "Root path set to: ")
+    expect_equal(system.file("examples", package="clickme"), get_root_path())
+})
+
+test_that("root path can be changed", {
+    path <- system.file("", package="clickme")
     set_root_path(path)
     expect_equal(path, get_root_path())
 })
