@@ -49,7 +49,7 @@ generate_visualization <- function(data, opts){
 #' set_root_path(system.file("examples", package="clickme"))
 #' clickme(lawsuits, "force_directed")
 clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, browse = interactive(), validate_names = TRUE){
-    if (is.null(get_root_path())) set_root_path()
+    if (is.null(get_root_path())) set_root_path(system.file("examples", package="clickme"))
 
     opts <- get_opts(ractive, data_file_name, viz_file_name)
 
