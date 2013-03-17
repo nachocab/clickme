@@ -1,4 +1,4 @@
-context("root_path")
+context("set_root_path")
 
 test_that("root path can be changed", {
     path <- system.file("", package="clickme")

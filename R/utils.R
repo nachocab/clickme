@@ -23,9 +23,14 @@ clickme_quote <- function(data) {
 
 #' Run a local server
 #'
-#' This will not work on Windows
-#'
 #' @export
-server <- function(path=.clickme_env$root_path, port=8888){
+server <- function(path=get_root_path(), port=8888){
     system(paste0("pushd ", path, "; python -m SimpleHTTPServer", port, "; popd"))
+}
+
+#' @export
+test_translator <- function(ractive){
+    library("testthat")
+    source(file.path("..", "template", "translator.R"))
+    test_file(opts$path$test_translator)
 }

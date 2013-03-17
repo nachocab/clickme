@@ -41,7 +41,10 @@ generate_visualization <- function(data, opts){
 #'
 #' @param data input data
 #' @param ractive template id, it must match a folder within \code{set_root_path}
-#' @param opts optional, list of options
+#' @param data_file_name
+#' @param viz_file_name name of HTML file
+#' @param browse open browser, default TRUE
+#' @param validate_names, default TRUE
 #' @export
 #' @examples
 #'

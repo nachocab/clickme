@@ -10,7 +10,7 @@ test_that("doesn't overwrite an existing ractive", {
     expect_error(new_ractive("force_directed"), "The force_directed ractive already exists")
 })
 
-test_that("test names and paths are set", {
+test_that("test names and paths are set when creating a new ractive", {
     set_root_path(system.file("examples", package="clickme"))
     ractive <- "tmp_ractive"
     cleanup_files(file.path(system.file("examples", package="clickme"), .clickme_env$ractives_dir_name, ractive)) # to be sure it doesn't exist
