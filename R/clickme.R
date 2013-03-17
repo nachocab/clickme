@@ -34,7 +34,7 @@ append_styles <- function(opts) {
 generate_visualization <- function(data, opts){
     visualization <- knit_expand(opts$path$template_file)
 
-    capture.output(knit(text = visualization, output = opts$path$viz_file))
+    capture.output(knit(text = visualization, output = opts$path$html_file))
 }
 
 #' Generates a JavaScript visualization
@@ -42,7 +42,7 @@ generate_visualization <- function(data, opts){
 #' @param data input data
 #' @param ractive template id, it must match a folder within \code{set_root_path}
 #' @param data_file_name
-#' @param viz_file_name name of HTML file
+#' @param html_file_name name of HTML file
 #' @param browse open browser, default TRUE
 #' @param validate_names, default TRUE
 #' @export
@@ -51,10 +51,10 @@ generate_visualization <- function(data, opts){
 #' data(lawsuits)
 #' set_root_path(system.file("examples", package="clickme"))
 #' clickme(lawsuits, "force_directed")
-clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, browse = interactive(), validate_names = TRUE){
+clickme <- function(data, ractive, data_file_name = NULL, html_file_name = NULL, browse = interactive(), validate_names = TRUE){
     if (is.null(get_root_path())) set_root_path(system.file("examples", package="clickme"))
 
-    opts <- get_opts(ractive, data_file_name, viz_file_name)
+    opts <- get_opts(ractive, data_file_name, html_file_name)
 
     validate_ractive(opts)
 
@@ -66,11 +66,11 @@ clickme <- function(data, ractive, data_file_name = NULL, viz_file_name = NULL, 
     generate_visualization(data, opts)
 
     if (opts$template_config$server){
-        message("Run a local server in folder: ", get_root_path(),"\nand browse to http://LOCALHOST:PORT/", opts$name$viz_file)
-        output <- opts$name$viz_file
+        message("Run a local server in folder: ", get_root_path(),"\nand browse to http://LOCALHOST:PORT/", opts$name$html_file)
+        output <- opts$name$html_file
     } else {
-        if (browse) browseURL(opts$path$viz_file)
-        output <- opts$path$viz_file
+        if (browse) browseURL(opts$path$html_file)
+        output <- opts$path$html_file
     }
     output
 }

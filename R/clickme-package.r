@@ -14,7 +14,7 @@
 #'   |  +- data                                             <= opts$name$data
 #'   |  +- tests                                            <= opts$name$tests
 #'   |      +- test-translator.R                            <= opts$name$tests
-#'   +- <visualization_generated_using_my_ractive.html>     <= opts$name$viz_file
+#'   +- <visualization_generated_using_my_ractive.html>     <= opts$name$html_file
 #'
 #' @name clickme
 #' @docType package
