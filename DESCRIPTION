@@ -14,7 +14,7 @@ Suggests:
     roxygen2
 Collate:
     'utils.R'
-    'utils-test.R'
+    'utils-for-testing.R'
     'opts.R'
     'set-root-path.R'
     'new-ractive.R'

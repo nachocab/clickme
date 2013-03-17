@@ -20,3 +20,12 @@ is.installed <- function(package) {
 clickme_quote <- function(data) {
     paste0("\"", data, "\"")
 }
+
+#' Run a local server
+#'
+#' This will not work on Windows
+#'
+#' @export
+server <- function(path=.clickme_env$root_path, port=8888){
+    system(paste0("pushd ", path, "; python -m SimpleHTTPServer", port, "; popd"))
+}
