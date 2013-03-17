@@ -25,7 +25,7 @@ test_that("test names and paths are set when creating a new ractive", {
 
     opts <- new_ractive(ractive)
 
-    # expect_equal(opts$path$tests, file.path(opts$path$ractive, opts$name$tests))
+    expect_equal(opts$path$tests, file.path(opts$path$ractive, opts$name$tests))
     expect_equal(opts$path$translator_test_file, file.path(opts$path$tests, opts$name$translator_test_file))
     expect_equal(opts$path$run_tests_file, file.path(opts$path$tests, opts$name$run_tests_file))
 
