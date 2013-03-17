@@ -1,12 +1,19 @@
 #' Creates a new ractive
 #'
 #' This creates the folder structure with the files that a ractive needs.
+#' @param ractive_name
+#' @param overwrite
 #' @export
-new_ractive <- function(ractive_name) {
+new_ractive <- function(ractive_name, overwrite = FALSE) {
     if (is.null(get_root_path())) stop("Root path not set, see ?set_root_path")
 
     opts <- add_ractive_opts(ractive_name)
-    if (file.exists(opts$path$ractive)) stop("The ", opts$name$ractive, " ractive already exists: ", opts$path$ractive)
+
+    if (overwrite){
+        cleanup_files(file.path(get_root_path(), ractive_name))
+    } else {
+        if (file.exists(opts$path$ractive)) stop("The ", opts$name$ractive, " ractive already exists: ", opts$path$ractive)
+    }
 
     opts$name$tests <- "tests"
 
