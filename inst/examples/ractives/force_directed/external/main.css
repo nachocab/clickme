@@ -1,19 +1,6 @@
 path.link {
   fill: none;
-  stroke: #666;
   stroke-width: 1.5px;
-}
-
-marker#licensing {
-  fill: green;
-}
-
-path.link.licensing {
-  stroke: green;
-}
-
-path.link.resolved {
-  stroke-dasharray: 0,2 1;
 }
 
 circle {

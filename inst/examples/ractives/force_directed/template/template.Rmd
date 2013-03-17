@@ -9,8 +9,17 @@
 
   <body>
     <script type="text/javascript">
+
+      Array.prototype.unique = function() {
+          var o = {}, i, l = this.length, r = [];
+          for(i=0; i<l;i+=1) o[this[i]] = this[i];
+          for(i in o) r.push(o[i]);
+          return r;
+      };
+
       var links = {{opts$data}};
       var nodes = {};
+      var connection_types = links.map(function(x){return x.type}).unique()
 
       // Compute the distinct nodes from the links.
       links.forEach(function(link) {
@@ -20,6 +29,8 @@
 
       var w = {{opts$template_config$width}},
           h = {{opts$template_config$height}};
+
+      var colors = d3.scale.category10();
 
       var force = d3.layout.force()
           .nodes(d3.values(nodes))
@@ -36,7 +47,7 @@
 
       // Per-type markers, as they don’t inherit external.
       svg.append("svg:defs").selectAll("marker")
-          .data(["suit", "licensing", "resolved"])
+          .data(connection_types)
         .enter().append("svg:marker")
           .attr("id", String)
           .attr("viewBox", "0 -5 10 10")
@@ -45,6 +56,7 @@
           .attr("markerWidth", 6)
           .attr("markerHeight", 6)
           .attr("orient", "auto")
+          .attr("fill", function(d) { return colors(d) })
         .append("svg:path")
           .attr("d", "M0,-5L10,0L0,5");
 
@@ -52,7 +64,9 @@
           .data(force.links())
         .enter().append("svg:path")
           .attr("class", function(d) { return "link " + d.type; })
-          .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+          .attr("marker-end", function(d) { return "url(#" + d.type + ")"; })
+          .attr("stroke", function(d) { return colors(d.type) })
+
 
       var circle = svg.append("svg:g").selectAll("circle")
           .data(force.nodes())
