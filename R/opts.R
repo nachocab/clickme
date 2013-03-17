@@ -12,17 +12,8 @@ get_template_config <- function(template_config_file_path){
     template_config
 }
 
-
-initialize_opts <- function() {
-    opts <- list()
-    opts$name$ractives <- .clickme_env$ractives_dir_name
-    opts$path$ractives <- file.path(get_root_path(), opts$name$ractives)
-
-    opts
-}
-
 add_ractive_opts <- function(ractive_name) {
-    opts <- initialize_opts()
+    opts <- list()
 
     # folder names
     opts$name$ractive <- ractive_name
@@ -35,8 +26,9 @@ add_ractive_opts <- function(ractive_name) {
     opts$name$template_config_file <- "config.yml"
     opts$name$template_file <- "template.Rmd"
 
-    # folder absolute paths - for now, ractive is directly below opts$path$ractives, maybe in the future we can allow nested paths (simple is better)
-    opts$path$ractive <- file.path(opts$path$ractives, opts$name$ractive)
+    # folder absolute paths
+    # PONDER: ractive is directly below the root path, maybe in the future we can allow nested paths for ractives (although, simple is better)
+    opts$path$ractive <- file.path(get_root_path(), opts$name$ractive)
     opts$path$data <- file.path(opts$path$ractive, opts$name$data)
     opts$path$template <- file.path(opts$path$ractive, opts$name$template)
     opts$path$external <- file.path(opts$path$ractive, opts$name$external)
@@ -46,10 +38,9 @@ add_ractive_opts <- function(ractive_name) {
     opts$path$template_config_file <- file.path(opts$path$template, opts$name$template_config_file)
     opts$path$template_file <- file.path(opts$path$template, opts$name$template_file)
 
-    # paths relative to opts$path$ractives
-    opts$relative_path$ractive <- file.path(opts$name$ractives, opts$name$ractive)
-    opts$relative_path$data <- file.path(opts$relative_path$ractive, opts$name$data)
-    opts$relative_path$external <- file.path(opts$relative_path$ractive, opts$name$external)
+    # paths relative to opts$path$ractive
+    opts$relative_path$data <- file.path(opts$name$ractive, opts$name$data)
+    opts$relative_path$external <- file.path(opts$name$ractive, opts$name$external)
 
     opts
 }

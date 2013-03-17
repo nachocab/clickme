@@ -6,8 +6,6 @@
 set_root_path <- function(root_path) {
     if (!file.exists(root_path)) stop("Path doesn't exist: ", root_path)
 
-    if (!file.exists(file.path(root_path, .clickme_env$ractives_dir_name))) dir.create(file.path(root_path, .clickme_env$ractives_dir_name))
-
     .clickme_env$root_path <- root_path
 
     message("Root path set to: ", .clickme_env$root_path)

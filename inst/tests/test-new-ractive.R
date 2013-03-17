@@ -13,7 +13,7 @@ test_that("doesn't overwrite an existing ractive", {
 test_that("test names and paths are set when creating a new ractive", {
     set_root_path(system.file("examples", package="clickme"))
     ractive <- "tmp_ractive"
-    cleanup_files(file.path(system.file("examples", package="clickme"), .clickme_env$ractives_dir_name, ractive)) # to be sure it doesn't exist
+    cleanup_files(file.path(system.file("examples", package="clickme"), ractive)) # to be sure it doesn't exist
 
     opts <- new_ractive(ractive)
 
@@ -21,13 +21,13 @@ test_that("test names and paths are set when creating a new ractive", {
     expect_equal(opts$path$translator_test_file, file.path(opts$path$tests, opts$name$translator_test_file))
     expect_equal(opts$path$run_tests_file, file.path(opts$path$tests, opts$name$run_tests_file))
 
-    cleanup_files(file.path(system.file("examples", package="clickme"), .clickme_env$ractives_dir_name, ractive))
+    cleanup_files(file.path(system.file("examples", package="clickme"), ractive))
 })
 
 test_that("creates a new blank ractive", {
     set_root_path(system.file("examples", package="clickme"))
     ractive <- "tmp_ractive"
-    cleanup_files(file.path(system.file("examples", package="clickme"), .clickme_env$ractives_dir_name, ractive)) # to be sure it doesn't exist
+    cleanup_files(file.path(system.file("examples", package="clickme"), ractive)) # to be sure it doesn't exist
 
     opts <- new_ractive(ractive)
 
@@ -42,6 +42,6 @@ test_that("creates a new blank ractive", {
     expect_true(file.exists(file.path(opts$path$template_config_file)))
     expect_true(file.exists(file.path(opts$path$template_file)))
 
-    cleanup_files(file.path(system.file("examples", package="clickme"), .clickme_env$ractives_dir_name, ractive))
+    cleanup_files(file.path(system.file("examples", package="clickme"), ractive))
 
 })

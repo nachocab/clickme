@@ -11,14 +11,14 @@
 <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tooltip.js"></script>
 <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js"></script>
 <script src="http://mbostock.github.com/d3/d3.js"></script>
-<script src="ractives/longitudinal_heatmap/external/helper.js"></script>
-<script src="ractives/longitudinal_heatmap/external/models/longitudinal_model.js"></script>
-<script src="ractives/longitudinal_heatmap/external/views/dashboard_view.js"></script>
-<script src="ractives/longitudinal_heatmap/external/views/heatmap_view.js"></script>
-<script src="ractives/longitudinal_heatmap/external/views/pcp_view.js"></script>
+<script src="longitudinal_heatmap/external/helper.js"></script>
+<script src="longitudinal_heatmap/external/models/longitudinal_model.js"></script>
+<script src="longitudinal_heatmap/external/views/dashboard_view.js"></script>
+<script src="longitudinal_heatmap/external/views/heatmap_view.js"></script>
+<script src="longitudinal_heatmap/external/views/pcp_view.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-<link href="ractives/longitudinal_heatmap/external/leanback_style.css" rel="stylesheet">
-<link href="ractives/longitudinal_heatmap/external/longitudinal.css" rel="stylesheet">
+<link href="longitudinal_heatmap/external/leanback_style.css" rel="stylesheet">
+<link href="longitudinal_heatmap/external/longitudinal.css" rel="stylesheet">
   </head>
 
   <body>
@@ -39,7 +39,7 @@
       urlVars["clusters"] = 1;
 
       $(document).ready(function() {
-        d3.text("ractives/longitudinal_heatmap/data/data.csv", function(text) {
+        d3.text("longitudinal_heatmap/data/data.csv", function(text) {
           var parsedGenes = d3.csv.parse(text);
 
           var userOptions = { urlVars: urlVars, rowNameColumn: "gene_symbol", rowType: "DE genes", specialColumnNames: ["cluster", "p_value_day_3", "p_value_day_6"] };

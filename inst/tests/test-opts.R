@@ -2,16 +2,10 @@ library(yaml)
 
 context("opts")
 
-test_that("initialize options", {
-    set_root_path(system.file("examples", package="clickme"))
-    opts <- initialize_opts()
-    expect_equal(opts$path$ractives, file.path(get_root_path(), opts$name$ractives))
-})
-
 test_that("add ractive options", {
     set_root_path(system.file("examples", package="clickme"))
     opts <- add_ractive_opts("force_directed")
-    expect_equal(opts$path$ractive, file.path(opts$path$ractives, opts$name$ractive))
+    expect_equal(opts$path$ractive, file.path(get_root_path(), opts$name$ractive))
     expect_equal(opts$path$data, file.path(opts$path$ractive, opts$name$data))
     expect_equal(opts$path$external, file.path(opts$path$ractive, opts$name$external))
     expect_equal(opts$path$template, file.path(opts$path$ractive, opts$name$template))
@@ -20,9 +14,8 @@ test_that("add ractive options", {
     expect_equal(opts$path$template_file, file.path(opts$path$template, opts$name$template_file))
     expect_equal(opts$path$translator_file, file.path(opts$path$template, opts$name$translator_file))
 
-    expect_equal(opts$relative_path$ractive, file.path(opts$name$ractives, opts$name$ractive))
-    expect_equal(opts$relative_path$data, file.path(opts$relative_path$ractive, opts$name$data))
-    expect_equal(opts$relative_path$external, file.path(opts$relative_path$ractive, opts$name$external))
+    expect_equal(opts$relative_path$data, file.path(opts$name$ractive, opts$name$data))
+    expect_equal(opts$relative_path$external, file.path(opts$name$ractive, opts$name$external))
 })
 
 test_that("add visualization options", {
