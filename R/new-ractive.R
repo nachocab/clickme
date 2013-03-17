@@ -45,6 +45,14 @@ new_ractive <- function(ractive_name, overwrite = FALSE) {
                 message("Created file: ", path)
              })
 
+    writeLines("valid_names:
+
+scripts:
+
+styles:
+
+", opts$path$template_config_file)
+
     writeLines("#' Translate the data object to the format expected by template.Rmd
 #'
 #' It returns the translated data object.
