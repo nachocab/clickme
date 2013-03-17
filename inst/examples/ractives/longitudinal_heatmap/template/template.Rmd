@@ -26,7 +26,7 @@
       urlVars["clusters"] = 1;
 
       $(document).ready(function() {
-        d3.text({{opts$data}}, function(text) {
+        d3.text({{ opts$data }}, function(text) {
           var parsedGenes = d3.csv.parse(text);
 
           var userOptions = { urlVars: urlVars, rowNameColumn: "gene_symbol", rowType: "DE genes", specialColumnNames: ["cluster", "p_value_day_3", "p_value_day_6"] };

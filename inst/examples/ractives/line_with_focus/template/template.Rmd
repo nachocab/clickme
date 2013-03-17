@@ -9,12 +9,12 @@
 
   <body>
     <script type="text/javascript">
-      var data = {{opts$data}};
+      var data = {{ opts$data }};
 
       nv.addGraph(function() {
 
-          var w = {{opts$template_config$width}},
-              h = {{opts$template_config$height}};
+          var w = {{ opts$template_config$width }},
+              h = {{ opts$template_config$height }};
 
           var chart = nv.models.lineWithFocusChart();
 

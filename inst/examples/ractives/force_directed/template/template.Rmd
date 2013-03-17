@@ -17,7 +17,7 @@
           return r;
       };
 
-      var links = {{opts$data}};
+      var links = {{ opts$data }};
       var nodes = {};
       var connection_types = links.map(function(x){return x.type}).unique()
 
@@ -27,8 +27,8 @@
         link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
       });
 
-      var w = {{opts$template_config$width}},
-          h = {{opts$template_config$height}};
+      var w = {{ opts$template_config$width }},
+          h = {{ opts$template_config$height }};
 
       var colors = d3.scale.category10();
 
