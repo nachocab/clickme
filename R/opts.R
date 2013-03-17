@@ -23,7 +23,7 @@ add_ractive_opts <- function(ractive_name) {
 
     # file names
     opts$name$translator_file <- "translator.R"
-    opts$name$template_config_file <- "config.yml"
+    opts$name$template_config_file <- "template_config.yml"
     opts$name$template_file <- "template.Rmd"
 
     # folder absolute paths

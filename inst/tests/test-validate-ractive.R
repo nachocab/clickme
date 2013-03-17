@@ -15,7 +15,7 @@ test_that("ractive is valid", {
     opts <- get_opts(ractive, data_file_name = "data")
 
     opts$path$template_config_file <- "fake_template_config_file"
-    expect_error(validate_ractive(opts), "config.yml not found in:")
+    expect_error(validate_ractive(opts), "template_config.yml not found in:")
     opts <- get_opts(ractive, data_file_name = "data")
 
     opts$path$translator_file <- "fake_translator_file"
