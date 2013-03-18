@@ -5,8 +5,7 @@
 \title{Generates a JavaScript visualization}
 \usage{
   clickme(data, ractive, data_file_name = NULL,
-    html_file_name = NULL, browse = interactive(),
-    validate_names = TRUE)
+    html_file_name = NULL, browse = interactive())
 }
 \arguments{
   \item{data}{input data}
@@ -19,8 +18,6 @@
   \item{html_file_name}{name of HTML file}
 
   \item{browse}{open browser, default TRUE}
-
-  \item{validate_names,}{default TRUE}
 }
 \description{
   Generates a JavaScript visualization
