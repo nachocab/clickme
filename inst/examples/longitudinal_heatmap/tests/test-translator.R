@@ -1,6 +1,15 @@
 context("translate longitudinal_heatmap")
 
-test_that("dataframes are translated to the format expected by the template", {
+test_that("gene_symbol and cluster names are coerced if not present in the input data object", {
+    data <- mat(ncol=5, nrow=10)
+    colnames(data) <- c(paste("hiv", "day", c(0,4), sep="_"), paste("flu", "day", c(0,2,3), sep="_"))
+    rownames(data) <- LETTERS[1:10]
+
+    prepared_data <- prepare_data(data)
+    expect_true(all(c("gene_symbol", "cluster") %in% colnames(prepared_data)))
+})
+
+test_that("the input data object is stored as a file", {
     data <- mat(ncol=5, nrow=10)
     colnames(data) <- c(paste("hiv", "day", c(0,4), sep="_"), paste("flu", "day", c(0,2,3), sep="_"))
     rownames(data) <- LETTERS[1:10]
