@@ -15,17 +15,6 @@ new_ractive <- function(ractive_name, overwrite = FALSE) {
         if (file.exists(opts$path$ractive)) stop("The ", opts$name$ractive, " ractive already exists: ", opts$path$ractive)
     }
 
-    opts$name$tests <- "tests"
-
-    opts$name$translator_test_file <- "test-translator.R"
-    opts$name$run_tests_file <- "run-tests.R"
-
-    opts$path$tests <- file.path(opts$path$ractive, opts$name$tests)
-
-    opts$path$translator_test_file <- file.path(opts$path$tests, opts$name$translator_test_file)
-    opts$path$run_tests_file <- file.path(opts$path$tests, opts$name$run_tests_file)
-
-
     message("Adding new ractive: ", opts$name$ractive)
     sapply(c(opts$path$ractive,
              opts$path$external,
@@ -38,7 +27,6 @@ new_ractive <- function(ractive_name, overwrite = FALSE) {
 
     sapply(c(opts$path$template_file,
              opts$path$template_config_file,
-             opts$path$run_tests_file,
              opts$path$translator_test_file,
              opts$path$translator_file), function(path){
                 file.create(path)
@@ -69,12 +57,4 @@ test_that(\"dataframes are translated to the format expected by the ractive\", {
 
 })", opts$path$translator_test_file)
 
-    writeLines("library(\"testthat\")
-
-# setwd(\"path/to/tests\")
-source(file.path(\"..\", \"template\", \"translator.R\"))
-test_file(\"test-translator.R\")
-", opts$path$run_tests_file)
-
-    invisible(opts)
 }
