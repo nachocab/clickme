@@ -19,6 +19,7 @@ prepare_data <- function(data){
 #' @param data input data object
 #' @param opts options returned by get_opts
 clickme_translate <- function(data, opts) {
+    library(rjson)
     data <- as.data.frame(data, stringsAsFactors=FALSE)
     data <- prepare_data(data)
     data <- toJSON(data)
