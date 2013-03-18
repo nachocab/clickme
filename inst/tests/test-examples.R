@@ -41,3 +41,13 @@ test_that("the HTML example file for the longitudinal_heatmap ractive is generat
 
     expect_true(file.exists(opts$path$html_file))
 })
+
+context("example translators")
+test_that("example translators work", {
+    set_root_path(system.file("examples", package="clickme"))
+
+    ractives <- basename(list.dirs(get_root_path(), recursive=F))
+    for(ractive in ractives){
+        test_translator(ractive)
+    }
+})
