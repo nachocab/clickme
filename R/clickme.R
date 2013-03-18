@@ -44,23 +44,18 @@ generate_visualization <- function(data, opts){
 #' @param data_file_name
 #' @param html_file_name name of HTML file
 #' @param browse open browser, default TRUE
-#' @param validate_names, default TRUE
 #' @export
 #' @examples
 #'
 #' data(lawsuits)
 #' set_root_path(system.file("examples", package="clickme"))
 #' clickme(lawsuits, "force_directed")
-clickme <- function(data, ractive, data_file_name = NULL, html_file_name = NULL, browse = interactive(), validate_names = TRUE){
+clickme <- function(data, ractive, data_file_name = NULL, html_file_name = NULL, browse = interactive()){
     if (is.null(get_root_path())) set_root_path(system.file("examples", package="clickme"))
 
     opts <- get_opts(ractive, data_file_name, html_file_name)
-
     validate_ractive(opts)
-
-    if (validate_names){
-        data <- validate_data_names(data, opts)
-    }
+    data <- validate_data_names(data, opts)
     opts$data <- translate_data(data, opts)
 
     generate_visualization(data, opts)
