@@ -63,13 +63,4 @@ mat <- function(elements=NULL, num_elements=nrow*ncol, nrow=5, ncol=2, scale_by=
     mat
 }
 
-#' Remove files in path
-cleanup_files <- function(path, files=NULL) {
-    if (is.null(files)){
-        unlink(path, recursive=TRUE)
-    } else {
-        sapply(files, function(file){
-            unlink(file.path(path, file), recursive=TRUE)
-        })
-    }
 }

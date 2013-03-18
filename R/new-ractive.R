@@ -8,7 +8,7 @@ new_ractive <- function(ractive_name, overwrite = FALSE) {
     opts <- add_ractive_opts(ractive_name)
 
     if (overwrite){
-        cleanup_files(file.path(get_root_path(), ractive_name))
+        unlink(file.path(get_root_path(), ractive_name), recursive=TRUE)
     } else {
         if (file.exists(opts$path$ractive)) stop("The ", opts$name$ractive, " ractive already exists: ", opts$path$ractive)
     }
