@@ -52,20 +52,26 @@ generate_visualization <- function(data, opts){
 #' clickme(lawsuits, "force_directed")
 clickme <- function(data, ractive, data_file_name = NULL, html_file_name = NULL, browse = interactive()){
     opts <- get_opts(ractive, data_file_name, html_file_name)
+
     validate_ractive(opts)
     data <- validate_data_names(data, opts)
     opts$data <- translate_data(data, opts)
 
     generate_visualization(data, opts)
 
+
     if (opts$template_config$require_server){
-        message("Run a local server in folder: ", get_root_path(),"\nand browse to http://LOCALHOST:PORT/", opts$name$html_file)
-        output <- opts$name$html_file
+        url <- paste0("http://localhost:8888/", opts$name$html_file) # TODO: make this into a parameter
+        message("Make sure you have a server running at: ", get_root_path(), "\n",
+                "and open:\n",
+                url)
     } else {
-        if (browse) browseURL(opts$path$html_file)
-        output <- opts$path$html_file
+        url <- opts$path$html_file
     }
-    output
+
+    if (browse) browseURL(url)
+
+    invisible(url)
 }
 
 #' Translate data object to be used in the ractive (usually into JSON or a file path)

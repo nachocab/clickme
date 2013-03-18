@@ -37,7 +37,7 @@ test_that("the HTML example file for the longitudinal_heatmap ractive is generat
     unlink(opts$path$html_file)
     data <- read.csv(file.path(opts$path$data, "original_data.csv"))
 
-    html_file_path <- expect_message(clickme(data, ractive, data_file_name = "data.csv", browse=FALSE), "Run a local server")
+    html_file_path <- expect_message(clickme(data, ractive, data_file_name = "data.csv", browse=FALSE), "Make sure you have a server running at")
 
     expect_true(file.exists(opts$path$html_file))
 })
