@@ -53,7 +53,7 @@ clickme_translate <- function(data, opts) {
 
     writeLines("context(\"clickme_translate\")
 
-test_that(\"dataframes are translated to the format expected by the ractive\", {
+test_that(\"dataframes are translated to the format expected by the template\", {
 
 })", opts$path$translator_test_file)
 

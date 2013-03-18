@@ -28,6 +28,9 @@ server <- function(path=get_root_path(), port=8888){
     system(paste0("pushd ", path, "; python -m SimpleHTTPServer", port, "; popd"))
 }
 
+#' Test the translator of a given ractive
+#'
+#' @param ractive name of ractive
 #' @export
 test_translator <- function(ractive){
     opts <- get_opts(ractive)
@@ -41,7 +44,9 @@ test_translator <- function(ractive){
     }
 }
 
-#' return a filled matrix
+#' return a matrix with random values
+#'
+#' @export
 mat <- function(elements=NULL, num_elements=nrow*ncol, nrow=5, ncol=2, scale_by=100, rownames=NULL, colnames=NULL){
     if (is.null(elements)){
         elements <- runif(num_elements) * scale_by
