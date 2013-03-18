@@ -57,8 +57,6 @@ add_ractive_opts <- function(ractive_name) {
 #' @param html_file_name name of output visualization file
 #' @export
 get_opts <- function(ractive, data_file_name = NULL, html_file_name = NULL){
-    if (is.null(get_root_path())) stop("Root path is not set. Use set_root_path()")
-
     opts <- add_ractive_opts(ractive)
     opts$template_config <- get_template_config(opts$path$template_config_file)
 

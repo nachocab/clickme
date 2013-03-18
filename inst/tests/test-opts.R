@@ -2,11 +2,6 @@ library(yaml)
 
 context("opts")
 
-test_that("get_opts only runs with a valid root path", {
-    .clickme_env$root_path <- NULL
-    expect_error(get_opts("longitudinal_heatmap"), "Root path is not set")
-})
-
 test_that("add ractive options", {
     set_root_path(system.file("examples", package="clickme"))
     opts <- add_ractive_opts("force_directed")

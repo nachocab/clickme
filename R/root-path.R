@@ -13,5 +13,8 @@ set_root_path <- function(root_path) {
 
 #' @export
 get_root_path <- function() {
+    if (is.null(.clickme_env$root_path)){
+        set_root_path(system.file("examples", package="clickme"))
+    }
     .clickme_env$root_path
 }

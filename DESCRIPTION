@@ -15,7 +15,7 @@ Suggests:
 Collate:
     'utils.R'
     'opts.R'
-    'set-root-path.R'
+    'root-path.R'
     'new-ractive.R'
     'validate-ractive.R'
     'validate-data-names.R'

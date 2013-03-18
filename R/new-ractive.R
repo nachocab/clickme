@@ -5,8 +5,6 @@
 #' @param overwrite
 #' @export
 new_ractive <- function(ractive_name, overwrite = FALSE) {
-    if (is.null(get_root_path())) stop("Root path not set, see ?set_root_path")
-
     opts <- add_ractive_opts(ractive_name)
 
     if (overwrite){

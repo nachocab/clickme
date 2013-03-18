@@ -1,10 +1,5 @@
 context("new_ractive")
 
-test_that("root path is set before creating a new ractive", {
-    .clickme_env$root_path <- NULL
-    expect_error(new_ractive("tmp_ractive"), "Root path not set")
-})
-
 test_that("doesn't overwrite an existing ractive, unless specified", {
     set_root_path(system.file("examples", package="clickme"))
     ractive <- "tmp_ractive"
