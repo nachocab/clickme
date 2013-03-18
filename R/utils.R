@@ -30,7 +30,41 @@ server <- function(path=get_root_path(), port=8888){
 
 #' @export
 test_translator <- function(ractive){
-    library("testthat")
-    source(file.path("..", "template", "translator.R"))
-    test_file(opts$path$test_translator)
+    opts <- get_opts(ractive)
+
+    if (file.exists(opts$path$translator_test_file)){
+        library("testthat")
+        source(opts$path$translator_file)
+        test_file(opts$path$translator_test_file)
+    } else {
+        stop(paste0("There is no test translator file at this location: ", opts$path$translator_test_file, "\nYou might have to create it or call set_root_path()"))
+    }
+}
+
+#' return a filled matrix
+mat <- function(elements=NULL, num_elements=nrow*ncol, nrow=5, ncol=2, scale_by=100, rownames=NULL, colnames=NULL){
+    if (is.null(elements)){
+        elements <- runif(num_elements) * scale_by
+    }
+    if (!is.null(ncol)){
+        mat <- matrix(elements, ncol=ncol, byrow=T)
+    } else {
+        mat <- matrix(elements, nrow=nrow, byrow=T)
+    }
+
+    if (!is.null(rownames)) rownames(mat) <- rownames
+    if (!is.null(colnames)) colnames(mat) <- colnames
+
+    mat
+}
+
+#' Remove files in path
+cleanup_files <- function(path, files=NULL) {
+    if (is.null(files)){
+        unlink(path, recursive=TRUE)
+    } else {
+        sapply(files, function(file){
+            unlink(file.path(path, file), recursive=TRUE)
+        })
+    }
 }
