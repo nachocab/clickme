@@ -35,10 +35,10 @@ test_that("get template configuration", {
         opts <- get_opts("force_directed")
 
         expect_true(is.character(opts$template_config$valid_names))
-        expect_true(is.character(opts$template_config$require))
+        expect_true(is.character(opts$template_config$require_packages))
         expect_true(is.numeric(opts$template_config$width))
         expect_true(is.numeric(opts$template_config$height))
         expect_true(is.character(opts$template_config$scripts))
         expect_true(is.character(opts$template_config$styles))
-        expect_false(opts$template_config$server)
+        expect_false(opts$template_config$require_server)
 })

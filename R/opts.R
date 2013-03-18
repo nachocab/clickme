@@ -7,7 +7,7 @@ get_template_config <- function(template_config_file_path){
         template_config <- yaml.load_file(template_config_file_path)
     }
 
-    template_config$server <- template_config$server %||% FALSE
+    template_config$require_server <- template_config$require_server %||% FALSE
 
     template_config
 }
@@ -35,7 +35,6 @@ add_ractive_opts <- function(ractive_name) {
     opts$path$template <- file.path(opts$path$ractive, opts$name$template)
     opts$path$external <- file.path(opts$path$ractive, opts$name$external)
     opts$path$tests <- file.path(opts$path$ractive, opts$name$tests)
-
 
     # file absolute paths
     opts$path$template_file <- file.path(opts$path$template, opts$name$template_file)

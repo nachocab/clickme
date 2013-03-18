@@ -58,7 +58,7 @@ clickme <- function(data, ractive, data_file_name = NULL, html_file_name = NULL,
 
     generate_visualization(data, opts)
 
-    if (opts$template_config$server){
+    if (opts$template_config$require_server){
         message("Run a local server in folder: ", get_root_path(),"\nand browse to http://LOCALHOST:PORT/", opts$name$html_file)
         output <- opts$name$html_file
     } else {

@@ -1,6 +1,12 @@
-valid_names:
-    - gene_symbol
-    - cluster
+purpose: |
+    Show a heatmap alongside a parallel coordinates plot.
+    Each row in the heatmap is linked with a line in the line plot.
+    Gene symbols appear on hover.
+    The values can be separated into groups according to "cluster".
+
+name_comments: |
+    (optional) "gene_symbol" is extracted from row names of the input data if a gene_symbol column is not present.
+    (optional) "cluster" is a factor used to break the rows of the input data into groups.
 
 scripts:
     - http://html5shim.googlecode.com/svn/trunk/html5.js
@@ -21,5 +27,5 @@ styles:
     - leanback_style.css
     - longitudinal.css
 
-server: true
+require_server: true
 

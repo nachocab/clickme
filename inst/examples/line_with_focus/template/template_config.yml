@@ -1,13 +1,13 @@
+purpose: |
+    Show multiple lines, each with a different color. Allow zooming across the x-axis.
+
 valid_names:
     - line
     - x
     - y
 
-require:
-    - rjson
-
-width: 800
-height: 500
+name_comments: |
+    "line" indicates the line name.
 
 scripts:
     - d3.v2.min.js
@@ -21,3 +21,14 @@ scripts:
 
 styles:
     - nv.d3.css
+
+require_packages:
+    - rjson
+
+width: 800
+height: 500
+
+original: http://nvd3.org/ghpages/lineWithFocus.html
+
+
+

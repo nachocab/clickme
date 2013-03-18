@@ -10,8 +10,8 @@ test_that("dataframes are translated to the format expected by the template", {
 
     translated_data <- translate(data, opts)
     expected_translated_data <- paste0("\"", file.path(opts$relative_path$data, test_data_file_name), "\"")
-
     expect_equal(translated_data, expected_translated_data)
     expect_true(file.exists(file.path(opts$path$data, test_data_file_name)))
+
     unlink(file.path(opts$path$data, test_data_file_name))
 })

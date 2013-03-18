@@ -1,16 +1,26 @@
+purpose: |
+    Show a graph with directed connections. The nodes are movable.
+
 valid_names:
     - source
     - target
     - type
 
-require:
-    - df2json
-
-width: 800
-height: 500
+name_comments: |
+    "source" is the beginning of the arrow
+    "target" is the end of the arrow
+    "type" is the type of arrow (color)
 
 scripts:
     - d3.min.js
 
 styles:
     - main.css
+
+require_packages:
+    - df2json
+
+width: 800
+height: 500
+
+original: http://bl.ocks.org/mbostock/1153292
