@@ -1,6 +1,7 @@
 export(clickme)
 export(get_opts)
 export(get_root_path)
+export(list_ractives)
 export(mat)
 export(new_ractive)
 export(server)

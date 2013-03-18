@@ -63,4 +63,9 @@ mat <- function(elements=NULL, num_elements=nrow*ncol, nrow=5, ncol=2, scale_by=
     mat
 }
 
+#' Show which ractives are available
+#'
+#' @export
+list_ractives <- function() {
+    basename(list.dirs(get_root_path(), recursive=F))
 }
