@@ -5,7 +5,7 @@
   translate_data(data, opts)
 }
 \description{
-  \code{clickme_translate} is a function defined in
+  \code{translate} is a function defined in
   opts$path$translator_file
 }
 

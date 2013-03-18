@@ -20,4 +20,4 @@ Collate:
     'validate-ractive.R'
     'validate-data-names.R'
     'clickme.R'
-    'clickme-package.R'
+    'clickme-package.r'

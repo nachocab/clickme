@@ -8,7 +8,7 @@ test_that("dataframes are translated to the format expected by the template", {
     test_data_file_name <- "test_data.csv"
     opts <- get_opts("longitudinal_heatmap", data_file_name = test_data_file_name)
 
-    translated_data <- clickme_translate(data, opts)
+    translated_data <- translate(data, opts)
     expected_translated_data <- paste0("\"", file.path(opts$relative_path$data, test_data_file_name), "\"")
 
     expect_equal(translated_data, expected_translated_data)

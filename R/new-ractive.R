@@ -47,11 +47,11 @@ styles:
 #'
 #' @param data input data object
 #' @param opts options returned by get_opts
-clickme_translate <- function(data, opts) {
+translate <- function(data, opts) {
     data
 }", opts$path$translator_file)
 
-    writeLines("context(\"clickme_translate\")
+    writeLines("context(\"translate\")
 
 test_that(\"dataframes are translated to the format expected by the template\", {
 

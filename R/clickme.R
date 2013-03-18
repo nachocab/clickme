@@ -77,9 +77,9 @@ clickme <- function(data, ractive, data_file_name = NULL, html_file_name = NULL,
 
 #' Translate data object to be used in the ractive (usually into JSON or a file path)
 #'
-#' \code{clickme_translate} is a function defined in opts$path$translator_file
+#' \code{translate} is a function defined in opts$path$translator_file
 translate_data <- function(data, opts) {
     source(opts$path$translator_file)
-    data <- clickme_translate(data, opts)
+    data <- translate(data, opts)
     data
 }
