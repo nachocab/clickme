@@ -9,8 +9,6 @@ validate_ractive <- function(opts) {
 
     if (!file.exists(opts$path$template_config_file)) stop(opts$name$template_config_file, " not found in: ", opts$path$template)
 
-    if (is.null(opts$template_config$valid_names)) stop(opts$path$template_config_file, " doesn't contain a valid_names option")
-
     if (!is.null(opts$template_config$require_packages)){
         sapply(opts$template_config$require_packages, function(package_name){
             if (!is.installed(package_name)){
