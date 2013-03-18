@@ -67,5 +67,35 @@ mat <- function(elements=NULL, num_elements=nrow*ncol, nrow=5, ncol=2, scale_by=
 #'
 #' @export
 list_ractives <- function() {
-    basename(list.dirs(get_root_path(), recursive=F))
+    ractives <- basename(list.dirs(get_root_path(), recursive=F))
+    message("Available ractives:")
+    write(ractives, "")
+}
+
+#' Get information about a ractive
+#'
+#' @param ractive ractive name
+#' @export
+ractive_info <- function(ractive){
+    opts <- get_opts(ractive)
+
+    if (!is.null(opts$template_config$purpose)){
+        message("Purpose:")
+        write(opts$template_config$purpose, "")
+    }
+
+    if (!is.null(opts$template_config$valid_names)){
+        message("Valid names:")
+        write(opts$template_config$valid_names, "")
+        message("")
+    }
+
+    if (!is.null(opts$template_config$name_comments)){
+        message("Name comments:")
+        write(opts$template_config$name_comments, "")
+    }
+
+    if (!is.null(opts$template_config$original)){
+        message("Original version: ", opts$template_config$original)
+    }
 }

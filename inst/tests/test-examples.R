@@ -46,7 +46,9 @@ context("example translators")
 test_that("example translators work", {
     set_root_path(system.file("examples", package="clickme"))
 
-    for(ractive in list_ractives()){
+    ractives <- basename(list.dirs(get_root_path(), recursive=F))
+
+    for(ractive in ractives){
         test_translator(ractive)
     }
 })
