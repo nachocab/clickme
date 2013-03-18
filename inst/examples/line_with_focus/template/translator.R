@@ -17,7 +17,7 @@ prepare_data <- function(data){
 #' It returns the translated data object.
 #'
 #' @param data input data object
-#' @param opts options returned by get_opts
+#' @param opts options of current ractive
 translate <- function(data, opts) {
     library(rjson)
     data <- as.data.frame(data, stringsAsFactors=FALSE)
