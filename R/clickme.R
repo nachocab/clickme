@@ -64,17 +64,14 @@ generate_visualization <- function(data, opts){
 clickme <- function(data, ractive, data_name = NULL, html_file_name = NULL, params = NULL, browse = interactive(), port = 8888){
     opts <- get_opts(ractive, data_name, html_file_name, params)
 
-    validate_ractive(opts)
     data <- validate_data_names(data, opts)
     opts$data <- translate_data(data, opts)
 
     generate_visualization(data, opts)
 
     if (opts$template_config$require_server){
-        url <- paste0("http://localhost:8888/", opts$name$html_file) # TODO: make this into a parameter
-        message("Make sure you have a server running at: ", get_root_path(), "\n",
-                "and open:\n",
-                url)
+        url <- paste0("http://localhost:", port, "/", opts$name$html_file)
+        message("Make sure you have a server running at: ", get_root_path(), "\n")
     } else {
         url <- opts$path$html_file
     }

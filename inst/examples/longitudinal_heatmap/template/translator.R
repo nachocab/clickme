@@ -1,11 +1,11 @@
 prepare_data <- function(data){
     data <- as.data.frame(data)
 
-    if ("gene_symbol" %notin% colnames(data)){
+    if (! "gene_symbol" %in% colnames(data)){
         data$gene_symbol <- rownames(data)
     }
 
-    if ("cluster" %notin% colnames(data)){
+    if (! "cluster" %in% colnames(data)){
         data$cluster <- 1
     }
 
@@ -25,6 +25,7 @@ translate <- function(data, opts) {
     relative_data_file_path <- file.path(opts$relative_path$data, data_file_name)
 
     write.table(data, file = data_file_path, sep = ",", quote=FALSE, row.names=FALSE, col.names=TRUE)
+    message("Created data file at: ", data_file_path)
 
     path <- paste0("\"", relative_data_file_path, "\"")
     path

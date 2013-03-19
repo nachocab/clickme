@@ -75,29 +75,43 @@ plain_list_ractives <- function() {
     basename(list.dirs(get_root_path(), recursive=F))
 }
 
+
+#' @import stringr
+titleize <- function(str){
+    str <- str_replace(str,"_"," ")
+    words_in_str <- strsplit(str, " ")[[1]]
+    title <- paste0(toupper(substring(words_in_str, 1,1)), substring(words_in_str, 2), collapse=" ")
+    names(title) <- NULL
+    title
+}
+
 #' Get information about a ractive
 #'
 #' @param ractive ractive name
 #' @export
-ractive_info <- function(ractive){
+show_ractive <- function(ractive, fields = NULL){
+
     opts <- get_opts(ractive)
 
-    if (!is.null(opts$template_config$info)){
-        write(opts$template_config$info, "")
+    fields <- fields %||% names(opts$template_config)
+
+    message("Ractive")
+    cat(ractive, "\n\n")
+
+    for (field in fields){
+        if (!is.null(opts$template[[field]])){
+            message(paste0(titleize(field)))
+            if (field == "default_parameters"){
+                cat(paste0(paste0(names(opts$template_config[[field]]), ": ", opts$template_config[[field]]), collapse="\n"), "\n\n")
+            } else {
+                cat(paste0(opts$template_config[[field]], collapse="\n"), "\n")
+            }
+
+            if (field %notin% c("info", "name_comments", "default_parameters")){
+                cat("\n")
+            }
+        }
     }
 
-    if (!is.null(opts$template_config$valid_names)){
-        message("Valid names:")
-        write(opts$template_config$valid_names, "")
-        message("")
-    }
-
-    if (!is.null(opts$template_config$name_comments)){
-        message("Name comments:")
-        write(opts$template_config$name_comments, "")
-    }
-
-    if (!is.null(opts$template_config$original)){
-        message("Original version: ", opts$template_config$original_url)
-    }
+    cat("\n")
 }

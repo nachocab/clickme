@@ -4,8 +4,7 @@ test_that("ractive is valid", {
     ractive <- "force_directed"
     set_root_path(system.file("examples", package="clickme"))
 
-    opts <- get_opts("fake_ractive", data_name = "data")
-    expect_error(validate_ractive(opts), "ractive not found in:")
+    expect_error(get_opts("fake_ractive", data_name = "data"), "ractive not found in:")
 
     opts <- get_opts(ractive, data_name = "data")
 
