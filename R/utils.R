@@ -67,9 +67,12 @@ mat <- function(elements=NULL, num_elements=nrow*ncol, nrow=5, ncol=2, scale_by=
 #'
 #' @export
 list_ractives <- function() {
-    ractives <- basename(list.dirs(get_root_path(), recursive=F))
-    message("Available ractives:")
-    write(ractives, "")
+    message("Available ractives at: ", get_root_path())
+    write(plain_list_ractives(), "")
+}
+
+plain_list_ractives <- function() {
+    basename(list.dirs(get_root_path(), recursive=F))
 }
 
 #' Get information about a ractive
