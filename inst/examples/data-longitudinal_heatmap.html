@@ -40,7 +40,7 @@
         d3.text("longitudinal_heatmap/data/data.csv", function(text) {
           var parsedGenes = d3.csv.parse(text);
 
-          var userOptions = { urlVars: urlVars, rowNameColumn: "gene_symbol", rowType: "DE genes" };
+          var userOptions = { urlVars: urlVars, rowNameColumn: "gene_symbol", rowType: "genes", yAxisName: "log-ratio" };
           var model = new window.LongitudinalModel(parsedGenes, userOptions);
 
           var dashboardView = new window.DashboardView({ el: "#dashboard", model: model});
