@@ -15,6 +15,8 @@ info: |
         no_pcp=[1] hide the parallel coordinates plot
         no_rownames=[1] hide the row names of the heatmap
 
+valid_names:
+
 name_comments: |
     (optional) "gene_symbol" is extracted from row names of the input data if a gene_symbol column is not present.
     (optional) "cluster" is a factor used to break the rows of the input data into groups.
@@ -38,8 +40,15 @@ styles:
     - leanback_style.css
     - longitudinal.css
 
-row_names: "genes"
-y_axis_name: "log-ratio"
+params: {
+    row_names: "genes",
+    y_axis_name: "log-ratio",
+}
 
 require_server: true
+
+require_packages:
+
+original_url:
+
 

@@ -41,6 +41,16 @@ scripts:
 
 styles:
 
+params: {
+
+}
+
+require_packages:
+
+require_server: false
+
+original_url:
+
 ", opts$path$template_config_file)
 
     writeLines("#' Translate the data object to the format expected by template.Rmd

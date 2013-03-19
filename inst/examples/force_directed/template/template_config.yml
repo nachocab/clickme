@@ -17,11 +17,14 @@ scripts:
 styles:
     - main.css
 
+params: {
+    width: 800,
+    height: 800,
+}
+
 require_packages:
     - df2json
 
-params:
-    - width: 800
-    - height: 800
+require_server: false
 
-original: http://bl.ocks.org/mbostock/1153292
+original_url: http://bl.ocks.org/mbostock/1153292

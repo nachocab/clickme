@@ -22,13 +22,17 @@ scripts:
 styles:
     - nv.d3.css
 
+params: {
+    width: 800,
+    height: 500,
+}
+
 require_packages:
     - rjson
 
-width: 800
-height: 500
+require_server: false
 
-original: http://nvd3.org/ghpages/lineWithFocus.html
+original_url: http://nvd3.org/ghpages/lineWithFocus.html
 
 
 

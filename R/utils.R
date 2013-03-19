@@ -98,6 +98,6 @@ ractive_info <- function(ractive){
     }
 
     if (!is.null(opts$template_config$original)){
-        message("Original version: ", opts$template_config$original)
+        message("Original version: ", opts$template_config$original_url)
     }
 }

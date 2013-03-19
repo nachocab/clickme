@@ -59,6 +59,8 @@ get_opts <- function(ractive, data_name = NULL, html_file_name = NULL){
     opts <- add_ractive_opts(ractive)
     opts$template_config <- get_template_config(opts$path$template_config_file)
 
+    opts$params <- opts$template_config$params
+
     opts$data_name <- data_name %||% basename(tempfile("data"))
 
     opts$name$html_file <- html_file_name %||% paste0(opts$data_name, "-", opts$name$ractive, ".html")
