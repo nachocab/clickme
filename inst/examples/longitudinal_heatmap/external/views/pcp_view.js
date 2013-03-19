@@ -55,7 +55,7 @@
       this.margin = {
         top: 300,
         right: 50,
-        bottom: this.columnNamesMargin * 10,
+        bottom: this.columnNamesMargin * 30,
         left: 150
       };
       this.width = d3.max([400, this.model.columnNames.length * 40]);
@@ -75,7 +75,7 @@
       this.renderedXAxis.selectAll("text").attr("dx", "-.5em").attr("dy", ".3em").attr("text-anchor", "end").attr("transform", "rotate(-45)");
       this.yAxis = d3.svg.axis().scale(this.y).ticks(4).tickSize(6, 0).orient("left");
       this.renderedYAxis = this.pcp.append("g").attr("class", "y axis").attr("transform", "translate(0,0)").call(this.yAxis);
-      this.renderedYAxis.append("text").attr("text-anchor", "middle").attr("dy", "-.5em").text("log-ratio");
+      this.renderedYAxis.append("text").attr("text-anchor", "middle").attr("dy", "-.5em").text(this.model.options.yAxisName);
       this.addLongitudinalDataLines();
       return this.pcp.append("line").attr("y1", this.y(0)).attr("y2", this.y(0)).attr("x2", this.width).attr("class", "axis zero");
     };

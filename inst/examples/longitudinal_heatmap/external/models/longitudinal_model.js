@@ -26,11 +26,11 @@
       }
       this.options = {
         rowNameColumn: userOptions.rowNameColumn || "id",
+        yAxisName: userOptions.yAxisName || "log-ratio",
         specialColumnNames: userOptions.specialColumnNames || ["cluster"],
         rowType: userOptions.rowType,
         tagFile: userOptions.urlVars["tags"],
         showGroups: userOptions.urlVars["groups"],
-        showClusters: userOptions.urlVars["clusters"],
         hideHeatmap: userOptions.urlVars["no_heatmap"],
         hidePCP: userOptions.urlVars["no_pcp"],
         hideRowNames: userOptions.urlVars["no_row_names"]
@@ -51,6 +51,7 @@
       this.longitudinalData = this.getLongitudinalData();
       this.groupedLongitudinalData = this.getGroupedLongitudinalData();
       this.clusters = _.pluck(this.parsedData, "cluster");
+      this.options.showClusters = _.uniq(this.clusters).length > 1;
       return this.clusterNames = this.getClusterNames();
     };
 

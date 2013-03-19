@@ -107,7 +107,7 @@
       maxrowNameLength = d3.max(this.model.rowNames.map(function(x) {
         return x.length;
       }));
-      return maxrowNameLength * 14;
+      return maxrowNameLength * 18;
     };
 
     HeatmapView.prototype.addRows = function() {

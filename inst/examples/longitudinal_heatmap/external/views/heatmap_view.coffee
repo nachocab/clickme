@@ -77,7 +77,7 @@ class window.HeatmapView extends Backbone.View
 
     calculateRightMargin: ->
         maxrowNameLength = d3.max(@model.rowNames.map (x)-> x.length)
-        maxrowNameLength*14 # px per letter
+        maxrowNameLength*18 # px per letter
 
     addRows: ->
         that = @

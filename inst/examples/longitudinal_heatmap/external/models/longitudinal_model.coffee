@@ -8,11 +8,11 @@
     initialize: (parsedData, userOptions = {})->
         @options =
             rowNameColumn: userOptions.rowNameColumn || "id"
+            yAxisName: userOptions.yAxisName || "log-ratio"
             specialColumnNames: userOptions.specialColumnNames || ["cluster"]
             rowType: userOptions.rowType
             tagFile: userOptions.urlVars["tags"]
             showGroups: userOptions.urlVars["groups"]
-            showClusters: userOptions.urlVars["clusters"]
             hideHeatmap: userOptions.urlVars["no_heatmap"]
             hidePCP: userOptions.urlVars["no_pcp"]
             hideRowNames: userOptions.urlVars["no_row_names"]
@@ -29,6 +29,7 @@
         @groupedLongitudinalData = @getGroupedLongitudinalData()
 
         @clusters = _.pluck(@parsedData, "cluster")
+        @options.showClusters = (_.uniq(@clusters).length > 1)
         @clusterNames = @getClusterNames()
 
     getRowName: (rowName)->

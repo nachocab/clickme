@@ -1,8 +1,19 @@
-purpose: |
+info: |
     Show a heatmap alongside a parallel coordinates plot.
+
     Each row in the heatmap is linked with a line in the line plot.
     Gene symbols appear on hover.
-    The values can be separated into groups according to "cluster".
+    Rows can be grouped according to the "cluster" column.
+
+    This visualization can receive URL parameters of the form:
+        http://localhost:8888/data-longitudinal_heatmap.html?url_param1=value1&url_param2=value2&url_param3=value3
+    Available URL parameters include:
+        cluster=[1|0] show (or don't show) rows in clusters
+        group=[1|0] break up (or don't break up) the columns of the data into subsets, determined by the prefix of each column
+            (ex: boston_day_1, boston_day_2, nyc_day_1, nyc_day_2 would be broken up into two columns for each city)
+        no_heatmap=[1] hide the heatmap
+        no_pcp=[1] hide the parallel coordinates plot
+        no_rownames=[1] hide the row names of the heatmap
 
 name_comments: |
     (optional) "gene_symbol" is extracted from row names of the input data if a gene_symbol column is not present.
@@ -26,6 +37,9 @@ styles:
     - https://fonts.googleapis.com/css?family=Lobster
     - leanback_style.css
     - longitudinal.css
+
+row_names: "genes"
+y_axis_name: "log-ratio"
 
 require_server: true
 

@@ -23,7 +23,7 @@ class window.PcpView extends Backbone.View
         @margin =
             top: 300
             right: 50
-            bottom: @columnNamesMargin*10
+            bottom: @columnNamesMargin*30
             left: 150
         @width = d3.max([400,@model.columnNames.length*40])
         @height = 300
@@ -70,7 +70,7 @@ class window.PcpView extends Backbone.View
         @renderedYAxis.append("text")
             .attr("text-anchor", "middle")
             .attr("dy","-.5em")
-            .text("log-ratio")
+            .text(@model.options.yAxisName)
 
         @addLongitudinalDataLines()
 

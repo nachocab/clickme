@@ -20,16 +20,14 @@
     </main>
 
     <script type="text/javascript">
-      var urlVars = getUrlVars();
 
-      urlVars["groups"] = 1;
-      urlVars["clusters"] = 1;
+      var urlVars = getUrlVars();
 
       $(document).ready(function() {
         d3.text({{ opts$data }}, function(text) {
           var parsedGenes = d3.csv.parse(text);
 
-          var userOptions = { urlVars: urlVars, rowNameColumn: "gene_symbol", rowType: "DE genes", specialColumnNames: ["cluster", "p_value_day_3", "p_value_day_6"] };
+          var userOptions = { urlVars: urlVars, rowNameColumn: "gene_symbol", rowType: "{{ opts$template_config$row_names }}", yAxisName: "{{ opts$template_config$y_axis_name }}" };
           var model = new window.LongitudinalModel(parsedGenes, userOptions);
 
           var dashboardView = new window.DashboardView({ el: "#dashboard", model: model});
