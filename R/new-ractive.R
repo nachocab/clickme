@@ -31,7 +31,7 @@ new_ractive <- function(ractive_name, overwrite = FALSE) {
                 message("Created file: ", path)
              })
 
-    writeLines("purpose: |
+    writeLines("info: |
 
 valid_names:
 

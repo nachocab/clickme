@@ -1,4 +1,4 @@
-purpose: |
+info: |
     Show a graph with directed connections. The nodes are movable.
 
 valid_names:
@@ -20,7 +20,8 @@ styles:
 require_packages:
     - df2json
 
-width: 800
-height: 800
+params:
+    - width: 800
+    - height: 800
 
 original: http://bl.ocks.org/mbostock/1153292

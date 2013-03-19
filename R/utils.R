@@ -82,9 +82,8 @@ plain_list_ractives <- function() {
 ractive_info <- function(ractive){
     opts <- get_opts(ractive)
 
-    if (!is.null(opts$template_config$purpose)){
-        message("Purpose:")
-        write(opts$template_config$purpose, "")
+    if (!is.null(opts$template_config$info)){
+        write(opts$template_config$info, "")
     }
 
     if (!is.null(opts$template_config$valid_names)){
