@@ -3,7 +3,7 @@ context("validate_data_names")
 test_that("an error is raised if there are not enough valid names", {
     set_root_path(system.file("examples", package="clickme"))
     ractive <- "line_with_focus"
-    opts <- get_opts(ractive, data_file_name = "data")
+    opts <- get_opts(ractive, data_name = "data")
 
     data <- data.frame(x=1:3, y=4:6)
     expect_error(validate_data_names(data, opts), "The data object is missing the following names: line")
@@ -16,7 +16,7 @@ test_that("an error is raised if there are not enough valid names", {
 test_that("valid names are not modified, whatever their order", {
     set_root_path(system.file("examples", package="clickme"))
     ractive <- "line_with_focus"
-    opts <- get_opts(ractive, data_file_name = "data")
+    opts <- get_opts(ractive, data_name = "data")
 
     data <- data.frame(y=4:6, line=letters[1:3], x=1:3, stringsAsFactors=FALSE)
     checked_data <- validate_data_names(data, opts)
@@ -29,7 +29,7 @@ test_that("valid names are not modified, whatever their order", {
 test_that("invalid names are replaced with missing valid names in the order they were specified in template_config", {
     set_root_path(system.file("examples", package="clickme"))
     ractive <- "line_with_focus"
-    opts <- get_opts(ractive, data_file_name = "data")
+    opts <- get_opts(ractive, data_name = "data")
 
     data <- data.frame(y=4:6, invalid_name=letters[1:3], x=1:3, stringsAsFactors=FALSE)
     expect_message(checked_data <- validate_data_names(data, opts))

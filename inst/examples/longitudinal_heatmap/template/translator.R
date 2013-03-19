@@ -20,10 +20,12 @@ prepare_data <- function(data){
 #' @param opts options of current ractive
 translate <- function(data, opts) {
     data <- prepare_data(data)
-    data_file_name <- paste0(strsplit(opts$name$data_file, "\\.")[[1]][1], ".csv")
+    data_file_name <- paste0(opts$data_name, ".csv")
+    data_file_path <- file.path(opts$path$data, data_file_name)
+    relative_data_file_path <- file.path(opts$relative_path$data, data_file_name)
 
-    write.table(data, file = file.path(opts$path$data, data_file_name), sep = ",", quote=FALSE, row.names=FALSE, col.names=TRUE)
+    write.table(data, file = data_file_path, sep = ",", quote=FALSE, row.names=FALSE, col.names=TRUE)
 
-    path <- paste0("\"", file.path(opts$relative_path$data, data_file_name), "\"")
+    path <- paste0("\"", relative_data_file_path, "\"")
     path
 }

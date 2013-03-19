@@ -4,7 +4,7 @@
 \alias{clickme-package}
 \title{Generates a JavaScript visualization}
 \usage{
-  clickme(data, ractive, data_file_name = NULL,
+  clickme(data, ractive, data_name = NULL,
     html_file_name = NULL, browse = interactive())
 }
 \arguments{
@@ -13,7 +13,7 @@
   \item{ractive}{template id, it must match a folder within
   \code{set_root_path}}
 
-  \item{data_file_name}{}
+  \item{data_name}{}
 
   \item{html_file_name}{name of HTML file}
 

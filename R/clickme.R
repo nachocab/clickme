@@ -41,7 +41,7 @@ generate_visualization <- function(data, opts){
 #'
 #' @param data input data
 #' @param ractive template id, it must match a folder within \code{set_root_path}
-#' @param data_file_name
+#' @param data_name
 #' @param html_file_name name of HTML file
 #' @param browse open browser, default TRUE
 #' @export
@@ -50,15 +50,14 @@ generate_visualization <- function(data, opts){
 #' data(lawsuits)
 #' set_root_path(system.file("examples", package="clickme"))
 #' clickme(lawsuits, "force_directed")
-clickme <- function(data, ractive, data_file_name = NULL, html_file_name = NULL, browse = interactive()){
-    opts <- get_opts(ractive, data_file_name, html_file_name)
+clickme <- function(data, ractive, data_name = NULL, html_file_name = NULL, browse = interactive()){
+    opts <- get_opts(ractive, data_name, html_file_name)
 
     validate_ractive(opts)
     data <- validate_data_names(data, opts)
     opts$data <- translate_data(data, opts)
 
     generate_visualization(data, opts)
-
 
     if (opts$template_config$require_server){
         url <- paste0("http://localhost:8888/", opts$name$html_file) # TODO: make this into a parameter

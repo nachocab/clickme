@@ -14,13 +14,13 @@ test_that("the input data object is stored as a file", {
     colnames(data) <- c(paste("hiv", "day", c(0,4), sep="_"), paste("flu", "day", c(0,2,3), sep="_"))
     rownames(data) <- LETTERS[1:10]
 
-    test_data_file_name <- "test_data.csv"
-    opts <- get_opts("longitudinal_heatmap", data_file_name = test_data_file_name)
+    test_data_name <- "test_data"
+    opts <- get_opts("longitudinal_heatmap", data_name = test_data_name)
 
     translated_data <- translate(data, opts)
-    expected_translated_data <- paste0("\"", file.path(opts$relative_path$data, test_data_file_name), "\"")
+    expected_translated_data <- paste0("\"", file.path(opts$relative_path$data, paste0(test_data_name, ".csv")), "\"")
     expect_equal(translated_data, expected_translated_data)
-    expect_true(file.exists(file.path(opts$path$data, test_data_file_name)))
+    expect_true(file.exists(file.path(opts$path$data, paste0(test_data_name, ".csv"))))
 
-    unlink(file.path(opts$path$data, test_data_file_name))
+    unlink(file.path(opts$path$data, paste0(test_data_name, ".csv")))
 })

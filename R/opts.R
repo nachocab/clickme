@@ -52,16 +52,16 @@ add_ractive_opts <- function(ractive_name) {
 #' Get options used by ractive
 #'
 #' @param ractive name of the reactive
-#' @param data_file_name name of output data file
-#' @param html_file_name name of output visualization file
+#' @param data_name name of input data
+#' @param html_file_name name of output HTML file
 #' @export
-get_opts <- function(ractive, data_file_name = NULL, html_file_name = NULL){
+get_opts <- function(ractive, data_name = NULL, html_file_name = NULL){
     opts <- add_ractive_opts(ractive)
     opts$template_config <- get_template_config(opts$path$template_config_file)
 
-    # file names
-    opts$name$data_file <- data_file_name %||% paste0(basename(tempfile("data")), ".json")
-    opts$name$html_file <- html_file_name %||% paste0(strsplit(opts$name$data_file, "\\.")[[1]][1], "-", opts$name$ractive, ".html")
+    opts$data_name <- data_name %||% basename(tempfile("data"))
+
+    opts$name$html_file <- html_file_name %||% paste0(opts$data_name, "-", opts$name$ractive, ".html")
 
     # file absolute paths
     opts$path$data_file <- file.path(opts$path$data, opts$name$data_file)

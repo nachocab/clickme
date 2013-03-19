@@ -5,11 +5,11 @@ test_that("the HTML example file for the force_directed ractive is generated", {
     ractive <- "force_directed"
 
     # we do this to ensure that the HTML file doesn't exist before we create it
-    opts <- get_opts(ractive, data_file_name = "data.csv")
+    opts <- get_opts(ractive, data_name = "data")
     unlink(opts$path$html_file)
     data <- read.csv(file.path(opts$path$data, "original_data.csv"))
 
-    html_file_path <- clickme(data, ractive, data_file_name = "data.csv", browse=FALSE)
+    html_file_path <- clickme(data, ractive, data_name = "data", browse=FALSE)
 
     expect_true(file.exists(opts$path$html_file))
 })
@@ -19,11 +19,11 @@ test_that("the HTML example file for the line_with_focus ractive is generated", 
     ractive <- "line_with_focus"
 
     # we do this to ensure that the HTML file doesn't exist before we create it
-    opts <- get_opts(ractive, data_file_name = "data.csv")
+    opts <- get_opts(ractive, data_name = "data")
     unlink(opts$path$html_file)
     data <- read.csv(file.path(opts$path$data, "original_data.csv"))
 
-    html_file_path <- clickme(data, ractive, data_file_name = "data.csv", browse=FALSE)
+    html_file_path <- clickme(data, ractive, data_name = "data", browse=FALSE)
 
     expect_true(file.exists(opts$path$html_file))
 })
@@ -33,11 +33,11 @@ test_that("the HTML example file for the longitudinal_heatmap ractive is generat
     ractive <- "longitudinal_heatmap"
 
     # we do this to ensure that the HTML file doesn't exist before we create it
-    opts <- get_opts(ractive, data_file_name = "data.csv")
+    opts <- get_opts(ractive, data_name = "data")
     unlink(opts$path$html_file)
     data <- read.csv(file.path(opts$path$data, "original_data.csv"))
 
-    html_file_path <- expect_message(clickme(data, ractive, data_file_name = "data.csv", browse=FALSE), "Make sure you have a server running at")
+    html_file_path <- expect_message(clickme(data, ractive, data_name = "data", browse=FALSE), "Make sure you have a server running at")
 
     expect_true(file.exists(opts$path$html_file))
 })

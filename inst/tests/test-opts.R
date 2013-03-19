@@ -22,10 +22,10 @@ test_that("add ractive options", {
 
 test_that("add visualization options", {
     set_root_path(system.file("examples", package="clickme"))
-    opts <- get_opts("force_directed")
+    opts <- get_opts("force_directed", data_name="data")
 
-    expect_equal(opts$path$data_file, file.path(opts$path$data, opts$name$data_file))
-    expect_equal(opts$name$html_file, paste0(strsplit(opts$name$data_file, "\\.")[[1]][1], "-", opts$name$ractive, ".html"))
+    expect_equal(opts$data_name, "data")
+    expect_equal(opts$name$html_file, paste0(opts$data_name, "-", opts$name$ractive, ".html"))
     expect_equal(opts$path$html_file, file.path(get_root_path(), opts$name$html_file))
 })
 
