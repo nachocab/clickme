@@ -1,17 +1,3 @@
-#' Read ractive configuration from yaml file
-#'
-#' @import yaml
-get_template_config <- function(template_config_file_path){
-    template_config <- NULL
-    if (file.exists(template_config_file_path)){
-        template_config <- yaml.load_file(template_config_file_path)
-    }
-
-    template_config$require_server <- template_config$require_server %||% FALSE
-
-    template_config
-}
-
 add_ractive_opts <- function(ractive_name) {
     opts <- list()
 
@@ -49,24 +35,36 @@ add_ractive_opts <- function(ractive_name) {
     opts
 }
 
+add_params <- function(opts, params) {
+    opts$params <- opts$template_config$default_parameters
+    valid_param_names <- names(opts$template_config$default_parameters)
+
+    for (param in names(params)){
+        if (param %notin% valid_param_names) stop(param, " is not a valid parameter\n(Use one of: ", paste(valid_param_names, collapse=", "), ")")
+
+        opts$params[[param]] <- params[[param]]
+    }
+
+    opts
+}
+
 #' Get options used by ractive
 #'
 #' @param ractive name of the reactive
 #' @param data_name name of input data
 #' @param html_file_name name of output HTML file
 #' @export
-get_opts <- function(ractive, data_name = NULL, html_file_name = NULL){
+#' @import yaml
+get_opts <- function(ractive, data_name = NULL, html_file_name = NULL, params = NULL){
     opts <- add_ractive_opts(ractive)
-    opts$template_config <- get_template_config(opts$path$template_config_file)
+    validate_ractive(opts)
 
-    opts$params <- opts$template_config$params
+    opts$template_config <- yaml.load_file(opts$path$template_config_file)
 
+    # user provided options
+    opts <- add_params(opts, params)
     opts$data_name <- data_name %||% basename(tempfile("data"))
-
     opts$name$html_file <- html_file_name %||% paste0(opts$data_name, "-", opts$name$ractive, ".html")
-
-    # file absolute paths
-    opts$path$data_file <- file.path(opts$path$data, opts$name$data_file)
     opts$path$html_file <- file.path(get_root_path(), opts$name$html_file)
 
     opts

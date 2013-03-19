@@ -27,8 +27,8 @@
         link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
       });
 
-      var w = {{ opts$template_config$width }},
-          h = {{ opts$template_config$height }};
+      var w = {{ opts$params$width }},
+          h = {{ opts$params$height }};
 
       var colors = d3.scale.category10();
 

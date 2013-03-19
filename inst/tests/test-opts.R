@@ -43,3 +43,18 @@ test_that("get template configuration", {
         expect_true(is.numeric(opts$params$width))
         expect_true(is.numeric(opts$params$height))
 })
+
+test_that("user params override template params", {
+    set_root_path(system.file("examples", package="clickme"))
+    opts <- get_opts("force_directed")
+    expect_equal(opts$params$height, 800)
+
+    opts <- get_opts("force_directed", params=list(height=666))
+    expect_equal(opts$params$height, 666)
+})
+
+
+test_that("user params are valid", {
+    set_root_path(system.file("examples", package="clickme"))
+    expect_error(get_opts("force_directed", params=list(fake_param=666)), "fake_param is not a valid parameter")
+})
