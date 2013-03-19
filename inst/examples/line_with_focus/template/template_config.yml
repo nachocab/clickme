@@ -22,7 +22,7 @@ scripts:
 styles:
     - nv.d3.css
 
-params: {
+default_parameters: {
     width: 800,
     height: 500,
 }

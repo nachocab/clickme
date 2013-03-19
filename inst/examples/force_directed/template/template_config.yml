@@ -17,7 +17,7 @@ scripts:
 styles:
     - main.css
 
-params: {
+default_parameters: {
     width: 800,
     height: 800,
 }

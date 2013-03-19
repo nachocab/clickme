@@ -41,7 +41,7 @@ scripts:
 
 styles:
 
-params: {
+default_parameters: {
 
 }
 

@@ -40,7 +40,7 @@ styles:
     - leanback_style.css
     - longitudinal.css
 
-params: {
+default_parameters: {
     row_names: "genes",
     y_axis_name: "log-ratio",
 }
