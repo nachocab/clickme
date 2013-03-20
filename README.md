@@ -52,7 +52,7 @@ Thank you **Mike Bostock** for creating the [D3.js][] library. Being able to use
 Thank you **Yihui Xie** for building the [knitr][] R package. Even though clickme only uses knitr as a templating engine, it is the most important part of my daily workflow.
 
 ## Contributing
-If you can see the potential of clickme as a bridge between the R and JS worlds, please contribute by improving the source code or making your ractives publicly available.
+If you can see the potential of clickme as a bridge between the R and JS worlds, please contribute by [reporting an issue](https://github.com/nachocab/clickme/issues), improving the source code or making your ractives publicly available.
 
 [D3.js]: http://d3js.org
 [Raphaël.js]: http://raphaeljs.com
