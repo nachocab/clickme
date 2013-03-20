@@ -8,7 +8,7 @@ The variables used in JS visualizations are statically-defined, which makes them
 
 Each template is embedded into a simple folder structure called a **ractive** (short for *interactive*—a hat tip to [Neal Stephenson](https://en.wikipedia.org/wiki/The_Diamond_Age)), which is designed to improve reusability, encourage sharing, and minimize overhead.
 
-Want to learn more? [See the wiki]().
+Want to learn more? [See the wiki](https://github.com/nachocab/clickme/wiki).
 
 ## Quick Usage
 
