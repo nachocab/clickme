@@ -2,9 +2,9 @@
 
 **clickme** is a package that lets you use R objects as input for JavaScript visualizations.
 
-JS libraries like [D3.js][] or [Raphaël.js][] can be used to generate powerful visualizations that run on the browser, giving users unprecedented levels of interactivity and flexibility. Unfortunately, they are hard to access within R. The design goal of **clickme** is to make them as easy to use as the base `plot()` function.
+JS libraries like [D3.js][] or [Raphaël.js][] can be used to generate awesome visualizations that run on the browser, with a high level of interactivity and flexibility. Unfortunately, they are hard to access within R. The design goal of **clickme** is to make them as easy to use as the base `plot()` function.
 
-The variables used in JS visualizations are statically-defined, making them hard to customize. Instead of using static JS files, clickme works with **templates** that allow users to specify the input data that will be used by the JS code, along with other parameters that affect the behavior of the visualization.
+The variables used in JS visualizations are statically-defined, which makes them hard to customize. Instead of using static JS files, clickme works with **templates** that make it easy to specify the input data that will be used by the JS code, along with other graphical parameters of the visualization.
 
 Each template is embedded into a simple folder structure called a **ractive** (short for *interactive*—a hat tip to [Neal Stephenson](https://en.wikipedia.org/wiki/The_Diamond_Age)), which is designed to improve reusability, encourage sharing, and minimize overhead.
 
@@ -14,7 +14,7 @@ Want to learn more? [See the wiki]().
 
 You can install clickme by running this in your R session:
 
-```r
+```
 install.packages("devtools") # In case you don't have it already installed
 
 library(devtools)
@@ -23,7 +23,7 @@ install_github("clickme", "nachocab")
 
 Now you can try the examples:
 
-```r
+```
 library(clickme)
 
 # visualize a force-directed interactive graph
