@@ -2,6 +2,10 @@ library(yaml)
 
 context("opts")
 
+test_that("the template_config file must exist", {
+    expect_error(get_opts("fake_ractive", data_name = "data"), "No template configuration file found")
+})
+
 test_that("add ractive options", {
     set_root_path(system.file("examples", package="clickme"))
     opts <- add_ractive_opts("force_directed")
