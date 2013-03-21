@@ -45,7 +45,7 @@ default_parameters: {
     y_axis_name: "log-ratio",
 }
 
-require_server: true
+require_server: yes
 
 require_packages:
 

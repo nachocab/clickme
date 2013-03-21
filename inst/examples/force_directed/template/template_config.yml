@@ -25,6 +25,6 @@ default_parameters: {
 require_packages:
     - df2json
 
-require_server: false
+require_server: no
 
 original_url: http://bl.ocks.org/mbostock/1153292

@@ -4,7 +4,7 @@ info: |
 valid_names:
     - line
     - x
-    - y
+    - "y"
 
 name_comments: |
     "line" indicates the line name.
@@ -30,7 +30,7 @@ default_parameters: {
 require_packages:
     - rjson
 
-require_server: false
+require_server: no
 
 original_url: http://nvd3.org/ghpages/lineWithFocus.html
 
