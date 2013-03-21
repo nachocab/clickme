@@ -12,16 +12,25 @@ Want to learn more? [See the wiki](https://github.com/nachocab/clickme/wiki).
 
 You can install clickme by running this in your R session:
 
-```
+```S
 install.packages("devtools") # In case you don't have it already installed
 
 library(devtools)
 install_github("clickme", "nachocab")
 ```
 
-Now you can try the examples:
+Other packages you might need include [rjson][] and a new version of [knitr][]
 
+```S
+install.packages("rjson")
+install.packages("knitr", repos = "http://www.rforge.net/", type = "source")
 ```
+
+Now you can try the examples.
+
+Your browser will open a new tab for each example. The first one should look something like [this](http://bl.ocks.org/nachocab/5178583).
+
+```S
 library(clickme)
 
 # visualize a force-directed interactive graph
@@ -42,8 +51,6 @@ colnames(df3) <- paste0("sample_", 1:8)
 clickme(df3, "longitudinal_heatmap") # you will need to have a local server running for this example to work
 ```
 
-Your browser will open a new tab for each example. The first one should look something like [this](http://bl.ocks.org/nachocab/5178583).
-
 ## Acknowledgements
 Thank you **Mike Bostock** for creating the [D3.js][] library. Being able to use it more effectively is the main reason why I developed clickme.
 
@@ -55,5 +62,4 @@ If you can see the potential of clickme as a bridge between the R and JS worlds,
 [D3.js]: http://d3js.org
 [Raphaël.js]: http://raphaeljs.com
 [knitr]: http://yihui.name/knitr/
-
-
+[rjson]: http://cran.r-project.org/web/packages/rjson/index.html
