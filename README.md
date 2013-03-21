@@ -12,7 +12,7 @@ Want to learn more? [See the wiki](https://github.com/nachocab/clickme/wiki).
 
 You can install clickme by running this in your R session:
 
-```r
+```S
 install.packages("devtools")
 install.packages("knitr", repos = "http://www.rforge.net/", type = "source")
 
@@ -22,7 +22,7 @@ install_github("clickme", "nachocab")
 
 Now you can try the examples:
 
-```r
+```S
 library(clickme)
 
 # visualize a force-directed interactive graph
