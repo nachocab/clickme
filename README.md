@@ -12,8 +12,9 @@ Want to learn more? [See the wiki](https://github.com/nachocab/clickme/wiki).
 
 You can install clickme by running this in your R session:
 
-```
-install.packages("devtools") # In case you don't have it already installed
+```r
+install.packages("devtools")
+install.packages("knitr", repos = "http://www.rforge.net/", type = "source")
 
 library(devtools)
 install_github("clickme", "nachocab")
@@ -21,7 +22,7 @@ install_github("clickme", "nachocab")
 
 Now you can try the examples:
 
-```
+```r
 library(clickme)
 
 # visualize a force-directed interactive graph
@@ -37,6 +38,7 @@ df2 <- data.frame(name=rep(cities, each=n), x=rep(1:n,length(cities)), y=c(sort(
 clickme(df2, "line_with_focus")
 
 # visualize an interactive heatmap alongside a parallel coordinates plot
+df3 <- matrix(rnorm(200),ncol=8,nrow=25)
 rownames(df3) <- paste0("GENE_", 1:25)
 colnames(df3) <- paste0("sample_", 1:8)
 clickme(df3, "longitudinal_heatmap") # you will need to have a local server running for this example to work
