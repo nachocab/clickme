@@ -8,7 +8,9 @@ Description: The default interactivity comes from the D3 javascript library.
 Imports:
     knitr,
     yaml (>= 2.1.7),
-    stringr
+    stringr,
+	rjson,
+	df2json
 Suggests:
     testthat,
     stringr,
