@@ -21,8 +21,4 @@ test_that("ractive is valid", {
     expect_error(validate_ractive(opts), "translator.R not found in:")
     opts <- get_opts(ractive, data_name = "data")
 
-    opts$template_config$require_packages <- "fake_library"
-    expect_error(validate_ractive(opts), "fake_library is not installed")
-    opts <- get_opts(ractive, data_name = "data")
-
 })

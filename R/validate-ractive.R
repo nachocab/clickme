@@ -9,7 +9,7 @@ validate_ractive <- function(opts) {
     if (!is.null(opts$template_config$require_packages)){
         sapply(opts$template_config$require_packages, function(package_name){
             if (!is.installed(package_name)){
-                stop("Package ", package_name, " is not installed, try install.packages(\"", package_name,"\")")
+                install.packages(package_name)
             }
         })
     }
