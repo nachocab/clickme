@@ -1,12 +1,10 @@
 # clickme
 
-**clickme** is a package that lets you use R objects as input for JavaScript visualizations.
+**clickme** is an R package that lets you plot your R data as interactive JavaScript visualizations.
 
-JS libraries like [D3.js][] or [Raphaël.js][] can be used to generate awesome visualizations that run on the browser, with a high level of interactivity and flexibility. Unfortunately, they are hard to access within R. The design goal of **clickme** is to make them as easy to use as the base `plot()` function.
+[D3.js][] or [Raphaël.js][] are two visualization libraries that can be used generate powerful interactive plots that run on the browser. Unfortunately, they are hard to access within R. The design goal of **clickme** is to make JS visualizations as easy to use as the base `plot()` function.
 
-The variables used in JS visualizations are statically-defined, which makes them hard to customize. Instead of using static JS files, clickme works with **templates** that make it easy to specify the input data that will be used by the JS code, along with other graphical parameters of the visualization.
-
-Each template is embedded into a simple folder structure called a **ractive** (short for *interactive*—a hat tip to [Neal Stephenson](https://en.wikipedia.org/wiki/The_Diamond_Age)), which is designed to improve reusability, encourage sharing, and minimize overhead.
+The variables used in JS visualizations are statically-defined, which makes them hard to customize. Instead of using static JS files, clickme uses **ractives** (short for *interactives*—a hat tip to [Neal Stephenson](https://en.wikipedia.org/wiki/The_Diamond_Age)), which are simple folder structures that contain a template file and some configuration options. This approach makes it easy to specify what input data will be used by the JS code, it improves reusability, and encourages sharing.
 
 Want to learn more? [See the wiki](https://github.com/nachocab/clickme/wiki).
 
