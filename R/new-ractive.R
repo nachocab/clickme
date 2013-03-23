@@ -59,7 +59,7 @@ original_url:
 #'
 #' @param data input data object
 #' @param opts options used by current template
-translate <- function(data, opts=NULL) {
+translate <- function(data, opts = NULL) {
     data
 }", opts$path$translator_file)
 

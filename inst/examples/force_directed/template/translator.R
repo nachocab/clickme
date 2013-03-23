@@ -4,7 +4,7 @@
 #'
 #' @param data input data object
 #' @param opts options used by current template
-translate <- function(data, opts) {
+translate <- function(data, opts = NULL) {
     library(df2json)
     data <- as.data.frame(data, stringsAsFactors=FALSE)
     data <- df2json(data)

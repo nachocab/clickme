@@ -2,8 +2,17 @@ library(yaml)
 
 context("opts")
 
+test_that("the ractive folder must exist", {
+    expect_error(get_opts("fake_ractive", data_name = "data"), "No ractive named fake_ractive found at")
+})
+
 test_that("the template_config file must exist", {
+    fake_ractive_path <- file.path(system.file("examples", package = "clickme"), "fake_ractive")
+    dir.create(fake_ractive_path)
+
     expect_error(get_opts("fake_ractive", data_name = "data"), "No template configuration file found")
+
+    unlink(fake_ractive_path, recursive = TRUE)
 })
 
 test_that("add ractive options", {

@@ -57,6 +57,7 @@ add_params <- function(opts, params) {
 #' @import yaml
 get_opts <- function(ractive, data_name = NULL, html_file_name = NULL, params = NULL){
     opts <- add_ractive_opts(ractive)
+    if (!file.exists(opts$path$ractive)) stop("No ractive named ", ractive, " found at:", get_root_path())
     if (!file.exists(opts$path$template_config_file)) stop("No template configuration file found at:", opts$path$template_config_file)
     opts$template_config <- yaml.load_file(opts$path$template_config_file)
     validate_ractive(opts)

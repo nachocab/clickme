@@ -18,7 +18,7 @@ prepare_data <- function(data){
 #'
 #' @param data input data object
 #' @param opts options used by current template
-translate <- function(data, opts) {
+translate <- function(data, opts = NULL) {
     library(rjson)
     data <- as.data.frame(data, stringsAsFactors=FALSE)
     data <- prepare_data(data)

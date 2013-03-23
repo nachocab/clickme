@@ -18,7 +18,7 @@ prepare_data <- function(data){
 #'
 #' @param data input data object
 #' @param opts options used by current template
-translate <- function(data, opts) {
+translate <- function(data, opts = NULL) {
     data <- prepare_data(data)
     data_file_name <- paste0(opts$data_name, ".csv")
     data_file_path <- file.path(opts$path$data, data_file_name)
