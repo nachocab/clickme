@@ -53,20 +53,24 @@ original_url:
 
 ", opts$path$template_config_file)
 
-    writeLines("#' Translate the data object to the format expected by template.Rmd
+    writeLines("#' Translate the data object to the format expected by the current template
 #'
 #' It returns the translated data object.
 #'
 #' @param data input data object
-#' @param opts options of current ractive
-translate <- function(data, opts) {
+#' @param opts options used by current template
+translate <- function(data, opts=NULL) {
     data
 }", opts$path$translator_file)
 
     writeLines("context(\"translate\")
 
-test_that(\"dataframes are translated to the format expected by the template\", {
+test_that(\"input data is translated to the format expected by the template\", {
+    input_data <- data.frame()
+    expected_data <- \"\"
 
+    translated_input <- translate(input_data)
+    expect_equal(translated_input, expected_data)
 })", opts$path$translator_test_file)
 
 }
