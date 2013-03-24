@@ -100,10 +100,13 @@ show_ractive <- function(ractive, fields = NULL){
 
     for (field in fields){
         if (!is.null(opts$template[[field]])){
-            message(paste0(titleize(field)))
-            if (field == "default_parameters"){
-                cat(paste0(paste0(names(opts$template_config[[field]]), ": ", opts$template_config[[field]]), collapse="\n"), "\n\n")
+            if (field == "default_parameters") {
+                if (length(opts$template_config$default_parameters) > 0){
+                    message(paste0(titleize(field)))
+                    cat(paste0(paste0(names(opts$template_config$default_parameters), ": ", opts$template_config$default_parameters), collapse="\n"), "\n\n")
+                }
             } else {
+                message(paste0(titleize(field)))
                 cat(paste0(opts$template_config[[field]], collapse="\n"), "\n")
             }
 
