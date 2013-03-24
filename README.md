@@ -23,7 +23,7 @@ Now you can try the examples:
 ```S
 library(clickme)
 
-# visualize a zoomable phylogenetic tree (OneZoom.org)
+# visualize a zoomable phylogenetic tree (www.onezoom.org)
 mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
 clickme(mammals_path, "one_zoom")
 
