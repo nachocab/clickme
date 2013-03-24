@@ -1,12 +1,29 @@
 info: |
     Zoomable phylogenetic tree viewer that allows interactive display of large trees.
 
-    Input data should be in newick format, ultrametric, polytomies as branch length zero.
+    clickme allows three types of input containing an ultrametric Newick tree (polytomies as branch length zero):
+    1) A path to a file containing a tree in string form
 
-    clickme allows three types of input:
-    1) An object of class phylo
-    2) A string of containing a Newick tree
-    3) A path to a file containing a string with a Newick tree
+        library(clickme)
+        mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
+        clickme(mammals_path, "one_zoom")
+
+    1) A tree in string form
+
+        library(clickme)
+        mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
+
+        mammals <- scan(mammals_path, "character")
+        clickme(mammals, "one_zoom")
+
+    2) An object of class phylo
+
+        library(clickme)
+        mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
+        library(ape)
+        mammals <- read.tree(mammals_path)
+        clickme(mammals, "one_zoom")
+
 
 valid_names:
 
