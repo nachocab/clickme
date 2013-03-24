@@ -1,3 +1,7 @@
+## clickme 0.0.2
+
+* You can set the CLICKME_ROOT_PATH variable in your .Rprofile to change the default root path
+
 ## clickme 0.0.1
 
 * fixed validate_ractive bug
