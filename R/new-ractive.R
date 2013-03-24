@@ -47,7 +47,7 @@ default_parameters: {
 
 require_packages:
 
-require_server: false
+require_server: no
 
 original_url:
 
