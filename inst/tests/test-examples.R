@@ -49,7 +49,7 @@ test_that("the HTML example file for the one_zoom ractive is generated", {
     # we do this to ensure that the HTML file doesn't exist before we create it
     opts <- get_opts(ractive, data_name = "data")
     unlink(opts$path$html_file)
-    data <- file.path(opts$path$data, "mammals.json")
+    data <- file.path(opts$path$data, "mammals.tree")
 
     html_file_path <- clickme(data, ractive, data_name = "data", browse=FALSE)
 

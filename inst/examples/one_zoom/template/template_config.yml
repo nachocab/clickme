@@ -3,6 +3,11 @@ info: |
 
     Input data should be in newick format, ultrametric, polytomies as branch length zero.
 
+    clickme allows three types of input:
+    1) An object of class phylo
+    2) A string of containing a Newick tree
+    3) A path to a file containing a string with a Newick tree
+
 valid_names:
 
 name_comments: |
