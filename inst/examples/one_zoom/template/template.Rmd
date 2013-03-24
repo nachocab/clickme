@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<!--
+
+License:
+
+OneZoom (TM) web version 1.1 (2012)
+Copyright (c) 2012 owned by James Rosindell and Imperial College, London
+URL: www.onezoom.org
+Citation: "OneZoom: A Fractal Explorer for the Tree of Life" PLoS Biology (2012) Rosindell, J. and Harmon, L. J.
+All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+Notes:
+
+Conceptualised and written by James Rosindell with advisory input at all stages of development from Luke Harmon
+
+Please edit to include your own data by opening in a text editor and following the instructions
+Please send us your edited software to be displayed at www.OneZoom.org where you will be credited as a contributor
+Please refer to www.OneZoom.org for software updates
+Please e-mail us using the address mail@onezoom.org
+By using OneZoom, you agree to cite the associated paper in any resulting publications
+When editing the software, you must not remove the author and copyright attribution information
+
+If you see only control buttons and no phylogenetic tree on loading, your browser probably does not support the html 5 canvas element
+This software has been tested on the latest versions of safari (Mac), Google Chrome (PC) and firefox (Mac and PC)
+
+-->
+
+<html>
+
+<script type="text/javascript">
+function userdata() {
+    fulltree = new midnode("{{ opts$data }}");
+}
+</script>
+
+{{ append_scripts(opts) }}
+
+<head>
+    <META NAME="description" CONTENT="OneZoom Tree of Life Explorer" />
+    <meta NAME="viewport" CONTENT="width=device-width, initial-scale=1, user-scalable=no">
+    <title>  OneZoom Tree of Life Explorer - Mammals</title>
+</head>
+
+<body id = "wholebody" onLoad="init();" style="overflow: hidden ; background-color:  rgb(0, 0, 0) " onresize="(Resize())" >
+
+    <center>
+        <img src="one_zoom/external/OZ_W_1/OZ_logo_small.png"  height="28" style = "cursor:pointer"onclick="Link2OZ();" onmouseover = "popup_OZsite()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/OZname.png"  height="28" style = "cursor:pointer"onclick="Link2OZ();" onmouseover = "popup_OZsite()" onmouseout = "popup_out()"/>
+        <img id = "headerspace" src="one_zoom/external/OZ_W_1/black.jpg" width = "50" height="28" />
+        <img src="one_zoom/external/OZ_W_1/Zoomin_icon.png"  height="28" style = "cursor:pointer"onclick="CZoomin();" onmouseover = "popup_Zoomin()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/Zoomout_icon.png"  height="28" style = "cursor:pointer"onclick="CZoomout();" onmouseover = "popup_Zoomout()" onmouseout = "popup_out()"/>
+
+        <img src="one_zoom/external/OZ_W_1/Home_icon.png"  height="28" style = "cursor:pointer"onclick="Link2OZ();" onmouseover = "popup_home()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/Search_icon.png"  height="28" style = "cursor:pointer"onclick="searchoptions();" onmouseover = "popup_search()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/Grow_icon.png"  height="28" style = "cursor:pointer"onclick="growoptions();"onmouseover = "popup_grow()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/Shape_icon.png"  height="28" style = "cursor:pointer"onclick="form_change();"onmouseover = "popup_shape()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/Options_icon.png"  height="28" style = "cursor:pointer"onclick="viewoptions();"onmouseover = "popup_view()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/Reload_icon.png"  height="28" style = "cursor:pointer"onclick="userReset();"onmouseover = "popup_reset()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/Help_icon.png"  height="28" style = "cursor:pointer"onclick="tutorialstart();"onmouseover = "popup_tutorial()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/More_icon.png"  height="28" style = "cursor:pointer"onclick="moreoptions();"onmouseover = "popup_more()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/Twitter_icon.png"  height="28" style = "cursor:pointer"onclick="Link2Twitter();"onmouseover = "popup_twitter()" onmouseout = "popup_out()"/>
+        <img src="one_zoom/external/OZ_W_1/Facebook_icon.png"  height="28" style = "cursor:pointer"onclick="Link2Facebook();"onmouseover = "popup_facebook()" onmouseout = "popup_out()"/>
+
+    </center>
+    <center>
+        <canvas id="myCanvas" >
+        </canvas>
+    </center>
+
+
+    <form name="myform">
+        <FONT style = "display:none" COLOR="FFFFFF" id = "Canvasnotsupported"> Canvas element not supported - please update your browser </FONT>
+        <p id="textoutunused"> </p>
+
+        <FONT COLOR="FFFFFF" id = "JSnotsupported"> <center>
+            <p>Please wait... </p>
+            <p>if you have waited for a long time and nothing has happened</p>
+            <p>then Javascript may be turned off in your browser settings</p>
+            <p>or Javascript may not be supported - please check your browser.</p></center></FONT>
+            <img id = "headerspace2" src="one_zoom/external/OZ_W_1/black.jpg" width = "26" height="2" />
+            <FONT style = "display:none" COLOR="FFFFFF" id = "viewtxt"> View options </FONT>
+        <FONT style = "display:none" COLOR="FFFFFF" id = "growtitle"> Growth animation</FONT>
+        <FONT style = "display:none" COLOR="FFFFFF" id = "searchtxt"> Search: </FONT>
+        <FONT style = "display:none" COLOR="FFFFFF" id = "moretxt"> More options </FONT>
+
+            <button style = "cursor:pointer; display:none"id = "detailincbutton" type="button" onclick="detaildown();">Detail -</button>
+            <button style = "cursor:pointer; display:none"id = "detaildecbutton" type="button" onclick="detailup();">Detail +</button>
+        <button style = "cursor:pointer; display:none"id = "tdetailincbutton" type="button" onclick="tdetaildown();">Text -</button>
+        <button style = "cursor:pointer; display:none"id = "tdetaildecbutton" type="button" onclick="tdetailup();">Text +</button>
+
+
+            <button style = "cursor:pointer; display:none"id = "formbutton" type="button" onclick="form_change();">Change Fractal Shape</button>
+            <button style = "cursor:pointer; display:none"id = "colourbutton" type="button" onclick="colour_change();">Change Colours</button>
+        <button style = "cursor:pointer; display:none"id = "spbutton" type="button" onclick="signpost_change();">Signposts On/Off</button>
+        <button style = "cursor:pointer; display:none"id = "namebutton" type="button" onclick="name_change();">Latin/Common Names</button>
+
+            <button style = "cursor:pointer; display:none"id = "polybutton"type="button" onclick="polyt_change();">Show Polytomies</button>
+        <button style = "cursor:pointer; display:none"id = "info button" type="button" onclick="toggledisplay();">Show Magnification</button>
+
+
+
+        <button style = "cursor:pointer; display:none"id = "startgbutton" type="button" onclick="growstart();">Beginning</button>
+        <button style = "cursor:pointer; display:none"id = "revgbutton" type="button" onclick="growrev();">Reverse</button>
+        <button style = "cursor:pointer; display:none"id = "pausegbutton" type="button" onclick="growpause();">Pause</button>
+        <button style = "cursor:pointer; display:none"id = "playgbutton" type="button" onclick="growplay();">Play</button>
+
+
+
+            <button style = "cursor:pointer; display:none"id = "endgbutton" type="button" onclick="growend();">Stop</button>
+
+            <button style = "cursor:pointer; display:none"id = "fastergbutton" type="button" onclick="growfaster();">Faster</button>
+            <button style = "cursor:pointer; display:none"id = "slowergbutton" type="button" onclick="growslower();">Slower</button>
+
+
+            <FONT style = "display:none" COLOR="FFFFFF" id = "numhittxt">no hits</FONT>
+                    <input style = "display:none" id = "searchtf" type="text" name="tosearchfor" onchange="marksearch();"/>
+
+        <button style = "cursor:pointer; display:none"id = "searchbutton" type="button" id= "markbutton" onclick="marksearch();">Next hit</button>
+
+            <button style = "cursor:pointer; display:none"id = "searchclearbutton" type="button" id= "searchclearbutton" onclick="usersearchclear();">Clear</button>
+
+            <button style = "cursor:pointer; display:none"id = "searchbutton2" type="button" id= "markbutton" onclick="unmarksearch();">Markings On/Off</button>
+            <button style = "cursor:pointer; display:none"id = "leapbutton" name="Flybutton" type="button" onclick="performleap();">Show Results</button>
+
+        <input style = "display:none" id = "latincheckbox" type="checkbox" name="latinsearch" value="latinsearch" />
+        <FONT style = "display:none" COLOR="FFFFFF" id = "latintxt"> Latin </FONT>
+        <input style = "display:none" id = "commoncheckbox" type="checkbox" name="commonsearch" value="commonsearch" checked="checked" />
+        <FONT style = "display:none" COLOR="FFFFFF" id = "commontxt"> Common  </FONT>
+        <input style = "display:none" id = "traitcheckbox" type="checkbox" name="traitsearch" value="traitsearch" checked="checked" />
+        <FONT style = "display:none"COLOR="FFFFFF" id = "traittxt"> Conservation </FONT>
+
+
+            <button style = "cursor:pointer; display:none"id = "flybutton" name="Flybutton" type="button" onclick="performfly();">Fly to Results</button>
+        <input style = "display:none" id = "flightcheckbox" type="checkbox" name="flightsearch" value="flightsearch"/>
+        <FONT style = "display:none" COLOR="FFFFFF" id = "flighttxt"> Flight animation </FONT>
+        <input style = "display:none" id = "markingscheckbox" type="checkbox" name="domarksearch" value="domarksearch" onchange="marksearchchange();" checked="checked"/>
+        <FONT style = "display:none" COLOR="FFFFFF" id = "markingstxt" > Markings </FONT>
+
+
+            <FONT style = "display:none"COLOR="FFFFFF" id = "datatxt"> Data in Newick format, ultrametric, polytomies as branch length zero - </FONT>
+            <input style = "display:none" type="text" id = "datatxtin" name="datain" width = "35" />
+            <button style = "cursor:pointer; display:none"type="button" id = "databutton" onclick="init();">Load data</button>
+
+
+
+
+
+         <button style = "cursor:pointer; display:none" type="button" id = "closebutton" onclick="Closebar();">Close</button>
+        <FONT COLOR="FFFFFF" id = "viewtxt2"> </FONT>
+        <FONT COLOR="FFFFFF" id = "growtxt"> </FONT>
+            <FONT id="textout"> </FONT>
+
+
+    </form>
+
+</body>
+</html>

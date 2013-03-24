@@ -1,0 +1,28 @@
+info: |
+    Zoomable phylogenetic tree viewer that allows interactive display of large trees.
+
+    Input data should be in newick format, ultrametric, polytomies as branch length zero.
+
+valid_names:
+
+name_comments: |
+
+scripts:
+    - OZ_W_1/User_options_13.js
+    - OZ_W_1/JScode_W_10.js
+    - OZ_W_1/mammals_soption.js
+
+styles:
+
+default_parameters: {
+
+}
+
+require_packages:
+    - ape
+
+require_server: no
+
+original_url: http://www.onezoom.org/mammals.htm
+
+

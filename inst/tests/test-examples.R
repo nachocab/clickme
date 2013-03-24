@@ -42,6 +42,20 @@ test_that("the HTML example file for the longitudinal_heatmap ractive is generat
     expect_true(file.exists(opts$path$html_file))
 })
 
+test_that("the HTML example file for the one_zoom ractive is generated", {
+    set_root_path(system.file("examples", package="clickme"))
+    ractive <- "one_zoom"
+
+    # we do this to ensure that the HTML file doesn't exist before we create it
+    opts <- get_opts(ractive, data_name = "data")
+    unlink(opts$path$html_file)
+    data <- file.path(opts$path$data, "mammals.json")
+
+    html_file_path <- clickme(data, ractive, data_name = "data", browse=FALSE)
+
+    expect_true(file.exists(opts$path$html_file))
+})
+
 context("example translators")
 test_that("example translators work", {
     set_root_path(system.file("examples", package="clickme"))
