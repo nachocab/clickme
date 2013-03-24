@@ -2,7 +2,7 @@
 
 **clickme** is an R package that renders JavaScript visualizations using R data objects as input. Its goal is to make interactive visualizations as easy to use as the base `plot` function.
 
-Instead of static JS files, clickme works with [**ractives**](https://github.com/nachocab/clickme/wiki/Ractive-Structure) (short for *interactives*—a hat tip to [Neal Stephenson](https://en.wikipedia.org/wiki/The_Diamond_Age)), which are simple folder structures that contain a **template** of the JS code that treats the input data as a parameter. This model makes visualizations easy to access and reuse within R.
+Instead of static JS files, clickme works with [**ractives**](https://github.com/nachocab/clickme/wiki/Ractive-Structure) (short for *interactives*—a hat tip to [Neal Stephenson](https://en.wikipedia.org/wiki/The_Diamond_Age)), which are simple folder structures that contain a **template** file used to populate the JS code with R input data. This model makes visualizations easy to access and reuse within R.
 
 Want to learn more? [See the wiki](https://github.com/nachocab/clickme/wiki).
 
@@ -23,7 +23,7 @@ Now you can try the examples:
 ```S
 library(clickme)
 
-# visualize a zoomable phylogenetic tree (OneZoom)
+# visualize a zoomable phylogenetic tree (OneZoom.org)
 mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
 clickme(mammals_path, "one_zoom")
 
