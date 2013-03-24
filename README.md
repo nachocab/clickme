@@ -43,7 +43,7 @@ clickme(df2, "line_with_focus")
 df3 <- matrix(rnorm(200), ncol = 8,nrow = 25)
 rownames(df3) <- paste0("GENE_", 1:25)
 colnames(df3) <- paste0("sample_", 1:8)
-clickme(df3, "longitudinal_heatmap") # you will need to have a local server running for this example to work
+clickme(df3, "longitudinal_heatmap") # you will need to have a local server for this one. Try running server() if you have python installed
 ```
 
 Your browser will open a new tab for each example. They should look something like [this](http://bl.ocks.org/nachocab/5178583).

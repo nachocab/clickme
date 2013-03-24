@@ -71,7 +71,7 @@ clickme <- function(data, ractive, data_name = NULL, html_file_name = NULL, para
 
     if (opts$template_config$require_server){
         url <- paste0("http://localhost:", port, "/", opts$name$html_file)
-        message("Make sure you have a server running at: ", get_root_path(), "\n")
+        message("Make sure you have a server running at: ", get_root_path(), "\nYou can use server() to start one, if you have python installed")
     } else {
         url <- opts$path$html_file
     }
