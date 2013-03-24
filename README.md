@@ -25,6 +25,10 @@ Now you can try the examples:
 ```S
 library(clickme)
 
+# visualize a zoomable phylogenetic tree (OneZoom)
+mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
+clickme(mammals_path, "one_zoom")
+
 # visualize a force-directed interactive graph
 items <- paste0("GENE_", 1:40)
 n <- 30
