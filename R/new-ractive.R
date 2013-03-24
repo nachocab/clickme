@@ -1,8 +1,8 @@
 #' Creates a new ractive
 #'
 #' This creates the folder structure with the files that a ractive needs.
-#' @param ractive_name
-#' @param overwrite
+#' @param ractive_name name of the ractive
+#' @param overwrite flag that indicates what to do when there is another ractive of the same name, default FALSE
 #' @export
 new_ractive <- function(ractive_name, overwrite = FALSE) {
     opts <- add_ractive_opts(ractive_name)

@@ -1,7 +1,7 @@
 Package: clickme
 Maintainer: Nacho Caballero <nachocab@gmail.com>
 Author: Nacho Caballero <nachocab@gmail.com>
-Version: 0.0.1
+Version: 0.0.2
 License: GPL-3
 Title: A way to generate interactive plots using R data
 Description: The default interactivity comes from the D3 javascript library.

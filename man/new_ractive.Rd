@@ -5,9 +5,10 @@
   new_ractive(ractive_name, overwrite = FALSE)
 }
 \arguments{
-  \item{ractive_name}{}
+  \item{ractive_name}{name of the ractive}
 
-  \item{overwrite}{}
+  \item{overwrite}{flag that indicates what to do when
+  there is another ractive of the same name, default FALSE}
 }
 \description{
   This creates the folder structure with the files that a

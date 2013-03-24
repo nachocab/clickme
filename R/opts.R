@@ -48,14 +48,15 @@ add_params <- function(opts, params) {
     opts
 }
 
-#' Get options used by ractive
+#' Get options used by the current ractive
 #'
 #' @param ractive name of the reactive
-#' @param data_name name of input data
-#' @param html_file_name name of output HTML file
+#' @param params list containing the parameters and values that will be accessible from the template
+#' @param data_name name used to identify the output HTML file, default "dataRANDOMSTRING"
+#' @param html_file_name name of the output HTML file that contains the visualization, default "data_name-ractive.html"
 #' @export
 #' @import yaml
-get_opts <- function(ractive, data_name = NULL, html_file_name = NULL, params = NULL){
+get_opts <- function(ractive, params = NULL, data_name = NULL, html_file_name = NULL){
     opts <- add_ractive_opts(ractive)
     if (!file.exists(opts$path$ractive)) stop("No ractive named ", ractive, " found at:", get_root_path())
     if (!file.exists(opts$path$template_config_file)) stop("No template configuration file found at:", opts$path$template_config_file)

@@ -4,6 +4,11 @@
 \usage{
   server(path = get_root_path(), port = 8888)
 }
+\arguments{
+  \item{path}{path where server is started}
+
+  \item{port}{port used to start the server}
+}
 \description{
   Run a local server
 }

@@ -6,7 +6,6 @@
 #' @param opts options of current template
 translate <- function(data, opts=NULL) {
     library(ape)
-
     if (class(data) == "phylo"){
         data <- write.tree(data)
     }  else if (file.exists(data)) {

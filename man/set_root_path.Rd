@@ -2,7 +2,7 @@
 \alias{set_root_path}
 \title{Set the root path}
 \usage{
-  set_root_path(root_path)
+  set_root_path(path)
 }
 \arguments{
   \item{path}{path to be used as root}
