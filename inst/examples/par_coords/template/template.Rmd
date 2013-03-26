@@ -4,7 +4,7 @@
 {{ append_styles(opts) }}
 {{ append_scripts(opts) }}
 
-<div id="example" class="parcoords" style="width:960px;height:200px;"></div>
+<div id="example" class="parcoords" style="width:{{ opts$params$width }}px;height:{{ opts$params$height }}px;"></div>
 
 <script id="brushing">// quantitative color scale
 var color_palette = d3.scale.linear()

@@ -6,6 +6,7 @@ info: |
     If not specified explicitly, the template uses the first numeric column.
 
     "from_color" is the starting color of the palette. It can be specified by a name ("red") or hex ("#FFFF33")
+
     "to_color" is the ending color of the palette. It can be specified by a name ("red") or hex ("#FFFF33")
 
     "range" will be used to set the domain of the color palette.
@@ -26,8 +27,12 @@ styles:
     - style.css
 
 default_parameters: {
+    color_by: null,
     from_color: "steelblue",
     to_color: "brown",
+    range: null,
+    width: 960,
+    height: 200,
 }
 
 require_packages:
