@@ -1,15 +1,18 @@
 #' Translate the data object to the format expected by current template
 #'
-#' It returns the translated data object.
-#'
 #' @param data input data object
 #' @param opts options of current template
-translate <- function(data, opts=NULL) {
+#' @return The opts variable with the opts$data variable filled in
+translate <- function(data, opts) {
     library(ape)
     if (class(data) == "phylo"){
-        data <- write.tree(data)
+        translated_data <- write.tree(data)
     }  else if (file.exists(data)) {
-        data <- scan(data, "character")
+        translated_data <- scan(data, "character")
+    } else {
+        translated_data <- data
     }
-    data
+
+    opts$data <- translated_data
+    opts
 }

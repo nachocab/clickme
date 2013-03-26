@@ -53,24 +53,28 @@ original_url:
 
 ", opts$path$template_config_file)
 
-    writeLines("#' Translate the data object to the format expected by the current template
-#'
-#' It returns the translated data object.
+    writeLines("#' Translate the data object to the format expected by current template
 #'
 #' @param data input data object
-#' @param opts options used by current template
-translate <- function(data, opts = NULL) {
-    data
+#' @param opts options of current template
+#' @return The opts variable with the opts$data variable filled in
+translate <- function(data, opts) {
+    translated_data <- data
+
+    opts$data <- translated_data
+    opts
 }", opts$path$translator_file)
 
-    writeLines("context(\"translate\")
+    writeLines(paste0("context(\"translate ", ractive_name, "\")
 
 test_that(\"input data is translated to the format expected by the template\", {
     input_data <- data.frame()
     expected_data <- \"\"
 
-    translated_input <- translate(input_data)
-    expect_equal(translated_input, expected_data)
-})", opts$path$translator_test_file)
+    opts <- get_opts(\"", ractive_name ,"\")
+    opts <- translate(input_data, opts)
+
+    expect_equal(opts$data, expected_data)
+})"), opts$path$translator_test_file)
 
 }

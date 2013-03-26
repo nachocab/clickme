@@ -1,13 +1,14 @@
-#' Translate the data object to the format expected by the current template
-#'
-#' It returns the translated data object.
+#' Translate the data object to the format expected by current template
 #'
 #' @param data input data object
-#' @param opts options used by current template
+#' @param opts options of current template
+#' @return The opts variable with the opts$data variable filled in
 translate <- function(data, opts = NULL) {
     library(df2json)
     data <- as.data.frame(data, stringsAsFactors=FALSE)
-    data <- df2json(data)
-    data
+    translated_data <- df2json(data)
+
+    opts$data <- translated_data
+    opts
 }
 

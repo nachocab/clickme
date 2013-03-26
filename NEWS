@@ -1,3 +1,7 @@
+## clickme 0.0.3
+
+* The `translate()` function should return opts. That way, if the translator makes changes to the opts variable, they will be visible to the `clickme` function
+
 ## clickme 0.0.2
 
 * You can set the CLICKME_ROOT_PATH variable in your .Rprofile to change the default root path

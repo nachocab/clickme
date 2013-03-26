@@ -12,13 +12,12 @@ prepare_data <- function(data){
     data
 }
 
-#' Translate the data object to the format expected by the current template
-#'
-#' It returns the translated data object.
+#' Translate the data object to the format expected by current template
 #'
 #' @param data input data object
-#' @param opts options used by current template
-translate <- function(data, opts = NULL) {
+#' @param opts options of current template
+#' @return The opts variable with the opts$data variable filled in
+translate <- function(data, opts) {
     data <- prepare_data(data)
     data_file_name <- paste0(opts$data_name, ".csv")
     data_file_path <- file.path(opts$path$data, data_file_name)
@@ -27,6 +26,6 @@ translate <- function(data, opts = NULL) {
     write.table(data, file = data_file_path, sep = ",", quote=FALSE, row.names=FALSE, col.names=TRUE)
     message("Created data file at: ", data_file_path)
 
-    path <- paste0("\"", relative_data_file_path, "\"")
-    path
+    opts$data <- paste0("\"", relative_data_file_path, "\"")
+    opts
 }

@@ -12,17 +12,17 @@ prepare_data <- function(data){
     data
 }
 
-#' Translate the data object to the format expected by the current template
-#'
-#' It returns the translated data object.
+#' Translate the data object to the format expected by current template
 #'
 #' @param data input data object
-#' @param opts options used by current template
-translate <- function(data, opts = NULL) {
+#' @param opts options of current template
+#' @return The opts variable with the opts$data variable filled in
+translate <- function(data, opts) {
     library(rjson)
     data <- as.data.frame(data, stringsAsFactors=FALSE)
-    data <- prepare_data(data)
-    data <- toJSON(data)
-    data
+    translated_data <- prepare_data(data)
+    translated_data <- toJSON(translated_data)
+    opts$data <- translated_data
+    opts
 }
 
