@@ -1,5 +1,6 @@
 context("set_root_path")
 
+if (exists("CLICKME_ROOT_PATH")) old_clickme_root_path <- CLICKME_ROOT_PATH
 
 test_that("root path can be preset in .Rprofile", {
     .clickme_env$root_path <- NULL
@@ -31,4 +32,6 @@ test_that("root path can be changed", {
     expect_equal(path, get_root_path())
 })
 
+# To ensure we are not overwriting the current CLICKME_ROOT_PATH in .Rprofile
+if (exists("old_clickme_root_path")) CLICKME_ROOT_PATH <<- old_clickme_root_path
 
