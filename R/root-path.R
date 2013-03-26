@@ -17,7 +17,7 @@ set_root_path <- function(path) {
 get_root_path <- function() {
     if (is.null(.clickme_env$root_path)){
         if (exists("CLICKME_ROOT_PATH") && !is.null(CLICKME_ROOT_PATH)){
-            if (!file.exists(CLICKME_ROOT_PATH)) stop("Your CLICKME_ROOT_PATH variable contains an invalid file path: \'", CLICKME_ROOT_PATH, "\'\n  You can change it directly, or use set_root_path(\"valid/path/to/root/folder\")")
+            if (!file.exists(CLICKME_ROOT_PATH)) stop("Your CLICKME_ROOT_PATH variable contains an invalid file path: \'", CLICKME_ROOT_PATH, "\'\n  You can change it directly, or use set_root_path(\"/path/to/root/folder\")")
 
             .clickme_env$root_path <- CLICKME_ROOT_PATH
         } else {

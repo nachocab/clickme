@@ -1,6 +1,6 @@
 # clickme
 
-**clickme** is an R package that renders JavaScript visualizations using R data objects as input. Its goal is to make interactive visualizations as easy to use as the base `plot` function.
+**clickme** is an R package that makes JavaScript visualizations using R data objects as input. Its goal is to make interactive visualizations as easy to use as the base `plot` function.
 
 Instead of static JS files, clickme works with [**ractives**](https://github.com/nachocab/clickme/wiki/Ractive-Structure) (short for *interactives*—a hat tip to [Neal Stephenson](https://en.wikipedia.org/wiki/The_Diamond_Age)), which are simple folder structures that contain a **template** file used to populate the JS code with R input data. This model makes visualizations easy to access and reuse within R.
 
@@ -43,7 +43,7 @@ clickme(df2, "line_with_focus")
 df3 <- matrix(rnorm(200), ncol = 8,nrow = 25)
 rownames(df3) <- paste0("GENE_", 1:25)
 colnames(df3) <- paste0("sample_", 1:8)
-clickme(df3, "longitudinal_heatmap") # you will need to have a local server for this one. Try running server() if you have python installed
+clickme(df3, "longitudinal_heatmap") # you will need to have a local server for this one. Try running python -m SimpleHTTPServer
 ```
 
 Your browser will open a new tab for each example. They should look something like [this](http://bl.ocks.org/nachocab/5178583).
