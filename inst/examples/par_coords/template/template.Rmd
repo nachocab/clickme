@@ -1,0 +1,32 @@
+<!doctype html>
+<title>Parallel Coordinates</title>
+
+{{ append_styles(opts) }}
+{{ append_scripts(opts) }}
+
+<div id="example" class="parcoords" style="width:960px;height:200px;"></div>
+
+<script id="brushing">// quantitative color scale
+var color_palette = d3.scale.linear()
+  .domain([{{ opts$params$range }}])
+  .range(["{{ opts$params$from_color }}", "{{ opts$params$to_color }}"])
+  .interpolate(d3.interpolateLab);
+
+var color = function(d) { return color_palette(d["{{ opts$params$color_by }}"]); };
+
+// load csv file and create the chart
+d3.csv({{ opts$data }}, function(data) {
+  d3.parcoords()("#example")
+    .data(data)
+    .color(color)
+    .alpha(0.4)
+    .render()
+    .shadows()
+    .brushable()  // enable brushing
+    .reorderable(); // enable moving axes
+});
+</script>
+
+
+
+

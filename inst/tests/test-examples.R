@@ -56,6 +56,20 @@ test_that("the HTML example file for the one_zoom ractive is generated", {
     expect_true(file.exists(opts$path$html_file))
 })
 
+test_that("the HTML example file for the par_coords ractive is generated", {
+    set_root_path(system.file("examples", package="clickme"))
+    ractive <- "par_coords"
+
+    # we do this to ensure that the HTML file doesn't exist before we create it
+    opts <- get_opts(ractive, data_name = "data")
+    unlink(opts$path$html_file)
+    data <- read.csv(file.path(opts$path$data, "original_data.csv"))
+
+    html_file_path <- clickme(data, ractive, data_name = "data", browse=FALSE)
+
+    expect_true(file.exists(opts$path$html_file))
+})
+
 context("example translators")
 test_that("example translators work", {
     set_root_path(system.file("examples", package="clickme"))
