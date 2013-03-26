@@ -27,7 +27,8 @@ clickme_quote <- function(data) {
 #' @param port port used to start the server
 #' @export
 server <- function(path=get_root_path(), port=8888){
-    system(paste0("pushd ", path, "; python -m SimpleHTTPServer", port, "; popd"))
+    system(paste0("cd ", path, "; python -m SimpleHTTPServer ", port))
+    message("Server running at ", path)
 }
 
 #' Test the translator of a given ractive
