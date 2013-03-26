@@ -8,7 +8,7 @@ Want to learn more? [See the wiki](https://github.com/nachocab/clickme/wiki).
 
 ## Quick Usage
 
-You can install clickme by running this in your R session:
+Run this in your R session to install or update clickme:
 
 ```S
 install.packages("devtools")
