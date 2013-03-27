@@ -1,4 +1,4 @@
-context("translate test_translator")
+context("translate line_with_focus")
 
 test_that("data frames are translated to the format expected by the template", {
     input_data <- data.frame(line = rep(c("l1", "l2"), each = 2), x = 1:4, y = 11:14)
