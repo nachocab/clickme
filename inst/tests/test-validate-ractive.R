@@ -20,5 +20,21 @@ test_that("ractive is valid", {
     opts$path$translator_file <- "fake_translator_file"
     expect_error(validate_ractive(opts), "translator.R not found in:")
     opts <- get_opts(ractive, data_name = "data")
+})
 
+test_that("styles and scripts must be valid", {
+    set_root_path(system.file("examples", package="clickme"))
+    ractive <- "par_coords"
+    opts <- get_opts(ractive, data_name = "data")
+
+    opts$template_config$styles <- c("abc.css")
+    expect_error(validate_ractive(opts), "abc.css not found")
+
+    opts <- get_opts(ractive, data_name = "data")
+    opts$template_config$scripts <- c("abc.js")
+    expect_error(validate_ractive(opts), "abc.js not found")
+
+    opts <- get_opts(ractive, data_name = "data")
+    opts$template_config$scripts <- c("http://d3js.org/d3.v3.min.js")
+    expect_true(validate_ractive(opts))
 })

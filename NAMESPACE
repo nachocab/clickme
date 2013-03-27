@@ -1,5 +1,6 @@
 export(append_scripts)
 export(append_styles)
+export(append_styles_and_scripts)
 export(clickme)
 export(get_opts)
 export(get_root_path)

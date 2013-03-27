@@ -14,5 +14,12 @@ validate_ractive <- function(opts) {
         })
     }
 
-    invisible()
+    sapply(c(opts$template_config$styles, opts$template_config$scripts), function(style_or_script){
+        if (!grepl("^http", style_or_script)){
+            path <- file.path(opts$path$external, style_or_script)
+            if (!file.exists(path)) stop(style_or_script, " not found at: ", path)
+        }
+    })
+
+    invisible(TRUE)
 }
