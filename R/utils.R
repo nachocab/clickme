@@ -1,3 +1,42 @@
+#' Generate HTML style and script tags
+#'
+#' @param opts the options of the current template
+#' @export
+append_styles_and_scripts <- function(opts){
+    styles_and_scripts <- paste0(c(append_styles(opts), append_scripts(opts)), collapse="\n")
+    styles_and_scripts
+}
+
+#' Generate HTML script tags
+#'
+#' @param opts the options of the current template
+#' @export
+append_scripts <- function(opts) {
+    scripts <- paste(sapply(opts$template_config$scripts, function(script_path){
+        if (!grepl("^http", script_path)){
+            script_path <- file.path(opts$relative_path$external, script_path)
+        }
+        paste0("<script src=\"", script_path, "\"></script>")
+    }), collapse="\n")
+
+    scripts
+}
+
+#' Generate HTML style tags
+#'
+#' @param opts the options of the current template
+#' @export
+append_styles <- function(opts) {
+    styles <- paste(sapply(opts$template_config$styles, function(style_path){
+        if (!grepl("^http", style_path)){
+            style_path <- file.path(opts$relative_path$external, style_path)
+        }
+        paste0("<link href=\"", style_path, "\" rel=\"stylesheet\">")
+    }), collapse="\n")
+
+    styles
+}
+
 # @keyword internal
 "%notin%" <- function(x,y) !(x %in% y)
 

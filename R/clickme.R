@@ -1,33 +1,3 @@
-#' Generate HTML script tags
-#'
-#' @param opts the options of the current template
-#' @export
-append_scripts <- function(opts) {
-    scripts <- paste(sapply(opts$template_config$scripts, function(script_path){
-        if (!grepl("^http", script_path)){
-            script_path <- file.path(opts$relative_path$external, script_path)
-        }
-        paste0("<script src=\"", script_path, "\"></script>")
-    }), collapse="\n")
-
-    scripts
-}
-
-#' Generate HTML style tags
-#'
-#' @param opts the options of the current template
-#' @export
-append_styles <- function(opts) {
-    styles <- paste(sapply(opts$template_config$styles, function(style_path){
-        if (!grepl("^http", style_path)){
-            style_path <- file.path(opts$relative_path$external, style_path)
-        }
-        paste0("<link href=\"", style_path, "\" rel=\"stylesheet\">")
-    }), collapse="\n")
-
-    styles
-}
-
 #' @import knitr
 generate_visualization <- function(data, opts){
     visualization <- knit_expand(opts$path$template_file)
