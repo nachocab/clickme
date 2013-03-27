@@ -33,11 +33,20 @@ test_that("add ractive options", {
     expect_equal(opts$relative_path$external, file.path(opts$name$ractive, opts$name$external))
 })
 
-test_that("add visualization options", {
+test_that("data_name is data by default, and it appends random string when NULL", {
     set_root_path(system.file("examples", package="clickme"))
-    opts <- get_opts("force_directed", data_name="data")
+    opts <- get_opts("force_directed")
 
     expect_equal(opts$data_name, "data")
+
+    opts <- get_opts("force_directed", data_name = NULL)
+    expect_match(opts$data_name, "data[0-9a-z]+")
+})
+
+test_that("the output HTML file is named using the data_name and the ractive name", {
+    set_root_path(system.file("examples", package="clickme"))
+    opts <- get_opts("force_directed")
+
     expect_equal(opts$name$html_file, paste0(opts$data_name, "-", opts$name$ractive, ".html"))
     expect_equal(opts$path$html_file, file.path(get_root_path(), opts$name$html_file))
 })

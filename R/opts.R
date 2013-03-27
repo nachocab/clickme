@@ -56,7 +56,7 @@ add_params <- function(opts, params) {
 #' @param html_file_name name of the output HTML file that contains the visualization, default "data_name-ractive.html"
 #' @export
 #' @import yaml
-get_opts <- function(ractive, params = NULL, data_name = NULL, html_file_name = NULL){
+get_opts <- function(ractive, params = NULL, data_name = "data", html_file_name = NULL){
     opts <- add_ractive_opts(ractive)
     if (!file.exists(opts$path$ractive)) stop("No ractive named ", ractive, " found at:", get_root_path())
     if (!file.exists(opts$path$template_config_file)) stop("No template configuration file found at:", opts$path$template_config_file)

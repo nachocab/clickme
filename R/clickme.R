@@ -9,7 +9,7 @@ generate_visualization <- function(data, opts){
 #' @param data input data
 #' @param ractive template id, it must match a folder within \code{set_root_path}
 #' @param params list containing the parameters and values that will be accessible from the template
-#' @param data_name name used to identify the output HTML file, default "dataRANDOMSTRING"
+#' @param data_name name used to identify the output HTML file, default "data"
 #' @param html_file_name name of the output HTML file that contains the visualization, default "data_name-ractive.html"
 #' @param browse open browser, default TRUE
 #' @param port port used to open a local browser, default 8888

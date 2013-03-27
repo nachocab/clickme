@@ -16,7 +16,7 @@
   that will be accessible from the template}
 
   \item{data_name}{name used to identify the output HTML
-  file, default "dataRANDOMSTRING"}
+  file, default "data"}
 
   \item{html_file_name}{name of the output HTML file that
   contains the visualization, default

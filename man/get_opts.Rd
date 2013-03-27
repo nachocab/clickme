@@ -2,7 +2,7 @@
 \alias{get_opts}
 \title{Get options used by the current ractive}
 \usage{
-  get_opts(ractive, params = NULL, data_name = NULL,
+  get_opts(ractive, params = NULL, data_name = "data",
     html_file_name = NULL)
 }
 \arguments{
