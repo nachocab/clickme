@@ -7,11 +7,21 @@ validate_ractive <- function(opts) {
     if (!file.exists(opts$path$template_config_file)) stop(opts$name$template_config_file, " not found in: ", opts$path$template)
 
     if (!is.null(opts$template_config$require_packages)){
-        sapply(opts$template_config$require_packages, function(package_name){
-            if (!is.installed(package_name)){
-                install.packages(package_name)
+        missing_packages <- opts$template_config$require_packages[!is.installed(opts$template_config$require_packages)]
+
+        if (length(missing_packages) != 0){
+            message("The ", opts$name$ractive,
+                    " ractive requires the following packages to be installed:\n\n",
+                    paste0(missing_packages, collapse="\n"),
+                    "\nPress ENTER and they will be installed automatically. Type 'c' if you prefer installing them yourself.")
+            response <- readline()
+            if (tolower(response) == "c"){
+                message("Try install.packages(", paste0(missing_packages, collapse=","), ")")
+                invisible(return())
+            } else {
+                install.packages(missing_packages)
             }
-        })
+        }
     }
 
     sapply(c(opts$template_config$styles, opts$template_config$scripts), function(style_or_script){
