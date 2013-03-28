@@ -4,7 +4,7 @@
 #' @param path path to be used as root
 #' @export
 set_root_path <- function(path) {
-    if (!file.exists(path)) stop("Path doesn't exist: \'", path, "\'")
+    if (!file.exists(path)) stop("Path doesn't exist: ", path)
 
     .clickme_env$root_path <- path
 

@@ -1,8 +1,9 @@
 ## clickme 0.0.4
 
 * Added `append_styles_and_scripts` convenience function
-* styles and scripts must be valid
-* data_name variable in clickme function is "data" by default. To make it a random string use NULL.
+* Styles and scripts in template_config.yml must point to existing files
+* Allow users to cancel auto-installing required packages
+* data_name variable in clickme function is now "data" by default. To make it a random string use NULL.
 
 ## clickme 0.0.3
 
