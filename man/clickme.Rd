@@ -2,7 +2,7 @@
 \alias{clickme}
 \title{Generates a JavaScript visualization}
 \usage{
-  clickme(data, ractive, params = NULL, data_name = NULL,
+  clickme(data, ractive, params = NULL, data_name = "data",
     html_file_name = NULL, browse = interactive(),
     port = 8888)
 }

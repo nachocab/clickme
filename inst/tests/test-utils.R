@@ -1,4 +1,4 @@
-context("styles and scripts")
+context("utils")
 
 test_that("appends styles and scripts", {
     set_root_path(system.file("examples", package="clickme"))

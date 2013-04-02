@@ -65,6 +65,11 @@ create_data_file <- function(data, opts, extension, sep=",", method = NULL, row.
 
     relative_data_file_path
 }
+
+readContents <- function(path) {
+    paste(readLines(path), collapse = "\n")
+}
+
 # @keyword internal
 "%notin%" <- function(x,y) !(x %in% y)
 
@@ -84,7 +89,11 @@ is.installed <- function(package) {
     is.element(package, installed.packages()[,1])
 }
 
-clickme_quote <- function(data) {
+#' Surround with escaped quotes
+#'
+#' @param data object to surround with escaped quotes
+#' @export
+escape_quote <- function(data) {
     paste0("\"", data, "\"")
 }
 
