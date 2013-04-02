@@ -8,7 +8,7 @@ translate <- function(data, opts) {
     if (class(data) == "phylo"){
         translated_data <- write.tree(data)
     }  else if (file.exists(data)) {
-        translated_data <- scan(data, "character")
+        translated_data <- paste(readLines(data), collapse = "\n")
     } else {
         translated_data <- data
     }
