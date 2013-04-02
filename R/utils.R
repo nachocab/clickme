@@ -37,6 +37,34 @@ append_styles <- function(opts) {
     styles
 }
 
+#' Create a data file
+#'
+#' Creates a file in the ractive data directory
+#'
+#' @param data the input data object
+#' @param opts the options of the current template
+#' @param extension the extension of the file
+#' @param sep the character used to separate fields in each line of the file ("," by default)
+#' @param method function used to generate the file (".csv" uses "write.csv" by default, every other file extension uses "writeLines")
+#' @param row.names show row names when using \code{write.csv}
+#' @param ... arguments passed to the function specified by method
+#' @export
+create_data_file <- function(data, opts, extension, sep=",", method = NULL, row.names = FALSE,...) {
+    if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
+
+    data_file_name <- paste0(opts$data_name, extension)
+    data_file_path <- file.path(opts$path$data, data_file_name)
+    relative_data_file_path <- file.path(opts$relative_path$data, data_file_name)
+
+    if ((is.null(method) && extension == ".csv") || (!is.null(method) && method == "write.csv")){
+        write.csv(data, file = data_file_path, row.names = row.names,...)
+    } else {
+        writeLines(text = data, con = data_file_path, ...)
+    }
+    message("Created data file at: ", data_file_path)
+
+    relative_data_file_path
+}
 # @keyword internal
 "%notin%" <- function(x,y) !(x %in% y)
 

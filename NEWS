@@ -1,5 +1,6 @@
 ## clickme 0.0.4
 
+* Added `create_data_file` convenience function to write an R object to file. It writes csv files using `write.csv` and `writeLines for the rest of extensions (unless overriden). It returns a relative path, which will be used as `opts$data` in the template.
 * Added `append_styles_and_scripts` convenience function
 * Styles and scripts in template_config.yml must point to existing files
 * Allow users to cancel auto-installing required packages
