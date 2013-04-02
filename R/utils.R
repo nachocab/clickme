@@ -2,7 +2,7 @@
 #'
 #' @param opts the options of the current template
 #' @export
-append_styles_and_scripts <- function(opts){
+append_styles_and_scripts <- append_scripts_and_styles <- function(opts){
     styles_and_scripts <- paste0(c(append_styles(opts), append_scripts(opts)), collapse="\n")
     styles_and_scripts
 }
