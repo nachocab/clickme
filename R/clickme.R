@@ -39,7 +39,7 @@ generate_visualization <- function(data, opts){
 #' rownames(df3) <- paste0("GENE_", 1:25)
 #' colnames(df3) <- paste0("sample_", 1:8)
 #' clickme(df3, "longitudinal_heatmap") # you will need to have a local server for this one.
-clickme <- function(data, ractive, params = NULL, data_name = NULL, html_file_name = NULL, browse = interactive(), port = 8888){
+clickme <- function(data, ractive, params = NULL, data_name = "data", html_file_name = NULL, browse = interactive(), port = 8888){
     opts <- get_opts(ractive, params = params, data_name = data_name, html_file_name = html_file_name)
 
     data <- validate_data_names(data, opts)
