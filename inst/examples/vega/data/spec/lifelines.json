@@ -1,0 +1,96 @@
+{
+  "name": "lifelines",
+  "width": {{ opts$params$width }},
+  "height": {{ opts$params$height }},
+  "padding": {{ get_padding_param(opts) }},
+  "data": {{ get_data_as_json(opts) }},
+  "scales": [
+    {
+      "name": "y",
+      "type": "ordinal",
+      "range": "height",
+      "domain": {"data": "people", "field": "data.label"}
+    },
+    {
+      "name": "x",
+      "type": "time",
+      "range": "width",
+      "round": true,
+      "nice": "year",
+      "domain": {"data": "people", "field": ["data.born", "data.died"]}
+    }
+  ],
+  "axes": [
+    {"type": "x", "scale": "x"}
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "from": {"data": "events"},
+      "properties": {
+        "enter": {
+          "x": {"scale": "x", "field": "data.when"},
+          "y": {"value": -10},
+          "angle": {"value": -25},
+          "fill": {"value": "#000"},
+          "text": {"field": "data.name"},
+          "font": {"value": "Helvetica Neue"},
+          "fontSize": {"value": 10}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "events"},
+      "properties": {
+        "enter": {
+          "x": {"scale": "x", "field": "data.when"},
+          "y": {"value": -8},
+          "width": {"value": 1},
+          "height": {"value": 108},
+          "fill": {"value": "#888"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "people"},
+      "properties": {
+        "enter": {
+          "x": {"scale": "x", "field": "data.born"},
+          "y": {"scale": "y", "field": "data.label", "offset": -3},
+          "fill": {"value": "#000"},
+          "text": {"field": "data.label"},
+          "font": {"value": "Helvetica Neue"},
+          "fontSize": {"value": 10}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "people"},
+      "properties": {
+        "enter": {
+          "x": {"scale": "x", "field": "data.born"},
+          "x2": {"scale": "x", "field": "data.died"},
+          "y": {"scale": "y", "field": "data.label"},
+          "height": {"value": 2},
+          "fill": {"value": "#557"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "people"},
+      "properties": {
+        "enter": {
+          "x": {"scale": "x", "field": "data.enter"},
+          "x2": {"scale": "x", "field": "data.leave"},
+          "y": {"scale": "y", "field": "data.label", "offset":-1},
+          "height": {"value": 4},
+          "fill": {"value": "#e44"}
+        }
+      }
+    }
+  ]
+}
