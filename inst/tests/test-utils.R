@@ -56,10 +56,10 @@ test_that("clickme_vega", {
     expect_equal(opts$name$html_file, "data_area-vega.html")
     expect_true(file.exists(opts$path$html_file))
 
-    opts <- clickme_vega(data, "area", params = list(width=150), browse = FALSE)
+    opts <- clickme_vega(data, "area", params = list(width=401), browse = FALSE)
 
     expect_equal(opts$params$spec, "area")
-    expect_equal(opts$params$width, 150)
+    expect_equal(opts$params$width, 401)
 
     opts <- clickme_vega(data, "area", data_name = "my_data", browse = FALSE)
 
