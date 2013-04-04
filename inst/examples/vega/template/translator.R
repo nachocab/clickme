@@ -35,9 +35,13 @@ get_padding_param <- function(opts) {
 }
 
 get_data_as_json <- function(opts) {
+  if (class(opts$data) =="data.frame") {
     library(df2json)
     json_data <- df2json(opts$data)
-
+  } else {
+    library(rjson)
+    json_data <- toJSON(opts$data)    
+  }
     json_data
 }
 
@@ -47,5 +51,3 @@ get_data_as_json_file <- function(opts) {
 
     json_file
 }
-
-
