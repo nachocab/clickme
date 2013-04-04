@@ -41,15 +41,16 @@ append_styles <- function(opts) {
 #'
 #' Creates a file in the ractive data directory
 #'
-#' @param data the input data object
 #' @param opts the options of the current template
 #' @param extension the extension of the file
 #' @param sep the character used to separate fields in each line of the file ("," by default)
 #' @param method function used to generate the file (".csv" uses "write.csv" by default, every other file extension uses "writeLines")
-#' @param row.names show row names when using \code{write.csv}
+#' @param row_names show row names when using \code{write.csv}
+#' @param relative_path boolean indicating if the path to the file should be relative or absolute
+#' @param quote_escaped boolean indicating if the file name should be surrounded with escaped quotes.
 #' @param ... arguments passed to the function specified by method
 #' @export
-create_data_file <- function(data, opts, extension, sep=",", method = NULL, row.names = FALSE,...) {
+create_data_file <- function(opts, extension, sep=",", method = NULL, row_names = FALSE, relative_path = TRUE, quote_escaped = TRUE, ...) {
     if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
 
     data_file_name <- paste0(opts$data_name, extension)
@@ -57,13 +58,23 @@ create_data_file <- function(data, opts, extension, sep=",", method = NULL, row.
     relative_data_file_path <- file.path(opts$relative_path$data, data_file_name)
 
     if ((is.null(method) && extension == ".csv") || (!is.null(method) && method == "write.csv")){
-        write.csv(data, file = data_file_path, row.names = row.names,...)
+        write.csv(opts$data, file = data_file_path, row.names = row_names,...)
     } else {
-        writeLines(text = data, con = data_file_path, ...)
+        writeLines(text = opts$data, con = data_file_path, ...)
     }
     message("Created data file at: ", data_file_path)
 
-    relative_data_file_path
+    if (relative_path){
+        path <- relative_data_file_path
+    } else {
+        path <- data_file_path
+    }
+
+    if (quote_escaped){
+        path <- quote_escaped(path)
+    }
+
+    path
 }
 
 readContents <- function(path) {
@@ -93,7 +104,7 @@ is.installed <- function(package) {
 #'
 #' @param data object to surround with escaped quotes
 #' @export
-escape_quote <- function(data) {
+quote_escaped <- function(data) {
     paste0("\"", data, "\"")
 }
 
@@ -161,6 +172,24 @@ titleize <- function(str){
     title
 }
 
+#' Open an HTML file in the browser
+#'
+#' By default it will open \code{get_opts(ractive)$url}
+#'
+#' @param ractive ractive name
+#' @param ... additional fields for \code{get_opts}
+#' @export
+open_html <- function(ractive, ...) {
+    opts <- get_opts(ractive, ...)
+    browseURL(opts$url)
+}
+
+open_all_html <- function(){
+    for(ractive in plain_list_ractives()){
+        open_html(ractive)
+    }
+}
+
 #' Get information about a ractive
 #'
 #' @param ractive ractive name
@@ -194,4 +223,41 @@ show_ractive <- function(ractive, fields = NULL){
     }
 
     cat("\n")
+}
+
+#' Generates a JavaScript visualization using Vega
+#'
+#' @param data input data
+#' @param spec Name of the vega spec file to use, it must match a file within \code{vega/data/spec/}
+#' @param ... additional arguments for \code{clickme}
+#' @export
+clickme_vega <- function(data, spec, ...){
+    dots <- list(...)
+
+    if (is.null(dots$params)) {
+        params <- list(spec = spec)
+    } else {
+        params <- dots$params
+        dots$params <- NULL
+        params$spec = spec
+    }
+
+    if (is.null(dots$data_name)){
+        dots$data_name <- paste0("data_", spec)
+    }
+    data_name <- dots$data_name
+    dots$data_name <- NULL
+
+    if (is.null(dots$browse)){
+        dots$browse <- interactive()
+    }
+    browse <- dots$browse
+    dots$browse <- NULL
+
+    if (length(dots) != 0){
+        clickme(data, "vega", browse = browse, params = params, data_name = data_name, dots)
+    } else {
+        clickme(data, "vega", browse = browse, params = params, data_name = data_name)
+    }
+
 }

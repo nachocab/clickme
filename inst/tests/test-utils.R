@@ -14,28 +14,57 @@ test_that("appends styles and scripts", {
     expect_equal(append_styles(opts), expected_styles)
 
     expected_styles_and_scripts <- "<link href=\"par_coords/external/d3.parcoords.css\" rel=\"stylesheet\">\n<link href=\"par_coords/external/style.css\" rel=\"stylesheet\">\n<script src=\"par_coords/external/d3.min.js\"></script>\n<script src=\"par_coords/external/d3.parcoords.js\"></script>"
-    expect_equal(append_styles_and_scripts(opts), expected_styles_and_scripts)
+    expect_equal(append_external(opts), expected_styles_and_scripts)
 })
 
 test_that("create data file", {
     set_root_path(system.file("examples", package="clickme"))
     ractive <- "par_coords"
     opts <- get_opts(ractive, data_name = "test_data")
+    opts$data <- "[{\"a\":3,\"b\":5}]"
 
-    data <- "[{\"a\":3,\"b\":5}]"
-    data_file <- create_data_file(data, opts, "json")
-    expect_equal(data_file, file.path(opts$relative_path$data, "test_data.json"))
-    data_file_path <- file.path(opts$path$data, "test_data.json")
-    expect_true(file.exists(data_file_path))
-    expect_equal(readContents(data_file_path), data)
+    json_file <- create_data_file(opts, "json", quote_escaped = FALSE)
 
-    unlink(file.path(opts$path$data, data_file))
+    expect_equal(json_file, file.path(opts$relative_path$data, "test_data.json"))
+    json_file_path <- file.path(opts$path$data, "test_data.json")
+    expect_true(file.exists(json_file_path))
+    expect_equal(readContents(json_file_path), opts$data)
 
-    data <- data.frame(a=c(1,2), b=c(3,4))
-    data_file <- create_data_file(data, opts, "csv")
-    data_file_path <- file.path(opts$path$data, "test_data.csv")
-    expect_true(file.exists(data_file_path))
-    expect_equal(readContents(data_file_path), "\"a\",\"b\"\n1,3\n2,4")
+    unlink(file.path(opts$path$data, json_file))
 
-    unlink(file.path(opts$path$data, data_file))
+    opts$data <- data.frame(a=c(1,2), b=c(3,4))
+    csv_file <- create_data_file(opts, "csv", quote_escaped = FALSE)
+    csv_file_path <- file.path(opts$path$data, "test_data.csv")
+    expect_true(file.exists(csv_file_path))
+    expect_equal(readContents(csv_file_path), "\"a\",\"b\"\n1,3\n2,4")
+
+    unlink(file.path(opts$path$data, csv_file))
+})
+
+test_that("clickme_vega", {
+    set_root_path(system.file("examples", package="clickme"))
+    ractive <- "vega"
+
+    # we do this to ensure that the HTML file doesn't exist before we create it
+    spec <- "area"
+    opts <- get_opts(ractive, params = list(spec = spec))
+    unlink(opts$path$html_file)
+    data <- read.csv(file.path(opts$path$data, "area_bar_scatter.csv"))
+
+    opts <- clickme_vega(data, "area", browse = FALSE)
+
+    expect_equal(opts$name$html_file, "data_area-vega.html")
+    expect_true(file.exists(opts$path$html_file))
+
+    opts <- clickme_vega(data, "area", params = list(width=150), browse = FALSE)
+
+    expect_equal(opts$params$spec, "area")
+    expect_equal(opts$params$width, 150)
+
+    opts <- clickme_vega(data, "area", data_name = "my_data", browse = FALSE)
+
+    expect_equal(opts$data_name, "my_data")
+    expect_equal(opts$name$html_file, "my_data-vega.html")
+
+    unlink(opts$path$html_file)
 })

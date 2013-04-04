@@ -53,17 +53,27 @@ test_that("the output HTML file is named using the data_name and the ractive nam
 
 
 test_that("get template configuration", {
-        set_root_path(system.file("examples", package="clickme"))
-        opts <- get_opts("force_directed")
+    set_root_path(system.file("examples", package="clickme"))
+    opts <- get_opts("force_directed")
 
-        expect_true(is.character(opts$template_config$valid_names))
-        expect_true(is.character(opts$template_config$require_packages))
-        expect_true(is.character(opts$template_config$scripts))
-        expect_true(is.character(opts$template_config$styles))
-        expect_false(opts$template_config$require_server)
+    expect_true(is.character(opts$template_config$valid_names))
+    expect_true(is.character(opts$template_config$require_packages))
+    expect_true(is.character(opts$template_config$scripts))
+    expect_true(is.character(opts$template_config$styles))
+    expect_false(opts$template_config$require_server)
 
-        expect_true(is.numeric(opts$params$width))
-        expect_true(is.numeric(opts$params$height))
+    expect_true(is.numeric(opts$params$width))
+    expect_true(is.numeric(opts$params$height))
+})
+
+test_that("opts$url is set", {
+    set_root_path(system.file("examples", package="clickme"))
+    opts <- get_opts("force_directed")
+
+    expect_equal(opts$url, opts$path$html_file)
+
+    opts <- get_opts("longitudinal_heatmap")
+    expect_equal(opts$url, "http://localhost:8888/data-longitudinal_heatmap.html")
 })
 
 test_that("user params override template params", {

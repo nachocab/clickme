@@ -2,12 +2,11 @@
 \alias{create_data_file}
 \title{Create a data file}
 \usage{
-  create_data_file(data, opts, extension, sep = ",",
-    method = NULL, row.names = FALSE, ...)
+  create_data_file(opts, extension, sep = ",",
+    method = NULL, row_names = FALSE, relative_path = TRUE,
+    quote_escaped = TRUE, ...)
 }
 \arguments{
-  \item{data}{the input data object}
-
   \item{opts}{the options of the current template}
 
   \item{extension}{the extension of the file}
@@ -19,8 +18,14 @@
   uses "write.csv" by default, every other file extension
   uses "writeLines")}
 
-  \item{row.names}{show row names when using
+  \item{row_names}{show row names when using
   \code{write.csv}}
+
+  \item{relative_path}{boolean indicating if the path to
+  the file should be relative or absolute}
+
+  \item{quote_escaped}{boolean indicating if the file name
+  should be surrounded with escaped quotes.}
 
   \item{...}{arguments passed to the function specified by
   method}
