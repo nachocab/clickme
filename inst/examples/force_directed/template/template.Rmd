@@ -3,8 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Force directed</title>
-    {{ append_scripts(opts) }}
-    {{ append_styles(opts) }}
+    {{ append_external(opts) }}
   </head>
 
   <body>
@@ -17,7 +16,7 @@
           return r;
       };
 
-      var links = {{ opts$data }};
+      var links = {{ get_data_as_json(opts) }};
       var nodes = {};
       var connection_types = links.map(function(x){return x.type}).unique()
 

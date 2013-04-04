@@ -4,7 +4,10 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>PCP Heatmap</title>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+<link href="longitudinal_heatmap/external/leanback_style.css" rel="stylesheet">
+<link href="longitudinal_heatmap/external/longitudinal.css" rel="stylesheet">
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script src="http://documentcloud.github.com/underscore/underscore.js"></script>
 <script src="http://documentcloud.github.com/backbone/backbone.js"></script>
@@ -16,9 +19,6 @@
 <script src="longitudinal_heatmap/external/views/dashboard_view.js"></script>
 <script src="longitudinal_heatmap/external/views/heatmap_view.js"></script>
 <script src="longitudinal_heatmap/external/views/pcp_view.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-<link href="longitudinal_heatmap/external/leanback_style.css" rel="stylesheet">
-<link href="longitudinal_heatmap/external/longitudinal.css" rel="stylesheet">
   </head>
 
   <body>
@@ -40,7 +40,11 @@
         d3.text("longitudinal_heatmap/data/data.csv", function(text) {
           var parsedGenes = d3.csv.parse(text);
 
-          var userOptions = { urlVars: urlVars, rowNameColumn: "gene_symbol", rowType: "genes", yAxisName: "log-ratio" };
+          var userOptions = { urlVars: urlVars,
+                              rowNameColumn: "gene_symbol",
+                              rowType: "genes",
+                              yAxisName: "log-ratio" };
+
           var model = new window.LongitudinalModel(parsedGenes, userOptions);
 
           var dashboardView = new window.DashboardView({ el: "#dashboard", model: model});

@@ -41,11 +41,11 @@ This software has been tested on the latest versions of safari (Mac), Google Chr
 
 <script type="text/javascript">
 function userdata() {
-    fulltree = new midnode("{{ opts$data }}");
+    fulltree = new midnode({{ get_data_as_tree(opts) }});
 }
 </script>
 
-{{ append_scripts(opts) }}
+{{ append_external(opts) }}
 
 <head>
     <META NAME="description" CONTENT="OneZoom Tree of Life Explorer" />

@@ -1,21 +1,20 @@
 <!doctype html>
 <title>Parallel Coordinates</title>
 
-{{ append_styles(opts) }}
-{{ append_scripts(opts) }}
+{{ append_external(opts) }}
 
 <div id="example" class="parcoords" style="width:{{ opts$params$width }}px;height:{{ opts$params$height }}px;"></div>
 
 <script id="brushing">// quantitative color scale
 var color_palette = d3.scale.linear()
-  .domain([{{ opts$params$range }}])
+  .domain([{{ get_range_param(opts) }}])
   .range(["{{ opts$params$from_color }}", "{{ opts$params$to_color }}"])
   .interpolate(d3.interpolateLab);
 
-var color = function(d) { return color_palette(d["{{ opts$params$color_by }}"]); };
+var color = function(d) { return color_palette(d["{{ get_color_by_param(opts) }}"]); };
 
 // load csv file and create the chart
-d3.csv({{ opts$data }}, function(data) {
+d3.csv({{ get_data_as_csv_file(opts) }}, function(data) {
   d3.parcoords()("#example")
     .data(data)
     .color(color)

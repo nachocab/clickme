@@ -3,13 +3,12 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Line with focus</title>
-    {{ append_scripts(opts) }}
-    {{ append_styles(opts) }}
+    {{ append_external(opts) }}
   </head>
 
   <body>
     <script type="text/javascript">
-      var data = {{ opts$data }};
+      var data = {{ get_data_as_json(opts) }};
 
       nv.addGraph(function() {
 

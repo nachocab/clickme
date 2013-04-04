@@ -4,8 +4,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>PCP Heatmap</title>
-    {{ append_scripts(opts) }}
-    {{ append_styles(opts) }}
+    {{ append_external(opts) }}
   </head>
 
   <body>
@@ -24,10 +23,14 @@
       var urlVars = getUrlVars();
 
       $(document).ready(function() {
-        d3.text({{ opts$data }}, function(text) {
+        d3.text({{ get_data_as_csv_file(opts) }}, function(text) {
           var parsedGenes = d3.csv.parse(text);
 
-          var userOptions = { urlVars: urlVars, rowNameColumn: "gene_symbol", rowType: "{{ opts$params$row_names }}", yAxisName: "{{ opts$params$y_axis_name }}" };
+          var userOptions = { urlVars: urlVars,
+                              rowNameColumn: "gene_symbol",
+                              rowType: "{{ opts$params$row_names }}",
+                              yAxisName: "{{ opts$params$y_axis_name }}" };
+
           var model = new window.LongitudinalModel(parsedGenes, userOptions);
 
           var dashboardView = new window.DashboardView({ el: "#dashboard", model: model});

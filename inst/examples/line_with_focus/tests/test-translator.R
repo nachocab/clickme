@@ -1,7 +1,7 @@
 context("translate line_with_focus")
 
 test_that("data frames are translated to the format expected by the template", {
-    input_data <- data.frame(line = rep(c("l1", "l2"), each = 2), x = 1:4, y = 11:14)
+    data <- data.frame(line = rep(c("l1", "l2"), each = 2), x = 1:4, y = 11:14)
     expected_data <- list(
                           list(key = "l1",
                                values = list(
@@ -17,8 +17,9 @@ test_that("data frames are translated to the format expected by the template", {
                           )
                      )
 
-    translated_input <- prepare_data(input_data)
-    expect_equal(translated_input, expected_data)
+    # I'm testing get_data_as_nested_structure instead of get_data_as_json because it's easier to understand expected_data as a list, than as a JSON string.
+    nested_data <- get_data_as_nested_structure(data)
+    expect_equal(nested_data, expected_data)
 })
 
 

@@ -1,18 +1,12 @@
-#' Translate the data object to the format expected by current template
-#'
-#' @param data input data object
-#' @param opts options of current template
-#' @return The opts variable with the opts$data variable filled in
-translate <- function(data, opts) {
+get_data_as_tree <- function(opts) {
     library(ape)
-    if (class(data) == "phylo"){
-        translated_data <- write.tree(data)
-    }  else if (file.exists(data)) {
-        translated_data <- paste(readLines(data), collapse = "\n")
+    if (class(opts$data) == "phylo"){
+        tree_data <- write.tree(opts$data)
+    }  else if (file.exists(opts$data)) {
+        tree_data <- paste(readLines(opts$data), collapse = "\n")
     } else {
-        translated_data <- data
+        tree_data <- opts$data
     }
 
-    opts$data <- translated_data
-    opts
+    tree_data
 }
