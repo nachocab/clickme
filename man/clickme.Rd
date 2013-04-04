@@ -2,9 +2,7 @@
 \alias{clickme}
 \title{Generates a JavaScript visualization}
 \usage{
-  clickme(data, ractive, params = NULL, data_name = "data",
-    html_file_name = NULL, browse = interactive(),
-    port = 8888)
+  clickme(data, ractive, browse = interactive(), ...)
 }
 \arguments{
   \item{data}{input data}
@@ -12,20 +10,9 @@
   \item{ractive}{template id, it must match a folder within
   \code{set_root_path}}
 
-  \item{params}{list containing the parameters and values
-  that will be accessible from the template}
-
-  \item{data_name}{name used to identify the output HTML
-  file, default "data"}
-
-  \item{html_file_name}{name of the output HTML file that
-  contains the visualization, default
-  "data_name-ractive.html"}
-
   \item{browse}{open browser, default TRUE}
 
-  \item{port}{port used to open a local browser, default
-  8888}
+  \item{...}{additional arguments for \code{get_opts}}
 }
 \description{
   Generates a JavaScript visualization

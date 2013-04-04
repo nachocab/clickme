@@ -46,6 +46,7 @@ default_parameters: {
 }
 
 require_packages:
+    - df2json
 
 require_server: no
 
@@ -53,28 +54,24 @@ original_url:
 
 ", opts$path$template_config_file)
 
-    writeLines("#' Translate the data object to the format expected by current template
-#'
-#' @param data input data object
-#' @param opts options of current template
-#' @return The opts variable with the opts$data variable filled in
-translate <- function(data, opts) {
-    translated_data <- data
+    writeLines("get_data_as_json <- function(opts) {
+    library(df2json)
+    opts$data <- as.data.frame(opts$data, stringsAsFactors=FALSE)
+    json_data <- df2json(opts$data)
 
-    opts$data <- translated_data
-    opts
+    json_data
 }", opts$path$translator_file)
 
     writeLines(paste0("context(\"translate ", ractive_name, "\")
 
 test_that(\"input data is translated to the format expected by the template\", {
-    input_data <- data.frame()
+    opts <- get_opts(\"", ractive_name ,"\")
+    opts$data <- data.frame()
     expected_data <- \"\"
 
-    opts <- get_opts(\"", ractive_name ,"\")
-    opts <- translate(input_data, opts)
+    json_data <- get_data_as_json(opts)
 
-    expect_equal(opts$data, expected_data)
+    expect_equal(json_data, expected_data)
 })"), opts$path$translator_test_file)
 
 }
