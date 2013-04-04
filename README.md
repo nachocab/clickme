@@ -8,7 +8,7 @@ Want to learn more? [See the wiki](https://github.com/nachocab/clickme/wiki).
 
 ## Quick Usage
 
-Run this in your R session to install or update clickme:
+Run this in your R session to install or update to the latest version of clickme:
 
 ```S
 install.packages("devtools")
@@ -22,6 +22,12 @@ Now you can try the examples:
 
 ```S
 library(clickme)
+
+# visualize the same dataset in different ways using Vega
+data <- data.frame(x = 1:20, y = c(28,55,43,91,81,53,19,87,52,48,24,49,87,66,17,27,68,16,49,15))
+clickme_vega(data, "area")
+clickme_vega(data, "bar")
+clickme_vega(data, "scatter")
 
 # visualize a (funky) zoomable phylogenetic tree (www.onezoom.org)
 mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
