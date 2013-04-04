@@ -1,0 +1,34 @@
+info: |
+    Vega is a visualization grammar, a declarative format for creating and saving visualization designs.
+    With Vega you can describe data visualizations in a JSON format, and generate interactive views using
+    either HTML5 Canvas or SVG.
+
+original_url: http://trifacta.github.com/vega/
+
+require_server: yes
+
+scripts:
+    - d3.v3.min.js
+    - vega.js
+
+styles:
+    - vega.css
+
+default_parameters: {
+    width: 400,
+    height: 400,
+    spec,
+    spec_path,
+    title,
+    renderer: "svg",
+    viewport: "null",
+    padding,
+}
+
+require_packages:
+    - rjson
+    - df2json
+
+required_names:
+
+

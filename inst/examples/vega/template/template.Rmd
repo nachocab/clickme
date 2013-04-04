@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>{{ opts$params$title }}</title>
+    {{ append_external(opts) }}
+  </head>
+  <body>
+    <div id="vis"></div>
+  </body>
+  <script type="text/javascript">
+
+  function parse(spec) {
+    vg.parse.spec(spec, function(chart) {
+      var view = chart({ el:"#vis" });
+      view.viewport({{ opts$params$viewport }})
+          .renderer("{{ opts$params$renderer }}")
+          .update();
+    });
+  }
+
+  parse({{ knit_expand(get_spec_path_param(opts)) }});
+  </script>
+</html>

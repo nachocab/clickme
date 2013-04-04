@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <title></title>
+    <link href="vega/external/vega.css" rel="stylesheet">
+<script src="vega/external/d3.v3.min.js"></script>
+<script src="vega/external/vega.js"></script>
+  </head>
+  <body>
+    <div id="vis"></div>
+  </body>
+  <script type="text/javascript">
+
+  function parse(spec) {
+    vg.parse.spec(spec, function(chart) {
+      var view = chart({ el:"#vis" });
+      view.viewport(null)
+          .renderer("svg")
+          .update();
+    });
+  }
+
+  parse({
+  "width": 400,
+  "height": 400,
+  "padding": {"top":10,"left":30,"bottom":30,"right":10},
+  "data": [
+    {
+      "name": "points",
+      "url": "vega/data/data_scatter.json"
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "nice": true,
+      "range": "width",
+      "domain": {"data": "points", "field": "data.x"}
+    },
+    {
+      "name": "y",
+      "nice": true,
+      "range": "height",
+      "domain": {"data": "points", "field": "data.y"}
+    }
+  ],
+  "axes": [
+    {"type": "x", "scale": "x"},
+    {"type": "y", "scale": "y"}
+  ],
+  "marks": [
+    {
+      "type": "symbol",
+      "from": {"data": "points"},
+      "properties": {
+        "enter": {
+          "x": {"scale": "x", "field": "data.x"},
+          "y": {"scale": "y", "field": "data.y"},
+          "stroke": {"value": "steelblue"},
+          "fillOpacity": {"value": 0.5}
+        },
+        "update": {
+          "fill": {"value": "transparent"},
+          "size": {"value": 100}
+        },
+        "hover": {
+          "fill": {"value": "pink"},
+          "size": {"value": 300}
+        }
+      }
+    }
+  ]
+});
+  </script>
+</html>

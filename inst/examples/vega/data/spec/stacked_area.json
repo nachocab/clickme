@@ -1,0 +1,76 @@
+{
+  "width": {{ opts$params$width }},
+  "height": {{ opts$params$height  }},
+  "padding": {{ get_padding_param(opts) }},
+  "data": [
+    {
+      "name": "table",
+      "values": {{ get_data_as_json(opts) }}
+    },
+    {
+      "name": "stats",
+      "source": "table",
+      "transform": [
+        {"type": "facet", "keys": ["data.x"]},
+        {"type": "stats", "value": "data.y"}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "range": "width",
+      "zero": false,
+      "domain": {"data": "table", "field": "data.x"}
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "nice": true,
+      "domain": {"data": "stats", "field": "sum"}
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "range": "category10"
+    }
+  ],
+  "axes": [
+    {"type": "x", "scale": "x"},
+    {"type": "y", "scale": "y"}
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "from": {
+        "data": "table",
+        "transform": [
+          {"type": "facet", "keys": ["data.c"]},
+          {"type": "stack", "point": "data.x", "height": "data.y"}
+        ]
+      },
+      "marks": [
+        {
+          "type": "area",
+          "properties": {
+            "enter": {
+              "interpolate": {"value": "monotone"},
+              "x": {"scale": "x", "field": "data.x"},
+              "y": {"scale": "y", "field": "y"},
+              "y2": {"scale": "y", "field": "y2"},
+              "fill": {"scale": "color", "field": "data.c"}
+            },
+            "update": {
+              "fillOpacity": {"value": 1}
+            },
+            "hover": {
+              "fillOpacity": {"value": 0.5}
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
