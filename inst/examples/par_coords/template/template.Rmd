@@ -7,7 +7,7 @@
 
 <script id="brushing">// quantitative color scale
 var color_palette = d3.scale.linear()
-  .domain([{{ get_range_param(opts) }}])
+  .domain([{{ get_domain_param(opts) }}])
   .range(["{{ opts$params$from_color }}", "{{ opts$params$to_color }}"])
   .interpolate(d3.interpolateLab);
 

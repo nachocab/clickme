@@ -10,13 +10,13 @@ get_color_by_param <- function(opts) {
     opts$params$color_by
 }
 
-get_range_param <- function(opts){
-    if (is.null(opts$params$range)){
-        opts$params$range <- range(opts$data[, get_color_by_param(opts)])
+get_domain_param <- function(opts){
+    if (is.null(opts$params$domain)){
+        opts$params$domain <- range(opts$data[, get_color_by_param(opts)])
     }
-    opts$params$range <- paste(opts$params$range, collapse=", ")
+    opts$params$domain <- paste(opts$params$domain, collapse=", ")
 
-    opts$params$range
+    opts$params$domain
 }
 
 get_data_as_csv_file <- function(opts) {
