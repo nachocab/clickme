@@ -1,6 +1,6 @@
+export(append_external)
 export(append_scripts)
 export(append_styles)
-export(append_styles_and_scripts)
 export(clickme)
 export(create_data_file)
 export(escape_quote)
