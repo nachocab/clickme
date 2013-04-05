@@ -1,17 +1,45 @@
-{
+<html>
+  <head>
+    <title></title>
+    <link href="vega/external/vega.css" rel="stylesheet">
+<script src="vega/external/d3.v3.min.js"></script>
+<script src="vega/external/vega.js"></script>
+  </head>
+  <body>
+    <div id="vis"></div>
+  </body>
+  <script type="text/javascript">
+
+  function parse(spec) {
+    vg.parse.spec(spec, function(chart) {
+      var view = chart({ el:"#vis" });
+      view.viewport(null)
+          .renderer("svg")
+          .update();
+    });
+  }
+
+  parse({
   "name": "lifelines",
-  "width": {{ opts$params$width }},
-  "height": {{ opts$params$height }},
-  "padding": {{ get_padding_param(opts, c(top = 60, left = 5, bottom = 30, right = 30)) }},
+  "width": 400,
+  "height": 200,
+  "padding": {"top":60,"left":5,"bottom":30,"right":30},
   "data": [
     {
       "name": "people",
-      "values": {{ get_data_as_json(opts) }}
+      "values": [{"label":"Washington","born":-7506057600000,"died":-5365324800000,"enter":-5701424400000,"leave":-5453884800000},
+{"label":"Adams","born":-7389766800000,"died":-4528285200000,"enter":-5453884800000,"leave":-5327740800000},
+{"label":"Jefferson","born":-7.154586e+12,"died":-4528285200000,"enter":-5327740800000,"leave":-5.07528e+12},
+{"label":"Madison","born":-6904544400000,"died":-4213184400000,"enter":-5.07528e+12,"leave":-4822819200000},
+{"label":"Monroe","born":-6679904400000,"died":-4370518800000,"enter":-4822819200000,"leave":-4570358400000}]
     },
     {
       "name": "events",
       "format": {"type":"json", "parse":{"when":"date"}},
-      "values": {{ get_event_data_param(opts) }}
+      "values": [{"name":"Decl. of Independence","when":"July 4 1776"},
+{"name":"U.S. Constitution","when":"March 4 1789"},
+{"name":"Louisiana Purchase","when":"April 30 1803"},
+{"name":"Monroe Doctrine","when":"Dec 2 1823"}]
     }
   ],
   "scales": [
@@ -57,7 +85,7 @@
           "x": {"scale": "x", "field": "data.when"},
           "y": {"value": -8},
           "width": {"value": 1},
-          "height": {"value": {{ opts$params$height + 8 }}},
+          "height": {"value": 208},
           "fill": {"value": "#888"}
         }
       }
@@ -103,4 +131,6 @@
       }
     }
   ]
-}
+});
+  </script>
+</html>

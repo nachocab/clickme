@@ -15,12 +15,17 @@ get_spec_path_param <- function(opts) {
     spec_path
 }
 
-get_padding_param <- function(opts) {
+get_padding_param <- function(opts, spec_padding = NULL) {
+    if (is.null(opts$params$padding)){
+        if (is.null(spec_padding)){
+            opts$params$padding <- c(top = 10, left = 30, bottom = 30, right = 10)
+        } else {
+            opts$params$padding <- spec_padding
+        }
+    }
+
     library(rjson)
     padding <- opts$params$padding
-    if (is.null(padding)){
-        padding <- c(top = 10, left = 30, bottom = 30, right = 10)
-    }
 
     if (length(padding) != 4){
         stop("Please provide four padding values. (currently ", paste(padding, collapse=", "), ")")
@@ -31,17 +36,15 @@ get_padding_param <- function(opts) {
     }
 
     padding <- toJSON(padding)
+
     padding
 }
 
 get_data_as_json <- function(opts) {
-  if (class(opts$data) =="data.frame") {
     library(df2json)
-    json_data <- df2json(opts$data)
-  } else {
-    library(rjson)
-    json_data <- toJSON(opts$data)    
-  }
+    data <- as.data.frame(opts$data, stringsAsFactors=FALSE)
+    json_data <- df2json(data)
+
     json_data
 }
 
@@ -51,3 +54,12 @@ get_data_as_json_file <- function(opts) {
 
     json_file
 }
+
+get_event_data_param <- function(opts) {
+    library(df2json)
+    data <- as.data.frame(opts$params$event_data, stringsAsFactors=FALSE)
+    json_data <- df2json(data)
+
+    json_data
+}
+

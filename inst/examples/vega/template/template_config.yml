@@ -23,6 +23,7 @@ default_parameters: {
     renderer: "svg",
     viewport: "null",
     padding,
+    event_data,
 }
 
 require_packages:
