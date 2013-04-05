@@ -30,7 +30,7 @@ test_that("create data file", {
     expect_true(file.exists(json_file_path))
     expect_equal(readContents(json_file_path), opts$data)
 
-    unlink(file.path(opts$path$data, json_file))
+    unlink(json_file_path)
 
     opts$data <- data.frame(a=c(1,2), b=c(3,4))
     csv_file <- create_data_file(opts, "csv", quote_escaped = FALSE)
@@ -38,7 +38,7 @@ test_that("create data file", {
     expect_true(file.exists(csv_file_path))
     expect_equal(readContents(csv_file_path), "\"a\",\"b\"\n1,3\n2,4")
 
-    unlink(file.path(opts$path$data, csv_file))
+    unlink(csv_file_path)
 })
 
 test_that("clickme_vega", {
@@ -56,15 +56,15 @@ test_that("clickme_vega", {
     expect_equal(opts$name$html_file, "data_area-vega.html")
     expect_true(file.exists(opts$path$html_file))
 
-    opts <- clickme_vega(data, "area", params = list(width=401), browse = FALSE)
+    opts <- clickme_vega(data, "area", data_name = "my_data", params = list(width=401), browse = FALSE)
 
     expect_equal(opts$params$spec, "area")
     expect_equal(opts$params$width, 401)
+    unlink(opts$path$html_file)
 
     opts <- clickme_vega(data, "area", data_name = "my_data", browse = FALSE)
 
     expect_equal(opts$data_name, "my_data")
     expect_equal(opts$name$html_file, "my_data-vega.html")
-
     unlink(opts$path$html_file)
 })
