@@ -6,6 +6,7 @@
   "data": [
     {
       "name": "people",
+      "format": {"type":"json", "parse":{"born":"date","died":"date","enter":"date","leave":"date"}},
       "values": {{ get_data_as_json(opts) }}
     },
     {
