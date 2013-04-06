@@ -27,7 +27,6 @@ test_that("creates a new blank ractive", {
     expect_true(file.exists(file.path(opts$path$data)))
     expect_true(file.exists(file.path(opts$path$external)))
     expect_true(file.exists(file.path(opts$path$template)))
-    expect_true(file.exists(file.path(opts$path$tests)))
 
     # files
     expect_true(file.exists(file.path(opts$path$translator_file)))

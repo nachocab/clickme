@@ -1,9 +1,9 @@
 coerce_names <- function(data){
-    if (!"gene_symbol" %in% colnames(data)){
+    if ("gene_symbol" %notin% colnames(data)){
         data$gene_symbol <- rownames(data)
     }
 
-    if (!"cluster" %in% colnames(data)){
+    if ("cluster" %notin% colnames(data)){
         data$cluster <- 1
     }
 

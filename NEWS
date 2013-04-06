@@ -1,3 +1,7 @@
+## 0.1.1
+* Added lifelines vega spec.
+* Moved test-translator.R inside the template folder for easier access
+
 ## 0.1.0 - April 4, 2013
 
 * Major change in the way templates communicate with R. Before, data was specified using `opts$data`, now you must call individual translate functions in your `translator.R` file. This allows for much greater flexibility and better code organization.

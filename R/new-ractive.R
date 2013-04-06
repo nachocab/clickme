@@ -17,7 +17,6 @@ new_ractive <- function(ractive_name, overwrite = FALSE) {
     sapply(c(opts$path$ractive,
              opts$path$external,
              opts$path$template,
-             opts$path$tests,
              opts$path$data), function(path){
                 dir.create(path)
                 message("Created directory: ", path)

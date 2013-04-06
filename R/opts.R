@@ -6,7 +6,6 @@ add_ractive_opts <- function(ractive_name) {
     opts$name$data <- "data"
     opts$name$template <- "template"
     opts$name$external <- "external"
-    opts$name$tests <- "tests"
 
     # file names
     opts$name$template_file <- "template.Rmd"
@@ -20,13 +19,12 @@ add_ractive_opts <- function(ractive_name) {
     opts$path$data <- file.path(opts$path$ractive, opts$name$data)
     opts$path$template <- file.path(opts$path$ractive, opts$name$template)
     opts$path$external <- file.path(opts$path$ractive, opts$name$external)
-    opts$path$tests <- file.path(opts$path$ractive, opts$name$tests)
 
     # file absolute paths
     opts$path$template_file <- file.path(opts$path$template, opts$name$template_file)
     opts$path$template_config_file <- file.path(opts$path$template, opts$name$template_config_file)
     opts$path$translator_file <- file.path(opts$path$template, opts$name$translator_file)
-    opts$path$translator_test_file <- file.path(opts$path$tests, opts$name$translator_test_file)
+    opts$path$translator_test_file <- file.path(opts$path$template, opts$name$translator_test_file)
 
     # paths relative to opts$path$ractive
     opts$relative_path$data <- file.path(opts$name$ractive, opts$name$data)
