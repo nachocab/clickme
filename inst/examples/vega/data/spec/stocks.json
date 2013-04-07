@@ -1,7 +1,7 @@
 {
   "width": 500,
   "height": 200,
-  "padding": {"top": 10, "left": 40, "bottom": 20, "right": 40},
+  "padding": {{ get_padding_param(opts, c(top = 10, left = 40, bottom = 20, right = 40)) }},
   "data": [
     {
       "name": "stocks",

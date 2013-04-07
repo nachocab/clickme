@@ -271,11 +271,11 @@ demo_ractive <- function(ractive) {
     if (is.null(opts$template_config$demo)){
         message("The ", ractive, " ractive didn't provide a demo example.")
     } else {
-        message("Getting ready to run the following ", ractive, " demo:\n\n", opts$template_config$demo)
+        message("* Getting ready to run the following ", ractive, " demo:\n\n", opts$template_config$demo)
         cat("\nGo ahead? (y)es (n)o ")
         response <- readline()
         if (tolower(response) %in% c("yes", "y")) {
-            message("Running...")
+            message("* Running...")
             eval(parse(text = opts$template_config$demo))
         } else {
             message("Demo wasn't run")

@@ -59,3 +59,11 @@ get_event_data_param <- function(opts) {
     json_data
 }
 
+get_data_as_csv_file <- function(opts) {
+    opts$data <- as.data.frame(opts$data, stringsAsFactors= FALSE)
+    csv_file <- create_data_file(opts, "csv")
+
+    csv_file
+}
+
+
