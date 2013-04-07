@@ -12,7 +12,6 @@ Run this in your R session to install or update to the latest version of clickme
 
 ```S
 install.packages("devtools")
-install.packages("knitr", repos = "http://www.rforge.net/", type = "source")
 
 library(devtools)
 install_github("clickme", "nachocab")

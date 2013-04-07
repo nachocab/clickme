@@ -21,8 +21,10 @@ get_root_path <- function() {
 
             .clickme_env$root_path <- CLICKME_ROOT_PATH
         } else {
-            message("No CLICKME_ROOT_PATH variable found, using default root path.")
+            message("No CLICKME_ROOT_PATH variable found, using default root path:")
+            message("set_root_path(\"", system.file("examples", package = "clickme"), "\")")
             set_root_path(system.file("examples", package = "clickme"))
+            message("\nThe root path is the folder where your ractives live.\nSee the wiki for more info: bit.ly/clickme_wiki")
         }
 
     }
