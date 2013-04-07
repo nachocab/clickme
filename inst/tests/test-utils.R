@@ -24,21 +24,12 @@ test_that("create data file", {
     opts$data <- "[{\"a\":3,\"b\":5}]"
 
     json_file <- create_data_file(opts, "json", quote_escaped = FALSE)
-
     expect_equal(json_file, file.path(opts$relative_path$data, "test_data.json"))
-    json_file_path <- file.path(opts$path$data, "test_data.json")
-    expect_true(file.exists(json_file_path))
-    expect_equal(readContents(json_file_path), opts$data)
-
-    unlink(json_file_path)
+    expect_correct_file(opts, "json", opts$data)
 
     opts$data <- data.frame(a=c(1,2), b=c(3,4))
     csv_file <- create_data_file(opts, "csv", quote_escaped = FALSE)
-    csv_file_path <- file.path(opts$path$data, "test_data.csv")
-    expect_true(file.exists(csv_file_path))
-    expect_equal(readContents(csv_file_path), "\"a\",\"b\"\n1,3\n2,4")
-
-    unlink(csv_file_path)
+    expect_correct_file(opts, "csv", "\"a\",\"b\"\n1,3\n2,4")
 })
 
 test_that("clickme_vega", {

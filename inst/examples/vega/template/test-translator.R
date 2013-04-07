@@ -14,17 +14,10 @@ test_that("input data is translated to the format expected by the template", {
     expect_equal(json_data, expected_data)
 
     json_file <- get_data_as_json_file(opts)
-    expected_relative_path <- paste("\"", file.path(opts$relative_path$data, paste0(test_data_name, ".json")), "\"")
-    expected_path <- file.path(opts$path$data, paste0(test_data_name, ".json"))
-    expect_true(file.exists(expected_path))
-    expect_equal(readContents(expected_path), expected_data)
-    unlink(expected_path)
+    expect_correct_file(opts, "json", expected_data)
 
     csv_file <- get_data_as_csv_file(opts)
-    expected_relative_path <- paste("\"", file.path(opts$relative_path$data, paste0(test_data_name, ".csv")), "\"")
-    expected_path <- file.path(opts$path$data, paste0(test_data_name, ".csv"))
-    expect_true(file.exists(expected_path))
-    unlink(expected_path)
+    expect_correct_file(opts, "csv")
 
 })
 
@@ -70,8 +63,3 @@ test_that("padding", {
     opts <- get_opts("vega", params=list(padding=c(10,20,30), spec="area"))
     expect_error(get_padding_param(opts), "Please provide four padding values")
 })
-
-
-# test_that("extra columns in the df get ignored", {
-
-# })

@@ -52,10 +52,5 @@ test_that("input data is stored as a csv file", {
     opts$data <- data.frame(country=c("Spain", "Australia", "Philippines"), ice_cream_production=c(200,300,50), flamenco_appreciation_rate=c(1, .9, .6), beatles_records_sold=c(50,200,70))
 
     csv_file <- get_data_as_csv_file(opts)
-    expected_data <- paste0("\"", file.path(opts$relative_path$data, paste0(test_data_name, ".csv")), "\"")
-
-    expect_equal(csv_file, expected_data)
-    expect_true(file.exists(file.path(opts$path$data, paste0(test_data_name, ".csv"))))
-
-    unlink(file.path(opts$path$data, paste0(test_data_name, ".csv")))
+    expect_correct_file(opts, "csv")
 })

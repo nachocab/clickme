@@ -280,5 +280,25 @@ clickme_vega <- function(data, spec, ...){
     } else {
         clickme(data, "vega", browse = browse, params = params, data_name = data_name)
     }
+}
 
+
+#' Test generated file
+#'
+#' Test that the path exists, and that the contents are as expected
+#'
+#' @param opts options
+#' @param expected_data data that should be stored in the test file.
+#' @param test_data_name value used on the \code{get_opts(..., data_name = test_data_name)} call. It is "test_data" by default.
+#' @export
+expect_correct_file <- function(opts, extension, expected_data = NULL, test_data_name = "test_data") {
+    if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
+
+    expected_relative_path <- paste("\"", file.path(opts$relative_path$data, paste0(test_data_name, extension)), "\"")
+    expected_path <- file.path(opts$path$data, paste0(test_data_name, extension))
+    expect_true(file.exists(expected_path))
+    if (!is.null(expected_data)){
+        expect_equal(readContents(expected_path), expected_data)
+    }
+    unlink(expected_path)
 }
