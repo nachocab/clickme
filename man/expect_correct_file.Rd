@@ -8,6 +8,8 @@
 \arguments{
   \item{opts}{options}
 
+  \item{extension}{extension of the file}
+
   \item{expected_data}{data that should be stored in the
   test file.}
 
