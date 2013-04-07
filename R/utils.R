@@ -77,14 +77,28 @@ create_data_file <- function(opts, extension, sep=",", method = NULL, row_names 
     path
 }
 
+#' Read a ractive's CSV file
+#'
+#'
+#'
+#' @param ractive ractive name
+#' @param file_name CSV file name
+#' @export
+read_ractive_csv <- function(ractive, file_name) {
+    opts <- get_opts(ractive)
+    data <- read.csv(file.path(opts$path$data, file_name))
+
+    data
+}
+
 readContents <- function(path) {
     paste(readLines(path), collapse = "\n")
 }
 
 #' Inverse Value Matching
 #'
-#' Complement of \code{%in%}. Returns the elements of \code{a} that are not in \code{b}.
-#' @usage a \%nin\% b
+#' Complement of \code{\%in\%}. Returns the elements of \code{a} that are not in \code{b}.
+#' @usage a \%notin\% b
 #' @param a a vector
 #' @param b a vector
 #' @export
@@ -246,6 +260,29 @@ show_ractive <- function(ractive, fields = NULL){
     cat("\n")
 }
 
+#' Run ractive examples
+#'
+#'
+#'
+#' @param ractive name of ractive
+#' @export
+demo_ractive <- function(ractive) {
+    opts <- get_opts(ractive)
+    if (is.null(opts$template_config$demo)){
+        message("The ", ractive, " ractive didn't provide a demo example.")
+    } else {
+        message("Getting ready to run the following ", ractive, " demo:\n\n", opts$template_config$demo)
+        cat("\nGo ahead? (y)es (n)o ")
+        response <- readline()
+        if (tolower(response) %in% c("yes", "y")) {
+            message("Running...")
+            eval(parse(text = opts$template_config$demo))
+        } else {
+            message("Demo wasn't run")
+        }
+    }
+}
+
 #' Generates a JavaScript visualization using Vega
 #'
 #' @param data input data
@@ -288,6 +325,7 @@ clickme_vega <- function(data, spec, ...){
 #' Test that the path exists, and that the contents are as expected
 #'
 #' @param opts options
+#' @param extension extension of the file
 #' @param expected_data data that should be stored in the test file.
 #' @param test_data_name value used on the \code{get_opts(..., data_name = test_data_name)} call. It is "test_data" by default.
 #' @export

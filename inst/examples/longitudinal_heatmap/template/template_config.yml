@@ -51,4 +51,9 @@ require_packages:
 
 original_url:
 
+demo: |
+    data <- matrix(rnorm(200), ncol = 8,nrow = 25)
+    rownames(data) <- paste0("GENE_", 1:25)
+    colnames(data) <- paste0("sample_", 1:8)
+    clickme(data, "longitudinal_heatmap")
 

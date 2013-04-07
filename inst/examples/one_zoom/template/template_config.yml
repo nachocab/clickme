@@ -48,4 +48,7 @@ require_server: no
 
 original_url: http://www.onezoom.org/mammals.htm
 
+demo: |
+    mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
+    clickme(mammals_path, "one_zoom")
 

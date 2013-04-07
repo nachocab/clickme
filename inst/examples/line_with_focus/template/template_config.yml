@@ -34,5 +34,10 @@ require_server: no
 
 original_url: http://nvd3.org/ghpages/lineWithFocus.html
 
+demo: |
+    n <- 30
+    cities <- c("Boston", "NYC", "Philadelphia")
+    data <- data.frame(name = rep(cities, each = n), x = rep(1:n, length(cities)), y = c(sort(rnorm(n)), -sort(rnorm(n)),sort(rnorm(n))))
+    clickme(data, "line_with_focus")
 
 

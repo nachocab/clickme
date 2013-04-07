@@ -1,8 +1,11 @@
-## 0.1.1
+## 0.1.2 -
+* added demos to `template_config.yml`
+* added convenience function `expect_correct_file`, used for translator testing
+
+## 0.1.1 - April 6, 2013
 * Added lifelines vega spec.
 * Moved test-translator.R inside the template folder for easier access
 * Bug: made %notin% and %||% visible to the translator.R file
-* added convenience function `expect_correct_file`, used for translator testing
 
 ## 0.1.0 - April 4, 2013
 
@@ -17,14 +20,14 @@
 * Allow users to cancel auto-installing required packages
 * data_name variable in clickme function is now "data" by default. To make it a random string use NULL.
 
-## 0.0.3
+## 0.0.3 - March 26, 2013
 
 * The `translate()` function should return opts. That way, if the translator makes changes to the opts variable, they will be visible to the `clickme` function
 
-## 0.0.2
+## 0.0.2 - March 24, 2013
 
 * You can set the CLICKME_ROOT_PATH variable in your .Rprofile to change the default root path
 
-## 0.0.1
+## 0.0.1 - March 21, 2013
 
 * fixed validate_ractive bug

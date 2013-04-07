@@ -102,7 +102,10 @@ test_that("the HTML example file for the vega ractive is generated", {
     spec <- "stocks"
     opts <- get_opts(ractive, params = list(spec = spec))
     unlink(opts$path$html_file)
-    data <- read.csv(file.path(opts$path$data, "stocks.csv"))
+    stocks <- read.csv(file.path(opts$path$data, "stocks.csv"))
+
+    opts <- clickme_vega(stocks, spec, browse = FALSE)
+    expect_true(file.exists(opts$path$html_file))
 
     spec <- "lifelines"
     opts <- get_opts(ractive, params = list(spec = spec))

@@ -42,4 +42,8 @@ require_server: yes
 
 original_url: http://syntagmatic.github.com/parallel-coordinates/examples/brushing.html
 
+demo: |
+    cars <- read_ractive_csv("par_coords", "original_data.csv")
+    clickme(cars, "par_coords")
+
 

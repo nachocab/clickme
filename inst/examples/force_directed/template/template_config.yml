@@ -28,3 +28,9 @@ require_packages:
 require_server: no
 
 original_url: http://bl.ocks.org/mbostock/1153292
+
+demo: |
+    items <- paste0("GENE_", 1:40)
+    n <- 30
+    data <- data.frame(a = sample(items, n, replace = TRUE), b = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace=TRUE))
+    clickme(data, "force_directed")

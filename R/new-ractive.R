@@ -28,6 +28,9 @@ require_server: no
 
 original_url:
 
+demo: |
+
+
 "
 
     translator_contents <- "get_data_as_json <- function(opts) {
