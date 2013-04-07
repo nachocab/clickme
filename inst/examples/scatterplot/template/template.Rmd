@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>D3 Test</title>
+    {{ append_external(opts) }}
+</head>
+
+<body>
+
+  <div id="plot" class="chart"></div>
+
+  <script type="text/javascript">
+    ```{r engine="coffee", results="asis", echo=FALSE}
+        chartname = "#plot"
+
+        d3.json {{ get_data_as_json_file(opts) }}, (data) ->
+
+          svgscale = plotframe(data, {
+            chartname: chartname,
+            xlab: {{ quote_escaped(opts$params$x_axis_label %||% "x axis") }},
+            ylab: {{ quote_escaped(opts$params$y_axis_label %||% "y axis") }},
+            height: {{ opts$params$height %||% 600 }},
+            width: {{ opts$params$width %||% 620 }},
+            pad: {{ get_padding_param(opts, c(bottom = 90, left = 100, top = 0, right = 10, scale = 0.1)) }},
+            tickPadding: {{ opts$params$tick_padding %||% 8 }},
+          })
+
+          colors =  d3.scale.category10()
+
+          svgscale.svg.selectAll("circle", {chartname: chartname})
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", (d) -> svgscale.x d.x)
+            .attr("cy", (d) -> svgscale.y d.y)
+            .attr("r", 5)
+            .attr("fill", (d) -> colors(d.group))
+            .on("mouseover", ->
+                d3.select(this).transition().attr("fill", "black")
+            ).on("mouseover.tooltip", (d,i) ->
+                svgscale.svg.append("text")
+                  .text("#{d.name} #{d.group}")
+                  .attr("id", "tooltip")
+                  .attr("x", svgscale.x(d.x) + 10)
+                  .attr("y", svgscale.y(d.y))
+                  .attr("fill","black")
+                  .attr("opacity",0).style("font-family", "sans-serif").transition().attr("opacity", 1)
+            )
+            .on("mouseout", (d) ->
+                d3.select(this).transition().duration(500).attr("fill", (d) -> colors(d.group))
+                d3.selectAll("#tooltip").transition().duration(500).attr("opacity",0).remove()
+            )
+    ```
+  </script>
+  </body>
+</html>

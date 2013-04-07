@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>D3 Test</title>
+    <link href="scatterplot/external/scatterplot.css" rel="stylesheet">
+<script src="scatterplot/external/d3.v3.min.js"></script>
+<script src="scatterplot/external/plotframe.js"></script>
+</head>
+
+<body>
+
+  <div id="plot" class="chart"></div>
+
+  <script type="text/javascript">
+    (function() {
+      var chartname;
+    
+      chartname = "#plot";
+    
+      d3.json("scatterplot/data/data.json", function(data) {
+        var colors, svgscale;
+        svgscale = plotframe(data, {
+          chartname: chartname,
+          xlab: "x axis",
+          ylab: "y axis",
+          height: 600,
+          width: 620,
+          pad: {
+            "bottom": 90,
+            "left": 100,
+            "top": 0,
+            "right": 10,
+            "scale": 0.1
+          },
+          tickPadding: 8
+        });
+        colors = d3.scale.category10();
+        return svgscale.svg.selectAll("circle", {
+          chartname: chartname
+        }).data(data).enter().append("circle").attr("cx", function(d) {
+          return svgscale.x(d.x);
+        }).attr("cy", function(d) {
+          return svgscale.y(d.y);
+        }).attr("r", 5).attr("fill", function(d) {
+          return colors(d.group);
+        }).on("mouseover", function() {
+          return d3.select(this).transition().attr("fill", "black");
+        }).on("mouseover.tooltip", function(d, i) {
+          return svgscale.svg.append("text").text("" + d.name + " " + d.group).attr("id", "tooltip").attr("x", svgscale.x(d.x) + 10).attr("y", svgscale.y(d.y)).attr("fill", "black").attr("opacity", 0).style("font-family", "sans-serif").transition().attr("opacity", 1);
+        }).on("mouseout", function(d) {
+          d3.select(this).transition().duration(500).attr("fill", function(d) {
+            return colors(d.group);
+          });
+          return d3.selectAll("#tooltip").transition().duration(500).attr("opacity", 0).remove();
+        });
+      });
+    
+    }).call(this);
+
+  </script>
+  </body>
+</html>

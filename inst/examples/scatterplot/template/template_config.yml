@@ -1,0 +1,28 @@
+info: |
+    An interactive scatterplot by Karl Broman.
+
+    The input data is a data frame with column names:
+    "x" x coordinate
+    "y" y coordinate
+    "group" (optional) used for coloring the points.
+    "name" (optional) displayed on tooltip when hovering over a point.
+
+scripts:
+    - d3.v3.min.js
+    - plotframe.js
+
+styles:
+    - scatterplot.css
+
+require_packages:
+    - df2json
+
+require_server: yes
+
+original_url: http://www.biostat.wisc.edu/~kbroman/presentations/InteractiveGraphs3/
+
+demo: |
+    n <- 100
+    names <- paste0("Gene ", 1:n)
+    df <- data.frame(x=rnorm(n), y=rnorm(n), group=sample(c("A","B"), n, replace=TRUE), name = names)
+    clickme(df, "scatterplot")
