@@ -22,7 +22,6 @@ test_that("input data is translated to the format expected by the template", {
 })
 
 test_that("spec is specified", {
-    data <- ""
     opts <- get_opts("vega")
 
     expect_error(get_spec_path_param(opts), "provide a Vega spec")
@@ -37,8 +36,6 @@ test_that("spec is specified", {
 })
 
 test_that("padding", {
-    data <- ""
-
     # default global padding
     opts <- get_opts("vega", params=list(spec="area"))
     padding <- get_padding_param(opts)

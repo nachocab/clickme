@@ -15,13 +15,9 @@ get_spec_path_param <- function(opts) {
     spec_path
 }
 
-get_padding_param <- function(opts, spec_padding = NULL) {
+get_padding_param <- function(opts, default = c(top = 10, left = 30, bottom = 30, right = 10)) {
     if (is.null(opts$params$padding)){
-        if (is.null(spec_padding)){
-            opts$params$padding <- c(top = 10, left = 30, bottom = 30, right = 10)
-        } else {
-            opts$params$padding <- spec_padding
-        }
+        opts$params$padding <- default
     }
 
     library(rjson)
