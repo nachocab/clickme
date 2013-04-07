@@ -1,3 +1,5 @@
+export("%notin%")
+export("%||%")
 export(append_external)
 export(append_scripts)
 export(append_styles)

@@ -1,6 +1,7 @@
 ## 0.1.1
 * Added lifelines vega spec.
 * Moved test-translator.R inside the template folder for easier access
+* Bug: made %notin% and %||% visible to the translator.R file
 
 ## 0.1.0 - April 4, 2013
 

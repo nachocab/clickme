@@ -81,11 +81,32 @@ readContents <- function(path) {
     paste(readLines(path), collapse = "\n")
 }
 
-# @keyword internal
-"%notin%" <- function(x,y) !(x %in% y)
+#' Inverse Value Matching
+#'
+#' Complement of \code{%in%}. Returns the elements of \code{a} that are not in \code{b}.
+#' @usage a \%nin\% b
+#' @param a a vector
+#' @param b a vector
+#' @export
+#' @rdname notin
+"%notin%" <- function(a, b) {
+    !(a %in% b)
+}
 
-# @keyword internal
-# @name nulldefault-infix
+#' Set default value
+#'
+#' If a is not null, return a. Otherwise, return b.
+#' @usage a \%||\% b
+#' @param a an object
+#' @param b an object
+#' @export
+#' @rdname nulldefault
+#' @examples
+#' a <- "a"
+#' b <- "b"
+#' d <- a %||% b # d == "a"
+#' a <- NULL
+#' d <- a %||% b # d == "b"
 "%||%" <- function(a, b) {
   if (!is.null(a)) a else b
 }
