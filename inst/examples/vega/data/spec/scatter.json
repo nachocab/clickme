@@ -1,7 +1,7 @@
 {
   "width": {{ opts$params$width }},
   "height": {{ opts$params$height  }},
-  "padding": {{ get_padding_param(opts) }},
+  "padding": {{ get_padding_param(opts, c(top = 10, left = 50, bottom = 30, right = 10)) }},
   "data": [
     {
       "name": "points",

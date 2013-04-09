@@ -46,7 +46,7 @@ clickme <- function(data, ractive, browse = interactive(), ...){
 
     if (opts$template_config$require_server){
         message("Make sure you have a server running at: ", get_root_path())
-        message("Try running: python -m SimpleHTTPServer")
+        message("(try running: python -m SimpleHTTPServer)")
     }
 
     if (browse) browseURL(opts$url)
