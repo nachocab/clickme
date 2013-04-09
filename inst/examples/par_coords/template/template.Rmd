@@ -5,19 +5,15 @@
 
 <div id="example" class="parcoords" style="width:{{ opts$params$width }}px;height:{{ opts$params$height }}px;"></div>
 
-<script id="brushing">// quantitative color scale
-var color_palette = d3.scale.linear()
-  .domain([{{ get_domain_param(opts) }}])
-  .range(["{{ opts$params$from_color }}", "{{ opts$params$to_color }}"])
-  .interpolate(d3.interpolateLab);
+<script id="brushing">
+var colors = {{ get_color_scale(opts) }}
 
-var color = function(d) { return color_palette(d["{{ get_color_by_param(opts) }}"]); };
+var color_palette = function(d) { return colors(d["{{ get_color_by_param(opts) }}"]); };
 
-// load csv file and create the chart
 d3.csv({{ get_data_as_csv_file(opts) }}, function(data) {
   d3.parcoords()("#example")
     .data(data)
-    .color(color)
+    .color(color_palette)
     .alpha(0.4)
     .render()
     .shadows()

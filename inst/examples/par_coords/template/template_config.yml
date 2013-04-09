@@ -3,16 +3,13 @@ info: |
 
     Parameters
     "color_by" is the name of the column that is used to generate the color palette.
-    If not specified explicitly, the template uses the first numeric column.
+    If not specified explicitly, the template uses the first column of the input data.
 
     "domain" will be used to set the domain of the color palette.
     Because it uses the D3 domain function, it can be a vector of 2 elements c(min, max)
     or 3 c(min, middle, max).
 
-    "from_color" is the starting color of the palette. It can be specified by a name ("red") or hex ("#FFFF33")
-
-    "to_color" is the ending color of the palette. It can be specified by a name ("red") or hex ("#FFFF33")
-
+    "colors" is a color palette. It can be specified using names c("red", "blue", "green") or hex colors c("#FFFF33", "#000")
 
 valid_names:
 
@@ -30,13 +27,13 @@ styles:
 default_parameters: {
     color_by,
     domain,
-    from_color: "steelblue",
-    to_color: "brown",
-    width: 960,
-    height: 200,
+    colors,
+    width: 1024,
+    height: 700,
 }
 
 require_packages:
+    - rjson
 
 require_server: yes
 

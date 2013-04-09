@@ -8,7 +8,7 @@ d3.parcoords = function(config) {
     rate: 20,
     width: 600,
     height: 300,
-    margin: { top: 24, right: 0, bottom: 12, left: 0 },
+    margin: { top: 24, right: 0, bottom: 12, left: 200 },
     color: "#069",
     composite: "source-over",
     alpha: 0.7
@@ -69,7 +69,7 @@ d3.parcoords = function(config) {
     .on("height", function(d) { pc.resize(); })
     .on("margin", function(d) { pc.resize(); })
     .on("rate", function(d) { rqueue.rate(d.value); })
-    .on("data", function(d) { 
+    .on("data", function(d) {
       if (flags.shadows) paths(__.data, ctx.shadows);
     })
     .on("dimensions", function(d) {
@@ -123,10 +123,10 @@ d3.parcoords = function(config) {
     // xscale
     xscale.rangePoints([0, w()], 1);
 
-    // canvas sizes 
+    // canvas sizes
     pc.selection.selectAll("canvas")
-        .style("margin-top", __.margin.top + "px") 
-        .style("margin-left", __.margin.left + "px") 
+        .style("margin-top", __.margin.top + "px")
+        .style("margin-left", __.margin.left + "px")
         .attr("width", w()+2)
         .attr("height", h()+2)
 
@@ -203,7 +203,7 @@ d3.parcoords = function(config) {
   };
 
   pc.createAxes = function() {
-    if (g) pc.removeAxes(); 
+    if (g) pc.removeAxes();
 
     // Add a group element for each dimension.
     g = pc.svg.selectAll(".dimension")
@@ -270,7 +270,7 @@ d3.parcoords = function(config) {
   };
 
   pc.brushable = function() {
-    if (!g) pc.createAxes(); 
+    if (!g) pc.createAxes();
 
     // Add and store a brush for each axis.
     g.append("svg:g")
@@ -292,7 +292,7 @@ d3.parcoords = function(config) {
 
   // Jason Davies, http://bl.ocks.org/1341281
   pc.reorderable = function() {
-    if (!g) pc.createAxes(); 
+    if (!g) pc.createAxes();
 
     g.style("cursor", "move")
       .call(d3.behavior.drag()
@@ -323,7 +323,7 @@ d3.parcoords = function(config) {
 
   // Get data within brushes
   pc.brush = function() {
-    __.brushed = selected();  
+    __.brushed = selected();
     events.brush.call(pc,__.brushed);
     pc.render();
   };
@@ -350,7 +350,7 @@ d3.parcoords = function(config) {
   // TODO currently assumes chart is brushable, and destroys old brushes
   pc.resize = function() {
     // selection size
-    pc.selection.select("svg") 
+    pc.selection.select("svg")
       .attr("width", __.width)
       .attr("height", __.height)
     pc.svg.attr("transform", "translate(" + __.margin.left + "," + __.margin.top + ")");
@@ -360,7 +360,7 @@ d3.parcoords = function(config) {
 
     // axes, destroys old brushes. the current brush state should pass through in the future
     if (g) pc.createAxes().brushable();
- 
+
     events.resize.call(this, {width: __.width, height: __.height, margin: __.margin});
     return this;
   };
@@ -388,7 +388,7 @@ d3.parcoords = function(config) {
     __.dimensions.map(function(p,i) {
       if (i == 0) {
         ctx.moveTo(position(p),yscale[p](d[p]));
-      } else { 
+      } else {
         ctx.lineTo(position(p),yscale[p](d[p]));
       }
     });
@@ -403,7 +403,7 @@ d3.parcoords = function(config) {
       __.dimensions.map(function(p,i) {
         if (i == 0) {
           ctx.moveTo(position(p),yscale[p](d[p]));
-        } else { 
+        } else {
           ctx.lineTo(position(p),yscale[p](d[p]));
         }
       });
@@ -411,7 +411,7 @@ d3.parcoords = function(config) {
     ctx.stroke();
   };
 
-  function is_brushed(p) { 
+  function is_brushed(p) {
     return !yscale[p].brush.empty();
   };
 
@@ -461,7 +461,7 @@ d3.parcoords = function(config) {
 
   // getter/setter with event firing
   function getset(obj,state,events)  {
-    d3.keys(state).forEach(function(key) {   
+    d3.keys(state).forEach(function(key) {
       obj[key] = function(x) {
         if (!arguments.length) return state[key];
         var old = state[key];
