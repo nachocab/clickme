@@ -22,6 +22,8 @@ validate_ractive <- function(opts) {
                 install.packages(missing_packages)
             }
         }
+
+        sapply(opts$template_config$require_packages, library, character.only=TRUE)
     }
 
     sapply(c(opts$template_config$styles, opts$template_config$scripts), function(style_or_script){
