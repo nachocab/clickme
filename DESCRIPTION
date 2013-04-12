@@ -1,10 +1,13 @@
 Package: clickme
 Maintainer: Nacho Caballero <nachocab@gmail.com>
 Author: Nacho Caballero <nachocab@gmail.com>
-Version: 0.1.3
+Version: 0.2.0
 License: GPL-3
-Title: A way to generate interactive plots using R data
-Description: The default interactivity comes from the D3 javascript library.
+Title: Straight from R to JS: Render JavaScript visualizations using R objects.
+Description: R has powerful data processing abilities, but it can only generate
+    static plots. Browsers allow interactivity but the data they use is often
+    statically defined. Clickme bridges both worlds by making it easy to create
+    interactive visualizations using data in R.
 Imports:
     knitr,
     yaml (>= 2.1.7),
@@ -19,6 +22,6 @@ Collate:
     'root-path.R'
     'new-ractive.R'
     'validate-ractive.R'
-    'validate-data-names.R'
+    'data-names.R'
     'clickme.R'
     'clickme-package.r'
