@@ -1,8 +1,9 @@
 context("new_ractive")
 
+suppressMessages(set_root_path(system.file("examples", package="clickme")))
+ractive <- "tmp_ractive"
+
 test_that("doesn't overwrite an existing ractive, unless specified", {
-    set_root_path(system.file("examples", package="clickme"))
-    ractive <- "tmp_ractive"
     unlink(file.path(get_root_path(), ractive), recursive = TRUE) # to be sure it doesn't exist
 
     new_ractive(ractive)
@@ -13,11 +14,7 @@ test_that("doesn't overwrite an existing ractive, unless specified", {
     unlink(file.path(get_root_path(), ractive), recursive = TRUE)
 })
 
-
-
 test_that("creates a new blank ractive", {
-    set_root_path(system.file("examples", package="clickme"))
-    ractive <- "tmp_ractive"
     unlink(file.path(get_root_path(), ractive), recursive = TRUE) # to be sure it doesn't exist
 
     new_ractive(ractive)
@@ -34,5 +31,4 @@ test_that("creates a new blank ractive", {
     expect_true(file.exists(file.path(opts$path$template_file)))
 
     unlink(file.path(get_root_path(), ractive), recursive = TRUE)
-
 })

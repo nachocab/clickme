@@ -7,35 +7,33 @@
 new_ractive <- function(ractive_name, overwrite = FALSE) {
     opts <- add_ractive_opts(ractive_name)
 
-    template_config_contents <- "info: |
+    template_config_contents <- "info: |-
 
-valid_names:
+original_url:
 
-name_comments: |
+demo: |-
+
+data_names:
+    required:
+
+    optional:
+
+params:
 
 scripts:
 
 styles:
-
-default_parameters: {
-
-}
 
 require_packages:
     - df2json
 
 require_server: no
 
-original_url:
-
-demo: |
-
-
 "
 
     translator_contents <- "get_data_as_json <- function(opts) {
     library(df2json)
-    data <- as.data.frame(opts$data, stringsAsFactors=FALSE)
+    data <- as.data.frame(opts$data, stringsAsFactors = FALSE)
     json_data <- df2json(data)
 
     json_data
@@ -60,18 +58,16 @@ test_that(\"input data is translated to the format expected by the template\", {
 })")
 
     if (overwrite){
-        unlink(file.path(get_root_path(), ractive_name), recursive=TRUE)
+        unlink(file.path(get_root_path(), ractive_name), recursive = TRUE)
     } else {
         if (file.exists(opts$path$ractive)) stop("The ", opts$name$ractive, " ractive already exists: ", opts$path$ractive)
     }
 
-    message("Adding new ractive: ", opts$name$ractive)
     sapply(c(opts$path$ractive,
              opts$path$external,
              opts$path$template,
              opts$path$data), function(path){
                 dir.create(path)
-                message("Created directory: ", path)
              })
 
     sapply(c(opts$path$template_file,
@@ -79,10 +75,12 @@ test_that(\"input data is translated to the format expected by the template\", {
              opts$path$translator_test_file,
              opts$path$translator_file), function(path){
                 file.create(path)
-                message("Created file: ", path)
              })
 
     writeLines(template_config_contents, opts$path$template_config_file)
     writeLines(translator_contents, opts$path$translator_file)
     writeLines(translator_test_contents, opts$path$translator_test_file)
+
+    message("Ractive created at: ", opts$path$ractive, "\n")
+    message("You can start by editing the template file using:\nfile.edit(\"", opts$path$template_file, "\")")
 }
