@@ -16,15 +16,16 @@ set_root_path <- function(path) {
 #' @export
 get_root_path <- function() {
     if (is.null(.clickme_env$root_path)){
-        if (exists("CLICKME_ROOT_PATH") && !is.null(CLICKME_ROOT_PATH)){
-            if (!file.exists(CLICKME_ROOT_PATH)) stop("Your CLICKME_ROOT_PATH variable contains an invalid file path: \'", CLICKME_ROOT_PATH, "\'\n  You can change it directly, or use set_root_path(\"/path/to/root/folder\")")
+        clickme_root_path <- getOption("clickme_root_path")
+        if (!is.null(clickme_root_path)){
+            if (!file.exists(clickme_root_path)) stop("The path you used to set your clickme_root_path option contains an invalid file path: \'", clickme_root_path, "\'\n  You can change it directly, or use set_root_path(\"/path/to/root/folder\")")
 
-            .clickme_env$root_path <- CLICKME_ROOT_PATH
+            .clickme_env$root_path <- clickme_root_path
         } else {
-            message("* No CLICKME_ROOT_PATH variable found, using default root path:")
+            message("No clickme_root_path option found, using default root path:")
             message("set_root_path(\"", system.file("examples", package = "clickme"), "\")")
             set_root_path(system.file("examples", package = "clickme"))
-            message("\n* The root path is the folder where your ractives live.\nSee the wiki for more info: bit.ly/clickme_wiki\n")
+            message("\nThe root path is the folder where your ractives live.\nSee the wiki for more info: bit.ly/clickme_wiki\n")
         }
 
     }
