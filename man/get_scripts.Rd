@@ -1,8 +1,8 @@
-\name{append_scripts}
-\alias{append_scripts}
+\name{get_scripts}
+\alias{get_scripts}
 \title{Generate HTML script tags}
 \usage{
-  append_scripts(opts)
+  get_scripts(opts)
 }
 \arguments{
   \item{opts}{the options of the current template}

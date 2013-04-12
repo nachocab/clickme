@@ -1,8 +1,8 @@
-\name{append_styles}
-\alias{append_styles}
+\name{get_styles}
+\alias{get_styles}
 \title{Generate HTML style tags}
 \usage{
-  append_styles(opts)
+  get_styles(opts)
 }
 \arguments{
   \item{opts}{the options of the current template}

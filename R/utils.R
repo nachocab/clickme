@@ -2,8 +2,8 @@
 #'
 #' @param opts the options of the current template
 #' @export
-append_external <- function(opts){
-    styles_and_scripts <- paste0(c(append_styles(opts), append_scripts(opts)), collapse="\n")
+get_external <- function(opts){
+    styles_and_scripts <- paste0(c(get_styles(opts), get_scripts(opts)), collapse="\n")
     styles_and_scripts
 }
 
@@ -11,7 +11,7 @@ append_external <- function(opts){
 #'
 #' @param opts the options of the current template
 #' @export
-append_scripts <- function(opts) {
+get_scripts <- function(opts) {
     scripts <- paste(sapply(opts$template_config$scripts, function(script_path){
         if (!grepl("^http", script_path)){
             script_path <- file.path(opts$relative_path$external, script_path)
@@ -26,7 +26,7 @@ append_scripts <- function(opts) {
 #'
 #' @param opts the options of the current template
 #' @export
-append_styles <- function(opts) {
+get_styles <- function(opts) {
     styles <- paste(sapply(opts$template_config$styles, function(style_path){
         if (!grepl("^http", style_path)){
             style_path <- file.path(opts$relative_path$external, style_path)

@@ -1,8 +1,8 @@
-\name{append_external}
-\alias{append_external}
+\name{get_external}
+\alias{get_external}
 \title{Generate HTML style and script tags}
 \usage{
-  append_external(opts)
+  get_external(opts)
 }
 \arguments{
   \item{opts}{the options of the current template}
