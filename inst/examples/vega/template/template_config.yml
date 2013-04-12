@@ -1,38 +1,11 @@
-info: |
+info: |-
     Vega is a visualization grammar, a declarative format for creating and saving visualization designs.
     With Vega you can describe data visualizations in a JSON format, and generate interactive views using
     either HTML5 Canvas or SVG.
 
 original_url: http://trifacta.github.com/vega/
 
-require_server: yes
-
-scripts:
-    - d3.v3.min.js
-    - vega.js
-
-styles:
-    - vega.css
-
-default_parameters: {
-    width: 400,
-    height: 400,
-    spec,
-    spec_path,
-    title,
-    renderer: "svg",
-    viewport: "null",
-    padding,
-    event_data,
-}
-
-require_packages:
-    - rjson
-    - df2json
-
-required_names:
-
-demo: |
+demo: |-
     data <- data.frame(x = 1:20, y = c(28,55,43,91,81,53,19,87,52,48,24,49,87,66,17,27,68,16,49,15))
     clickme_vega(data, "area")
     clickme_vega(data, "bar")
@@ -45,3 +18,30 @@ demo: |
     people_data <- read_ractive_csv("vega", "lifelines_people.csv")
     clickme_vega(people_data, "lifelines", params = list(event_data = event_data, height = 100))
 
+data_names:
+    required:
+    optional:
+
+params:
+    width: 400
+    height: 400
+    renderer: "svg"
+    viewport: "null"
+    spec:
+    spec_path:
+    title:
+    padding:
+    event_data:
+
+scripts:
+    - d3.v3.min.js
+    - vega.js
+
+styles:
+    - vega.css
+
+require_packages:
+    - rjson
+    - df2json
+
+require_server: yes

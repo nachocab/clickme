@@ -1,7 +1,7 @@
-info: |
+info: |-
     Zoomable phylogenetic tree viewer that allows interactive display of large trees.
 
-    clickme allows three types of input containing an ultrametric Newick tree (polytomies as branch length zero):
+    Clickme allows three types of input containing an ultrametric Newick tree (polytomies as branch length zero):
     1) A path to a file containing a tree in string form
 
         library(clickme)
@@ -25,10 +25,18 @@ info: |
 
         clickme("(((A:4.2,B:4.2):3.1,C:7.3):6.3,D:13.6);", "one_zoom")
 
+original_url: http://www.onezoom.org/mammals.htm
 
-valid_names:
+demo: |-
+    mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
+    clickme(mammals_path, "one_zoom")
 
-name_comments: |
+data_names:
+    required:
+    optional:
+
+params:
+    title: OneZoom Tree of Life Explorer
 
 scripts:
     - OZ_W_1/User_options_13.js
@@ -37,18 +45,7 @@ scripts:
 
 styles:
 
-default_parameters: {
-
-}
-
 require_packages:
     - ape
 
 require_server: no
-
-original_url: http://www.onezoom.org/mammals.htm
-
-demo: |
-    mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
-    clickme(mammals_path, "one_zoom")
-

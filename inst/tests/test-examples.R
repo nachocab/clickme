@@ -1,7 +1,8 @@
 context("examples")
 
+suppressMessages(set_root_path(system.file("examples", package="clickme")))
+
 test_that("the HTML example file for the force_directed ractive is generated", {
-    set_root_path(system.file("examples", package="clickme"))
     ractive <- "force_directed"
 
     # we do this to ensure that the HTML file doesn't exist before we create it
@@ -15,21 +16,18 @@ test_that("the HTML example file for the force_directed ractive is generated", {
 })
 
 test_that("the HTML example file for the line_with_focus ractive is generated", {
-    set_root_path(system.file("examples", package="clickme"))
     ractive <- "line_with_focus"
 
     # we do this to ensure that the HTML file doesn't exist before we create it
     opts <- get_opts(ractive)
     unlink(opts$path$html_file)
     data <- read.csv(file.path(opts$path$data, "original_data.csv"))
-
     clickme(data, ractive, browse = FALSE)
 
     expect_true(file.exists(opts$path$html_file))
 })
 
 test_that("the HTML example file for the longitudinal_heatmap ractive is generated", {
-    set_root_path(system.file("examples", package="clickme"))
     ractive <- "longitudinal_heatmap"
 
     # we do this to ensure that the HTML file doesn't exist before we create it
@@ -43,7 +41,6 @@ test_that("the HTML example file for the longitudinal_heatmap ractive is generat
 })
 
 test_that("the HTML example file for the one_zoom ractive is generated", {
-    set_root_path(system.file("examples", package="clickme"))
     ractive <- "one_zoom"
 
     # we do this to ensure that the HTML file doesn't exist before we create it
@@ -57,7 +54,6 @@ test_that("the HTML example file for the one_zoom ractive is generated", {
 })
 
 test_that("the HTML example file for the par_coords ractive is generated", {
-    set_root_path(system.file("examples", package="clickme"))
     ractive <- "par_coords"
 
     # we do this to ensure that the HTML file doesn't exist before we create it
@@ -65,13 +61,12 @@ test_that("the HTML example file for the par_coords ractive is generated", {
     unlink(opts$path$html_file)
     data <- read.csv(file.path(opts$path$data, "original_data.csv"))
 
-    clickme(data, ractive, browse = FALSE)
+    clickme(data, ractive, params = list(color_by = "economy"), browse = FALSE)
 
     expect_true(file.exists(opts$path$html_file))
 })
 
 test_that("the HTML example file for the vega ractive is generated", {
-    set_root_path(system.file("examples", package="clickme"))
     ractive <- "vega"
 
     # we do this to ensure that the HTML file doesn't exist before we create it
@@ -118,9 +113,8 @@ test_that("the HTML example file for the vega ractive is generated", {
 })
 
 context("example translators")
-test_that("example translators work", {
-    set_root_path(system.file("examples", package="clickme"))
 
+test_that("example translators work", {
     for(ractive in plain_list_ractives()){
         test_translator(ractive)
     }

@@ -1,13 +1,27 @@
-info: |
+info: |-
     Show multiple lines, each with a different color. Allow zooming across the x-axis.
 
-valid_names:
-    - line
-    - x
-    - "y"
-
-name_comments: |
     "line" indicates the line name.
+
+original_url: http://nvd3.org/ghpages/lineWithFocus.html
+
+demo: |-
+    n <- 30
+    cities <- c("Boston", "NYC", "Philadelphia")
+    data <- data.frame(x = rep(1:n, length(cities)), y = c(sort(rnorm(n)), -sort(rnorm(n)),sort(rnorm(n))), line = rep(cities, each = n))
+    clickme(data, "line_with_focus")
+
+data_names:
+    required:
+        - "x"
+        - "y"
+        - "line"
+    optional:
+
+params:
+    title: "Line with focus"
+    width: 800
+    height: 500
 
 scripts:
     - d3.v2.min.js
@@ -22,22 +36,7 @@ scripts:
 styles:
     - nv.d3.css
 
-default_parameters: {
-    width: 800,
-    height: 500,
-}
-
 require_packages:
     - rjson
 
 require_server: no
-
-original_url: http://nvd3.org/ghpages/lineWithFocus.html
-
-demo: |
-    n <- 30
-    cities <- c("Boston", "NYC", "Philadelphia")
-    data <- data.frame(name = rep(cities, each = n), x = rep(1:n, length(cities)), y = c(sort(rnorm(n)), -sort(rnorm(n)),sort(rnorm(n))))
-    clickme(data, "line_with_focus")
-
-

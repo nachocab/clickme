@@ -1,6 +1,6 @@
 {
   "width": {{ opts$params$width }},
-  "height": {{ opts$params$height  }},
+  "height": {{ opts$params$height }},
   "padding": {{ get_padding_param(opts) }},
   "data": [
     {

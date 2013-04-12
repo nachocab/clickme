@@ -1,8 +1,4 @@
-get_padding_param <- function(opts, default = c(top = 10, left = 30, bottom = 30, right = 10)) {
-    if (is.null(opts$params$padding)){
-        opts$params$padding <- default
-    }
-
+get_padding_param <- function(opts) {
     library(rjson)
     padding <- opts$params$padding
 
@@ -21,7 +17,7 @@ get_padding_param <- function(opts, default = c(top = 10, left = 30, bottom = 30
 
 get_data_as_json <- function(opts) {
     library(df2json)
-    data <- as.data.frame(opts$data, stringsAsFactors=FALSE)
+    data <- as.data.frame(opts$data, stringsAsFactors = FALSE)
 
     if (is.null(data$group)) data$group <- ""
     if (is.null(data$name)) data$name <- rownames(data)

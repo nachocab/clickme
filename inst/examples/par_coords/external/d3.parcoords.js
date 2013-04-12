@@ -8,7 +8,7 @@ d3.parcoords = function(config) {
     rate: 20,
     width: 600,
     height: 300,
-    margin: { top: 24, right: 0, bottom: 12, left: 200 },
+    margin: { top: 24, right: 0, bottom: 12, left: 0 },
     color: "#069",
     composite: "source-over",
     alpha: 0.7

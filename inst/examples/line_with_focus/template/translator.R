@@ -14,7 +14,7 @@ get_data_as_nested_structure <- function(data){
 
 get_data_as_json <- function(opts) {
     library(rjson)
-    data <- as.data.frame(opts$data, stringsAsFactors=FALSE)
+    data <- as.data.frame(opts$data, stringsAsFactors = FALSE)
     data <- get_data_as_nested_structure(data)
     json_data <- toJSON(data)
 

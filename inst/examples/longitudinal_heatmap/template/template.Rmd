@@ -3,8 +3,8 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>PCP Heatmap</title>
-    {{ append_external(opts) }}
+    <title>{{ opts$params$title }}</title>
+    {{ get_external(opts) }}
   </head>
 
   <body>

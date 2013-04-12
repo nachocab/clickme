@@ -148,7 +148,7 @@ quote_escaped <- function(data) {
 #' @param path path where server is started
 #' @param port port used to start the server
 #' @export
-server <- function(path=get_root_path(), port=8888){
+server <- function(path = get_root_path(), port = 8888){
     system(paste0("cd ", path, "; python -m SimpleHTTPServer ", port))
     message("Server running at ", path)
 }
@@ -169,14 +169,14 @@ test_translator <- function(ractive){
     }
 }
 
-mat <- function(elements=NULL, num_elements=nrow*ncol, nrow=5, ncol=2, scale_by=100, rownames=NULL, colnames=NULL){
+mat <- function(elements = NULL, num_elements = nrow*ncol, nrow = 5, ncol = 2, scale_by = 100, rownames = NULL, colnames = NULL){
     if (is.null(elements)){
         elements <- runif(num_elements) * scale_by
     }
     if (!is.null(ncol)){
-        mat <- matrix(elements, ncol=ncol, byrow=T)
+        mat <- matrix(elements, ncol = ncol, byrow = T)
     } else {
-        mat <- matrix(elements, nrow=nrow, byrow=T)
+        mat <- matrix(elements, nrow = nrow, byrow = T)
     }
 
     if (!is.null(rownames)) rownames(mat) <- rownames
@@ -194,7 +194,7 @@ list_ractives <- function() {
 }
 
 plain_list_ractives <- function() {
-    basename(list.dirs(get_root_path(), recursive=F))
+    basename(list.dirs(get_root_path(), recursive = F))
 }
 
 
@@ -202,7 +202,7 @@ plain_list_ractives <- function() {
 titleize <- function(str){
     str <- str_replace(str,"_"," ")
     words_in_str <- strsplit(str, " ")[[1]]
-    title <- paste0(toupper(substring(words_in_str, 1,1)), substring(words_in_str, 2), collapse=" ")
+    title <- paste0(toupper(substring(words_in_str, 1, 1)), substring(words_in_str, 2), collapse=" ")
     names(title) <- NULL
     title
 }
@@ -220,8 +220,14 @@ open_html <- function(ractive, ...) {
 }
 
 open_all_html <- function(){
-    for(ractive in plain_list_ractives()){
+    for (ractive in plain_list_ractives()){
         open_html(ractive)
+    }
+}
+
+open_all_demos <- function(){
+    for (ractive in plain_list_ractives()){
+        demo_ractive(ractive)
     }
 }
 
@@ -241,18 +247,24 @@ show_ractive <- function(ractive, fields = NULL){
 
     for (field in fields){
         if (!is.null(opts$template[[field]])){
-            if (field == "default_parameters") {
-                if (length(opts$template_config$default_parameters) > 0){
+            if (field == "params") {
+                if (length(opts$template_config$params) > 0){
                     message(paste0(titleize(field)))
-                    cat(paste0(paste0(names(opts$template_config$default_parameters), ": ", opts$template_config$default_parameters), collapse="\n"), "\n\n")
+                    cat(paste0(paste0(names(opts$template_config$params), ": ", opts$template_config$params), collapse="\n"), "\n\n")
                 }
+            } else if (field == "data_names") {
+                if (length(opts$template_config$data_names$required) > 0){
+                    message(paste0(titleize(field)))
+                    cat(paste0(c("Required:", opts$template_config$data_names$required), collapse=" "), "\n")
+                }
+                if (length(opts$template_config$data_names$optional) > 0){
+                    message(paste0(titleize(field)))
+                    cat(paste0(c("Optional:", opts$template_config$data_names$optional), collapse=" "), "\n")
+                }
+                cat ("\n")
             } else {
                 message(paste0(titleize(field)))
-                cat(paste0(opts$template_config[[field]], collapse="\n"), "\n")
-            }
-
-            if (field %notin% c("info", "name_comments", "default_parameters")){
-                cat("\n")
+                cat(paste0(opts$template_config[[field]], collapse="\n"), "\n\n")
             }
         }
     }
@@ -271,11 +283,11 @@ demo_ractive <- function(ractive) {
     if (is.null(opts$template_config$demo)){
         message("The ", ractive, " ractive didn't provide a demo example.")
     } else {
-        message("* Getting ready to run the following ", ractive, " demo:\n\n", opts$template_config$demo)
+        message("Getting ready to run the following ", ractive, " demo:\n\n", opts$template_config$demo)
         cat("\nGo ahead? (y)es (n)o ")
         response <- readline()
         if (tolower(response) %in% c("yes", "y")) {
-            message("* Running...")
+            message("Running...")
             eval(parse(text = opts$template_config$demo))
         } else {
             message("Demo wasn't run")
@@ -313,9 +325,9 @@ clickme_vega <- function(data, spec, ...){
     dots$browse <- NULL
 
     if (length(dots) != 0){
-        clickme(data, "vega", browse = browse, params = params, data_name = data_name, dots)
+        clickme(data, "vega", browse = browse, params = params, data_prefix = data_prefix, dots)
     } else {
-        clickme(data, "vega", browse = browse, params = params, data_name = data_name)
+        clickme(data, "vega", browse = browse, params = params, data_prefix = data_prefix)
     }
 }
 
@@ -327,13 +339,13 @@ clickme_vega <- function(data, spec, ...){
 #' @param opts options
 #' @param extension extension of the file
 #' @param expected_data data that should be stored in the test file.
-#' @param test_data_name value used on the \code{get_opts(..., data_name = test_data_name)} call. It is "test_data" by default.
+#' @param test_data_prefix value used on the \code{get_opts(..., data_prefix = test_data_prefix)} call. It is "test_data" by default.
 #' @export
-expect_correct_file <- function(opts, extension, expected_data = NULL, test_data_name = "test_data") {
+expect_correct_file <- function(opts, extension, expected_data = NULL, test_data_prefix = "test_data") {
     if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
 
-    expected_relative_path <- paste("\"", file.path(opts$relative_path$data, paste0(test_data_name, extension)), "\"")
-    expected_path <- file.path(opts$path$data, paste0(test_data_name, extension))
+    expected_relative_path <- paste("\"", file.path(opts$relative_path$data, paste0(test_data_prefix, extension)), "\"")
+    expected_path <- file.path(opts$path$data, paste0(test_data_prefix, extension))
     expect_true(file.exists(expected_path))
     if (!is.null(expected_data)){
         expect_equal(readContents(expected_path), expected_data)

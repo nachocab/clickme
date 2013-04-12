@@ -1,20 +1,26 @@
 <!doctype html>
-<title>Parallel Coordinates</title>
+<title>PCP</title>
 
 <link href="par_coords/external/d3.parcoords.css" rel="stylesheet">
 <link href="par_coords/external/style.css" rel="stylesheet">
 <script src="par_coords/external/d3.min.js"></script>
 <script src="par_coords/external/d3.parcoords.js"></script>
 
-<div id="example" class="parcoords" style="width:1024px;height:700px;"></div>
+<div id="example" class="parcoords"></div>
 
 <script id="brushing">
-var colors = d3.scale.ordinal().range(["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5"]);
+var colors = d3.scale.linear()
+               .domain([11,36.4])
+               .range(["steelblue","brown"])
+               .interpolate(d3.interpolateLab);
 
-var color_palette = function(d) { return colors(d["name"]); };
+var color_palette = function(d) { return colors(d["economy"]); };
 
 d3.csv("par_coords/data/data.csv", function(data) {
   d3.parcoords()("#example")
+    .height(700)
+    .width(1024)
+    .margin({"top":24,"right":0,"bottom":12,"left":200})
     .data(data)
     .color(color_palette)
     .alpha(0.4)

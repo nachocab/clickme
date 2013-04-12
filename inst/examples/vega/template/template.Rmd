@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>{{ opts$params$title }}</title>
-    {{ append_external(opts) }}
+    {{ get_external(opts) }}
   </head>
   <body>
     <div id="vis"></div>

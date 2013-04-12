@@ -2,9 +2,9 @@ get_spec_path_param <- function(opts) {
     spec_path <- opts$params$spec_path
     if (is.null(spec_path)){
         if (!is.null(opts$params$spec)){
-            spec_path <- file.path(opts$path$data, "spec", paste0(opts$params$spec, ".json"))
+            spec_path <- file.path(opts$path$template, "spec", paste0(opts$params$spec, ".json"))
         } else {
-            stop("Please provide a Vega spec name or path (ex: params=list(spec=\"area\") or params=list(spec_path=\"/path/to/spec.json\")")
+            stop("Please provide a Vega spec name or path (ex: params = c(spec=\"area\") or params = c(spec_path=\"/path/to/spec.json\")")
         }
     }
 
@@ -38,7 +38,7 @@ get_padding_param <- function(opts, default = c(top = 10, left = 30, bottom = 30
 
 get_data_as_json <- function(opts) {
     library(df2json)
-    data <- as.data.frame(opts$data, stringsAsFactors=FALSE)
+    data <- as.data.frame(opts$data, stringsAsFactors = FALSE)
     json_data <- df2json(data)
 
     json_data
@@ -53,7 +53,7 @@ get_data_as_json_file <- function(opts) {
 
 get_event_data_param <- function(opts) {
     library(df2json)
-    data <- as.data.frame(opts$params$event_data, stringsAsFactors=FALSE)
+    data <- as.data.frame(opts$params$event_data, stringsAsFactors = FALSE)
     json_data <- df2json(data)
 
     json_data

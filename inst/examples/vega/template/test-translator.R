@@ -1,8 +1,8 @@
 context("translate vega")
 
 test_that("input data is translated to the format expected by the template", {
-    test_data_name <- "test_data"
-    opts <- get_opts("vega", params=list(spec="area"), data_name = test_data_name)
+    test_data_prefix <- "test_data"
+    opts <- get_opts("vega", params = list(spec="area"), data_prefix = test_data_prefix)
     opts$data <- data.frame(x = c(1, 2, 3), y = c(10, 20, 30))
     expected_data <- "[{\"x\":1,\"y\":10},\n{\"x\":2,\"y\":20},\n{\"x\":3,\"y\":30}]"
 
@@ -26,7 +26,7 @@ test_that("spec is specified", {
 
     expect_error(get_spec_path_param(opts), "provide a Vega spec")
 
-    expected_spec_path <- file.path(opts$path$data, "spec", "area.json")
+    expected_spec_path <- file.path(opts$path$template, "spec", "area.json")
     opts <- get_opts("vega", list(spec_path = expected_spec_path))
     spec_path <- get_spec_path_param(opts)
     expect_equal(spec_path, expected_spec_path)
@@ -37,26 +37,26 @@ test_that("spec is specified", {
 
 test_that("padding", {
     # default global padding
-    opts <- get_opts("vega", params=list(spec="area"))
+    opts <- get_opts("vega", params = list(spec="area"))
     padding <- get_padding_param(opts)
     expect_equal(padding, "{\"top\":10,\"left\":30,\"bottom\":30,\"right\":10}")
 
     # spec-specific padding
-    opts <- get_opts("vega", params=list(spec="area"))
-    padding <- get_padding_param(opts, c(10,10,10,10))
+    opts <- get_opts("vega", params = list(spec="area"))
+    padding <- get_padding_param(opts, c(10, 10, 10, 10))
     expect_equal(padding, "{\"top\":10,\"left\":10,\"bottom\":10,\"right\":10}")
 
     # user-provided param padding
-    opts <- get_opts("vega", params=list(padding = c(10, 20, 30, 40), spec = "area"))
+    opts <- get_opts("vega", params = list(padding = c(10, 20, 30, 40), spec = "area"))
     padding <- get_padding_param(opts)
     expect_equal(padding, "{\"top\":10,\"left\":20,\"bottom\":30,\"right\":40}")
 
     # changed order
-    opts <- get_opts("vega", params=list(padding=c(right=10,bottom=20,left=30,top=40), spec="area"))
+    opts <- get_opts("vega", params = list(padding = c(right = 10, bottom = 20, left = 30, top = 40), spec="area"))
     padding <- get_padding_param(opts)
     expect_equal(padding, "{\"right\":10,\"bottom\":20,\"left\":30,\"top\":40}")
 
     # wrong input
-    opts <- get_opts("vega", params=list(padding=c(10,20,30), spec="area"))
+    opts <- get_opts("vega", params = list(padding = c(10, 20, 30), spec="area"))
     expect_error(get_padding_param(opts), "Please provide four padding values")
 })

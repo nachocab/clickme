@@ -23,7 +23,7 @@ validate_ractive <- function(opts) {
             }
         }
 
-        sapply(opts$template_config$require_packages, library, character.only=TRUE)
+        sapply(opts$template_config$require_packages, library, character.only = TRUE)
     }
 
     sapply(c(opts$template_config$styles, opts$template_config$scripts), function(style_or_script){

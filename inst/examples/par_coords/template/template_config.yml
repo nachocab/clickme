@@ -1,4 +1,4 @@
-info: |
+info: |-
     Parallel coordinates plot that allows brushing, and moving the axes.
 
     Parameters
@@ -11,10 +11,28 @@ info: |
 
     "colors" is a color palette. It can be specified using names c("red", "blue", "green") or hex colors c("#FFFF33", "#000")
 
-valid_names:
+original_url: http://syntagmatic.github.com/parallel-coordinates/examples/brushing.html
 
-name_comments: |
+demo: |-
+    cars <- read_ractive_csv("par_coords", "original_data.csv")
+    clickme(cars, "par_coords", params = list(color_by = "economy"))
 
+data_names:
+    required:
+    optional:
+
+params:
+    title: "PCP"
+    width: 1024
+    height: 700
+    color_by:
+    domain:
+    colors:
+    padding:
+        top: 24
+        right: 0
+        bottom: 12
+        left: 200
 
 scripts:
     - d3.min.js
@@ -24,23 +42,7 @@ styles:
     - d3.parcoords.css
     - style.css
 
-default_parameters: {
-    color_by,
-    domain,
-    colors,
-    width: 1024,
-    height: 700,
-}
-
 require_packages:
     - rjson
 
 require_server: yes
-
-original_url: http://syntagmatic.github.com/parallel-coordinates/examples/brushing.html
-
-demo: |
-    cars <- read_ractive_csv("par_coords", "original_data.csv")
-    clickme(cars, "par_coords")
-
-

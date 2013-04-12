@@ -54,6 +54,23 @@ get_domain_param <- function(opts){
     opts$params$domain
 }
 
+get_padding_param <- function(opts) {
+    library(rjson)
+    padding <- opts$params$padding
+
+    if (length(padding) != 4){
+        stop("Please provide four padding values. (currently ", paste(padding, collapse=", "), ")")
+    }
+
+    if (is.null(names(padding))) {
+        names(padding) <- c("top", "left", "bottom", "right")
+    }
+
+    padding <- toJSON(padding)
+
+    padding
+}
+
 get_data_as_csv_file <- function(opts) {
     csv_file <-  create_data_file(opts, "csv")
 
