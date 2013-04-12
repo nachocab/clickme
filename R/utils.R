@@ -53,7 +53,7 @@ get_styles <- function(opts) {
 create_data_file <- function(opts, extension, sep=",", method = NULL, row_names = FALSE, relative_path = TRUE, quote_escaped = TRUE, ...) {
     if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
 
-    data_file_name <- paste0(opts$data_name, extension)
+    data_file_name <- paste0(opts$data_prefix, extension)
     data_file_path <- file.path(opts$path$data, data_file_name)
     relative_data_file_path <- file.path(opts$relative_path$data, data_file_name)
 
@@ -300,11 +300,11 @@ clickme_vega <- function(data, spec, ...){
         params$spec = spec
     }
 
-    if (is.null(dots$data_name)){
-        dots$data_name <- paste0("data_", spec)
+    if (is.null(dots$data_prefix)){
+        dots$data_prefix <- paste0("data_", spec)
     }
-    data_name <- dots$data_name
-    dots$data_name <- NULL
+    data_prefix <- dots$data_prefix
+    dots$data_prefix <- NULL
 
     if (is.null(dots$browse)){
         dots$browse <- interactive()
