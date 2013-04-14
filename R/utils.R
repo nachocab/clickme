@@ -92,7 +92,7 @@ read_ractive_csv <- function(ractive, file_name) {
 }
 
 readContents <- function(path) {
-    paste(readLines(path), collapse = "\n")
+    paste(readLines(path, warn = FALSE), collapse = "\n")
 }
 
 #' Inverse Value Matching
@@ -281,7 +281,7 @@ demo_ractive <- function(ractive) {
     if (is.null(opts$template_config$demo)){
         message("The ", ractive, " ractive didn't provide a demo example.")
     } else {
-        message("Getting ready to run the following ", ractive, " demo:\n\n", opts$template_config$demo)
+        message("Getting ready to run the following demo for the ", ractive, " ractive:\n\n", opts$template_config$demo)
         message("\nPress Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
         response <- readline()
         if (tolower(response) %in% c("c")) {

@@ -27,7 +27,7 @@ get_root_path <- function() {
             message("No clickme_root_path option found, using default root path:")
             message("set_root_path(\"", system.file("examples", package = "clickme"), "\")")
             set_root_path(system.file("examples", package = "clickme"))
-            message("\nThe root path is the folder where your ractives live.\nSee the wiki for more info: bit.ly/clickme_wiki\n")
+            message("\nThe root path is the folder where your ractives live.\nSee the wiki for more info: bit.ly/clickme_wiki")
             message(separator)
         }
 
