@@ -36,5 +36,13 @@ validate_ractive <- function(opts) {
         }
     })
 
-    invisible(TRUE)
+    if (is.null(opts$template_config$require_server)){
+        opts$template_config$require_server <- FALSE
+    }
+
+    if (is.null(opts$template_config$require_coffeescript)){
+        opts$template_config$require_coffeescript <- FALSE
+    }
+
+    opts
 }

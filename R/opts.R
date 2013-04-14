@@ -63,7 +63,7 @@ get_opts <- function(ractive, params = NULL, name_mappings = NULL, data_prefix =
     if (!file.exists(opts$path$template_config_file)) stop("No template configuration file found at:", opts$path$template_config_file)
 
     opts$template_config <- yaml.load_file(opts$path$template_config_file)
-    validate_ractive(opts)
+    opts <- validate_ractive(opts)
 
     # user provided options
     opts <- add_params(opts, params)

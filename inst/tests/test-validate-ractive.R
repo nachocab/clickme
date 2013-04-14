@@ -45,5 +45,13 @@ test_that("styles and scripts must be valid", {
 
     opts <- get_opts(ractive, data_prefix = "data")
     opts$template_config$scripts <- c("http://d3js.org/d3.v3.min.js")
-    expect_true(validate_ractive(opts))
+    expect_equal(validate_ractive(opts), opts)
+})
+
+test_that("require_server and require_coffeescript are false by default", {
+    ractive <- "par_coords"
+    opts <- get_opts(ractive, data_prefix = "data")
+
+    opts$template_config$require_server <- NULL
+    expect_false(validate_ractive(opts)$template_config$require_server)
 })
