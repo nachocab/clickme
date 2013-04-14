@@ -24,7 +24,6 @@ get_root_path <- function() {
         } else {
             separator <- paste0(rep("=", 70, collapse = ""))
             message(separator)
-            message(separator)
             message("No clickme_root_path option found, using default root path:")
             message("set_root_path(\"", system.file("examples", package = "clickme"), "\")")
             set_root_path(system.file("examples", package = "clickme"))
