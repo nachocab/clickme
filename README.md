@@ -26,11 +26,11 @@ list_ractives()
 # Pick a few and try them
 demo_ractive("force_directed")
 
-demo_ractive("par_coords")
+demo_ractive("line_with_focus")
 
 demo_ractive("longitudinal_heatmap")
 
-demo_ractive("scatterplot")
+demo_ractive("par_coords")
 
 demo_ractive("vega")
 ```

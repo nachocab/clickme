@@ -10,17 +10,20 @@ validate_ractive <- function(opts) {
         missing_packages <- opts$template_config$require_packages[!is.installed(opts$template_config$require_packages)]
 
         if (length(missing_packages) != 0){
+            separator <- paste0(rep("=", 70, collapse = ""))
+            message(separator)
             message("The ", opts$name$ractive,
                     " ractive requires the following packages to be installed:\n\n",
                     paste0(missing_packages, collapse="\n"),
-                    "\nPress ENTER and they will be installed automatically. Type 'c' if you prefer installing them yourself.")
+                    "\nPress Enter to install them automatically or \"c\" to cancel.")
             response <- readline()
             if (tolower(response) == "c"){
                 message("Try install.packages(", paste0(missing_packages, collapse=","), ")")
-                invisible(return())
+                capture.output(return())
             } else {
                 install.packages(missing_packages)
             }
+            message(separator)
         }
 
         sapply(opts$template_config$require_packages, library, character.only = TRUE)

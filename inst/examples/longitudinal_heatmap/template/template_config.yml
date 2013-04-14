@@ -5,7 +5,7 @@ info: |-
     "cluster" is a factor used to break the rows of the input data into groups.
 
     This visualization can receive URL parameters of the form:
-        http://localhost:8888/data-longitudinal_heatmap.html?url_param1=value1&url_param2=value2&url_param3=value3
+        http://localhost:8000/data-longitudinal_heatmap.html?url_param1=value1&url_param2=value2&url_param3=value3
     Available URL parameters include:
         cluster=[1|0] show (or don't show) rows in clusters
         group=[1|0] break up (or don't break up) the columns of the data into subsets, determined by the prefix of each column

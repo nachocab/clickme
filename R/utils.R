@@ -148,7 +148,7 @@ quote_escaped <- function(data) {
 #' @param path path where server is started
 #' @param port port used to start the server
 #' @export
-server <- function(path = get_root_path(), port = 8888){
+server <- function(path = get_root_path(), port = 8000){
     system(paste0("cd ", path, "; python -m SimpleHTTPServer ", port))
     message("Server running at ", path)
 }
@@ -274,8 +274,6 @@ show_ractive <- function(ractive, fields = NULL){
 
 #' Run ractive examples
 #'
-#'
-#'
 #' @param ractive name of ractive
 #' @export
 demo_ractive <- function(ractive) {
@@ -284,13 +282,12 @@ demo_ractive <- function(ractive) {
         message("The ", ractive, " ractive didn't provide a demo example.")
     } else {
         message("Getting ready to run the following ", ractive, " demo:\n\n", opts$template_config$demo)
-        cat("\nGo ahead? (y)es (n)o ")
+        message("\nPress Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
         response <- readline()
-        if (tolower(response) %in% c("yes", "y")) {
-            message("Running...")
-            eval(parse(text = opts$template_config$demo))
+        if (tolower(response) %in% c("c")) {
+            message("Demo was canceled.")
         } else {
-            message("Demo wasn't run")
+            eval(parse(text = opts$template_config$demo))
         }
     }
 }

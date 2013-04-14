@@ -37,7 +37,6 @@ params:
         right: 10
         scale: 0.1
 
-
 scripts:
     - d3.v3.min.js
     - plotframe.js
@@ -49,5 +48,7 @@ require_packages:
     - df2json
 
 require_server: yes
+
+require_coffeescript: yes
 
 

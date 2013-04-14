@@ -29,6 +29,8 @@ require_packages:
 
 require_server: no
 
+require_coffeescript: no
+
 "
 
     translator_contents <- "get_data_as_json <- function(opts) {

@@ -4,7 +4,7 @@
 \usage{
   get_opts(ractive, params = NULL, name_mappings = NULL,
     data_prefix = "data", html_file_name = NULL,
-    port = 8888)
+    port = 8000)
 }
 \arguments{
   \item{ractive}{name of the reactive}
@@ -27,7 +27,7 @@
   "data_prefix-ractive.html"}
 
   \item{port}{port used to open a local browser, default
-  8888}
+  8000}
 }
 \description{
   Get options used by the current ractive

@@ -15,29 +15,40 @@ generate_visualization <- function(opts){
 #'
 #' library(clickme)
 #'
-#' # visualize a zoomable phylogenetic tree (www.onezoom.org)
-#' mammals_path <- system.file(file.path("examples", "one_zoom", "data", "mammals.tree"), package="clickme")
-#' clickme(mammals_path, "one_zoom")
-#'
 #' # visualize a force-directed interactive graph
 #' items <- paste0("GENE_", 1:40)
 #' n <- 30
 #' df1 <- data.frame(source = sample(items, n, replace = TRUE), target = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace = TRUE))
 #' clickme(df1, "force_directed")
-#'
-#' # visualize a line plot that allows zooming along the x-axis
-#' n <- 30
-#' cities <- c("Boston", "NYC", "Philadelphia")
-#' df2 <- data.frame(x = rep(1:n, length(cities)), y = c(sort(rnorm(n)), -sort(rnorm(n)),sort(rnorm(n))), line = rep(cities, each = n))
-#' clickme(df2, "line_with_focus")
-#'
-#' # visualize an interactive heatmap next to a parallel coordinates plot
-#' df3 <- matrix(rnorm(200), ncol = 8, nrow = 25)
-#' rownames(df3) <- paste0("GENE_", 1:25)
-#' colnames(df3) <- paste0("sample_", 1:8)
-#' clickme(df3, "longitudinal_heatmap") # you will need to have a local server for this one.
 clickme <- function(data, ractive, browse = interactive(), ...){
     opts <- get_opts(ractive, ...)
+
+    if (opts$template_config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {
+        separator <- paste0(rep("=", 70, collapse = ""))
+        message(separator)
+        message(paste0("If you don't have a server running in your Clickme root path, open a new ", ifelse(.Platform$OS.type == "unix", "terminal", "Command Prompt"), " and type:"))
+        message("cd \"", get_root_path(), "\"\npython -m SimpleHTTPServer")
+
+        message("\n(add: options(clickme_server_warning = FALSE) in your .Rprofile to avoid seeing this warning again.)")
+        message("Press Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
+        response <- readline()
+        if (tolower(response) %in% c("c")) {
+            capture.output(return())
+        }
+        message(separator)
+    }
+
+    if (opts$template_config$require_coffeescript && system("coffee -v", ignore.stdout = TRUE, ignore.stderr = TRUE) != 0) {
+        message("\n", separator)
+        message("This visualization requires \"coffee\" and it seems that you don't have it installed.")
+        message("See http://coffeescript.org/ for installation instructions")
+        message("Press Enter after you install it or \"c\" to cancel: ", appendLF = FALSE)
+        response <- readline()
+        if (tolower(response) %in% c("c")) {
+            capture.output(return())
+        }
+        message(separator)
+    }
 
     opts$data <- data
     if (!is.null(opts$name_mappings)){
@@ -48,11 +59,6 @@ clickme <- function(data, ractive, browse = interactive(), ...){
 
     source(opts$path$translator_file)
     generate_visualization(opts)
-
-    if (opts$template_config$require_server){
-        message("Make sure you have a server running at: ", get_root_path())
-        message("(try running: python -m SimpleHTTPServer)")
-    }
 
     if (browse) browseURL(opts$url)
 
