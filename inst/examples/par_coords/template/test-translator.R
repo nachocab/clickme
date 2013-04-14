@@ -34,6 +34,17 @@ test_that("the domain parameter can be set manually", {
     expect_equal(domain, expected_domain)
 })
 
+test_that("the domain data doesn't contain any NAs", {
+    old_data <- opts$data
+    opts$data$flamenco_appreciation_rate[3] <- NA
+    opts$params$color_by <- "flamenco_appreciation_rate"
+    domain <- get_domain_param(opts)
+
+    expected_domain <- "[0.9,1]"
+    expect_equal(domain, expected_domain)
+    opts$data <- old_data
+})
+
 test_that("the domain parameter is automatically calculated if not present", {
     opts$params$color_by <- "ice_cream_production"
     coerced_domain <- get_domain_param(opts)

@@ -44,7 +44,7 @@ get_domain_param <- function(opts){
     if (is.null(opts$params$domain)){
         color_values <- opts$data[, get_color_by_param(opts)]
         if (is.numeric(color_values)){
-            opts$params$domain <- range(color_values)
+            opts$params$domain <- range(color_values, na.rm = TRUE)
         } else {
             opts$params$domain <- c(1, length(unique(color_values)))
         }
