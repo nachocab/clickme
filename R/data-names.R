@@ -32,6 +32,11 @@ map_data_names <- function(opts){
 }
 
 validate_data_names <- function(opts){
+    if (is.matrix(opts$data)){
+        # because names(matrix) is NULL
+        opts$data <- data.frame(opts$data)
+    }
+
     required_names <- opts$template_config$data_names$required
     missing_required_names <- required_names[required_names %notin% names(opts$data)]
 
