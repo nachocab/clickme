@@ -58,3 +58,49 @@ test_that("clickme_vega", {
     expect_equal(opts$name$html_file, "my_data-vega.html")
     unlink(opts$path$html_file)
 })
+
+test_that("padding", {
+    # default global padding
+    opts <- get_opts("vega", params = list(spec="area"))
+    padding <- get_padding_param(opts)
+    expect_equal(padding, "{\"top\":10,\"left\":30,\"bottom\":30,\"right\":10}")
+
+    # spec-specific padding
+    opts <- get_opts("vega", params = list(spec="area"))
+    padding <- get_padding_param(opts, c(10, 10, 10, 10))
+    expect_equal(padding, "{\"top\":10,\"left\":10,\"bottom\":10,\"right\":10}")
+
+    # user-provided param padding
+    opts <- get_opts("vega", params = list(padding = c(10, 20, 30, 40), spec = "area"))
+    padding <- get_padding_param(opts)
+    expect_equal(padding, "{\"top\":10,\"left\":20,\"bottom\":30,\"right\":40}")
+
+    # changed order
+    opts <- get_opts("vega", params = list(padding = c(right = 10, bottom = 20, left = 30, top = 40), spec="area"))
+    padding <- get_padding_param(opts)
+    expect_equal(padding, "{\"right\":10,\"bottom\":20,\"left\":30,\"top\":40}")
+
+    # wrong input
+    opts <- get_opts("vega", params = list(padding = c(10, 20, 30), spec="area"))
+    expect_error(get_padding_param(opts), "Please provide four padding values")
+})
+
+# test_that("get_data_names", {
+#     names <- c("a", "b", "c")
+#     m <- matrix(1:9, ncol=3)
+#     colnames(m) <- names
+#     expect_equal(get_data_names(m), names)
+
+#     d <- data.frame(m)
+#     rownames(d) <- c("A","B","C")
+#     expect_equal(get_data_names(d), names)
+
+#     l <- list(a = 3, b = 33, c = 333)
+#     expect_equal(get_data_names(l), names)
+
+#     v <- c(a = 3, b = 33, c = 333)
+#     expect_equal(get_data_names(v), names)
+
+#     f <- factor(c(a = 3, b = 33, c = 333))
+#     expect_equal(get_data_names(f), names)
+# })

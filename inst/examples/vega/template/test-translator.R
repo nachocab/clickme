@@ -35,28 +35,3 @@ test_that("spec is specified", {
     expect_error(get_spec_path_param(opts), "No spec file was found")
 })
 
-test_that("padding", {
-    # default global padding
-    opts <- get_opts("vega", params = list(spec="area"))
-    padding <- get_padding_param(opts)
-    expect_equal(padding, "{\"top\":10,\"left\":30,\"bottom\":30,\"right\":10}")
-
-    # spec-specific padding
-    opts <- get_opts("vega", params = list(spec="area"))
-    padding <- get_padding_param(opts, c(10, 10, 10, 10))
-    expect_equal(padding, "{\"top\":10,\"left\":10,\"bottom\":10,\"right\":10}")
-
-    # user-provided param padding
-    opts <- get_opts("vega", params = list(padding = c(10, 20, 30, 40), spec = "area"))
-    padding <- get_padding_param(opts)
-    expect_equal(padding, "{\"top\":10,\"left\":20,\"bottom\":30,\"right\":40}")
-
-    # changed order
-    opts <- get_opts("vega", params = list(padding = c(right = 10, bottom = 20, left = 30, top = 40), spec="area"))
-    padding <- get_padding_param(opts)
-    expect_equal(padding, "{\"right\":10,\"bottom\":20,\"left\":30,\"top\":40}")
-
-    # wrong input
-    opts <- get_opts("vega", params = list(padding = c(10, 20, 30), spec="area"))
-    expect_error(get_padding_param(opts), "Please provide four padding values")
-})

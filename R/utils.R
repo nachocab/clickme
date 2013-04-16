@@ -1,3 +1,30 @@
+#' Get padding around plot
+#'
+#' @param opts ractive options
+#' @param default default padding, a vector with top, left, bottom and right values
+#'
+#' @export
+get_padding_param <- function(opts, default = c(top = 10, left = 30, bottom = 30, right = 10)) {
+    if (is.null(opts$params$padding)){
+        opts$params$padding <- default
+    }
+
+    library(rjson)
+    padding <- opts$params$padding
+
+    if (length(padding) != 4){
+        stop("Please provide four padding values. (currently ", paste(padding, collapse=", "), ")")
+    }
+
+    if (is.null(names(padding))) {
+        names(padding) <- c("top", "left", "bottom", "right")
+    }
+
+    padding <- toJSON(padding)
+
+    padding
+}
+
 #' Generate HTML style and script tags
 #'
 #' @param opts the options of the current template
