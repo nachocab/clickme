@@ -2,15 +2,6 @@ context("map_data_names")
 
 suppressMessages(set_root_path(system.file("examples", package="clickme")))
 
-test_that("input can be a matrix", {
-    ractive <- "scatterplot"
-    opts <- get_opts(ractive, data_prefix = "data")
-    opts$data <- matrix(1:4, 2, 2)
-    colnames(opts$data) <- c("x", "y")
-
-    expect_equal(length(validate_data_names(opts)), 0)
-})
-
 opts <- get_opts("force_directed", data_prefix = "data")
 test_that("input data names can be mapped to those expected by the template", {
     opts$data <- data.frame(the_source = 1:4, the_target = 4:1, the_type = paste0("A", 1:4))

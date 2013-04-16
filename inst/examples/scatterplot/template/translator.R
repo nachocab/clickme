@@ -28,6 +28,7 @@ get_data_as_json <- function(opts) {
 }
 
 get_data_as_json_file <- function(opts) {
+    opts$data <- as.data.frame(opts$data, stringsAsFactors= FALSE)
     opts$data <- get_data_as_json(opts)
     json_file <- create_data_file(opts, "json")
 
