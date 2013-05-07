@@ -1,0 +1,41 @@
+info: |-
+    Many box plots, with links to underlying histograms, by Karl Broman.
+
+    The input data is a matrix with columns corresponding to arrays
+    and rows corresonding to measurements.
+
+original_url: https://github.com/kbroman/d3examples/tree/master/manyboxplots2
+
+demo: |-
+    p <- 200
+    n <- 10000
+    means <- rnorm(p, 20, 5)
+    x <- matrix(rnorm(p*n), ncol=p, nrow=n)
+    x <- t(t(x) + means)
+    u <- sample(1:(p-1), 10)
+    x[1:(n/2),u] <- x[1:(n/2),u+1] # <- errors
+    clickme(x, "manyboxplots", params=list(qu=c(0.01, 0.05, 0.1, 0.25)))
+
+params:
+    title:         "Many box plots"
+    qu:            [0.01, 0.1, 0.25]
+    orderByMedian: TRUE
+    breaks:        251
+    ylab:          "\"Response\""
+    xlab:          "\"Individuals, sorted by median\""
+    width:         1000
+    height:        450
+    
+scripts:
+    - d3.min.js
+
+styles:
+    - manyboxplots.css
+
+require_packages:
+    - df2json
+    - rjson
+
+require_server: yes
+
+require_coffeescript: yes
