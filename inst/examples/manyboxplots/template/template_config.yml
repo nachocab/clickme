@@ -12,7 +12,9 @@ demo: |-
     means <- rnorm(p, 20, 5)
     x <- matrix(rnorm(p*n), ncol=p, nrow=n)
     x <- t(t(x) + means)
-    clickme(x, "manyboxplots", params=list(qu=c(0.001, 0.01, 0.05, 0.1, 0.25)))
+    u <- sample(1:(p-1), 10)
+    x[1:(n/2),u] <- x[1:(n/2),u+1] # <- errors
+    clickme(x, "manyboxplots", params=list(qu=c(0.01, 0.05, 0.1, 0.25)))
 
 params:
     title:         "Many box plots"
