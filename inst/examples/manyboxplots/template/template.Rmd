@@ -113,13 +113,21 @@ d3.json {{ get_data_as_json_file(opts) }}, (data) ->
      .attr("stroke", "white")
      .attr("pointer-events", "none")
 
+  # function to determine rounding of axis labels
+  formatAxis = (d) ->
+    d = d[1] - d[0]
+    ndig = Math.floor( Math.log(d % 10) / Math.log(10) )
+    ndig = 0 if ndig > 0
+    ndig = Math.abs(ndig)
+    d3.format(".#{ndig}f")
+
   # axis: labels
   Laxis.append("g").selectAll("empty")
      .data(LaxisData)
      .enter()
      .append("text")
      .attr("class", "axis")
-     .text((d) -> d3.format(".0f")(d))
+     .text((d) -> formatAxis(LaxisData)(d))
      .attr("x", pad.left*0.9)
      .attr("y", (d) -> yScale(d))
      .attr("dominant-baseline", "middle")
@@ -282,7 +290,7 @@ d3.json {{ get_data_as_json_file(opts) }}, (data) ->
      .enter()
      .append("text")
      .attr("class", "axis")
-     .text((d) -> d3.format(".0f")(d))
+     .text((d) -> formatAxis(lowBaxisData)(d))
      .attr("y", h-pad.bottom*0.75)
      .attr("x", (d) -> lowxScale(d))
      .attr("dominant-baseline", "middle")
@@ -337,7 +345,7 @@ d3.json {{ get_data_as_json_file(opts) }}, (data) ->
                 d3.select("rect#rect#{data.ind[d]}").attr("opacity", "0")
 
     .on "click", (d) ->
-              console.log("Click: #{data.ind[d]} (#{d})")
+              console.log("Click: #{data.ind[d]} (#{d+1})")
               clickStatus[d] = 1 - clickStatus[d]
               d3.select("rect#rect#{data.ind[d]}").attr("opacity", clickStatus[d])
               if clickStatus[d]
