@@ -42,7 +42,7 @@ function(dat, qu = c(0.001, 0.01, 0.1, 0.25), orderByMedian=TRUE,
 
   # counts for histograms
   if(length(breaks) == 1)
-    breaks <- seq(floor(min(dat)), ceiling(max(dat)), length=breaks)
+    breaks <- seq(min(dat, na.rm=TRUE), max(dat, na.rm=TRUE), length=breaks)
 
   counts <- apply(dat, 2, function(a) hist(a, breaks=breaks, plot=FALSE)$counts)
 
