@@ -2,7 +2,7 @@ info: |-
     Many box plots, with links to underlying histograms, by Karl Broman.
 
     The input data is a matrix with columns corresponding to arrays
-    and rows corresonding to measurements.
+    and rows corresponding to measurements.
 
 original_url: https://github.com/kbroman/d3examples/tree/master/manyboxplots2
 
@@ -21,8 +21,8 @@ params:
     qu:            [0.01, 0.1, 0.25]
     orderByMedian: TRUE
     breaks:        251
-    ylab:          "\"Response\""
-    xlab:          "\"Individuals, sorted by median\""
+    ylab:          "Response"
+    xlab:          "Individuals, sorted by median"
     width:         1000
     height:        450
     

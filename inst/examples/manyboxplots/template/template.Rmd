@@ -22,8 +22,8 @@ d3.json {{ get_data_as_json_file(opts) }}, (data) ->
   pad = {left:60, top:20, right:60, bottom: 40}
 
   # axis labels
-  ylab = {{ opts$param$ylab }}
-  xlab = {{ opts$param$xlab }}
+  ylab = "{{ opts$param$ylab }}"
+  xlab = "{{ opts$param$xlab }}"
 
   # y-axis limits for top figure
   topylim = [data.quant[0][0], data.quant[0][1]]
