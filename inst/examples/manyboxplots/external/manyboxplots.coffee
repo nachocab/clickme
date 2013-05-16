@@ -7,12 +7,16 @@
 #   is show below; click for it to persist; click again to make it go away.
 #
 
-d3.json("data.json", (data) ->
+d3.json "data.json", (data) ->  # data.json -> {{ get_data_as_json_file(opts) }}
 
   # dimensions of SVG
-  w = 1000
-  h = 450
+  w = 1000 # {{ opts$param$width }}
+  h =  450 # {{ opts$param$height }}
   pad = {left:60, top:20, right:60, bottom: 40}
+
+  # axis labels
+  ylab = "Response" # "{{ opts$param$ylab }}"
+  xlab = "Individuals" # "{{ opts$param$xlab }}"
 
   # y-axis limits for top figure
   topylim = [data.quant[0][0], data.quant[0][1]]
@@ -54,7 +58,7 @@ d3.json("data.json", (data) ->
 
   # x and y scales for top figure
   xScale = d3.scale.linear()
-             .domain([-0.5, data.ind.length+0.5])
+             .domain([-1, data.ind.length])
              .range([pad.left, w-pad.right])
 
   # width of rectangles in top panel
@@ -67,7 +71,7 @@ d3.json("data.json", (data) ->
   # function to create quantile lines
   quline = (j) ->
     d3.svg.line()
-        .x((d) -> xScale(d+0.5))
+        .x((d) -> xScale(d))
         .y((d) -> yScale(data.quant[j][d]))
 
   svg = d3.select("div#plot").append("svg")
@@ -102,13 +106,21 @@ d3.json("data.json", (data) ->
      .attr("stroke", "white")
      .attr("pointer-events", "none")
 
+  # function to determine rounding of axis labels
+  formatAxis = (d) ->
+    d = d[1] - d[0]
+    ndig = Math.floor( Math.log(d % 10) / Math.log(10) )
+    ndig = 0 if ndig > 0
+    ndig = Math.abs(ndig)
+    d3.format(".#{ndig}f")
+
   # axis: labels
   Laxis.append("g").selectAll("empty")
      .data(LaxisData)
      .enter()
      .append("text")
      .attr("class", "axis")
-     .text((d) -> d3.format(".0f")(d))
+     .text((d) -> formatAxis(LaxisData)(d))
      .attr("x", pad.left*0.9)
      .attr("y", (d) -> yScale(d))
      .attr("dominant-baseline", "middle")
@@ -127,8 +139,8 @@ d3.json("data.json", (data) ->
      .attr("class", "axis")
      .attr("y1", pad.top)
      .attr("y2", h-pad.bottom)
-     .attr("x1", (d) -> xScale(d+0.5))
-     .attr("x2", (d) -> xScale(d+0.5))
+     .attr("x1", (d) -> xScale(d-1))
+     .attr("x2", (d) -> xScale(d-1))
      .attr("stroke", "white")
      .attr("pointer-events", "none")
 
@@ -140,7 +152,7 @@ d3.json("data.json", (data) ->
      .attr("class", "axis")
      .text((d) -> d)
      .attr("y", h-pad.bottom*0.75)
-     .attr("x", (d) -> xScale(d+0.5))
+     .attr("x", (d) -> xScale(d-1))
      .attr("dominant-baseline", "middle")
      .attr("text-anchor", "middle")
 
@@ -172,12 +184,28 @@ d3.json("data.json", (data) ->
                  .data(indindex)
                  .enter()
                  .append("rect")
-                 .attr("x", (d) -> xScale(d+0.5) - recWidth/2)
+                 .attr("x", (d) -> xScale(d) - recWidth/2)
                  .attr("y", (d) -> yScale(data.quant[nQuant-1][d]))
                  .attr("id", (d) -> "rect#{data.ind[d]}")
                  .attr("width", recWidth)
                  .attr("height", (d) ->
                     yScale(data.quant[0][d]) - yScale(data.quant[nQuant-1][d]))
+                 .attr("fill", "purple")
+                 .attr("stroke", "none")
+                 .attr("opacity", "0")
+                 .attr("pointer-events", "none")
+
+  # vertical rectangles representing each array
+  longRectGrp = svg.append("g").attr("id", "longRect")
+
+  longRect = indRectGrp.selectAll("empty")
+                 .data(indindex)
+                 .enter()
+                 .append("rect")
+                 .attr("x", (d) -> xScale(d) - recWidth/2)
+                 .attr("y", pad.top)
+                 .attr("width", recWidth)
+                 .attr("height", h - pad.top - pad.bottom)
                  .attr("fill", "purple")
                  .attr("stroke", "none")
                  .attr("opacity", "0")
@@ -255,7 +283,7 @@ d3.json("data.json", (data) ->
      .enter()
      .append("text")
      .attr("class", "axis")
-     .text((d) -> d3.format(".0f")(d))
+     .text((d) -> formatAxis(lowBaxisData)(d))
      .attr("y", h-pad.bottom*0.75)
      .attr("x", (d) -> lowxScale(d))
      .attr("dominant-baseline", "middle")
@@ -294,9 +322,9 @@ d3.json("data.json", (data) ->
   for d in indindex
     clickStatus.push(0)
 
-  indRect
+  longRect
     .on "mouseover", (d) ->
-              d3.select(this)
+              d3.select("rect#rect#{data.ind[d]}")
                  .attr("opacity", "1")
               d3.select("#histline")
                  .datum(data.counts[d])
@@ -307,17 +335,17 @@ d3.json("data.json", (data) ->
 
     .on "mouseout", (d) ->
               if !clickStatus[d]
-                d3.select(this).attr("opacity", "0")
+                d3.select("rect#rect#{data.ind[d]}").attr("opacity", "0")
 
     .on "click", (d) ->
-              console.log("Click: #{data.ind[d]} (#{d})")
+              console.log("Click: #{data.ind[d]} (#{d+1})")
               clickStatus[d] = 1 - clickStatus[d]
-              d3.select(this).attr("opacity", clickStatus[d])
+              d3.select("rect#rect#{data.ind[d]}").attr("opacity", clickStatus[d])
               if clickStatus[d]
                 curcolor = histColors.shift()
                 histColors.push(curcolor)
 
-                d3.select(this).attr("fill", curcolor)
+                d3.select("rect#rect#{data.ind[d]}").attr("fill", curcolor)
 
                 grp4BkgdHist.append("path")
                       .datum(data.counts[d])
@@ -340,7 +368,7 @@ d3.json("data.json", (data) ->
      .attr("fill", "none")
 
   svg.append("text")
-     .text("Outcome")
+     .text(ylab)
      .attr("x", pad.left*0.2)
      .attr("y", h/2)
      .attr("fill", "blue")
@@ -349,7 +377,7 @@ d3.json("data.json", (data) ->
      .attr("text-anchor", "middle")
 
   lowsvg.append("text")
-     .text("Outcome")
+     .text(ylab)
      .attr("x", (w-pad.left-pad.bottom)/2+pad.left)
      .attr("y", h-pad.bottom*0.2)
      .attr("fill", "blue")
@@ -357,7 +385,7 @@ d3.json("data.json", (data) ->
      .attr("text-anchor", "middle")
 
   svg.append("text")
-     .text("Individuals, sorted by median")
+     .text(xlab)
      .attr("x", (w-pad.left-pad.bottom)/2+pad.left)
      .attr("y", h-pad.bottom*0.2)
      .attr("fill", "blue")
@@ -373,11 +401,12 @@ d3.json("data.json", (data) ->
     text += "#{q*100}"
   text += " percentiles for each of #{data.ind.length} distributions.\n"
 
-  d3.select("div#legend").append("p")
+  d3.select("div#legend")
+    .style("margin-left", "70px")
+    .style("width", "500px")
+    .append("p")
     .text(text)
 
   d3.select("div#legend").append("p")
     .text("Hover over a column in the top panel and the corresponding histogram is shown below; " +
           "click for it to persist; click again to make it go away.")
-
-)
