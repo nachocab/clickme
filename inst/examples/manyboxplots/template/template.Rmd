@@ -15,8 +15,8 @@
   <script type="text/javascript">
   d3.json({{ get_data_as_json_file(opts) }}, function(data) {
     var Baxis, BaxisData, Laxis, LaxisData, botylim, br2, clickStatus, colindex, curves, d, fix4hist, formatAxis, grp4BkgdHist, h, hi, hist, histColors, histline, i, indRect, indRectGrp, indindex, j, lo, longRect, longRectGrp, lowBaxis, lowBaxisData, lowsvg, lowxScale, lowyScale, midQuant, nQuant, pad, q, qucolors, quline, randomInd, recWidth, rightAxis, svg, text, tmp, topylim, w, x, xScale, xlab, yScale, ylab, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _p, _ref, _ref1, _ref2, _ref3, _ref4;
-    w =  {{ opts$param$width }}
-    h =  {{ opts$param$height }}
+    w =  {{ opts$param$width }};
+    h =  {{ opts$param$height }};
     pad = {
       left: 60,
       top: 20,
