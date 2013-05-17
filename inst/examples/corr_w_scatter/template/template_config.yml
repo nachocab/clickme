@@ -28,6 +28,7 @@ data_names:
         - "data"
     optional:
         - "group"
+        - "corrmatrix"
 
 params:
     title:         "Correlation matrix with linked scatterplot"
