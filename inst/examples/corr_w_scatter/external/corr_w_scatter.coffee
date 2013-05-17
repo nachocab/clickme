@@ -126,11 +126,23 @@ d3.json "data.json", (data) ->
     d3.selectAll("circle.points").remove()
     d3.selectAll("text.axes").remove()
     d3.selectAll("line.axes").remove()
+
+    # points that have no missing values
+    x = []
+    y = []
+    z = []
+    for d in d3.range(nind)
+      if data.dat[i][d] != "NA" and data.dat[j][d] != "NA"
+        x.push(data.dat[i][d])
+        y.push(data.dat[j][d])
+        z.push(data.group[d])
+    return null if x.length == 0 
+
     xScale = d3.scale.linear()
-                     .domain(d3.extent(data.dat[i]))
+                     .domain(d3.extent(x))
                      .range([innerPad, w-innerPad])
     yScale = d3.scale.linear()
-                     .domain(d3.extent(data.dat[j]))
+                     .domain(d3.extent(y))
                      .range([h-innerPad, innerPad])
     # axis labels
     scatterplot.append("text")
@@ -197,18 +209,19 @@ d3.json "data.json", (data) ->
                .attr("x2", w)
                .attr("stroke", "white")
                .attr("stroke-width", 1)
+
     # the points
     scatterplot.selectAll("empty")
-               .data(d3.range(nind))
+               .data(x)
                .enter()
                .append("circle")
                .attr("class", "points")
-               .attr("cx", (d) -> xScale(data.dat[i][d]))
-               .attr("cy", (d) -> yScale(data.dat[j][d]))
+               .attr("cx", (d,i) -> xScale(x[i]))
+               .attr("cy", (d,i) -> yScale(y[i]))
                .attr("r", 3)
                .attr("stroke", "black")
                .attr("stroke-width", 1)
-               .attr("fill", (d) -> colors[data.group[d]-1])
+               .attr("fill", (d,i) -> colors[z[i]-1])
 
   # boxes around panels
   corrplot.append("rect")

@@ -23,7 +23,6 @@ d3.json({{ get_data_as_json_file(opts) }}, function(data) {
   h = {{ opts$param$height }};
   w = h;
   pad = {{ get_padding_param(opts) }};
-  console.log(pad);
   innerPad = {{ opts$param$inner_padding }};
   totalh = h + pad.top + pad.bottom;
   totalw = (w + pad.left + pad.right) * 2;
@@ -109,12 +108,27 @@ d3.json({{ get_data_as_json_file(opts) }}, function(data) {
     })();
   }
   drawScatter = function(i, j) {
-    var xScale, xticks, yScale, yticks;
+    var d, x, xScale, xticks, y, yScale, yticks, z, _i, _len, _ref;
     d3.selectAll("circle.points").remove();
     d3.selectAll("text.axes").remove();
     d3.selectAll("line.axes").remove();
-    xScale = d3.scale.linear().domain(d3.extent(data.dat[i])).range([innerPad, w - innerPad]);
-    yScale = d3.scale.linear().domain(d3.extent(data.dat[j])).range([h - innerPad, innerPad]);
+    x = [];
+    y = [];
+    z = [];
+    _ref = d3.range(nind);
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      d = _ref[_i];
+      if (data.dat[i][d] !== "NA" && data.dat[j][d] !== "NA") {
+        x.push(data.dat[i][d]);
+        y.push(data.dat[j][d]);
+        z.push(data.group[d]);
+      }
+    }
+    if (x.length === 0) {
+      return null;
+    }
+    xScale = d3.scale.linear().domain(d3.extent(x)).range([innerPad, w - innerPad]);
+    yScale = d3.scale.linear().domain(d3.extent(y)).range([h - innerPad, innerPad]);
     scatterplot.append("text").attr("id", "xaxis").attr("class", "axes").attr("x", w / 2).attr("y", h + pad.bottom * 0.7).text(data["var"][i]).attr("dominant-baseline", "middle").attr("text-anchor", "middle").attr("fill", "slateblue");
     scatterplot.append("text").attr("id", "yaxis").attr("class", "axes").attr("x", -pad.left * 0.8).attr("y", h / 2).text(data["var"][j]).attr("dominant-baseline", "middle").attr("text-anchor", "middle").attr("transform", "rotate(270," + (-pad.left * 0.8) + "," + (h / 2) + ")").attr("fill", "slateblue");
     xticks = xScale.ticks(5);
@@ -139,12 +153,12 @@ d3.json({{ get_data_as_json_file(opts) }}, function(data) {
     }).attr("y2", function(d) {
       return yScale(d);
     }).attr("x1", 0).attr("x2", w).attr("stroke", "white").attr("stroke-width", 1);
-    return scatterplot.selectAll("empty").data(d3.range(nind)).enter().append("circle").attr("class", "points").attr("cx", function(d) {
-      return xScale(data.dat[i][d]);
-    }).attr("cy", function(d) {
-      return yScale(data.dat[j][d]);
-    }).attr("r", 3).attr("stroke", "black").attr("stroke-width", 1).attr("fill", function(d) {
-      return colors[data.group[d] - 1];
+    return scatterplot.selectAll("empty").data(x).enter().append("circle").attr("class", "points").attr("cx", function(d, i) {
+      return xScale(x[i]);
+    }).attr("cy", function(d, i) {
+      return yScale(y[i]);
+    }).attr("r", 3).attr("stroke", "black").attr("stroke-width", 1).attr("fill", function(d, i) {
+      return colors[z[i]-1];
     });
   };
   corrplot.append("rect").attr("height", h).attr("width", w).attr("fill", "none").attr("stroke", "black").attr("stroke-width", 1).attr("pointer-events", "none");
