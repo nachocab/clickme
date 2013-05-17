@@ -38,4 +38,4 @@ require_packages:
 
 require_server: yes
 
-require_coffeescript: yes
+require_coffeescript: no

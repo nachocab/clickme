@@ -13,7 +13,8 @@ plotframe = (data, args=null, svgscale={svg:null, x:null, y:null}) ->
       .attr("width", width)
 
   # padding
-  pad = args?.pad ? {bottom: 50, left: 50, top: 3, right: 3, scale: 0.05}
+  pad = args?.pad ? {bottom: 50, left: 50, top: 3, right: 3}
+  scalePadding = args?.scalePadding ? 0.05
 
   # make background rectangle
   svgscale.svg.append("rect")
@@ -33,10 +34,10 @@ plotframe = (data, args=null, svgscale={svg:null, x:null, y:null}) ->
   y_min = args?.y_min ? d3.min data, (d) -> d[y_name]
   y_max = args?.y_max ? d3.max data, (d) -> d[y_name]
 
-  x_min -= (x_max-x_min)*pad.scale
-  x_max += (x_max-x_min)*pad.scale
-  y_min -= (y_max-y_min)*pad.scale
-  y_max += (y_max-y_min)*pad.scale
+  x_min -= (x_max-x_min)*scalePadding
+  x_max += (x_max-x_min)*scalePadding
+  y_min -= (y_max-y_min)*scalePadding
+  y_max += (y_max-y_min)*scalePadding
 
   # create X and Y scales if necessary
   if svgscale.x is null

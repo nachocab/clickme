@@ -30,12 +30,12 @@ params:
     x_axis_label: "x"
     y_axis_label: "y"
     tick_padding: 8
+    scale_padding: 0.1
     padding:
         bottom: 90
         left: 100
         top: 0
         right: 10
-        scale: 0.1
 
 scripts:
     - d3.v3.min.js
@@ -49,6 +49,6 @@ require_packages:
 
 require_server: yes
 
-require_coffeescript: yes
+require_coffeescript: no
 
 
