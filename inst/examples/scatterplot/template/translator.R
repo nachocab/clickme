@@ -2,12 +2,13 @@ get_padding_param <- function(opts) {
     library(rjson)
     padding <- opts$params$padding
 
-    if (length(padding) != 5){
+    if (length(padding) != 4){
+      cat("length(padding): ", length(padding), "\n")
         stop("Please provide four padding values and a scale. (currently ", paste(padding, collapse=", "), ")")
     }
 
     if (is.null(names(padding))) {
-        names(padding) <- c("top", "left", "bottom", "right", "scale")
+        names(padding) <- c("top", "left", "bottom", "right")
     }
 
     padding <- toJSON(padding)

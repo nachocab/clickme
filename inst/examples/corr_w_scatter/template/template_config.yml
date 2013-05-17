@@ -1,0 +1,55 @@
+info: |-
+    Image of correlation matrix with a linked scatterplot, by Karl Broman.
+
+    The input data is a matrix with columns corresponding to variables
+    and rows corresponding to measurements, plus an additional group
+    variable with length = number of rows in the matrix
+
+original_url: https://github.com/kbroman/d3examples/tree/master/corr_w_scatter
+
+demo: |-
+    n.ind <- 200
+    n.var <- 40
+    n.groups <- 3
+    group <- sample(1:n.groups, n.ind, repl=TRUE)
+    eff <- sample(c(-1, 1), n.var, repl=TRUE)*runif(n.var, 0.5, 3)
+    eff <- matrix(rep(eff, n.ind), nrow=n.ind, byrow=TRUE)
+    err <- rnorm(n.ind, 0, 0.3)
+    V <- matrix(0.3, ncol=n.var, nrow=n.var)
+    diag(V) <- 1
+    x <- matrix(rnorm(n.var*n.ind), ncol=n.var) %*% chol(V) + err + eff * group
+    dimnames(x) <- list(paste0("ind", 1:n.ind), paste0("gene", 1:n.var))
+    names(group) <- rownames(x)
+    dat <- list(data=x, group=group)
+    clickme(dat, "corr_w_scatter")
+
+data_names:
+    required:
+        - "data"
+    optional:
+        - "group"
+
+params:
+    title:         "Correlation matrix with linked scatterplot"
+    reorder:       1
+    height:        450
+    inner_padding:   5
+    padding:
+        bottom:     70
+        left:       70
+        top:        40
+        right:       5
+  
+    
+scripts:
+    - d3.min.js
+
+styles:
+    - corr_w_scatter.css
+
+require_packages:
+    - df2json
+
+require_server: yes
+
+require_coffeescript: no
