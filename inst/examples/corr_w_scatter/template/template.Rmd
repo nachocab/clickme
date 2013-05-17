@@ -24,6 +24,7 @@ d3.json({{ get_data_as_json_file(opts) }}, function(data) {
   w = h;
   pad = {{ get_padding_param(opts) }};
   innerPad = {{ opts$param$inner_padding }};
+  circleRadius = {{ opts$param$circle_radius }};
   totalh = h + pad.top + pad.bottom;
   totalw = (w + pad.left + pad.right) * 2;
   svg = d3.select("div#plot").append("svg").attr("height", totalh).attr("width", totalw);
@@ -157,7 +158,7 @@ d3.json({{ get_data_as_json_file(opts) }}, function(data) {
       return xScale(x[i]);
     }).attr("cy", function(d, i) {
       return yScale(y[i]);
-    }).attr("r", 3).attr("stroke", "black").attr("stroke-width", 1).attr("fill", function(d, i) {
+    }).attr("r", circleRadius).attr("stroke", "black").attr("stroke-width", 1).attr("fill", function(d, i) {
       return colors[z[i]-1];
     });
   };

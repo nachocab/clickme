@@ -14,6 +14,7 @@ d3.json "data.json", (data) ->
   w = h
   pad = {left:70, top:40, right:5, bottom: 70}
   innerPad = 5
+  circleRadius = 2
 
   totalh = h + pad.top + pad.bottom
   totalw = (w + pad.left + pad.right)*2
@@ -218,7 +219,7 @@ d3.json "data.json", (data) ->
                .attr("class", "points")
                .attr("cx", (d,i) -> xScale(x[i]))
                .attr("cy", (d,i) -> yScale(y[i]))
-               .attr("r", 3)
+               .attr("r", circleRadius)
                .attr("stroke", "black")
                .attr("stroke-width", 1)
                .attr("fill", (d,i) -> colors[z[i]-1])
