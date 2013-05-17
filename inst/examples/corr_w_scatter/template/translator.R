@@ -34,12 +34,12 @@ get_data_as_json_file <- function(opts) {
 
 # Convert data to JSON format for corr_w_scatter vis
 convert4corrwscatter <-
-function(dat, group, reorder=TRUE)
+function(dat, group=NULL, reorder=TRUE)
 {
   ind <- rownames(dat)
   variables <- colnames(dat)
 
-  if(is.null(group) || missing(group))
+  if(is.null(group))
     group <- rep(1, nrow(dat))
 
   if(nrow(dat) != length(group))
