@@ -48,6 +48,14 @@ d3.json "data.json", (data) ->
       corr.push({row:i, col:j, value:data.corr[i][j]})
 
 
+  # function to determine rounding of axis labels
+  formatAxis = (d) ->
+    d = d[1] - d[0]
+    ndig = Math.floor( Math.log(d % 10) / Math.log(10) )
+    ndig = 0 if ndig > 0
+    ndig = Math.abs(ndig)
+    d3.format(".#{ndig}f")
+
   # gray background on scatterplot
   scatterplot.append("rect")
              .attr("height", h)
@@ -152,7 +160,7 @@ d3.json "data.json", (data) ->
                .enter()
                .append("text")
                .attr("class", "axes")
-               .text((d) -> d3.format(".2f")(d))
+               .text((d) -> formatAxis(xticks)(d))
                .attr("x", (d) -> xScale(d))
                .attr("y", h+pad.bottom*0.3)
                .attr("dominant-baseline", "middle")
@@ -162,7 +170,7 @@ d3.json "data.json", (data) ->
                .enter()
                .append("text")
                .attr("class", "axes")
-               .text((d) -> d3.format(".2f")(d))
+               .text((d) -> formatAxis(yticks)(d))
                .attr("x", -pad.left*0.1)
                .attr("y", (d) -> yScale(d))
                .attr("dominant-baseline", "middle")

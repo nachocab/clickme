@@ -45,6 +45,16 @@ d3.json({{ get_data_as_json_file(opts) }}, function(data) {
       });
     }
   }
+  formatAxis = function(d) {
+    var ndig;
+    d = d[1] - d[0];
+    ndig = Math.floor(Math.log(d % 10) / Math.log(10));
+    if (ndig > 0) {
+      ndig = 0;
+    }
+    ndig = Math.abs(ndig);
+    return d3.format("." + ndig + "f");
+  };
   scatterplot.append("rect").attr("height", h).attr("width", w).attr("fill", d3.rgb(200, 200, 200)).attr("stroke", "black").attr("stroke-width", 1).attr("pointer-events", "none");
   cells = corrplot.selectAll("empty").data(corr).enter().append("rect").attr("class", "cell").attr("x", function(d) {
     return corXscale(d.col);
@@ -110,12 +120,12 @@ d3.json({{ get_data_as_json_file(opts) }}, function(data) {
     xticks = xScale.ticks(5);
     yticks = yScale.ticks(5);
     scatterplot.selectAll("empty").data(xticks).enter().append("text").attr("class", "axes").text(function(d) {
-      return d3.format(".2f")(d);
+      return formatAxis(xticks)(d);
     }).attr("x", function(d) {
       return xScale(d);
     }).attr("y", h + pad.bottom * 0.3).attr("dominant-baseline", "middle").attr("text-anchor", "middle");
     scatterplot.selectAll("empty").data(yticks).enter().append("text").attr("class", "axes").text(function(d) {
-      return d3.format(".2f")(d);
+      return formatAxis(yticks)(d);
     }).attr("x", -pad.left * 0.1).attr("y", function(d) {
       return yScale(d);
     }).attr("dominant-baseline", "middle").attr("text-anchor", "end");
