@@ -20,7 +20,7 @@ get_padding_param <- function(opts) {
 # opts$group = vector of groups [length n]
 # opts$reorder = 1/0 according to whether to reorder variables by clustering
 get_data_as_json <- function(opts) {
-    json_data <- convert4corrwscatter(opts$data$data, opts$data$group, opts$params$reorder)
+    json_data <- convert4corrwscatter(opts$data$data, opts$data$group, opts$data$corrmatrix, opts$params$reorder)
 
     json_data
 }
@@ -34,12 +34,12 @@ get_data_as_json_file <- function(opts) {
 
 # Convert data to JSON format for corr_w_scatter vis
 convert4corrwscatter <-
-function(dat, group, reorder=TRUE)
+function(dat, group=NULL, corrmatrix=NULL, reorder=TRUE)
 {
   ind <- rownames(dat)
   variables <- colnames(dat)
 
-  if(is.null(group) || missing(group))
+  if(is.null(group))
     group <- rep(1, nrow(dat))
 
   if(nrow(dat) != length(group))
@@ -47,17 +47,22 @@ function(dat, group, reorder=TRUE)
   if(!is.null(names(group)) && !all(names(group) == ind))
     stop("names(group) != rownames(dat)")
 
+  # correlation matrix
+  if(is.null(corrmatrix))
+    corrmatrix <- cor(dat, use="pairwise.complete.obs")
+  else if(ncol(corrmatrix) != ncol(dat) || nrow(corrmatrix) != ncol(dat))
+      stop("corrmatrix is not the correct size")
+
+  # order genes by clustering
   if(reorder) {
     ord <- hclust(dist(t(dat)), method="ward")$order
     variables <- variables[ord]
     dat <- dat[,ord]
+    corrmatrix <- corrmatrix[ord,ord]
   }
 
-  # correlation matrix
-  corr <- cor(dat, use="pairwise.complete.obs")
-
   # get rid of names
-  dimnames(corr) <- dimnames(dat) <- NULL
+  dimnames(corrmatrix) <- dimnames(dat) <- NULL
   names(group) <- NULL
 
   # data structure for JSON
@@ -66,7 +71,7 @@ function(dat, group, reorder=TRUE)
 
   output <- list("ind" = toJSON(ind),
                  "var" = toJSON(variables),
-                 "corr" = matrix2json(corr),
+                 "corr" = matrix2json(corrmatrix),
                  "dat" =  matrix2json(t(dat)), # columns as rows
                  "group" = toJSON(group))
   paste0("{", paste0("\"", names(output), "\" :", output, collapse=","), "}")

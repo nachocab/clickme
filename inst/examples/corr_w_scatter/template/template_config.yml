@@ -28,12 +28,14 @@ data_names:
         - "data"
     optional:
         - "group"
+        - "corrmatrix"
 
 params:
     title:         "Correlation matrix with linked scatterplot"
     reorder:       1
     height:        450
     inner_padding:   5
+    circle_radius:   3
     padding:
         bottom:     70
         left:       70
