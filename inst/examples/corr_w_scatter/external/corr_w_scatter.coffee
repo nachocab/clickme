@@ -1,11 +1,7 @@
-# manyboxplots2.coffee
+# corr_w_scatter.coffee
 #
-# Top panel is like ~500 box plots:
-#   lines are drawn at the 0.1 1, 10, 25, 50, 75, 90, 99, 99.9 percentiles
-#   for each of ~500 distributions
-# Hover over a column in the top panel and the corresponding distribution
-#   is show below; click for it to persist; click again to make it go away.
-#
+# Left panel is a heat map of a correlation matrix; hover over pixels
+# to see the values; click to see the corresponding scatterplot on the right
 
 d3.json "data.json", (data) ->
 
