@@ -23,5 +23,6 @@ Collate:
     'new-ractive.R'
     'validate-ractive.R'
     'data-names.R'
+    'helper-ractives.R'
     'clickme.R'
     'clickme-package.r'

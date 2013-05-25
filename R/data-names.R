@@ -13,14 +13,22 @@ map_data_names <- function(opts){
     invalid_names <- names(opts$name_mappings)
     if (any(invalid_names %notin% old_names)) {
         fake_invalid_names <- invalid_names[invalid_names %notin% old_names]
-        stop("The names \"", paste(fake_invalid_names, collapse = ", "),"\" don't appear in your input data")
+        if (length(fake_invalid_names) == 1){
+            stop("The name \"", paste(fake_invalid_names, collapse = ", "),"\" doesn't appear in your input data")
+        } else {
+            stop("The names \"", paste(fake_invalid_names, collapse = ", "),"\" don't appear in your input data")
+        }
     }
 
     valid_names <- sapply(opts$name_mappings, "[[", 1)
     all_data_names <- unlist(opts$template_config$data_names)
     if (any(valid_names %notin% all_data_names)){
         unknown_valid_names <- valid_names[valid_names %notin% all_data_names]
-        stop("The names \"", paste(unknown_valid_names, collapse = ", "),"\" are not specified as valid data_names in the template_config.yml file of the ", opts$name$ractive, " ractive")
+        if (length(unknown_valid_names) == 1){
+            stop("The name \"", paste(unknown_valid_names, collapse = ", "),"\" is not specified as a valid data_name in the template_config.yml file of the ", opts$name$ractive, " ractive")
+        } else {
+            stop("The names \"", paste(unknown_valid_names, collapse = ", "),"\" are not specified as valid data_names in the template_config.yml file of the ", opts$name$ractive, " ractive")
+        }
     }
 
     sapply(invalid_names, function(invalid_name){

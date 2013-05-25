@@ -2,15 +2,13 @@
 \alias{clickme}
 \title{Generates a JavaScript visualization}
 \usage{
-  clickme(data, ractive, browse = interactive(), ...)
+  clickme(data, ractive, ...)
 }
 \arguments{
   \item{data}{input data}
 
   \item{ractive}{template id, it must match a folder within
   \code{set_root_path}}
-
-  \item{browse}{open browser, default TRUE}
 
   \item{...}{additional arguments for \code{get_opts}}
 }

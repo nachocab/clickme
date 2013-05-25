@@ -1,8 +1,8 @@
-add_ractive_opts <- function(ractive_name) {
+add_ractive_opts <- function(ractive) {
     opts <- list()
 
     # folder names
-    opts$name$ractive <- ractive_name
+    opts$name$ractive <- ractive
     opts$name$data <- "data"
     opts$name$template <- "template"
     opts$name$external <- "external"

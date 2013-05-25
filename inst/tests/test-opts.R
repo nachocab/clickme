@@ -69,8 +69,8 @@ test_that("name_mappings gets saved", {
 test_that("opts$url is set", {
     expect_equal(opts$url, opts$path$html_file)
 
-    opts <- get_opts("longitudinal_heatmap")
-    expect_equal(opts$url, "http://localhost:8000/data-longitudinal_heatmap.html")
+    opts <- get_opts("par_coords")
+    expect_equal(opts$url, "http://localhost:8000/data-par_coords.html")
 })
 
 test_that("user params override template params", {
