@@ -1,0 +1,25 @@
+info: |-
+
+original_url:
+
+demo: |-
+
+data_names:
+    required:
+
+    optional:
+
+params:
+
+scripts:
+
+styles:
+
+require_packages:
+    - df2json
+
+require_server: no
+
+require_coffeescript: no
+
+

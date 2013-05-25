@@ -1,0 +1,34 @@
+info: |-
+    "color"
+
+    Based on ideas from:
+    http://bl.ocks.org/mbostock/3680957
+    http://bl.ocks.org/stepheneb/1182434
+
+original_url:
+
+demo: |-
+
+data_names:
+    required:
+    optional:
+        - "x"
+        - "y"
+        - "name"
+
+scripts:
+    - d3.v3.js
+    - d3_aux.js
+    - jquery.min.js
+    - bootstrap-tooltip.v2_3.js
+
+styles:
+    - clickme_points.css
+    - bootstrap-tooltip.css
+
+require_packages:
+    - df2json
+
+require_server: no
+
+require_coffeescript: yes

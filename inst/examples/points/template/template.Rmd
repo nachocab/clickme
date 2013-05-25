@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>{{ opts$params$title }}</title>
+
+    {{ get_external(opts) }}
+
+  </head>
+
+  <body>
+    <script type="text/javascript">
+    ```{r abc, engine="coffee", results="asis", echo = FALSE }
+    # data should have x, y and name
+    decimal_format = d3.format(".2f")
+
+    data = {{ get_data_as_json(opts) }}
+
+    plot = append_plot(
+        width: {{ opts$params$width }}
+        height: {{ opts$params$height }}
+        margin: {{ get_padding_param(opts) }}
+    )
+
+    # this can be refactored
+    plot.scales.x.domain([d3.min(data, (d) -> d.x), d3.max(data, (d) -> d.x)])
+    plot.scales.x = add_scale_padding(plot.scales.x)
+
+    plot.scales.y.domain([d3.min(data, (d) -> d.y), d3.max(data, (d) -> d.y)])
+    plot.scales.y = add_scale_padding(plot.scales.y)
+
+    radius = {{ opts$params$radius }}
+
+    color_scale = {{ get_d3_color_scale(opts) }}
+
+    plot.append("defs").append("clipPath")
+        .attr("id", "clip")
+      .append("rect")
+        .attr("width", plot.width)
+        .attr("height", plot.height);
+
+    clip = plot.append("g").attr("clip-path", "url(#clip)")
+
+    # we need this to allow zooming anywhere on the svg, not only on top of a circle
+
+    transform = (d) ->
+        "translate(#{plot.scales.x(d.x)},#{plot.scales.y(d.y)})"
+
+    clip.append("rect")
+      .attr(
+            "class": "overlay"
+            "width":  plot.width
+            "height": plot.height
+            "fill": "none"
+            "pointer-events": "all"
+      ).style("cursor","move")
+      .call(d3.behavior.zoom()
+          .x(plot.scales.x)
+          .y(plot.scales.y)
+          .scaleExtent([1, Infinity])
+          .on("zoom", () -> redraw() )
+      )
+
+    circles = clip.selectAll("circle")
+        .data(data)
+      .enter().append("svg:circle")
+        .attr(
+            "r": radius
+            "title": (d) -> "<strong>#{d.name}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
+            "class": "circle_tooltip"
+            "transform": transform
+            "fill": (d) -> color_scale(d.color_group)
+        )
+
+    names = clip.selectAll("text")
+        .data(data, (d) -> d.name)
+      .enter().append("text")
+        .text((d) -> d.name)
+        .attr(
+            "dy": ".32em"
+            "dx": "8"
+            "text-anchor": "left"
+            "display": "none"
+            "transform":  transform
+        )
+
+    plot = draw_axes(plot)
+
+    redraw = () ->
+        plot.select(".x.axis").call(plot.axes.x);
+        plot.select(".y.axis").call(plot.axes.y);
+        circles.attr("transform", transform)
+        names.attr("transform", transform)
+
+    $(".circle_tooltip").tooltip
+        html: true
+        container: "body"
+        placement: "top"
+
+    plot.append("text")
+        .text("{{ opts$params$title }}")
+        .attr(
+            "class": "title"
+            "text-anchor": "middle"
+            "x": plot.width / 2
+            "y": -plot.margin.top / 2
+        ).style(
+            "font-family": "Rockwell"
+            "font-size": 30
+        )
+
+    # plot.append("text")
+    #   .attr("class", "subtitle")
+    #   .attr("text-anchor","middle")
+    #   .attr("x", plot.width/2)
+    #   .attr("y", -plot.margin.top/2 + 15)
+    #   .text("Scroll and drag to zoom/pan, hover for details.");
+
+    plot.append("text")
+        .text("{{ opts$params$xlab }}")
+        .attr(
+            "class": "x label"
+            "text-anchor": "middle"
+            "x": plot.width - plot.width/2
+            "y": plot.height + plot.margin.bottom/2
+            "dy": "2em"
+        )
+
+    plot.append("text")
+        .text("{{ opts$params$ylab }}")
+        .attr(
+            "class": "y label"
+            "text-anchor": "middle"
+            "x": 0 - (plot.height/2)
+            "y": -plot.margin.left + 5
+            "dy": "1em"
+            "transform": "rotate(-90)"
+        )
+
+    names_button = plot.append("g")
+        .attr("transform","translate(#{plot.width},#{0})")
+        .style("cursor", "pointer")
+        .style("font-size","16px")
+        .style("font-family","Rockwell")
+        .on("click", () -> toggle_names() )
+
+    d3.select(window).on("keydown", () ->
+        # switch (d3.event.keyCode) {
+          # case : year = Math.max(year0, year - 10); break;
+          # case 39: year = Math.min(year1, year + 10); break;
+        # }
+        # console.log(d3.event.keyCode)
+        if (d3.event.keyCode in [78, 32]) # 'n' or 'space bar'
+            change()
+    )
+
+    names_button.append("circle")
+        .attr("r", 7)
+        .attr("stroke","black")
+        .attr("stroke-width",2)
+
+    names_button.append("text")
+        .attr('text-anchor', 'start')
+        .attr('dy', '.32em')
+        .attr('dx', '12')
+
+
+    toggle_names = ()->
+        if names_button.classed("show_names")
+            names_button.attr("class","")
+            toggle_names_button()
+        else
+            names_button.attr("class","show_names")
+            toggle_names_button()
+
+    toggle_names_button = ()->
+        if names_button.classed("show_names")
+            names.attr("display", "inline")
+            names_button.select("circle").attr("fill","black")
+            # names_button.select("text").text(" Hide names")
+        else
+            names.attr("display", "none")
+            names_button.select("circle").attr("fill","white")
+            names_button.select("text").text("Show names")
+
+    toggle_names_button()
+
+    ```
+    </script>
+  </body>
+</html>

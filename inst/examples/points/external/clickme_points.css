@@ -1,0 +1,11 @@
+.axis line, .axis path{
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+    stroke-width: 2;
+}
+
+.axis text{
+    font-family: "Rockwell";
+    font-size: 18;
+}
