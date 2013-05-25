@@ -1,10 +1,31 @@
+
+#' Default colors
+#'
+#' @param n number of colors
+#'
+#' @export
+default_colors <- function(n = 10){
+    d3_category10 <- c("#1f77b4", "#d62728", "#2ca02c", "#ff7f0e", "#9467bd", "#17becf", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22")
+    d3_category20 <- c(d3_category10, "#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5")
+    # d3_category10 <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf")
+    # d3_category10b <- c("#aec7e8", "#ffbb78", "#98df8a", "#ff9896", "#c5b0d5", "#c49c94", "#f7b6d2", "#c7c7c7", "#dbdb8d", "#9edae5")
+    if (n <= 10){
+        colors <- d3_category10[1:n]
+    } else if (n <= 20) {
+        colors <- d3_category20
+    } else {
+        colors <- rainbow(n)
+    }
+    colors
+}
+
 #' Get padding around plot
 #'
 #' @param opts ractive options
 #' @param default default padding, a vector with top, left, bottom and right values
 #'
 #' @export
-get_padding_param <- function(opts, default = c(top = 10, left = 30, bottom = 30, right = 10)) {
+get_padding_param <- function(opts, default = c(top = 10, right = 30, bottom = 30, left = 10)) {
     if (is.null(opts$params$padding)){
         opts$params$padding <- default
     }
@@ -17,7 +38,7 @@ get_padding_param <- function(opts, default = c(top = 10, left = 30, bottom = 30
     }
 
     if (is.null(names(padding))) {
-        names(padding) <- c("top", "left", "bottom", "right")
+        names(padding) <- c("top", "right", "bottom", "left")
     }
 
     padding <- toJSON(padding)
@@ -316,42 +337,6 @@ demo_ractive <- function(ractive) {
         } else {
             eval(parse(text = opts$template_config$demo))
         }
-    }
-}
-
-#' Generates a JavaScript visualization using Vega
-#'
-#' @param data input data
-#' @param spec Name of the vega spec file to use, it must match a file within \code{vega/data/spec/}
-#' @param ... additional arguments for \code{clickme}
-#' @export
-clickme_vega <- function(data, spec, ...){
-    dots <- list(...)
-
-    if (is.null(dots$params)) {
-        params <- list(spec = spec)
-    } else {
-        params <- dots$params
-        dots$params <- NULL
-        params$spec = spec
-    }
-
-    if (is.null(dots$data_prefix)){
-        dots$data_prefix <- paste0("data_", spec)
-    }
-    data_prefix <- dots$data_prefix
-    dots$data_prefix <- NULL
-
-    if (is.null(dots$browse)){
-        dots$browse <- interactive()
-    }
-    browse <- dots$browse
-    dots$browse <- NULL
-
-    if (length(dots) != 0){
-        clickme(data, "vega", browse = browse, params = params, data_prefix = data_prefix, dots)
-    } else {
-        clickme(data, "vega", browse = browse, params = params, data_prefix = data_prefix)
     }
 }
 

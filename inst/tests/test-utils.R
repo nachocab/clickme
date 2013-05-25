@@ -32,56 +32,31 @@ test_that("create data file", {
     expect_correct_file(opts, "csv", "\"a\",\"b\"\n1,3\n2,4")
 })
 
-test_that("clickme_vega", {
-    ractive <- "vega"
-
-    # we do this to ensure that the HTML file doesn't exist before we create it
-    spec <- "area"
-    opts <- get_opts(ractive, params = list(spec = spec))
-    unlink(opts$path$html_file)
-    data <- read.csv(file.path(opts$path$data, "area_bar_scatter.csv"))
-
-    opts <- clickme_vega(data, "area", browse = FALSE)
-
-    expect_equal(opts$name$html_file, "data_area-vega.html")
-    expect_true(file.exists(opts$path$html_file))
-
-    opts <- clickme_vega(data, "area", data_prefix = "my_data", params = list(width = 401), browse = FALSE)
-
-    expect_equal(opts$params$spec, "area")
-    expect_equal(opts$params$width, 401)
-    unlink(opts$path$html_file)
-
-    opts <- clickme_vega(data, "area", data_prefix = "my_data", browse = FALSE)
-
-    expect_equal(opts$data_prefix, "my_data")
-    expect_equal(opts$name$html_file, "my_data-vega.html")
-    unlink(opts$path$html_file)
-})
 
 test_that("padding", {
     # default global padding
-    opts <- get_opts("vega", params = list(spec="area"))
+    opts <- get_opts("par_coords")
     padding <- get_padding_param(opts)
-    expect_equal(padding, "{\"top\":10,\"left\":30,\"bottom\":30,\"right\":10}")
+    expect_equal(padding, "{\"top\":24,\"right\":0,\"bottom\":12,\"left\":200}")
 
     # spec-specific padding
-    opts <- get_opts("vega", params = list(spec="area"))
+    opts <- get_opts("par_coords")
+    opts$params$padding <- NULL
     padding <- get_padding_param(opts, c(10, 10, 10, 10))
-    expect_equal(padding, "{\"top\":10,\"left\":10,\"bottom\":10,\"right\":10}")
+    expect_equal(padding, "{\"top\":10,\"right\":10,\"bottom\":10,\"left\":10}")
 
     # user-provided param padding
-    opts <- get_opts("vega", params = list(padding = c(10, 20, 30, 40), spec = "area"))
+    opts <- get_opts("par_coords", params = list(padding = c(10, 20, 30, 40)))
     padding <- get_padding_param(opts)
-    expect_equal(padding, "{\"top\":10,\"left\":20,\"bottom\":30,\"right\":40}")
+    expect_equal(padding, "{\"top\":10,\"right\":20,\"bottom\":30,\"left\":40}")
 
     # changed order
-    opts <- get_opts("vega", params = list(padding = c(right = 10, bottom = 20, left = 30, top = 40), spec="area"))
+    opts <- get_opts("par_coords", params = list(padding = c(right = 10, bottom = 20, left = 30, top = 40)))
     padding <- get_padding_param(opts)
     expect_equal(padding, "{\"right\":10,\"bottom\":20,\"left\":30,\"top\":40}")
 
     # wrong input
-    opts <- get_opts("vega", params = list(padding = c(10, 20, 30), spec="area"))
+    opts <- get_opts("par_coords", params = list(padding = c(10, 20, 30)))
     expect_error(get_padding_param(opts), "Please provide four padding values")
 })
 
