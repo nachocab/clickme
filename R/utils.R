@@ -25,7 +25,7 @@ default_colors <- function(n = 10){
 #' @param default default padding, a vector with top, left, bottom and right values
 #'
 #' @export
-get_padding_param <- function(opts, default = c(top = 10, right = 30, bottom = 30, left = 10)) {
+get_padding_param <- function(opts, default = c(top = 100, right = 100, bottom = 100, left = 100)) {
     if (is.null(opts$params$padding)){
         opts$params$padding <- default
     }
@@ -205,7 +205,7 @@ server <- function(path = get_root_path(), port = 8000){
 #'
 #' @param ractive name of ractive
 #' @export
-test_translator <- function(ractive){
+test_ractive <- function(ractive){
     opts <- get_opts(ractive)
 
     if (file.exists(opts$path$translator_test_file)){

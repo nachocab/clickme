@@ -1,7 +1,7 @@
 #' @import knitr
 generate_visualization <- function(opts){
-    visualization <- knit_expand(opts$path$template_file)
-    capture.output(knit(text = visualization, output = opts$path$html_file))
+    unrendered_template <- knit_expand(opts$path$template_file)
+    capture.output(knit(text = unrendered_template, output = opts$path$html_file))
 }
 
 #' Generates a JavaScript visualization
@@ -61,7 +61,7 @@ clickme <- function(data, ractive, ...){
     source(opts$path$translator_file)
     generate_visualization(opts)
 
-    if (dots$browse) browseURL(opts$url)
+    if (open) browseURL(opts$url)
 
     invisible(opts)
 }

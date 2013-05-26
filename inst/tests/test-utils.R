@@ -37,7 +37,7 @@ test_that("padding", {
     # default global padding
     opts <- get_opts("par_coords")
     padding <- get_padding_param(opts)
-    expect_equal(padding, "{\"top\":24,\"right\":0,\"bottom\":12,\"left\":200}")
+    expect_equal(padding, "{\"top\":100,\"right\":100,\"bottom\":100,\"left\":100}")
 
     # spec-specific padding
     opts <- get_opts("par_coords")

@@ -1,8 +1,8 @@
-\name{test_translator}
-\alias{test_translator}
+\name{test_ractive}
+\alias{test_ractive}
 \title{Test the translator of a given ractive}
 \usage{
-  test_translator(ractive)
+  test_ractive(ractive)
 }
 \arguments{
   \item{ractive}{name of ractive}

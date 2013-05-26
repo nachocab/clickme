@@ -10,7 +10,7 @@ test_that("the HTML example file for the force_directed ractive is generated", {
     unlink(opts$path$html_file)
     data <- read.csv(file.path(opts$path$data, "original_data.csv"))
 
-    clickme(data, ractive, browse = FALSE)
+    clickme(data, ractive, open = FALSE)
 
     expect_true(file.exists(opts$path$html_file))
 })
@@ -23,7 +23,7 @@ test_that("the HTML example file for the par_coords ractive is generated", {
     unlink(opts$path$html_file)
     data <- read.csv(file.path(opts$path$data, "original_data.csv"))
 
-    clickme(data, ractive, params = list(color_by = "economy"), browse = FALSE)
+    clickme(data, ractive, params = list(color_by = "economy"), open = FALSE)
 
     expect_true(file.exists(opts$path$html_file))
 })
@@ -32,6 +32,6 @@ context("example translators")
 
 test_that("example translators work", {
     for(ractive in plain_list_ractives()){
-        test_translator(ractive)
+        test_ractive(ractive)
     }
 })
