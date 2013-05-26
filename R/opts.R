@@ -33,19 +33,6 @@ add_ractive_opts <- function(ractive) {
     opts
 }
 
-add_params <- function(opts, user_params) {
-    opts$params <- opts$template_config$params
-    valid_param_names <- names(opts$template_config$params)
-
-    for (param in names(user_params)){
-        if (param %notin% valid_param_names) stop(param, " is not a valid parameter\n(Use one of: ", paste(valid_param_names, collapse=", "), ")")
-
-        opts$params[[param]] <- user_params[[param]]
-    }
-
-    opts
-}
-
 #' Get options used by the current ractive
 #'
 #' @param ractive name of the reactive
@@ -65,9 +52,8 @@ get_opts <- function(ractive, params = NULL, name_mappings = NULL, data_prefix =
     opts$template_config <- yaml.load_file(opts$path$template_config_file)
     opts <- validate_ractive(opts)
 
-    # user provided options
-    opts <- add_params(opts, params)
-    opts$name_mappings <- name_mappings
+    opts$params <- params
+    opts$name_mappings <- name_mappings # TODO: delete this
 
     opts$data_prefix <- data_prefix %||% basename(tempfile("data"))
     opts$name$html_file <- html_file_name %||% paste0(opts$data_prefix, "-", opts$name$ractive, ".html")
