@@ -1,3 +1,22 @@
+get_xlim_param <- function(opts) {
+
+    if (is.null(opts$params$xlim)){
+        opts$params$xlim <- range(opts$data$x)
+    }
+    opts$params$xlim <- toJSON(opts$params$xlim)
+    opts$params$xlim
+}
+
+get_ylim_param <- function(opts) {
+
+    if (is.null(opts$params$ylim)){
+        opts$params$ylim <- range(opts$data$y)
+    }
+    opts$params$ylim <- toJSON(opts$params$ylim)
+    opts$params$ylim
+}
+
+
 # default: last column/variable name
 get_color_group_param <- function(opts) {
     if (is.null(opts$params$color_group)){

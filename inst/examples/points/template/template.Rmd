@@ -24,10 +24,10 @@
     )
 
     # this can be refactored
-    plot.scales.x.domain([d3.min(data, (d) -> d.x), d3.max(data, (d) -> d.x)])
+    plot.scales.x.domain({{ get_xlim_param(opts)}})
     plot.scales.x = add_scale_padding(plot.scales.x)
 
-    plot.scales.y.domain([d3.min(data, (d) -> d.y), d3.max(data, (d) -> d.y)])
+    plot.scales.y.domain({{ get_ylim_param(opts)}})
     plot.scales.y = add_scale_padding(plot.scales.y)
 
     radius = {{ opts$params$radius }}
@@ -67,16 +67,16 @@
       .enter().append("svg:circle")
         .attr(
             "r": radius
-            "title": (d) -> "<strong>#{d.name}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
+            "title": (d) -> "<strong>#{d[".name"]}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
             "class": "circle_tooltip"
             "transform": transform
-            "fill": (d) -> color_scale(d.color_group)
+            "fill": (d) -> color_scale(d[".color_group"])
         )
 
     names = clip.selectAll("text")
-        .data(data, (d) -> d.name)
+        .data(data, (d) -> d[".name"])
       .enter().append("text")
-        .text((d) -> d.name)
+        .text((d) -> d[".name"])
         .attr(
             "dy": ".32em"
             "dx": "8"
