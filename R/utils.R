@@ -1,4 +1,21 @@
 
+#' Type of scale
+#'
+#' @param elements values
+#'
+#' If elements is numeric and has a length greater than one, it returns "quantitative". If elements is NULL, or not numeric, or has a length of one, it returns "categorical".
+#'
+#' @export
+scale_type <- function(elements = NULL) {
+    if (!is.null(elements) & is.numeric(elements) & length(elements) > 1){
+        type <- "quantitative"
+    } else {
+        type <- "categorical"
+    }
+
+    type
+}
+
 #' Default colors
 #'
 #' @param n number of colors

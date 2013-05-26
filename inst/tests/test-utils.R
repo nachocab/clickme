@@ -18,7 +18,7 @@ test_that("appends styles and scripts", {
     expect_equal(get_external(opts), expected_styles_and_scripts)
 })
 
-test_that("create data file", {
+test_that("create_data_file", {
     ractive <- "par_coords"
     opts <- get_opts(ractive, data_prefix = "test_data")
     opts$data <- "[{\"a\":3,\"b\":5}]"
@@ -33,7 +33,7 @@ test_that("create data file", {
 })
 
 
-test_that("padding", {
+test_that("get_padding_param", {
     # default global padding
     opts <- get_opts("par_coords")
     padding <- get_padding_param(opts)
@@ -60,22 +60,10 @@ test_that("padding", {
     expect_error(get_padding_param(opts), "Please provide four padding values")
 })
 
-# test_that("get_data_names", {
-#     names <- c("a", "b", "c")
-#     m <- matrix(1:9, ncol=3)
-#     colnames(m) <- names
-#     expect_equal(get_data_names(m), names)
-
-#     d <- data.frame(m)
-#     rownames(d) <- c("A","B","C")
-#     expect_equal(get_data_names(d), names)
-
-#     l <- list(a = 3, b = 33, c = 333)
-#     expect_equal(get_data_names(l), names)
-
-#     v <- c(a = 3, b = 33, c = 333)
-#     expect_equal(get_data_names(v), names)
-
-#     f <- factor(c(a = 3, b = 33, c = 333))
-#     expect_equal(get_data_names(f), names)
-# })
+test_that("scale_type", {
+    expect_equal(scale_type(NULL), "categorical")
+    expect_equal(scale_type(c(1)), "categorical")
+    expect_equal(scale_type(c("a")), "categorical")
+    expect_equal(scale_type(c("a", "b", "c")), "categorical")
+    expect_equal(scale_type(c(1, 2, 3)), "quantitative")
+})
