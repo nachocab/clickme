@@ -1,4 +1,21 @@
-get_points_data <- function(x,y){
+validate_points_params <- function(params) {
+    if (!is.null(params$main)) {
+        params$title <- params$main
+    }
+
+    if (scale_type(params$colorize) == "categorical" & !is.null(params$color_domain)){
+        stop("A color domain can only be specified for quantitative scales. colorize has categorical values.")
+    }
+
+    if (!is.null(params$colorize) & !is.null(params$palette) & !is.null(names(params$palette)) & any(names(params$palette) %notin% unique(params$colorize))) {
+        stop("The following palette names don't appear in colorize: ", paste0(names(params$palette)[names(params$palette) %notin% unique(params$colorize)], sep = ", "))
+    }
+
+    params[names(params) %in% c("x", "y", "main", "...")] <- NULL
+    params
+}
+
+get_points_data <- function(x, y, params){
     data <- suppressWarnings(xy.coords(x,y))
     data <- as.data.frame(data[c("x","y")])
 
@@ -6,9 +23,27 @@ get_points_data <- function(x,y){
         rownames(data) <- rownames(x)
     }
 
+    if (is.null(params$names)){
+        data$.name <- rownames(data)
+    } else {
+        data$.name <- params$names
+    }
+
+    if (!is.null(params$colorize)){
+        data$.colorize <- params$colorize
+
+        if (!is.null(names(params$palette))){
+            category_order <- unlist(sapply(names(params$palette), function(category) {
+                which(data$.colorize == category)
+            }))
+            data <- data[rev(category_order),]
+        } else {
+            data <- data[order(data$.colorize, decreasing = TRUE),]
+        }
+    }
+
     data
 }
-
 
 #' Generates an interactive scatterplot
 #'
@@ -21,8 +56,8 @@ get_points_data <- function(x,y){
 #' @param xlim,ylim [to implement]
 #' @param width,height width and height of the plot
 #' @param radius the radius of the points
-#' @param palette color palette. Quantitative scales expect a vector with a start color, and an end color (optionally, a middle color may be provided between both). Categorical scales expect a vector with a color for each category.
-#' @param color_group. If it is a numeric vector, it will assume the scale is quantitative and it will generate a gradient using the start and end colors of the palette (also with the middle color, if it is provided). If it is a character vector, a logical vector, or a factor it will generate a categorical scale with one color per unique value (or level).
+#' @param palette color palette. Quantitative scales expect a vector with a start color, and an end color (optionally, a middle color may be provided between both). Categorical scales expect a vector with a color for each category. Use category names to change the default color assignment \code{c(category1="color1", category2="color2")}. The order in which these colors are specified determines rendering order when points from different categories collide (colors specified first appear on top of later ones).
+#' @param colorize a vector whose values are used to determine the color of the points. If it is a numeric vector, it will assume the scale is quantitative and it will generate a gradient using the start and end colors of the palette (also with the middle color, if it is provided). If it is a character vector, a logical vector, or a factor, it will generate a categorical scale with one color per unique value (or level).
 #' @param color_domain [to implement] a vector with a start and end value (an optionally a middle value between them). It is only used for quantitative scales. Useful when the scale is continuous and, for example, we want to ensure it is symmetric in negative and positive values.
 #' @param padding padding around the top-level object
 #' @param ... additional arguments for \code{clickme}
@@ -37,31 +72,12 @@ clickme_points <- function(x, y = NULL,
                       xlim = NULL, ylim = NULL,
                       width = 980, height = 980,
                       radius = 5,
-                      palette = NULL, color_group = NULL, color_domain = NULL,
+                      palette = NULL, colorize = NULL, color_domain = NULL,
                       padding = list(top = 80, right = 150, bottom = 30, left = 100),
                       ...){
-    if (!is.null(main)) title <- main
     params <- as.list(environment())[-1]
-    params[names(params) %in% c("x", "y", "main", "...")] <- NULL
-
-    data <- get_points_data(x,y)
-
-    if (is.null(names)){
-        data$.name <- rownames(data)
-    } else {
-        data$.name <- names
-    }
-
-    if (!is.null(color_group)){
-        data$.color_group <- color_group
-
-        # ensure that the first group is rendered on top, then the second, and so on.
-        data <- data[order(data$.color_group),] # TODO: ensure that this actually sorts by color_group
-    }
-
-    if (scale_type(data$.color_group) == "categorical" & !is.null(color_domain)){
-        stop("A color domain can only be specified for quantitative scales. Current color_group: ", head(color_group))
-    }
+    params <- validate_points_params(params)
+    data <- get_points_data(x, y, params)
 
     clickme(data, "points", params = params, ...)
 }

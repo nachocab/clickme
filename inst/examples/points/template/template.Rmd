@@ -70,7 +70,7 @@
             "title": (d) -> "<strong>#{d[".name"]}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
             "class": "circle_tooltip"
             "transform": transform
-            "fill": (d) -> color_scale(d[".color_group"])
+            "fill": (d) -> color_scale(d[".colorize"])
         )
 
     names = clip.selectAll("text")
