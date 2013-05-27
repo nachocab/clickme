@@ -6,6 +6,21 @@
 }
 
 .axis text{
+    font-size: 18px;
+}
+
+.label.y, .label.x {
+    font-size: 24px;
+}
+
+.key {
+    font-size: 20px;
+}
+
+.title{
+    font-size: 30px;
+}
+
+text {
     font-family: "Rockwell";
-    font-size: 18;
 }

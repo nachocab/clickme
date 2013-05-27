@@ -11,7 +11,7 @@
 
   <body>
     <script type="text/javascript">
-    ```{r abc, engine="coffee", results="asis", echo = FALSE }
+    ```{r engine="coffee", results="asis", echo = FALSE }
     # data should have x, y and name
     decimal_format = d3.format(".2f")
 
@@ -67,16 +67,16 @@
       .enter().append("svg:circle")
         .attr(
             "r": radius
-            "title": (d) -> "<strong>#{d[".name"]}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
+            "title": (d) -> "<strong>#{d.name__}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
             "class": "circle_tooltip"
             "transform": transform
-            "fill": (d) -> color_scale(d[".colorize"])
+            "fill": (d) -> color_scale(d.colorize__)
         )
 
     names = clip.selectAll("text")
-        .data(data, (d) -> d[".name"])
+        .data(data, (d) -> d.name__)
       .enter().append("text")
-        .text((d) -> d[".name"])
+        .text((d) -> d.name__)
         .attr(
             "dy": ".32em"
             "dx": "8"
@@ -105,9 +105,6 @@
             "text-anchor": "middle"
             "x": plot.width / 2
             "y": -plot.margin.top / 2
-        ).style(
-            "font-family": "Rockwell"
-            "font-size": 30
         )
 
     # plot.append("text")
@@ -138,12 +135,37 @@
             "transform": "rotate(-90)"
         )
 
-    names_button = plot.append("g")
-        .attr("transform","translate(#{plot.width},#{0})")
+    sidebar = plot.append("g")
+        .attr("transform","translate(#{plot.width + 15},#{0})")
+
+    g_names = sidebar.append("g")
         .style("cursor", "pointer")
-        .style("font-size","16px")
-        .style("font-family","Rockwell")
+        .style("font-size","22px")
         .on("click", () -> toggle_names() )
+
+
+
+    g_color_legend = sidebar.selectAll(".key")
+        .data(color_scale.domain().reverse())
+      .enter().append("g")
+        .attr(
+              "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 50})"
+              "class": "key"
+        )
+
+    g_color_legend.append("circle")
+        .attr(
+            "r": radius
+            "fill": color_scale
+        )
+
+    g_color_legend.append("text")
+        .attr(
+            "x": radius + 10
+            "y": 0
+            "dy": ".35em"
+        ).text((d) -> d)
+
 
     d3.select(window).on("keydown", () ->
         # switch (d3.event.keyCode) {
@@ -155,36 +177,36 @@
             change()
     )
 
-    names_button.append("circle")
+    g_names.append("circle")
         .attr("r", 7)
         .attr("stroke","black")
         .attr("stroke-width",2)
 
-    names_button.append("text")
+    g_names.append("text")
         .attr('text-anchor', 'start')
         .attr('dy', '.32em')
         .attr('dx', '12')
 
 
     toggle_names = ()->
-        if names_button.classed("show_names")
-            names_button.attr("class","")
-            toggle_names_button()
+        if g_names.classed("show_names")
+            g_names.attr("class","")
+            toggle_g_names()
         else
-            names_button.attr("class","show_names")
-            toggle_names_button()
+            g_names.attr("class","show_names")
+            toggle_g_names()
 
-    toggle_names_button = ()->
-        if names_button.classed("show_names")
+    toggle_g_names = ()->
+        if g_names.classed("show_names")
             names.attr("display", "inline")
-            names_button.select("circle").attr("fill","black")
-            # names_button.select("text").text(" Hide names")
+            g_names.select("circle").attr("fill","black")
+            # g_names.select("text").text(" Hide names")
         else
             names.attr("display", "none")
-            names_button.select("circle").attr("fill","white")
-            names_button.select("text").text("Show names")
+            g_names.select("circle").attr("fill","white")
+            g_names.select("text").text("Show names")
 
-    toggle_names_button()
+    toggle_g_names()
 
     ```
     </script>

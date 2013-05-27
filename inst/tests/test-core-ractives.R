@@ -8,29 +8,29 @@ test_that("clickme_points reads the correct data input", {
 
     # x is a vector, no y
     data <- get_points_data(1:10, NULL, params)
-    expect_equal(data, data.frame(x = 1:10, y = 1:10, .name = as.character(1:10)))
+    expect_equal(data, data.frame(x = 1:10, y = 1:10, name__ = as.character(1:10)))
 
     # x is a vector, y is a vector
     data <- get_points_data(2:4, 5:7, params)
-    expect_equal(data, data.frame(x = 2:4, y = 5:7, .name = as.character(1:3)))
+    expect_equal(data, data.frame(x = 2:4, y = 5:7, name__ = as.character(1:3)))
 
     # x is a data frame (x, y, row names), no y
     data <- get_points_data(data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3]), NULL, params)
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, .name = LETTERS[1:3]))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, name__ = LETTERS[1:3]))
 
     # x is a data frame (x, y, row names, extra column), no y
     data <- get_points_data(data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3], extra = 11:13), NULL, params)
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, .name = LETTERS[1:3]))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, name__ = LETTERS[1:3]))
 
     # x is a matrix (x, y, row names), no y
     mat <- cbind(x = 2:4, y = 5:7)
     rownames(mat) <- LETTERS[1:3]
     data <- get_points_data(mat, NULL, params)
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, .name = LETTERS[1:3]))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, name__ = LETTERS[1:3]))
 
     # x is a list (x, y, no names, uneven-size element), no y
     data <- get_points_data(list(x = 2:4, y = 5:7, extra = 1:10), NULL, params)
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, .name = as.character(1:3)))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, name__ = as.character(1:3)))
 
 })
 
@@ -46,8 +46,14 @@ test_that("color_domain is only used in quantitative scales", {
 })
 
 test_that("the palette has valid names", {
-    params <- list(colorize = c("a", "a", "b", "c", "b"), palette = c(a = "blue", c = "green", d = "red", e = "yellow"))
+    params <- list(colorize = c("a", "a", "b", "c", "b"), palette = c(a = "blue"))
+    expect_error(validate_points_params(params), "categories don't have a color in palette: b, c")
+
+    params <- list(colorize = c("a", "a", "b", "c", "b"), palette = c(a = "blue", b = "pink", c = "green", d = "red", e = "yellow"))
     expect_error(validate_points_params(params), "palette names don't appear in colorize: d, e")
+
+    params <- list(colorize = 1:5, palette = c(a = "blue", c = "green", d = "red", e = "yellow"))
+    expect_error(validate_points_params(params), "an unnamed vector")
 })
 
 test_that("the palette determines the order in which the points are rendered", {
@@ -66,5 +72,11 @@ test_that("the palette determines the order in which the points are rendered", {
     params <- list(colorize = c("c", "a", "b", "c", "b"), palette = c(a = "blue", c = "green", b = "red"))
     data <- get_points_data(1:5, NULL, params)
     expect_equal(data$x, c(5,3,4,1,2)) # b b c c a ("a" on top)
+})
+
+test_that("limits reduce the size of the data", {
+    params <- list(xlim = c(2,8))
+    data <- get_points_data(1:10, 1:10, params)
+    expect_equal(data$x, 2:8)
 })
 
