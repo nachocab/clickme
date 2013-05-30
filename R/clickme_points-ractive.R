@@ -54,15 +54,7 @@ get_points_data <- function(x, y, params){
     }
 
     if (!is.null(params$colorize)){
-        data$colorize__ <- params$colorize
-        if (!is.null(names(params$palette))){
-            category_order <- unlist(sapply(names(params$palette), function(category) {
-                which(data$colorize__ == category)
-            }))
-            data <- data[rev(category_order),]
-        } else {
-            data <- data[order(data$colorize__, decreasing = TRUE),]
-        }
+        data <- reorder_data_by_color(data, params)
     }
 
     data <- apply_limits(data, params)
@@ -70,13 +62,15 @@ get_points_data <- function(x, y, params){
     data
 }
 
+
+
 #' Generates an interactive scatterplot
 #'
-#' @param x x-values
-#' @param y y-values
-#' @param names y-values
-#' @param title y-values
-#' @param main same as title, kept for compatibility with \code{base::plot}
+#' @param x x-values, but only if the "y" param is specified, otherwise it represents the y-values
+#' @param y y-values (optional)
+#' @param names point names
+#' @param title title of the plot
+#' @param main same as title, kept to be compatible with \code{base::plot}
 #' @param xlab,ylab x- and y-axis labels
 #' @param xlim,ylim x- and y-axis limits
 #' @param width,height width and height of the plot
@@ -103,17 +97,15 @@ clickme_points <- function(x, y = NULL,
                       width = 980, height = 980,
                       radius = 5,
                       palette = NULL, colorize = NULL, color_domain = NULL,
-                      padding = list(top = 80, right = 150, bottom = 30, left = 100),
+                      padding = list(top = 80, right = 200, bottom = 30, left = 100),
                       ...){
     params <- as.list(environment())[-1]
     params <- validate_points_params(params)
-    data <- get_points_data(x, y, params)
+    data <- get_points_data(data, x, params)
 
     # this must be done *after* data has been sorted to ensure the first category (which will be rendered at the bottom) gets the last color
     params$palette <- rev(params$palette)
 
     clickme(data, "points", params = params, ...)
 }
-
-
 

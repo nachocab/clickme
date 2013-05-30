@@ -1,7 +1,7 @@
 #' @import knitr
 generate_visualization <- function(opts){
-    unrendered_template <- knit_expand(opts$path$template_file)
-    capture.output(knit(text = unrendered_template, output = opts$path$html_file))
+    raw_template <- knit_expand(opts$path$template_file)
+    capture.output(knit(text = raw_template, output = opts$path$html_file))
 }
 
 #' Generates a JavaScript visualization

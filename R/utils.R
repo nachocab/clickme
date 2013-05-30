@@ -16,20 +16,53 @@ scale_type <- function(elements = NULL) {
     type
 }
 
+
+#' Reorder data by color
+#'
+#' @data data
+#' @param parameters
+#'
+#' It adds a colorize column and it uses it to reorder the data object. This ensures that rows are ordered in a way that elements with the first color in the palette are rendered on top
+#'
+#' @export
+reorder_data_by_color <- function(data, params){
+    data$colorize__ <- params$colorize
+
+    if (!is.null(names(params$palette))){
+        category_order <- unlist(sapply(names(params$palette), function(category) {
+            which(data$colorize__ == category)
+        }))
+        data <- data[rev(category_order),]
+    } else {
+        data <- data[order(data$colorize__, decreasing = TRUE),]
+    }
+
+    data
+}
+
 #' Default colors
 #'
 #' @param n number of colors
 #'
 #' @export
-default_colors <- function(n = 10){
-    d3_category10 <- c("#1f77b4", "#d62728", "#2ca02c", "#ff7f0e", "#9467bd", "#17becf", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22")
-    d3_category20 <- c(d3_category10, "#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5")
-    # d3_category10 <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf")
+default_colors <- function(n = 9){
+    # too similar purples: "#9467bd", "#8c564b"
+    d3_category9 <- c("#1f77b4", # blue
+                       "#ff7f0e", # orange
+                       "#2ca02c", # green
+                       "#d62728", # red
+                       "#9467bd", # purple
+                       "#17becf", # cyan
+                       "#e377c2", # pink
+                       "#7f7f7f",
+                       "#bcbd22")
+    # d3_category10 <- c("#1f77b4", "#d62728", "#2ca02c", "#ff7f0e", "#9467bd", "#17becf", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22")
+    d3_category19 <- c(d3_category9, "#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5")
     # d3_category10b <- c("#aec7e8", "#ffbb78", "#98df8a", "#ff9896", "#c5b0d5", "#c49c94", "#f7b6d2", "#c7c7c7", "#dbdb8d", "#9edae5")
-    if (n <= 10){
-        colors <- d3_category10[1:n]
-    } else if (n <= 20) {
-        colors <- d3_category20
+    if (n <= 9){
+        colors <- d3_category9[1:n]
+    } else if (n <= 19) {
+        colors <- d3_category19
     } else {
         colors <- rainbow(n)
     }
@@ -80,6 +113,9 @@ get_scripts <- function(opts) {
     scripts <- paste(sapply(opts$template_config$scripts, function(script_path){
         if (!grepl("^http", script_path)){
             script_path <- file.path(opts$relative_path$external, script_path)
+        }
+        if (!grepl("^shared/", script_path)){
+            script_path <- file.path(script_path)
         }
         paste0("<script src=\"", script_path, "\"></script>")
     }), collapse="\n")
