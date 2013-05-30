@@ -112,43 +112,39 @@
     plot.xlab = opts.xlab
     plot.ylab = opts.ylab
     plot.selector = opts.selector
+    plot.axes = {}
 
     plot.scales = get_scales(opts.width, opts.height)
 
-    plot.scales.x.domain(opts.x_domain)
-    plot.scales.x = add_scale_padding(plot.scales.x)
+    draw_title(plot)
 
-    plot.scales.y.domain(opts.y_domain)
-    plot.scales.y = add_scale_padding(plot.scales.y)
+    if opts.x_domain?
+        plot.scales.x.domain(opts.x_domain)
+        plot.scales.x = add_scale_padding(plot.scales.x)
+        draw_x_axis(plot)
+        draw_x_axis_label(plot)
 
-    draw_axes(plot)
-    draw_axes_labels(plot)
+    if opts.y_domain?
+        plot.scales.y.domain(opts.y_domain)
+        plot.scales.y = add_scale_padding(plot.scales.y)
+        draw_y_axis(plot)
+        draw_y_axis_label(plot)
 
     plot
 
-@draw_axes = (plot) ->
+@draw_x_axis = (plot) ->
     plot.orientation_x ?= "bottom"
-    plot.orientation_y ?= "left"
 
-    plot.axes = {}
     plot.axes.x = d3.svg.axis()
         .scale(plot.scales.x)
         .orient(plot.orientation_x)
-
-    plot.axes.y = d3.svg.axis()
-        .scale(plot.scales.y)
-        .orient(plot.orientation_y)
 
     plot.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0,#{plot.height})")
         .call(plot.axes.x)
 
-    plot.append("g")
-        .attr("class", "y axis")
-        .call(plot.axes.y)
-
-    plot.selectAll(".axis line, .axis path")
+    plot.selectAll(".x.axis line, .x.axis path")
         .style(
             "fill": "none"
             "stroke": "black"
@@ -158,7 +154,28 @@
 
     plot
 
-@draw_axes_labels = (plot) ->
+@draw_y_axis = (plot) ->
+    plot.orientation_y ?= "left"
+
+    plot.axes.y = d3.svg.axis()
+        .scale(plot.scales.y)
+        .orient(plot.orientation_y)
+
+    plot.append("g")
+        .attr("class", "y axis")
+        .call(plot.axes.y)
+
+    plot.selectAll(".y.axis line, .y.axis path")
+        .style(
+            "fill": "none"
+            "stroke": "black"
+            "shape-rendering": "crispEdges"
+            "stroke-width": 2
+        )
+
+    plot
+
+@draw_title = (plot) ->
     plot.append("text")
         .text(plot.title)
         .attr(
@@ -167,6 +184,8 @@
             "x": plot.width / 2
             "y": -plot.padding.top / 2
         )
+
+@draw_x_axis_label = (plot) ->
 
     plot.append("text")
         .text(plot.xlab)
@@ -178,6 +197,7 @@
             "dy": "2em"
         )
 
+@draw_y_axis_label = (plot) ->
     plot.append("text")
         .text(plot.ylab)
         .attr(

@@ -23,12 +23,21 @@
         width: {{ opts$params$width }}
         height: {{ opts$params$height }}
         padding: {{ get_padding_param(opts) }}
-        x_domain: {{ get_xlim_param(opts)}}
-        y_domain: {{ get_ylim_param(opts)}}
         title: "{{ opts$params$title }}"
         xlab: "{{ opts$params$xlab }}"
         ylab: "{{ opts$params$ylab }}"
     )
+
+    plot.scales.x = {{ get_d3_x_scale(opts) }}
+    if
+    plot.scales.x = add_scale_padding(plot.scales.x)
+    draw_x_axis(plot)
+    draw_x_axis_label(plot)
+
+    plot.scales.y = {{ get_d3_y_scale(opts) }}
+    plot.scales.y = add_scale_padding(plot.scales.y)
+    draw_y_axis(plot)
+    draw_y_axis_label(plot)
 
     line = d3.svg.line()
         .interpolate("basis")
@@ -41,9 +50,13 @@
         .attr("class", ".line")
 
     g_line.append("path")
-        .attr("class", "line")
-        .attr("d", (d) -> line(d.values))
-        # .style("stroke", (d) -> color(d.name))
+        .attr(
+            "class": "line"
+            "d": (d) -> line(d.values)
+        ).style(
+            "stroke": (d) -> color_scale(d.name)
+            "stroke-width": "{{ opts$params$lwd }}px"
+        )
 
     # city.append("text")
     #     .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })

@@ -85,12 +85,40 @@ validate_lines_params <- function(params) {
         params$title <- params$main
     }
 
-    params[names(params) %in% c("data", "x", "main", "...")] <- NULL
+    params[names(params) %in% c("data", "main", "...")] <- NULL
     params
 }
 
+
+#' Generates an interactive line plot
+#'
+#' @param data matrix, data frame, or vector specifying y-values. The values of each line correpond to one row.
+#' @param x x-values (optional)
+#' @param names point names
+#' @param lwd line width
+#' @param title title of the plot
+#' @param main same as title, kept to be compatible with \code{base::plot}
+#' @param xlab,ylab x- and y-axis labels
+#' @param xlim,ylim x- and y-axis limits
+#' @param width,height width and height of the plot
+#' @param radius the radius of the points
+#' @param palette color palette. Quantitative scales expect a vector with a start color, and an end color (optionally, a middle color may be provided between both). Categorical scales expect a vector with a color for each category. Use category names to change the default color assignment \code{c(category1="color1", category2="color2")}. The order in which these colors are specified determines rendering order when points from different categories collide (colors specified first appear on top of later ones). Colors can be a variety of formats:
+#' rgb decimal - "rgb(255,255,255)"
+#' hsl decimal - "hsl(120,50%,20%)"
+#' rgb hexadecimal - "#ffeeaa"
+#' rgb shorthand hexadecimal - "#fea"
+#' CSS named - "red", "white", "blue" (see http://www.w3.org/TR/SVG/types.html#ColorKeywords)
+#' @param colorize a vector whose values are used to determine the color of the points. If it is a numeric vector, it will assume the scale is quantitative and it will generate a gradient using the start and end colors of the palette (also with the middle color, if it is provided). If it is a character vector, a logical vector, or a factor, it will generate a categorical scale with one color per unique value (or level).
+#' @param color_domain [to implement] a vector with a start and end value (an optionally a middle value between them). It is only used for quantitative scales. Useful when the scale is continuous and, for example, we want to ensure it is symmetric in negative and positive values.
+#' @param padding padding around the top-level object
+#' @param ... additional arguments for \code{clickme}
+#'
+#' \code{x} and \code{y} follow the same behavior as the base::plot function. If y is not defined, x is interpreted as y. x can be a vector, a list, a data.frame, or a matrix.
+#'
+#' @export
 clickme_lines <- function(data, x = colnames(data),
                       names = rownames(data),
+                      lwd = 3,
                       title = "Lines", main = NULL,
                       xlab = NULL, ylab = NULL,
                       xlim = NULL, ylim = NULL,

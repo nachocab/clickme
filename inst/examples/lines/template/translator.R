@@ -1,17 +1,42 @@
-get_xlim_param <- function(opts) {
-    if (is.null(opts$params$xlim)){
-        data <- undo_nested_lines(opts$data)
-        opts$params$xlim <- range(data)
+get_d3_x_scale <- function(opts) {
+    if (is.null(opts$params$x)){
+        x <- 1:ncol(undo_nested_lines(opts$data))
+    } else {
+        x <- opts$params$x
     }
-    toJSON(opts$params$xlim)
+
+    if (scale_type(x) == "quantitative"){
+        if (!is.null(opts$params$xlim)){
+            domain <- opts$params$xlim
+        } else {
+            domain <- range(x)
+        }
+        scale <- paste0("d3.scale.linear()
+                .domain(", toJSON(domain), ")
+                .range([0, plot.width])")
+    } else {
+        scale <- paste0("d3.scale.ordinal()
+                .domain(", toJSON(x), ")
+                .rangePoints([0, plot.width], .1)")
+    }
+
+    scale
 }
 
-get_ylim_param <- function(opts) {
-    if (is.null(opts$params$ylim)){
-        data <- undo_nested_lines(opts$data)
-        opts$params$ylim <- range(data)
+get_d3_y_scale <- function(opts) {
+    y <- undo_nested_lines(opts$data)
+
+    if (!is.null(opts$params$ylim)){
+        domain <- opts$params$ylim
+    } else {
+        domain <- range(y)
     }
-    toJSON(opts$params$ylim)
+
+    scale <- paste0("d3.scale.linear()
+            .domain(", toJSON(domain), ")
+            .range([plot.height, 0])")
+
+    scale
 }
 
 # only for quantitative scales
