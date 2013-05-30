@@ -30,7 +30,7 @@ get_palette_param <- function(opts) {
             if (scale_type(opts$data$colorize__) == "quantitative"){
                 opts$params$palette <- c("steelblue", "#CA0020") # blue-red gradient
             } else {
-                opts$params$palette <- default_colors(length(unique(opts$data$colorize__)))
+                opts$params$palette <- rev(default_colors(length(unique(opts$data$colorize__))))
             }
         }
     }
