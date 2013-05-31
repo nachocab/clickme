@@ -16,7 +16,6 @@ scale_type <- function(elements = NULL) {
     type
 }
 
-
 #' Reorder data by color
 #'
 #' @data data
@@ -26,15 +25,15 @@ scale_type <- function(elements = NULL) {
 #'
 #' @export
 reorder_data_by_color <- function(data, params){
-    data$colorize__ <- params$colorize
+    data$colorize <- params$colorize
 
     if (!is.null(names(params$palette))){
         category_order <- unlist(sapply(names(params$palette), function(category) {
-            which(data$colorize__ == category)
+            which(data$colorize == category)
         }))
         data <- data[rev(category_order),]
     } else {
-        data <- data[order(data$colorize__, decreasing = TRUE),]
+        data <- data[order(data$colorize, decreasing = TRUE),]
     }
 
     data

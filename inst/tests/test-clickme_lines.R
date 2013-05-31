@@ -1,0 +1,52 @@
+context("clickme_lines")
+
+test_that("reads the correct data input", {
+
+    # data is a vector
+    data <- get_lines_data(2:6, 2:6, list())
+    expect_equal(toJSON(data), "[{\"line_name\":1,\"values\":[{\"x\":2,\"y\":2},{\"x\":3,\"y\":3},{\"x\":4,\"y\":4},{\"x\":5,\"y\":5},{\"x\":6,\"y\":6}]}]")
+
+    # data is a matrix
+    data <- matrix(1:9, nrow = 3, byrow = FALSE)
+    data <- get_lines_data(data, NULL, list())
+    expect_equal(toJSON(data), "[{\"line_name\":1,\"values\":[{\"x\":1,\"y\":1},{\"x\":2,\"y\":4},{\"x\":3,\"y\":7}]},{\"line_name\":2,\"values\":[{\"x\":1,\"y\":2},{\"x\":2,\"y\":5},{\"x\":3,\"y\":8}]},{\"line_name\":3,\"values\":[{\"x\":1,\"y\":3},{\"x\":2,\"y\":6},{\"x\":3,\"y\":9}]}]")
+
+    # data is a data frame
+    data <- data.frame(x1 = 1:3, x2 = 4:6, x3 = 7:9)
+    data <- get_lines_data(data, colnames(data), list())
+    expect_equal(toJSON(data), "[{\"line_name\":1,\"values\":[{\"x\":\"x1\",\"y\":1},{\"x\":\"x2\",\"y\":4},{\"x\":\"x3\",\"y\":7}]},{\"line_name\":2,\"values\":[{\"x\":\"x1\",\"y\":2},{\"x\":\"x2\",\"y\":5},{\"x\":\"x3\",\"y\":8}]},{\"line_name\":3,\"values\":[{\"x\":\"x1\",\"y\":3},{\"x\":\"x2\",\"y\":6},{\"x\":\"x3\",\"y\":9}]}]")
+
+    # data is a data frame with x
+    data <- data.frame(x1 = 1:3, x2 = 4:6, x3 = 7:9)
+    data <- get_lines_data(data, c(1,5,6), list())
+    expect_equal(toJSON(data), "[{\"line_name\":1,\"values\":[{\"x\":1,\"y\":1},{\"x\":5,\"y\":4},{\"x\":6,\"y\":7}]},{\"line_name\":2,\"values\":[{\"x\":1,\"y\":2},{\"x\":5,\"y\":5},{\"x\":6,\"y\":8}]},{\"line_name\":3,\"values\":[{\"x\":1,\"y\":3},{\"x\":5,\"y\":6},{\"x\":6,\"y\":9}]}]")
+
+    # data is a data frame with row names
+    data <- data.frame(x1 = 1:3, x2 = 4:6, x3 = 7:9)
+    data <- get_lines_data(data, colnames(data), list(names = letters[1:3]))
+    expect_equal(toJSON(data), "[{\"line_name\":\"a\",\"values\":[{\"x\":\"x1\",\"y\":1},{\"x\":\"x2\",\"y\":4},{\"x\":\"x3\",\"y\":7}]},{\"line_name\":\"b\",\"values\":[{\"x\":\"x1\",\"y\":2},{\"x\":\"x2\",\"y\":5},{\"x\":\"x3\",\"y\":8}]},{\"line_name\":\"c\",\"values\":[{\"x\":\"x1\",\"y\":3},{\"x\":\"x2\",\"y\":6},{\"x\":\"x3\",\"y\":9}]}]")
+
+    data <- data.frame(x1 = 1:3, x2 = 4:6, x3 = 7:9)
+    expect_error(get_lines_data(data, c(colnames(data), "extra"), list()), "You have provided more x-values than columns in your data: x1, x2, x3, extra")
+
+    # data is a matrix with colorize
+    data <- matrix(1:9, nrow = 3, byrow = FALSE)
+    data <- get_lines_data(data, NULL, list(colorize = c("a","a","b")))
+    expect_equal(toJSON(data), "[{\"line_name\":1,\"values\":[{\"x\":1,\"y\":3},{\"x\":2,\"y\":6},{\"x\":3,\"y\":9}],\"colorize\":\"b\"},{\"line_name\":2,\"values\":[{\"x\":1,\"y\":1},{\"x\":2,\"y\":4},{\"x\":3,\"y\":7}],\"colorize\":\"a\"},{\"line_name\":3,\"values\":[{\"x\":1,\"y\":2},{\"x\":2,\"y\":5},{\"x\":3,\"y\":8}],\"colorize\":\"a\"}]")
+
+})
+
+test_that("validate lines params", {
+    params <- validate_lines_params(list(names = 1:4))
+    expect_equal(params$names, as.character(1:4))
+
+    params <- validate_lines_params(list())
+    expect_true(is.null(params$names))
+})
+
+test_that("undo nested list", {
+    df <- data.frame(x1=c(1,2,3), x2= c(4,5,6), row.names = c("a","b","c"))
+    data <- get_lines_data(df, colnames(df), list(names = rownames(df)))
+    data_df <- undo_nested_lines(data)
+    expect_equal(data_df, df)
+})

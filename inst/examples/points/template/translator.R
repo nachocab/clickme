@@ -15,7 +15,7 @@ get_ylim_param <- function(opts) {
 # only for quantitative scales
 get_color_domain_param <- function(opts){
     if (is.null(opts$params$color_domain)){
-        opts$params$color_domain <- range(opts$data$colorize__, na.rm = TRUE)
+        opts$params$color_domain <- range(opts$data$colorize, na.rm = TRUE)
     }
     opts$params$color_domain <- toJSON(opts$params$color_domain)
 
@@ -24,13 +24,13 @@ get_color_domain_param <- function(opts){
 
 get_palette_param <- function(opts) {
     if (is.null(opts$params$palette)){
-        if (is.null(opts$data$colorize__) | length(unique(opts$data$colorize__)) == 1){
+        if (is.null(opts$data$colorize) | length(unique(opts$data$colorize)) == 1){
                 opts$params$palette <- c("#000")
         } else {
-            if (scale_type(opts$data$colorize__) == "quantitative"){
+            if (scale_type(opts$data$colorize) == "quantitative"){
                 opts$params$palette <- c("steelblue", "#CA0020") # blue-red gradient
             } else {
-                opts$params$palette <- rev(default_colors(length(unique(opts$data$colorize__))))
+                opts$params$palette <- rev(default_colors(length(unique(opts$data$colorize))))
             }
         }
     }
@@ -43,7 +43,7 @@ get_color_legend <- function(opts){
 }
 
 get_d3_color_scale <- function(opts) {
-    if (scale_type(opts$data$colorize__) == "quantitative") {
+    if (scale_type(opts$data$colorize) == "quantitative") {
         color_scale <- paste0("d3.scale.linear()
                .domain(", get_color_domain_param(opts), ")
                .range(", get_palette_param(opts), ")

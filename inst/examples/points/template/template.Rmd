@@ -64,22 +64,25 @@
       .enter().append("svg:circle")
         .attr(
             "r": radius
-            "title": (d) -> "<strong>#{d.name__}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
+            "title": (d) -> "<strong>#{d.point_name}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
             "class": "circle_tooltip"
             "transform": transform
-            "fill": (d) -> color_scale(d.colorize__)
+            "fill": (d) -> color_scale(d.colorize)
         )
 
     names = clip.selectAll("text")
-        .data(data, (d) -> d.name__)
+        .data(data, (d) -> d.point_name)
       .enter().append("text")
-        .text((d) -> d.name__)
+        .text((d) -> d.point_name)
         .attr(
             "dy": ".32em"
-            "dx": "8"
+            "dx": 8
             "text-anchor": "left"
             "display": "none"
             "transform":  transform
+        ).style(
+            "fill": (d) -> color_scale(d.colorize)
+            "font-size": "22px"
         )
 
     redraw = () ->
@@ -88,54 +91,13 @@
         circles.attr("transform", transform)
         names.attr("transform", transform)
 
-    $(".circle_tooltip").tooltip
-        html: true
-        container: "body"
-        placement: "top"
-
     sidebar = plot.append("g")
-        .attr("transform","translate(#{plot.width + 15},#{0})")
+        .attr("transform","translate(#{plot.width + 20},#{0})")
 
     g_names = sidebar.append("g")
         .style("cursor", "pointer")
         .style("font-size","22px")
         .on("click", () -> toggle_names() )
-
-
-
-    g_color_legend = sidebar.selectAll(".key")
-        .data(color_scale.domain().reverse())
-      .enter().append("g")
-        .attr(
-              "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 50})"
-              "class": "key"
-        )
-
-    g_color_legend.append("circle")
-        .attr(
-            "r": radius
-            "fill": color_scale
-        )
-
-    # legend_names = get_legend_names_param(opts)
-    g_color_legend.append("text")
-        .attr(
-            "x": radius + 10
-            "y": 0
-            "dy": ".35em"
-        ).text((d) -> d)
-        # ).text((d,i) -> legend_names[i])
-
-
-    d3.select(window).on("keydown", () ->
-        # switch (d3.event.keyCode) {
-          # case : year = Math.max(year0, year - 10); break;
-          # case 39: year = Math.min(year1, year + 10); break;
-        # }
-        # console.log(d3.event.keyCode)
-        if (d3.event.keyCode in [78, 32]) # 'n' or 'space bar'
-            change()
-    )
 
     g_names.append("circle")
         .attr("r", 7)
@@ -168,6 +130,44 @@
 
     toggle_g_names()
 
+    if color_scale.range().length > 1
+        g_color_legend = sidebar.selectAll(".key")
+            .data(color_scale.domain().reverse())
+          .enter().append("g")
+            .attr(
+                  "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 50})"
+                  "class": "key"
+            )
+
+        g_color_legend.append("circle")
+            .attr(
+                "r": radius
+                "fill": color_scale
+            )
+
+        # legend_names = get_legend_names_param(opts)
+        g_color_legend.append("text")
+            .attr(
+                "x": radius + 10
+                "y": 0
+                "dy": ".35em"
+            ).text((d) -> d)
+            # ).text((d,i) -> legend_names[i])
+
+    $(".circle_tooltip").tooltip
+        html: true
+        container: "body"
+        placement: "top"
+
+    d3.select(window).on("keydown", () ->
+        # switch (d3.event.keyCode) {
+          # case : year = Math.max(year0, year - 10); break;
+          # case 39: year = Math.min(year1, year + 10); break;
+        # }
+        # console.log(d3.event.keyCode)
+        if (d3.event.keyCode in [78, 32]) # 'n' or 'space bar'
+            change()
+    )
     ```
     </script>
   </body>

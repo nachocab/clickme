@@ -29,9 +29,8 @@
     )
 
     plot.scales.x = {{ get_d3_x_scale(opts) }}
-    if
     plot.scales.x = add_scale_padding(plot.scales.x)
-    draw_x_axis(plot)
+    draw_x_axis(plot, {{ get_x_tick_values(opts) }})
     draw_x_axis_label(plot)
 
     plot.scales.y = {{ get_d3_y_scale(opts) }}
@@ -40,9 +39,11 @@
     draw_y_axis_label(plot)
 
     line = d3.svg.line()
-        .interpolate("basis")
+        .defined((d) -> !isNaN(d.y)) # skip null and NaN values
+        .interpolate("{{ opts$params$interpolate }}")
         .x((d) -> plot.scales.x(d.x))
         .y((d) -> plot.scales.y(d.y))
+
 
     g_line = plot.selectAll(".line")
         .data(data)
@@ -54,18 +55,26 @@
             "class": "line"
             "d": (d) -> line(d.values)
         ).style(
-            "stroke": (d) -> color_scale(d.name)
+            "stroke": (d) -> color_scale(d.colorize)
             "stroke-width": "{{ opts$params$lwd }}px"
+            "fill": "none"
+            "shape-rendering": "auto"
         )
 
-    # city.append("text")
-    #     .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-    #     .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
-    #     .attr("x", 3)
-    #     .attr("dy", ".35em")
-    #     .text(function(d) { return d.name; });
-
-
+    names = g_line.append("text")
+        .datum((d) ->
+            "line_name": d.line_name
+            "value": d.values[d.values.length - 1]
+            "colorize": d.colorize
+        ).text((d) -> d.line_name)
+        .attr(
+            "transform": (d) -> "translate(#{plot.scales.x(d.value.x)} #{plot.scales.y(d.value.y)})"
+            "dx": 8
+            "dy": ".35em"
+        ).style(
+            "fill": (d) -> color_scale(d.colorize)
+            "font-size": "22px"
+        )
 
     # plot.append("defs").append("clipPath")
     #     .attr("id", "clip")
@@ -93,29 +102,6 @@
     #       .on("zoom", () -> redraw() )
     #   )
 
-    # circles = clip.selectAll("circle")
-    #     .data(data)
-    #   .enter().append("svg:circle")
-    #     .attr(
-    #         "r": radius
-    #         "title": (d) -> "<strong>#{d.name__}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
-    #         "class": "circle_tooltip"
-    #         "transform": transform
-    #         "fill": (d) -> color_scale(d.colorize__)
-    #     )
-
-    # names = clip.selectAll("text")
-    #     .data(data, (d) -> d.name__)
-    #   .enter().append("text")
-    #     .text((d) -> d.name__)
-    #     .attr(
-    #         "dy": ".32em"
-    #         "dx": "8"
-    #         "text-anchor": "left"
-    #         "display": "none"
-    #         "transform":  transform
-    #     )
-
     # redraw = () ->
     #     plot.select(".x.axis").call(plot.axes.x);
     #     plot.select(".y.axis").call(plot.axes.y);
@@ -127,39 +113,68 @@
     #     container: "body"
     #     placement: "top"
 
-    # sidebar = plot.append("g")
-    #     .attr("transform","translate(#{plot.width + 15},#{0})")
+    sidebar = plot.append("g")
+        .attr("transform","translate(#{plot.width + 20},#{0})")
 
-    # g_names = sidebar.append("g")
-    #     .style("cursor", "pointer")
-    #     .style("font-size","22px")
-    #     .on("click", () -> toggle_names() )
+    g_names = sidebar.append("g")
+        .style("cursor", "pointer")
+        .style("font-size","22px")
+        .on("click", () -> toggle_names() )
+
+    g_names.append("circle")
+        .attr("r", 7)
+        .attr("stroke","black")
+        .attr("stroke-width",2)
+
+    g_names.append("text")
+        .attr('text-anchor', 'start')
+        .attr('dy', '.32em')
+        .attr('dx', '12')
 
 
+    toggle_names = ()->
+        if g_names.classed("show_names")
+            g_names.attr("class","")
+            toggle_g_names()
+        else
+            g_names.attr("class","show_names")
+            toggle_g_names()
 
-    # g_color_legend = sidebar.selectAll(".key")
-    #     .data(color_scale.domain().reverse())
-    #   .enter().append("g")
-    #     .attr(
-    #           "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 50})"
-    #           "class": "key"
-    #     )
+    toggle_g_names = ()->
+        if g_names.classed("show_names")
+            names.attr("display", "inline")
+            g_names.select("circle").attr("fill","black")
+            # g_names.select("text").text(" Hide names")
+        else
+            names.attr("display", "none")
+            g_names.select("circle").attr("fill","white")
+            g_names.select("text").text("Show names")
 
-    # g_color_legend.append("circle")
-    #     .attr(
-    #         "r": radius
-    #         "fill": color_scale
-    #     )
+    toggle_g_names()
 
-    # # legend_names = get_legend_names_param(opts)
-    # g_color_legend.append("text")
-    #     .attr(
-    #         "x": radius + 10
-    #         "y": 0
-    #         "dy": ".35em"
-    #     ).text((d) -> d)
-    #     # ).text((d,i) -> legend_names[i])
+    if color_scale.range().length > 1
+        g_color_legend = sidebar.selectAll(".key")
+            .data(color_scale.domain().reverse())
+          .enter().append("g")
+            .attr(
+                  "transform": (d, i) -> "translate(0, #{i * (5 * 2 + 15) + 50})"
+                  "class": "key"
+            )
 
+        g_color_legend.append("circle")
+            .attr(
+                "r": 5
+                "fill": color_scale
+            )
+
+        # legend_names = get_legend_names_param(opts)
+        g_color_legend.append("text")
+            .attr(
+                "x": 20 + 10
+                "y": 0
+                "dy": ".35em"
+            ).text((d) -> d)
+            # ).text((d,i) -> legend_names[i])
 
     # d3.select(window).on("keydown", () ->
     #     # switch (d3.event.keyCode) {
@@ -170,37 +185,6 @@
     #     if (d3.event.keyCode in [78, 32]) # 'n' or 'space bar'
     #         change()
     # )
-
-    # g_names.append("circle")
-    #     .attr("r", 7)
-    #     .attr("stroke","black")
-    #     .attr("stroke-width",2)
-
-    # g_names.append("text")
-    #     .attr('text-anchor', 'start')
-    #     .attr('dy', '.32em')
-    #     .attr('dx', '12')
-
-
-    # toggle_names = ()->
-    #     if g_names.classed("show_names")
-    #         g_names.attr("class","")
-    #         toggle_g_names()
-    #     else
-    #         g_names.attr("class","show_names")
-    #         toggle_g_names()
-
-    # toggle_g_names = ()->
-    #     if g_names.classed("show_names")
-    #         names.attr("display", "inline")
-    #         g_names.select("circle").attr("fill","black")
-    #         # g_names.select("text").text(" Hide names")
-    #     else
-    #         names.attr("display", "none")
-    #         g_names.select("circle").attr("fill","white")
-    #         g_names.select("text").text("Show names")
-
-    # toggle_g_names()
 
     ```
     </script>

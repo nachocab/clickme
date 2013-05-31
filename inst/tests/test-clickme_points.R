@@ -8,34 +8,34 @@ test_that("reads the correct data input", {
 
     # x is a vector, no y
     data <- get_points_data(1:10, NULL, params)
-    expect_equal(data, data.frame(x = 1:10, y = 1:10, name__ = as.character(1:10)))
+    expect_equal(data, data.frame(x = 1:10, y = 1:10, point_name = as.character(1:10)))
 
     # x is a vector, y is a vector
     data <- get_points_data(2:4, 5:7, params)
-    expect_equal(data, data.frame(x = 2:4, y = 5:7, name__ = as.character(1:3)))
+    expect_equal(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
 
     # x is a data frame (x, y, row names)
     data <- get_points_data(data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3]), NULL, params)
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, name__ = LETTERS[1:3]))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
 
     # x is a data frame (x, y, row names, extra column)
     data <- get_points_data(data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3], extra = 11:13), NULL, params)
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, name__ = LETTERS[1:3]))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
 
     # x is a matrix (x, y, row names)
     mat <- cbind(x = 2:4, y = 5:7)
     rownames(mat) <- LETTERS[1:3]
     data <- get_points_data(mat, NULL, params)
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, name__ = LETTERS[1:3]))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
 
     # x is a list (x, y, no names, uneven-size element)
     data <- get_points_data(list(x = 2:4, y = 5:7, extra = 1:10), NULL, params)
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, name__ = as.character(1:3)))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
 
     data <- list(x = 2:4, y = 5:7, extra = c("a", "b", "b"))
     params$colorize <- data$extra
     data <- get_points_data(data, NULL, params)
-    expect_true(!is.null(data$colorize__)) # we test this in more detail later
+    expect_true(!is.null(data$colorize)) # we test this in more detail later
 
 })
 

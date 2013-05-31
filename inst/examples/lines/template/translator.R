@@ -1,3 +1,13 @@
+get_x_tick_values <- function(opts) {
+    if (!is.null(opts$params$x) & is.numeric(opts$params$x)){
+        tick_values <- opts$params$x
+    } else {
+        tick_values <- NULL
+    }
+
+    toJSON(tick_values)
+}
+
 get_d3_x_scale <- function(opts) {
     if (is.null(opts$params$x)){
         x <- 1:ncol(undo_nested_lines(opts$data))
@@ -9,7 +19,7 @@ get_d3_x_scale <- function(opts) {
         if (!is.null(opts$params$xlim)){
             domain <- opts$params$xlim
         } else {
-            domain <- range(x)
+            domain <- range(x, na.rm = TRUE)
         }
         scale <- paste0("d3.scale.linear()
                 .domain(", toJSON(domain), ")
@@ -29,7 +39,7 @@ get_d3_y_scale <- function(opts) {
     if (!is.null(opts$params$ylim)){
         domain <- opts$params$ylim
     } else {
-        domain <- range(y)
+        domain <- range(y, na.rm = TRUE)
     }
 
     scale <- paste0("d3.scale.linear()
@@ -41,8 +51,9 @@ get_d3_y_scale <- function(opts) {
 
 # only for quantitative scales
 get_color_domain_param <- function(opts){
+    colorize <- sapply(opts$data, "[[", "colorize")
     if (is.null(opts$params$color_domain)){
-        opts$params$color_domain <- range(opts$data$colorize__, na.rm = TRUE)
+        opts$params$color_domain <- range(colorize, na.rm = TRUE)
     }
     opts$params$color_domain <- toJSON(opts$params$color_domain)
 
@@ -51,13 +62,14 @@ get_color_domain_param <- function(opts){
 
 get_palette_param <- function(opts) {
     if (is.null(opts$params$palette)){
-        if (is.null(opts$data$colorize__) | length(unique(opts$data$colorize__)) == 1){
+        colorize <- sapply(opts$data, "[[", "colorize")
+        if (is.null(colorize) | length(unique(colorize)) == 1){
                 opts$params$palette <- c("#000")
         } else {
-            if (scale_type(opts$data$colorize__) == "quantitative"){
+            if (scale_type(colorize) == "quantitative"){
                 opts$params$palette <- c("steelblue", "#CA0020") # blue-red gradient
             } else {
-                opts$params$palette <- rev(default_colors(length(unique(opts$data$colorize__))))
+                opts$params$palette <- rev(default_colors(length(unique(colorize))))
             }
         }
     }
@@ -70,7 +82,8 @@ get_color_legend <- function(opts){
 }
 
 get_d3_color_scale <- function(opts) {
-    if (scale_type(opts$data$colorize__) == "quantitative") {
+    colorize <- sapply(opts$data, "[[", "colorize")
+    if (scale_type(colorize) == "quantitative") {
         color_scale <- paste0("d3.scale.linear()
                .domain(", get_color_domain_param(opts), ")
                .range(", get_palette_param(opts), ")

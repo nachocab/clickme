@@ -1,74 +1,4 @@
-get_nested_lines <- function(data, x, data_colnames, params){
-    data <- lapply(1:nrow(data), function(index){
-        df <- data.frame(x = x, y = as.numeric(data[index, data_colnames]))
-        values <- lapply(split(df, rownames(df)), as.list)
-        names(values) <-  NULL
-        if (is.null(data$colorize__[index])){
-            list(name = params$names[index], values = values)
-        } else {
-            list(name = params$names[index], values = values, colorize__ = data$colorize__[index])
-        }
-    })
-
-    data
-}
-
-undo_nested_lines <- function(data){
-    df <- t(sapply(data, function(data){
-        sapply(data$values, "[[", "y")
-    }))
-
-    x <- sapply(data[[1]]$values, "[[", "x")
-    df <- as.data.frame(df)
-    colnames(df) <- x
-    rownames(df) <- sapply(data, "[[", "name")
-    df
-}
-
-get_lines_data <- function(data, x, params){
-    if (is.vector(data)){
-        data <- as.data.frame(t(data))
-    }
-
-    if (is.matrix(data)){
-        data <- as.data.frame(data)
-    }
-
-    if (is.null(x)){
-        x <- 1:ncol(data)
-    } else {
-        if (length(x) > ncol(data)){
-            stop("You have provided more x-values than columns in your data: ", paste0(x, collapse = ", "))
-        } else {
-            colnames(data) <- x
-        }
-    }
-
-    if (is.null(params$names)) {
-        params$names <- 1:nrow(data)
-    }
-    rownames(data) <- params$names
-
-    # save colnames before adding colorize (and potentially, other columns)
-    data_colnames <- colnames(data)
-
-    if (!is.null(params$colorize)){
-        data <- reorder_data_by_color(data, params)
-    }
-
-    data <- apply_limits(data, params)
-
-    data <- get_nested_lines(data, x, data_colnames, params)
-
-    data
-}
-
-validate_lines_params <- function(params) {
-
-    if (!is.null(params$names)){
-        params$names <- as.character(params$names)
-    }
-
+validate_points_params <- function(params) {
     if (scale_type(params$colorize) == "categorical" & !is.null(params$color_domain)){
         stop("A color domain can only be specified for quantitative scales. colorize has categorical values.")
     }
@@ -92,18 +22,54 @@ validate_lines_params <- function(params) {
         params$title <- params$main
     }
 
-    params[names(params) %in% c("data", "main", "...")] <- NULL
+    params[names(params) %in% c("x", "y", "main", "...")] <- NULL
     params
 }
 
+apply_limits <- function(data, params) {
+    if (!is.null(params$xlim)){
+        data <- data[data$x >= params$xlim[1],]
+        data <- data[data$x <= params$xlim[2],]
+    }
 
-#' Generates an interactive line plot
+    if (!is.null(params$ylim)){
+        data <- data[data$y >= params$ylim[1],]
+        data <- data[data$y <= params$ylim[2],]
+    }
+    data
+}
+
+get_points_data <- function(x, y, params){
+    data <- suppressWarnings(xy.coords(x,y))
+    data <- as.data.frame(data[c("x","y")])
+
+    if (is.data.frame(x) | is.matrix(x)){
+        rownames(data) <- rownames(x)
+    }
+
+    if (is.null(params$names)){
+        data$point_name <- rownames(data)
+    } else {
+        data$point_name <- params$names
+    }
+
+    # we only create data$colorize when params$colorize is not NULL. When it is NULL, d3_color_scale(null) returns a color.
+    if (!is.null(params$colorize)){
+        data <- reorder_data_by_color(data, params)
+    }
+
+    data <- apply_limits(data, params)
+
+    data
+}
+
+
+
+#' Generates an interactive scatterplot
 #'
-#' @param data matrix, data frame, or vector specifying y-values. A line is defined by the values of one row.
-#' @param x x-values (optional). If specified by a numeric vector, it is used to set the tick values.
-#' @param names line names
-#' @param lwd line width
-#' @param interpolate interpolation mode. Linear by default, read about other options: https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
+#' @param x x-values, but only if the "y" param is specified, otherwise it represents the y-values
+#' @param y y-values (optional)
+#' @param names point names
 #' @param title title of the plot
 #' @param main same as title, kept to be compatible with \code{base::plot}
 #' @param xlab,ylab x- and y-axis labels
@@ -124,25 +90,23 @@ validate_lines_params <- function(params) {
 #' \code{x} and \code{y} follow the same behavior as the base::plot function. If y is not defined, x is interpreted as y. x can be a vector, a list, a data.frame, or a matrix.
 #'
 #' @export
-clickme_lines <- function(data, x = colnames(data),
-                      names = rownames(data),
-                      lwd = 3,
-                      interpolate = "linear",
-                      title = "Lines", main = NULL,
+clickme_points <- function(x, y = NULL,
+                      names = NULL,
+                      title = "Points", main = NULL,
                       xlab = NULL, ylab = NULL,
                       xlim = NULL, ylim = NULL,
                       width = 980, height = 980,
+                      radius = 5,
                       palette = NULL, colorize = NULL, color_domain = NULL,
-                      padding = list(top = 80, right = 150, bottom = 30, left = 100),
+                      padding = list(top = 80, right = 200, bottom = 30, left = 100),
                       ...){
     params <- as.list(environment())[-1]
-    params <- validate_lines_params(params)
-    data <- get_lines_data(data, x, params)
+    params <- validate_points_params(params)
+    data <- get_points_data(x, y, params)
 
     # this must be done *after* data has been sorted to ensure the first category (which will be rendered at the bottom) gets the last color
-    # params$palette <- rev(params$palette)
+    params$palette <- rev(params$palette)
 
-    clickme(data, "lines", params = params, ...)
+    clickme(data, "points", params = params, ...)
 }
-
 
