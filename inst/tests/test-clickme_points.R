@@ -15,17 +15,19 @@ test_that("reads the correct data input", {
     expect_equal(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
 
     # x is a data frame (x, y, row names)
-    data <- get_points_data(data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3]), NULL, params)
+    data <- data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3])
+    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
     expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
 
     # x is a data frame (x, y, row names, extra column)
-    data <- get_points_data(data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3], extra = 11:13), NULL, params)
+    data <- data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3], extra = 11:13)
+    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
     expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
 
     # x is a matrix (x, y, row names)
     mat <- cbind(x = 2:4, y = 5:7)
     rownames(mat) <- LETTERS[1:3]
-    data <- get_points_data(mat, NULL, params)
+    data <- get_points_data(mat, NULL, list(point_names = rownames(mat)))
     expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
 
     # x is a list (x, y, no names, uneven-size element)

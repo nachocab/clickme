@@ -4,9 +4,9 @@ get_nested_lines <- function(data, x, data_colnames, params){
         values <- lapply(split(df, rownames(df)), as.list)
         names(values) <-  NULL
         if (is.null(data$colorize[index])){
-            list(line_name = params$names[index], values = values)
+            list(line_name = params$line_names[index], values = values)
         } else {
-            list(line_name = params$names[index], values = values, colorize = data$colorize[index])
+            list(line_name = params$line_names[index], values = values, colorize = data$colorize[index])
         }
     })
 
@@ -44,10 +44,7 @@ get_lines_data <- function(data, x, params){
         }
     }
 
-    if (is.null(params$names)) {
-        params$names <- 1:nrow(data)
-    }
-    rownames(data) <- params$names
+    rownames(data) <- params$line_names
 
     # save colnames before adding colorize (and potentially, other columns)
     data_colnames <- colnames(data)
@@ -65,11 +62,6 @@ get_lines_data <- function(data, x, params){
 }
 
 validate_lines_params <- function(params) {
-
-    if (!is.null(params$names)){
-        params$names <- as.character(params$names)
-    }
-
     if (scale_type(params$colorize) == "categorical" & !is.null(params$color_domain)){
         stop("A color domain can only be specified for quantitative scales. colorize has categorical values.")
     }
@@ -89,6 +81,23 @@ validate_lines_params <- function(params) {
         }
     }
 
+    if (!is.null(params$line_names)){
+        params$line_names <- as.character(params$line_names)
+    } else {
+        # data was a vector/list/factor or an unnamed matrix
+        if (is.matrix(params$data)){
+            params$line_names <- as.character(1:nrow(params$data))
+        } else if (is.list(params$data)){
+            if (is.null(names(params$data))){
+                params$line_names <- as.character(1:length(params$data))
+            } else {
+                params$line_names <- names(params$data)
+            }
+        } else {
+            params$line_names <- "1"
+        }
+    }
+
     if (!is.null(params$main)) {
         params$title <- params$main
     }
@@ -102,7 +111,7 @@ validate_lines_params <- function(params) {
 #'
 #' @param data matrix, data frame, or vector specifying y-values. A line is defined by the values of one row.
 #' @param x x-values (optional). If specified by a numeric vector, it is used to set the tick values.
-#' @param names line names
+#' @param line_names line names
 #' @param lwd line width
 #' @param interpolate interpolation mode. Linear by default, read about other options: https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
 #' @param title title of the plot
@@ -123,11 +132,9 @@ validate_lines_params <- function(params) {
 #' @param padding padding around the top-level object
 #' @param ... additional arguments for \code{clickme}
 #'
-#' \code{x} and \code{y} follow the same behavior as the base::plot function. If y is not defined, x is interpreted as y. x can be a vector, a list, a data.frame, or a matrix.
-#'
 #' @export
 clickme_lines <- function(data, x = colnames(data),
-                      names = rownames(data),
+                      line_names = rownames(data),
                       lwd = 3,
                       interpolate = "linear",
                       title = "Lines", main = NULL,
@@ -140,6 +147,9 @@ clickme_lines <- function(data, x = colnames(data),
     params <- as.list(environment())[-1]
     params <- validate_lines_params(params)
     data <- get_lines_data(data, x, params)
+
+    # this must be done *after* data has been sorted to ensure the first category (which will be rendered at the bottom) gets the last color
+    params$palette <- rev(params$palette)
 
     clickme(data, "lines", params = params, ...)
 }

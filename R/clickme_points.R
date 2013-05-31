@@ -5,6 +5,7 @@ validate_points_params <- function(params) {
 
     palette_names <- names(params$palette)
     categories <- unique(params$colorize)
+
     if (!is.null(params$colorize) & !is.null(params$palette) & !is.null(palette_names)) {
         if (scale_type(params$colorize) == "categorical"){
             if (any(categories %notin% palette_names)){
@@ -16,6 +17,10 @@ validate_points_params <- function(params) {
         } else {
             stop("The values in colorize imply a quantitative scale, which requires an unnamed vector of the form c(start_color[, middle_color], end_color)")
         }
+    }
+
+    if (!is.null(params$point_names)){
+        params$point_names <- as.character(params$point_names)
     }
 
     if (!is.null(params$main)) {
@@ -47,11 +52,11 @@ get_points_data <- function(x, y, params){
         rownames(data) <- rownames(x)
     }
 
-    if (is.null(params$names)){
-        data$point_name <- rownames(data)
-    } else {
-        data$point_name <- params$names
+    if (is.null(params$point_names)){
+        # x was a vector/list/factor or an unnamed matrix
+        params$point_names <- as.character(1:nrow(data))
     }
+    data$point_name <- params$point_names
 
     # we only create data$colorize when params$colorize is not NULL. When it is NULL, d3_color_scale(null) returns a color.
     if (!is.null(params$colorize)){
@@ -67,9 +72,9 @@ get_points_data <- function(x, y, params){
 
 #' Generates an interactive scatterplot
 #'
-#' @param x x-values, but only if the "y" param is specified, otherwise it represents the y-values
+#' @param x x-values, but only if the "y" param is specified, otherwise it represents the y-values. It can be a dataframe, a matrix, a vector, a list, or a factor (test this).
 #' @param y y-values (optional)
-#' @param names point names
+#' @param point_names point names
 #' @param title title of the plot
 #' @param main same as title, kept to be compatible with \code{base::plot}
 #' @param xlab,ylab x- and y-axis labels
@@ -87,11 +92,9 @@ get_points_data <- function(x, y, params){
 #' @param padding padding around the top-level object
 #' @param ... additional arguments for \code{clickme}
 #'
-#' \code{x} and \code{y} follow the same behavior as the base::plot function. If y is not defined, x is interpreted as y. x can be a vector, a list, a data.frame, or a matrix.
-#'
 #' @export
 clickme_points <- function(x, y = NULL,
-                      names = NULL,
+                      point_names = rownames(x),
                       title = "Points", main = NULL,
                       xlab = NULL, ylab = NULL,
                       xlim = NULL, ylim = NULL,
