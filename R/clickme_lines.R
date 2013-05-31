@@ -62,44 +62,16 @@ get_lines_data <- function(data, x, params){
 }
 
 validate_lines_params <- function(params) {
-    if (scale_type(params$colorize) == "categorical" & !is.null(params$color_domain)){
-        stop("A color domain can only be specified for quantitative scales. colorize has categorical values.")
-    }
+    validate_colorize(params)
 
-    palette_names <- names(params$palette)
-    categories <- unique(params$colorize)
-    if (!is.null(params$colorize) & !is.null(params$palette) & !is.null(palette_names)) {
-        if (scale_type(params$colorize) == "categorical"){
-            if (any(categories %notin% palette_names)){
-                stop("The following categories don't have a color in palette: ", paste0(categories[categories %notin% palette_names], collapse = ", "))
-            }
-            if (any(palette_names %notin% categories)) {
-                stop("The following palette names don't appear in colorize: ", paste0(palette_names[palette_names %notin% categories], collapse = ", "))
-            }
-        } else {
-            stop("The values in colorize imply a quantitative scale, which requires an unnamed vector of the form c(start_color[, middle_color], end_color)")
-        }
+    if (!is.null(params$main)) {
+        params$title <- params$main
     }
 
     if (!is.null(params$line_names)){
         params$line_names <- as.character(params$line_names)
     } else {
-        # data was a vector/list/factor or an unnamed matrix
-        if (is.matrix(params$data)){
-            params$line_names <- as.character(1:nrow(params$data))
-        } else if (is.list(params$data)){
-            if (is.null(names(params$data))){
-                params$line_names <- as.character(1:length(params$data))
-            } else {
-                params$line_names <- names(params$data)
-            }
-        } else {
-            params$line_names <- "1"
-        }
-    }
-
-    if (!is.null(params$main)) {
-        params$title <- params$main
+        params$line_names <- get_row_names(params$data)
     }
 
     params[names(params) %in% c("data", "main", "...")] <- NULL
@@ -144,7 +116,7 @@ clickme_lines <- function(data, x = colnames(data),
                       palette = NULL, colorize = NULL, color_domain = NULL, order = NULL,
                       padding = list(top = 80, right = 150, bottom = 30, left = 100),
                       ...){
-    params <- as.list(environment())[-1]
+    params <- as.list(environment())
     params <- validate_lines_params(params)
     data <- get_lines_data(data, x, params)
 

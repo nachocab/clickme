@@ -1,4 +1,51 @@
 
+#' Validates colorize
+#'
+#' @param params parameters
+#'
+#' @export
+validate_colorize <- function(params) {
+    if (scale_type(params$colorize) == "categorical" & !is.null(params$color_domain)){
+        stop("A color domain can only be specified for quantitative scales. colorize has categorical values.")
+    }
+
+    palette_names <- names(params$palette)
+    categories <- unique(params$colorize)
+    if (!is.null(params$colorize) & !is.null(params$palette) & !is.null(palette_names)) {
+        if (scale_type(params$colorize) == "categorical"){
+            if (any(categories %notin% palette_names)){
+                stop("The following categories don't have a color in palette: ", paste0(categories[categories %notin% palette_names], collapse = ", "))
+            }
+            if (any(palette_names %notin% categories)) {
+                stop("The following palette names don't appear in colorize: ", paste0(palette_names[palette_names %notin% categories], collapse = ", "))
+            }
+        } else {
+            stop("The values in colorize imply a quantitative scale, which requires an unnamed vector of the form c(start_color[, middle_color], end_color)")
+        }
+    }
+}
+
+#' Returns row names from objects that don't have rows
+#'
+#' @param data input data. It can be a vector, a list, or a matrix.
+#'
+#' @export
+get_row_names <- function(data) {
+    if (is.matrix(data)){
+        row_names <- as.character(1:nrow(data))
+    } else if (is.list(data)){
+        if (is.null(names(data))){
+            row_names <- as.character(1:length(data))
+        } else {
+            row_names <- names(data)
+        }
+    } else {
+        # TODO: what if it is a factor? if as.character(factor) is not unique, stop("not unique values: ")
+        row_names <- as.character(1:length(data))
+    }
+
+    row_names
+}
 #' Type of scale
 #'
 #' @param elements values

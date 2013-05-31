@@ -1,30 +1,14 @@
 validate_points_params <- function(params) {
-    if (scale_type(params$colorize) == "categorical" & !is.null(params$color_domain)){
-        stop("A color domain can only be specified for quantitative scales. colorize has categorical values.")
-    }
+    validate_colorize(params)
 
-    palette_names <- names(params$palette)
-    categories <- unique(params$colorize)
-
-    if (!is.null(params$colorize) & !is.null(params$palette) & !is.null(palette_names)) {
-        if (scale_type(params$colorize) == "categorical"){
-            if (any(categories %notin% palette_names)){
-                stop("The following categories don't have a color in palette: ", paste0(categories[categories %notin% palette_names], collapse = ", "))
-            }
-            if (any(palette_names %notin% categories)) {
-                stop("The following palette names don't appear in colorize: ", paste0(palette_names[palette_names %notin% categories], collapse = ", "))
-            }
-        } else {
-            stop("The values in colorize imply a quantitative scale, which requires an unnamed vector of the form c(start_color[, middle_color], end_color)")
-        }
+    if (!is.null(params$main)) {
+        params$title <- params$main
     }
 
     if (!is.null(params$point_names)){
         params$point_names <- as.character(params$point_names)
-    }
-
-    if (!is.null(params$main)) {
-        params$title <- params$main
+    } else {
+        params$point_names <- get_row_names(params$x)
     }
 
     params[names(params) %in% c("x", "y", "main", "...")] <- NULL
@@ -52,10 +36,6 @@ get_points_data <- function(x, y, params){
         rownames(data) <- rownames(x)
     }
 
-    if (is.null(params$point_names)){
-        # x was a vector/list/factor or an unnamed matrix
-        params$point_names <- as.character(1:nrow(data))
-    }
     data$point_name <- params$point_names
 
     # we only create data$colorize when params$colorize is not NULL. When it is NULL, d3_color_scale(null) returns a color.
@@ -103,7 +83,7 @@ clickme_points <- function(x, y = NULL,
                       palette = NULL, colorize = NULL, color_domain = NULL,
                       padding = list(top = 80, right = 200, bottom = 30, left = 100),
                       ...){
-    params <- as.list(environment())[-1]
+    params <- as.list(environment())
     params <- validate_points_params(params)
     data <- get_points_data(x, y, params)
 
