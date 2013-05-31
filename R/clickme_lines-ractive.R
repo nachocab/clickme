@@ -1,12 +1,12 @@
-get_nested_lines <- function(data, x, params){
-    data <- lapply(params$names, function(name){
-        df <- data.frame(x = x, y = as.numeric(data[name, x]))
+get_nested_lines <- function(data, x, data_colnames, params){
+    data <- lapply(1:nrow(data), function(index){
+        df <- data.frame(x = x, y = as.numeric(data[index, data_colnames]))
         values <- lapply(split(df, rownames(df)), as.list)
         names(values) <-  NULL
-        if (is.null(data$colorize__[name])){
-            list(name = name, values = values)
+        if (is.null(data$colorize__[index])){
+            list(name = params$names[index], values = values)
         } else {
-            list(name = name, values = values, colorize__ = data$colorize__[name])
+            list(name = params$names[index], values = values, colorize__ = data$colorize__[index])
         }
     })
 
@@ -49,18 +49,25 @@ get_lines_data <- function(data, x, params){
     }
     rownames(data) <- params$names
 
+    # save colnames before adding colorize (and potentially, other columns)
+    data_colnames <- colnames(data)
+
     if (!is.null(params$colorize)){
         data <- reorder_data_by_color(data, params)
     }
 
     data <- apply_limits(data, params)
 
-    data <- get_nested_lines(data, x, params)
+    data <- get_nested_lines(data, x, data_colnames, params)
 
     data
 }
 
 validate_lines_params <- function(params) {
+
+    if (!is.null(params$names)){
+        params$names <- as.character(params$names)
+    }
 
     if (scale_type(params$colorize) == "categorical" & !is.null(params$color_domain)){
         stop("A color domain can only be specified for quantitative scales. colorize has categorical values.")
@@ -92,10 +99,11 @@ validate_lines_params <- function(params) {
 
 #' Generates an interactive line plot
 #'
-#' @param data matrix, data frame, or vector specifying y-values. The values of each line correpond to one row.
-#' @param x x-values (optional)
-#' @param names point names
+#' @param data matrix, data frame, or vector specifying y-values. A line is defined by the values of one row.
+#' @param x x-values (optional). If specified by a numeric vector, it is used to set the tick values.
+#' @param names line names
 #' @param lwd line width
+#' @param interpolate interpolation mode. Linear by default, read about other options: https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
 #' @param title title of the plot
 #' @param main same as title, kept to be compatible with \code{base::plot}
 #' @param xlab,ylab x- and y-axis labels
@@ -119,6 +127,7 @@ validate_lines_params <- function(params) {
 clickme_lines <- function(data, x = colnames(data),
                       names = rownames(data),
                       lwd = 3,
+                      interpolate = "linear",
                       title = "Lines", main = NULL,
                       xlab = NULL, ylab = NULL,
                       xlim = NULL, ylim = NULL,

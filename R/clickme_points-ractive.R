@@ -101,7 +101,7 @@ clickme_points <- function(x, y = NULL,
                       ...){
     params <- as.list(environment())[-1]
     params <- validate_points_params(params)
-    data <- get_points_data(data, x, params)
+    data <- get_points_data(x, y, params)
 
     # this must be done *after* data has been sorted to ensure the first category (which will be rendered at the bottom) gets the last color
     params$palette <- rev(params$palette)

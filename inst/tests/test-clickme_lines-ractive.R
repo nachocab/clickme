@@ -3,8 +3,8 @@ context("clickme_lines")
 test_that("reads the correct data input", {
 
     # data is a vector
-    data <- get_lines_data(2:6, 1:5, list())
-    expect_equal(toJSON(data), "[{\"name\":1,\"values\":[{\"x\":1,\"y\":2},{\"x\":2,\"y\":3},{\"x\":3,\"y\":4},{\"x\":4,\"y\":5},{\"x\":5,\"y\":6}]}]")
+    data <- get_lines_data(2:6, 2:6, list())
+    expect_equal(toJSON(data), "[{\"name\":1,\"values\":[{\"x\":2,\"y\":2},{\"x\":3,\"y\":3},{\"x\":4,\"y\":4},{\"x\":5,\"y\":5},{\"x\":6,\"y\":6}]}]")
 
     # data is a matrix
     data <- matrix(1:9, nrow = 3, byrow = FALSE)
@@ -15,6 +15,11 @@ test_that("reads the correct data input", {
     data <- data.frame(x1 = 1:3, x2 = 4:6, x3 = 7:9)
     data <- get_lines_data(data, colnames(data), list())
     expect_equal(toJSON(data), "[{\"name\":1,\"values\":[{\"x\":\"x1\",\"y\":1},{\"x\":\"x2\",\"y\":4},{\"x\":\"x3\",\"y\":7}]},{\"name\":2,\"values\":[{\"x\":\"x1\",\"y\":2},{\"x\":\"x2\",\"y\":5},{\"x\":\"x3\",\"y\":8}]},{\"name\":3,\"values\":[{\"x\":\"x1\",\"y\":3},{\"x\":\"x2\",\"y\":6},{\"x\":\"x3\",\"y\":9}]}]")
+
+    # data is a data frame with x
+    data <- data.frame(x1 = 1:3, x2 = 4:6, x3 = 7:9)
+    data <- get_lines_data(data, c(1,5,6), list())
+    expect_equal(toJSON(data), "[{\"name\":1,\"values\":[{\"x\":1,\"y\":1},{\"x\":5,\"y\":4},{\"x\":6,\"y\":7}]},{\"name\":2,\"values\":[{\"x\":1,\"y\":2},{\"x\":5,\"y\":5},{\"x\":6,\"y\":8}]},{\"name\":3,\"values\":[{\"x\":1,\"y\":3},{\"x\":5,\"y\":6},{\"x\":6,\"y\":9}]}]")
 
     # data is a data frame with row names
     data <- data.frame(x1 = 1:3, x2 = 4:6, x3 = 7:9)
@@ -29,6 +34,14 @@ test_that("reads the correct data input", {
     data <- get_lines_data(data, NULL, list(colorize = c("a","a","b")))
     expect_equal(toJSON(data), "[{\"name\":1,\"values\":[{\"x\":1,\"y\":3},{\"x\":2,\"y\":6},{\"x\":3,\"y\":9}],\"colorize__\":\"b\"},{\"name\":2,\"values\":[{\"x\":1,\"y\":1},{\"x\":2,\"y\":4},{\"x\":3,\"y\":7}],\"colorize__\":\"a\"},{\"name\":3,\"values\":[{\"x\":1,\"y\":2},{\"x\":2,\"y\":5},{\"x\":3,\"y\":8}],\"colorize__\":\"a\"}]")
 
+})
+
+test_that("validate lines params", {
+    params <- validate_lines_params(list(names = 1:4))
+    expect_equal(params$names, as.character(1:4))
+
+    params <- validate_lines_params(list())
+    expect_true(is.null(params$names))
 })
 
 test_that("undo nested list", {
