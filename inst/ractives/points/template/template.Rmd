@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>{{ opts$params$title }}</title>
+
+    {{ get_external(opts) }}
+
+  </head>
+
+  <body>
+    <script type="text/javascript">
+    ```{r engine="coffee", results="asis", echo = FALSE }
+
+    data = {{ get_data_as_json(opts) }}
+
+    decimal_format = d3.format(".2f")
+
+    radius = {{ opts$params$radius }}
+
+    color_scale = {{ get_d3_color_scale(opts) }}
+
+    draw_box = {{ toJSON(opts$params$box) }}
+
+    plot = append_plot(
+        selector: "#container"
+        width: {{ opts$params$width }}
+        height: {{ opts$params$height }}
+        padding: {{ get_padding_param(opts) }}
+        x_domain: {{ get_xlim_param(opts)}}
+        y_domain: {{ get_ylim_param(opts)}}
+        title: "{{ opts$params$title }}"
+        xlab: "{{ opts$params$xlab }}"
+        ylab: "{{ opts$params$ylab }}"
+    )
+
+
+    if draw_box?
+        plot.append("path")
+            .attr(
+                "d": "M0,0L#{plot.width},0L#{plot.width},#{plot.height}"
+            ).style(
+                "stroke": "black"
+                "stroke-width": "2px"
+                "shape-rendering": "crispEdges"
+                "fill": "none"
+            )
+
+
+    plot.append("defs").append("clipPath")
+        .attr("id", "clip")
+      .append("rect")
+        .attr(
+            "width": plot.width
+            "height": plot.height
+        )
+
+    clip = plot.append("g").attr("clip-path", "url(#clip)")
+
+
+    transform = (d) ->
+        "translate(#{plot.scales.x(d.x)},#{plot.scales.y(d.y)})"
+
+    zoom = clip.append("rect")
+      .attr(
+            "class": "overlay"
+            "width":  plot.width
+            "height": plot.height
+            "fill": "none"
+            "pointer-events": "all"
+      ).style("cursor","move")
+      .call(d3.behavior.zoom()
+          .x(plot.scales.x)
+          .y(plot.scales.y)
+          .scaleExtent([1, Infinity])
+          .on("zoom", () -> redraw() )
+      )
+
+
+
+    circles = clip.selectAll("circle")
+        .data(data)
+      .enter().append("svg:circle")
+        .attr(
+            "r": radius
+            "title": (d) -> "<strong>#{d.point_name}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
+            "class": "circle_tooltip"
+            "transform": transform
+            "fill": (d) -> color_scale(d.colorize)
+        )
+
+    names = clip.selectAll("text")
+        .data(data, (d) -> d.point_name)
+      .enter().append("text") # add .filter(function(d, i) { return d.colorize == "HSF1 target"; })
+        .text((d) -> d.point_name)
+        .attr(
+            "dy": ".32em"
+            "dx": 8
+            "text-anchor": "left"
+            "display": "none"
+            "transform":  transform
+        ).style(
+            "fill": (d) -> color_scale(d.colorize)
+            "font-size": "22px"
+            "font-weight": "bold"
+        )
+
+    redraw = () ->
+        plot.select(".x.axis").call(plot.axes.x);
+        plot.select(".y.axis").call(plot.axes.y);
+        circles.attr("transform", transform)
+        names.attr("transform", transform)
+
+    sidebar = plot.append("g")
+        .attr("transform","translate(#{plot.width + 20},#{0})")
+
+    g_names = sidebar.append("g")
+        .style("cursor", "pointer")
+        .style("font-size","22px")
+        .on("click", () -> toggle_names() )
+
+    g_names.append("circle")
+        .attr("r", 7)
+        .attr("stroke","black")
+        .attr("stroke-width", 2)
+
+    g_names.append("text")
+        .attr('text-anchor', 'start')
+        .attr('dy', '.32em')
+        .attr('dx', '12')
+
+
+    toggle_names = ()->
+        if g_names.classed("show_names")
+            g_names.attr("class","")
+            toggle_g_names()
+        else
+            g_names.attr("class","show_names")
+            toggle_g_names()
+
+    toggle_g_names = ()->
+        if g_names.classed("show_names")
+            names.attr("display", "inline")
+            g_names.select("circle").attr("fill","black")
+            # g_names.select("text").text(" Hide names")
+        else
+            names.attr("display", "none")
+            g_names.select("circle").attr("fill","white")
+            g_names.select("text").text("Show names")
+
+    toggle_g_names()
+
+    if color_scale.range().length > 1
+        g_color_legend = sidebar.selectAll(".key")
+            .data(color_scale.domain().reverse())
+          .enter().append("g")
+            .attr(
+                  "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 50})"
+                  "class": "key")
+
+        g_color_legend.append("circle")
+            .attr(
+                "r": radius
+                "fill": color_scale)
+
+        # legend_names = get_legend_names_param(opts)
+        g_color_legend.append("text")
+            .attr(
+                "x": radius + 10
+                "y": 0
+                "dy": ".35em")
+            .text((d) -> d)
+            # ).text((d,i) -> legend_names[i])
+
+    $(".circle_tooltip").tooltip
+        html: true
+        container: "body"
+        placement: "top"
+
+    d3.select(window).on("keydown", () ->
+        # switch (d3.event.keyCode) {
+          # case : year = Math.max(year0, year - 10); break;
+          # case 39: year = Math.min(year1, year + 10); break;
+        # }
+        # console.log(d3.event.keyCode)
+        if (d3.event.keyCode in [78, 32]) # 'n' or 'space bar'
+            change()
+    )
+    ```
+    </script>
+  </body>
+</html>

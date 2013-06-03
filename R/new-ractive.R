@@ -13,13 +13,6 @@ original_url:
 
 demo: |-
 
-data_names:
-    required:
-
-    optional:
-
-params:
-
 scripts:
 
 styles:

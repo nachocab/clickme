@@ -1,19 +1,20 @@
-get_nested_lines <- function(data, x, data_colnames, params){
-    data <- lapply(1:nrow(data), function(index){
+format_lines_data <- function(data, x, data_colnames, params){
+    formatted_data <- lapply(1:nrow(data), function(index){
         df <- data.frame(x = x, y = as.numeric(data[index, data_colnames]))
-        values <- lapply(split(df, rownames(df)), as.list)
-        names(values) <-  NULL
-        if (is.null(data$colorize[index])){
-            list(line_name = params$line_names[index], values = values)
+        values <- unname(lapply(split(df, rownames(df)), as.list))
+        if (is.null(params$colorize)){
+            # you had a bug here: params$line_names instead of rownames(data), make sure you test it
+            list(line_name = rownames(data)[index], values = values)
         } else {
-            list(line_name = params$line_names[index], values = values, colorize = data$colorize[index])
+            list(line_name = rownames(data)[index], values = values, colorize = data$colorize[index])
         }
     })
 
-    data
+    formatted_data
 }
 
-undo_nested_lines <- function(data){
+# you can probably get rid of this function and just do list(formatted = formatted_data, unformatted = data)
+unformat_lines_data <- function(data){
     df <- t(sapply(data, function(data){
         sapply(data$values, "[[", "y")
     }))
@@ -54,9 +55,8 @@ get_lines_data <- function(data, x, params){
         data <- reorder_data_by_color(data, params)
     }
 
-    data <- apply_limits(data, params)
-
-    data <- get_nested_lines(data, x, data_colnames, params)
+    # data <- apply_limits(data, params)
+    data <- format_lines_data(data, x, data_colnames, params)
 
     data
 }
@@ -89,7 +89,7 @@ validate_lines_params <- function(params) {
 #' @param title title of the plot
 #' @param main same as title, kept to be compatible with \code{base::plot}
 #' @param xlab,ylab x- and y-axis labels
-#' @param xlim,ylim x- and y-axis limits
+#' @param xlim,ylim x- and y-axis limits [to implement]
 #' @param width,height width and height of the plot
 #' @param radius the radius of the points
 #' @param palette color palette. Quantitative scales expect a vector with a start color, and an end color (optionally, a middle color may be provided between both). Categorical scales expect a vector with a color for each category. Use category names to change the default color assignment \code{c(category1="color1", category2="color2")}. The order in which these colors are specified determines rendering order when points from different categories collide (colors specified first appear on top of later ones). Colors can be a variety of formats:
@@ -100,6 +100,7 @@ validate_lines_params <- function(params) {
 #' CSS named - "red", "white", "blue" (see http://www.w3.org/TR/SVG/types.html#ColorKeywords)
 #' @param colorize a vector whose values are used to determine the color of the points. If it is a numeric vector, it will assume the scale is quantitative and it will generate a gradient using the start and end colors of the palette (also with the middle color, if it is provided). If it is a character vector, a logical vector, or a factor, it will generate a categorical scale with one color per unique value (or level).
 #' @param color_domain [to implement] a vector with a start and end value (an optionally a middle value between them). It is only used for quantitative scales. Useful when the scale is continuous and, for example, we want to ensure it is symmetric in negative and positive values.
+#' @param box Draws a box around the plot if TRUE.
 #' @param order order of categories (overrides the implicit order of names in palette)
 #' @param padding padding around the top-level object
 #' @param ... additional arguments for \code{clickme}
@@ -111,10 +112,11 @@ clickme_lines <- function(data, x = colnames(data),
                       interpolate = "linear",
                       title = "Lines", main = NULL,
                       xlab = NULL, ylab = NULL,
-                      xlim = NULL, ylim = NULL,
+                      # xlim = NULL, ylim = NULL,
                       width = 980, height = 980,
-                      palette = NULL, colorize = NULL, color_domain = NULL, order = NULL,
-                      padding = list(top = 80, right = 150, bottom = 30, left = 100),
+                      box = NULL,
+                      palette = NULL, colorize = NULL, color_domain = NULL, color_order = NULL,
+                      padding = list(top = 80, right = 200, bottom = 30, left = 100),
                       ...){
     params <- as.list(environment())
     params <- validate_lines_params(params)

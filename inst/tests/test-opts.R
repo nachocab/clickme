@@ -7,7 +7,7 @@ test_that("the ractive folder must exist", {
 })
 
 test_that("the template_config file must exist", {
-    fake_ractive_path <- file.path(system.file("examples", package = "clickme"), "fake_ractive")
+    fake_ractive_path <- file.path(system.file("ractives", package = "clickme"), "fake_ractive")
     dir.create(fake_ractive_path)
 
     expect_error(get_opts("fake_ractive", data_prefix = "data"), "No template configuration file found")
@@ -15,7 +15,7 @@ test_that("the template_config file must exist", {
     unlink(fake_ractive_path, recursive = TRUE)
 })
 
-suppressMessages(set_root_path(system.file("examples", package="clickme")))
+suppressMessages(set_root_path(system.file("ractives", package="clickme")))
 
 test_that("add ractive options", {
     opts <- add_ractive_opts("force_directed")

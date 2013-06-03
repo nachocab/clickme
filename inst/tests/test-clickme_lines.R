@@ -18,12 +18,11 @@ test_that("validate lines params", {
 test_that("undo nested list", {
     df <- data.frame(x1=c(1,2,3), x2= c(4,5,6), row.names = c("a","b","c"))
     data <- get_lines_data(df, colnames(df), list(line_names = rownames(df)))
-    data_df <- undo_nested_lines(data)
+    data_df <- unformat_data(data)
     expect_equal(data_df, df)
 })
 
 test_that("reads the correct data input", {
-
     # data is a vector
     data <- get_lines_data(2:6, 2:6, list(line_names = "1"))
     expect_equal(toJSON(data), "[{\"line_name\":\"1\",\"values\":[{\"x\":2,\"y\":2},{\"x\":3,\"y\":3},{\"x\":4,\"y\":4},{\"x\":5,\"y\":5},{\"x\":6,\"y\":6}]}]")

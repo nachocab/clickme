@@ -1,0 +1,24 @@
+info: |-
+
+original_url:
+
+demo: |-
+
+scripts:
+    - d3.v3.js
+    - d3_aux.js
+    - jquery.min.js
+    - bootstrap-tooltip.v2_3.js
+
+styles:
+    - bootstrap-tooltip.css
+    - main.css
+
+require_packages:
+    - df2json
+
+require_server: no
+
+require_coffeescript: no
+
+

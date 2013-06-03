@@ -1,6 +1,6 @@
 context("validate_ractive")
 
-suppressMessages(set_root_path(system.file("examples", package="clickme")))
+suppressMessages(set_root_path(system.file("ractives", package="clickme")))
 
 test_that("ractive is valid", {
     ractive <- "force_directed"
@@ -24,7 +24,7 @@ test_that("ractive is valid", {
 })
 
 # test_that("required packages require user confirmation before they are installed", {
-#     set_root_path(system.file("examples", package="clickme"))
+#     set_root_path(system.file("ractives", package="clickme"))
 #     ractive <- "par_coords"
 #     opts <- get_opts(ractive, data_prefix = "data")
 

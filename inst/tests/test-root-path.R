@@ -11,7 +11,7 @@ test_that("root path can be preset in .Rprofile", {
 test_that("default root path is used if not present in .Rprofile", {
     .clickme_env$root_path <- NULL
     options("clickme_root_path" = NULL)
-    default_path <- system.file("examples", package="clickme")
+    default_path <- system.file("ractives", package="clickme")
     expect_equal(default_path, get_root_path())
 })
 
@@ -27,7 +27,7 @@ test_that("root path can be changed", {
     options("clickme_root_path" = system.file("tests", package="clickme"))
     expect_equal(getOption("clickme_root_path"), get_root_path())
 
-    path <- system.file("examples", package="clickme")
+    path <- system.file("ractives", package="clickme")
     set_root_path(path)
     expect_equal(path, get_root_path())
 })

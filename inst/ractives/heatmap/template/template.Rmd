@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>{{ opts$params$title }}</title>
+
+    {{ get_external(opts) }}
+
+  </head>
+
+  <body>
+    <script type="text/javascript">
+    ```{r engine="coffee", results="asis", echo = FALSE }
+
+    decimal_format = d3.format(".2f")
+
+    data = {{ get_data_as_json(opts) }}
+    color_scale = {{ get_d3_color_scale(opts) }}
+    cell_width = {{ opts$params$cell_width }}
+    cell_height = {{ opts$params$cell_height }}
+
+    row_names = {{ get_row_names_param(opts) }}
+
+    plot = append_plot(
+        width: 2000
+        height: 2000
+        padding: {{ get_padding_param(opts) }}
+        title: "{{ opts$params$title }}"
+        xlab: "{{ opts$params$xlab }}"
+        ylab: "{{ opts$params$ylab }}"
+    )
+
+    plot.scales.col_group = {{ get_d3_col_group_scale(opts) }}
+
+
+    # plot.scales.x = {{ get_d3_x_scale(opts) }}
+    # plot.scales.x = add_scale_padding(plot.scales.x)
+
+    # plot.scales.y = {{ get_d3_y_scale(opts) }}
+    # plot.scales.y = add_scale_padding(plot.scales.y)
+
+    # add col groups
+    g_col_group = plot.selectAll(".col_group")
+        .data(data)
+      .enter().append("g")
+        .attr("transform", (d, i) -> "translate(#{plot.scales.col_group(i)},0)")
+        .attr("class", "col_group")
+    if (data.length > 1)
+        # add col group names
+        g_col_group_names = g_col_group.append("text")
+            .attr(
+                "x": 5*cell_width/2
+                "y": "-2em"
+                "text-anchor": "middle"
+                "class": "col_group_name"
+            ).text((d) -> d.col_group_name)
+
+    # add col names
+    g_col_group.selectAll(".col_name")
+        .data((d) -> d.col_names)
+      .enter().append("text")
+        .attr(
+              "class": "col_name"
+              "x": (d,i) -> cell_width * i
+              "y": 6
+              "dy": "-.5em"
+              "dx": ".5em"
+              "text-anchor": "middle"
+        ).text((d) -> d)
+
+    get_row = (row) ->
+        cell = d3.select(@).selectAll(".cell")
+            .data(row.row_values)
+          .enter().append("rect")
+            .attr("class", "cell")
+            .attr("x", (d,i) -> cell_width*i)
+            .attr("width", cell_width)
+            .attr("height", cell_height)
+            .attr("title", (d) -> d.cell_value)
+            .style("fill", (d) -> color_scale(d.cell_value))
+
+    # Add rows
+    g_rows = g_col_group.selectAll(".row")
+        .data((d) -> d.col_values)
+      .enter().append("g")
+        .attr("class", "row")
+        .attr("transform", (d, i) -> "translate(0,#{cell_height*i})" )
+        .each(get_row)
+        # .attr("row-id", (d,i) -> @model.rowIds[i])
+        # .attr("cluster", (d,i) -> @model.clusters[i])
+
+
+    # Add row names
+    g_col_group.selectAll(".row_name")
+        .data(()-> row_names)
+      .enter().append("text")
+        .attr("x", -20) #  + @calculate_right_margin()
+        .attr("y", (d,i) -> cell_height*i)
+        .attr("dy", "1em")
+        .attr("class", "row_name")
+        .attr("text-anchor", "start") # left aligned
+        .text((d) -> d)
+
+    ```
+    </script>
+  </body>
+</html>

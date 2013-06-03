@@ -419,7 +419,7 @@ show_ractive <- function(ractive, fields = NULL){
     cat("\n")
 }
 
-#' Run ractive examples
+#' Run a ractive demo
 #'
 #' @param ractive name of ractive
 #' @export

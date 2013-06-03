@@ -1,17 +1,15 @@
 context("clickme_points")
 
-suppressMessages(set_root_path(system.file("examples", package="clickme")))
+suppressMessages(set_root_path(system.file("ractives", package="clickme")))
 
 test_that("reads the correct data input", {
 
-    params <- list()
-
     # x is a vector, no y
-    data <- get_points_data(1:10, NULL, params)
+    data <- get_points_data(1:10, NULL, list(point_names = as.character(1:10)))
     expect_equal(data, data.frame(x = 1:10, y = 1:10, point_name = as.character(1:10)))
 
     # x is a vector, y is a vector
-    data <- get_points_data(2:4, 5:7, params)
+    data <- get_points_data(2:4, 5:7, list(point_names = as.character(1:3)))
     expect_equal(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
 
     # x is a data frame (x, y, row names)
@@ -31,12 +29,11 @@ test_that("reads the correct data input", {
     expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
 
     # x is a list (x, y, no names, uneven-size element)
-    data <- get_points_data(list(x = 2:4, y = 5:7, extra = 1:10), NULL, params)
+    data <- get_points_data(list(x = 2:4, y = 5:7, extra = 1:10), NULL, list(point_names = as.character(1:3)))
     expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
 
     data <- list(x = 2:4, y = 5:7, extra = c("a", "b", "b"))
-    params$colorize <- data$extra
-    data <- get_points_data(data, NULL, params)
+    data <- get_points_data(data, NULL, list(point_names = as.character(1:3), colorize = data$extra))
     expect_true(!is.null(data$colorize)) # we test this in more detail later
 
 })

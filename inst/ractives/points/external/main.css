@@ -1,0 +1,26 @@
+.axis line, .axis path{
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+    stroke-width: 2;
+}
+
+.axis text{
+    font-size: 18px;
+}
+
+.label.y, .label.x {
+    font-size: 24px;
+}
+
+.key {
+    font-size: 20px;
+}
+
+.title{
+    font-size: 30px;
+}
+
+text {
+    font-family: "Arial";
+}

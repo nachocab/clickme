@@ -1,6 +1,6 @@
 context("new_ractive")
 
-suppressMessages(set_root_path(system.file("examples", package="clickme")))
+suppressMessages(set_root_path(system.file("ractives", package="clickme")))
 ractive <- "tmp_ractive"
 
 test_that("doesn't overwrite an existing ractive, unless specified", {
