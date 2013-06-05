@@ -3,6 +3,8 @@ info: |-
 original_url:
 
 demo: |-
+    clickme_heatmap(matrix(rnorm(700), ncol = 10), row_names = paste("row", 1:70))
+    clickme_heatmap(matrix(rnorm(600), ncol = 20), row_names = paste("row", 1:30), col_groups = c(rep("First group", 10), rep("Second group",10)))
 
 scripts:
     - d3.v3.js

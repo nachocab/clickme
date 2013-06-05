@@ -3,6 +3,8 @@ info: |-
 original_url:
 
 demo: |-
+    clickme_lines(mat(nrow=5,ncol=5), colorize = c("a","a","b","b","a"))
+    clickme_lines(mat(nrow=5,ncol=5), colorize = c("a","a","b","b","a"), interpolate = "basis")
 
 scripts:
     - d3.v3.js

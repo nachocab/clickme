@@ -24,15 +24,15 @@ library(clickme)
 list_ractives()
 
 # Pick a few and try them
-demo_ractive("force_directed")
+demo_ractive("points") # try zooming in and out, click the Show names button, hover over points
 
-demo_ractive("line_with_focus")
+demo_ractive("heatmap") # hover over cells
 
-demo_ractive("longitudinal_heatmap")
+demo_ractive("lines") # click the Show names button
 
-demo_ractive("par_coords")
+demo_ractive("force_directed") # drag the nodes around
 
-demo_ractive("vega")
+demo_ractive("par_coords") # click and drag up and down each axes, drag the axes horizontally (you need to run a local server for this one)
 ```
 
 Your browser will open a new tab for each example. The first one should look something like [this](http://bl.ocks.org/nachocab/5178583).
