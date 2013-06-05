@@ -27,8 +27,8 @@ clickme <- function(data, ractive, params = NULL, open = TRUE, ...){
     aux_get_opts <- function(..., open) { get_opts(...) }
     opts <- aux_get_opts(ractive, params, ...)
 
+    separator <- paste0(rep("=", 70, collapse = ""))
     if (opts$template_config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {
-        separator <- paste0(rep("=", 70, collapse = ""))
         message(separator)
         message(paste0("If you don't have a server running in your Clickme root path, open a new ", ifelse(.Platform$OS.type == "unix", "terminal", "Command Prompt"), " and type:"))
         message("cd \"", get_root_path(), "\"\npython -m SimpleHTTPServer")

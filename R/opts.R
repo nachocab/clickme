@@ -57,7 +57,7 @@ add_params <- function(opts, user_params) {
 get_opts <- function(ractive, params = NULL, name_mappings = NULL, data_prefix = "data", html_file_name = NULL, port = 8000){
     opts <- add_ractive_opts(ractive)
 
-    if (!file.exists(opts$path$ractive)) stop("No ractive named ", ractive, " found at:", get_root_path())
+    if (!file.exists(opts$path$ractive)) stop("No ractive named ", ractive, " found at: ", get_root_path())
     if (!file.exists(opts$path$template_config_file)) stop("No template configuration file found at:", opts$path$template_config_file)
 
     opts$template_config <- yaml.load_file(opts$path$template_config_file)

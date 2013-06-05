@@ -1,0 +1,21 @@
+path.link {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+}
+
+text.shadow {
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-opacity: .8;
+}

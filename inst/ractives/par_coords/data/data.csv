@@ -1,0 +1,90 @@
+"name","economy","cylinders","displacement","power","weight","zero_to_sixty_mph","year"
+"AMC Ambassador Brougham",13,8,360,175,3821,11,73
+"AMC Ambassador DPL",15,8,390,190,3850,8.5,70
+"AMC Ambassador SST",17,8,304,150,3672,11.5,72
+"AMC Concord DL 6",20.2,6,232,90,3265,18.2,79
+"AMC Concord DL",18.1,6,258,120,3410,15.1,78
+"AMC Concord DL",23,4,151,NA,3035,20.5,82
+"AMC Concord",19.4,6,232,90,3210,17.2,78
+"AMC Concord",24.3,4,151,90,3003,20.1,80
+"AMC Gremlin",18,6,232,100,2789,15,73
+"AMC Gremlin",19,6,232,100,2634,13,71
+"AMC Gremlin",20,6,232,100,2914,16,75
+"AMC Gremlin",21,6,199,90,2648,15,70
+"AMC Hornet Sportabout (Wagon)",18,6,258,110,2962,13.5,71
+"AMC Hornet",18,6,199,97,2774,15.5,70
+"AMC Hornet",18,6,232,100,2945,16,73
+"AMC Hornet",19,6,232,100,2901,16,74
+"AMC Hornet",22.5,6,232,90,3085,17.6,76
+"AMC Matador (Wagon)",14,8,304,150,4257,15.5,74
+"AMC Matador (Wagon)",15,8,304,150,3892,12.5,72
+"AMC Matador",14,8,304,150,3672,11.5,73
+"AMC Matador",15,6,258,110,3730,19,75
+"AMC Matador",15.5,8,304,120,3962,13.9,76
+"AMC Matador",16,6,258,110,3632,18,74
+"AMC Matador",18,6,232,100,3288,15.5,71
+"AMC Pacer D/L",17.5,6,258,95,3193,17.8,76
+"AMC Pacer",19,6,232,90,3211,17,75
+"AMC Rebel SST",16,8,304,150,3433,12,70
+"AMC Spirit DL",27.4,4,121,80,2670,15,79
+"Audi 100 LS",20,4,114,91,2582,14,73
+"Audi 100 LS",23,4,115,95,2694,15,75
+"Audi 100 LS",24,4,107,90,2430,14.5,70
+"Audi 4000",34.3,4,97,78,2188,15.8,80
+"Audi 5000",20.3,5,131,103,2830,15.9,78
+"Audi 5000S (Diesel)",36.4,5,121,67,2950,19.9,80
+"Audi Fox",29,4,98,83,2219,16.5,74
+"BMW 2002",26,4,121,113,2234,12.5,70
+"BMW 320i",21.5,4,121,110,2600,12.8,77
+"Buick Century 350",13,8,350,175,4100,13,73
+"Buick Century Limited",25,6,181,110,2945,16.4,82
+"Buick Century Luxus (Wagon)",13,8,350,150,4699,14.5,74
+"Buick Century Special",20.6,6,231,105,3380,15.8,78
+"Buick Century",17,6,231,110,3907,21,75
+"Buick Century",22.4,6,231,110,3415,15.8,81
+"Buick Electra 225 Custom",12,8,455,225,4951,11,73
+"Buick Estate Wagon (Wagon)",14,8,455,225,3086,10,70
+"Buick Estate Wagon (Wagon)",16.9,8,350,155,4360,14.9,79
+"Buick Lesabre Custom",13,8,350,155,4502,13.5,72
+"Buick Opel Isuzu Deluxe",30,4,111,80,2155,14.8,77
+"Buick Regal Sport Coupe (Turbo)",17.7,6,231,165,3445,13.4,78
+"Buick Skyhawk",21,6,231,110,3039,15,75
+"Buick Skylark 320",15,8,350,165,3693,11.5,70
+"Buick Skylark Limited",28.4,4,151,90,2670,16,79
+"Buick Skylark",20.5,6,231,105,3425,16.9,77
+"Buick Skylark",26.6,4,151,84,2635,16.4,81
+"Cadillac Eldorado",23,8,350,125,3900,17.4,79
+"Cadillac Seville",16.5,8,350,180,4380,12.1,76
+"Chevroelt Chevelle Malibu",16,6,250,105,3897,18.5,75
+"Chevrolet Bel Air",15,8,350,145,4440,14,75
+"Chevrolet Camaro",27,4,151,90,2950,17.3,82
+"Chevrolet Caprice Classic",13,8,400,150,4464,12,73
+"Chevrolet Caprice Classic",17,8,305,130,3840,15.4,79
+"Chevrolet Caprice Classic",17.5,8,305,145,3880,12.5,77
+"Chevrolet Cavalier 2-Door",34,4,112,88,2395,18,82
+"Chevrolet Cavalier Wagon",27,4,112,88,2640,18.6,82
+"Chevrolet Cavalier",28,4,112,88,2605,19.6,82
+"Chevrolet Chevelle Concours (Wagon)",13,8,307,130,4098,14,72
+"Chevrolet Chevelle Malibu Classic",16,6,250,100,3781,17,74
+"Chevrolet Chevelle Malibu Classic",17.5,8,305,140,4215,13,76
+"Chevrolet Chevelle Malibu",17,6,250,100,3329,15.5,71
+"Chevrolet Chevelle Malibu",18,8,307,130,3504,12,70
+"Chevrolet Chevette",29,4,85,52,2035,22.2,76
+"Chevrolet Chevette",30,4,98,68,2155,16.5,78
+"Chevrolet Chevette",30.5,4,98,63,2051,17,77
+"Chevrolet Chevette",32.1,4,98,70,2120,15.5,80
+"Chevrolet Citation",23.5,6,173,110,2725,12.6,81
+"Chevrolet Citation",28,4,151,90,2678,16.5,80
+"Chevrolet Citation",28.8,6,173,115,2595,11.3,79
+"Chevrolet Concours",17.5,6,250,110,3520,16.4,77
+"Chevrolet Impala",11,8,400,150,4997,14,73
+"Chevrolet Impala",13,8,350,165,4274,12,72
+"Chevrolet Impala",14,8,350,165,4209,12,71
+"Chevrolet Impala",14,8,454,220,4354,9,70
+"Chevrolet Malibu Classic (Wagon)",19.2,8,267,125,3605,15,79
+"Chevrolet Malibu",13,8,350,145,3988,13,73
+"Chevrolet Malibu",20.5,6,200,95,3155,18.2,78
+"Chevrolet Monte Carlo Landau",15.5,8,350,170,4165,11.4,77
+"Chevrolet Monte Carlo Landau",19.2,8,305,145,3425,13.2,78
+"Chevrolet Monte Carlo S",15,8,350,145,4082,13,73
+"Chevrolet Monte Carlo",15,8,400,150,3761,9.5,70

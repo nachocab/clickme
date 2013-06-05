@@ -1,0 +1,36 @@
+info: |-
+    Show a graph with directed connections. The nodes are movable.
+
+    "source" is the beginning of the arrow
+    "target" is the end of the arrow
+    "type" is the type of arrow (color)
+
+original_url: http://bl.ocks.org/mbostock/1153292
+
+demo: |-
+    items <- paste0("GENE_", 1:40)
+    n <- 30
+    network <- data.frame(source = sample(items, n, replace = TRUE), target = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace=TRUE))
+    clickme(network, "force_directed")
+
+data_names:
+    required:
+        - "source"
+        - "target"
+        - "type"
+    optional:
+
+params:
+    title: "Force directed"
+    width: 800
+    height: 800
+
+scripts:
+    - d3.v3.js
+
+styles:
+    - main.css
+
+require_packages:
+
+require_server: no
