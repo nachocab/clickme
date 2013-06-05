@@ -1,7 +1,7 @@
 Package: clickme
 Maintainer: Nacho Caballero <nachocab@gmail.com>
 Author: Nacho Caballero <nachocab@gmail.com>
-Version: 0.2.0
+Version: 0.3.0
 License: GPL-3
 Title: Straight from R to JS: Render JavaScript visualizations using R objects.
 Description: R has powerful data processing abilities, but it can only generate
@@ -11,13 +11,15 @@ Description: R has powerful data processing abilities, but it can only generate
 Imports:
     knitr,
     yaml (>= 2.1.7),
-    stringr
+    stringr,
+    rjson
 Suggests:
     testthat,
     stringr,
     roxygen2
 Collate:
     'utils.R'
+    'json.R'
     'opts.R'
     'root-path.R'
     'clickme_points.R'

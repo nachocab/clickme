@@ -1,3 +1,7 @@
+get_colorize_counts <- function(opts){
+    toJSON(table(opts$data$colorize))
+}
+
 get_xlim_param <- function(opts) {
     if (is.null(opts$params$xlim)){
         opts$params$xlim <- range(opts$data$x)
@@ -56,7 +60,6 @@ get_d3_color_scale <- function(opts) {
 }
 
 get_data_as_json <- function(opts) {
-    library(df2json)
     json_data <- df2json(opts$data)
 
     json_data

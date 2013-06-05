@@ -22,5 +22,13 @@
 }
 
 text {
-    font-family: "Rockwell";
+    font-family: Rockwell, Helvetica, Arial, sans;
+}
+
+.code {
+    float:left;
+    width: 1024px;
+    padding: 20px;
+    font-family: Monaco, Courier, monospace;
+    background: #eeeeee;
 }

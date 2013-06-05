@@ -31,6 +31,7 @@
 
     main.width = opts.width
     main.height = opts.height
+    main.svg = opts.selector
     main
 
 @append_container = (opts = {})->

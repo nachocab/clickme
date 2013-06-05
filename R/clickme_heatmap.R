@@ -1,3 +1,5 @@
+# The heatmap data structure is not as straightforward as the points data structure because it has overlapping definitions: col_g[col_gn, col_n, col_v[rv[cv], rgn]]
+
 get_col_values <- function(data, data_col_names, params){
     col_values <- unname(apply(data, 1, function(row){
         row_values <- lapply(1:length(row), function(row_index){
@@ -8,7 +10,7 @@ get_col_values <- function(data, data_col_names, params){
         if (is.null(params$row_groups)){
             list(row_values = row_values)
         } else {
-            list(row_values = row_values, row_group = params$row_groups[row_index])
+            list(row_values = row_values, row_group_names = params$row_groups)
         }
     }))
 
@@ -91,7 +93,8 @@ validate_heatmap_params <- function(params) {
 #' @param col_names column names
 #' @param title title of the plot
 #' @param main same as title, kept to be compatible with \code{base::plot}
-#' @param width,height width and height of the plot
+#' @param cell_width,cell_height width and height of a cell
+#' @param row_groups,col_groups row and column groups
 #' @param palette color palette. A vector with a start color, and an end color (optionally, a middle color may be provided between both). The default palette is red, white, and blue. Colors can be a variety of formats:
 #' rgb decimal - "rgb(255,255,255)"
 #' hsl decimal - "hsl(120,50%,20%)"
@@ -102,9 +105,13 @@ validate_heatmap_params <- function(params) {
 #' @param padding padding around the top-level object
 #' @param ... additional arguments for \code{clickme}
 #'
+#' @examples
+#' clickme_heatmap(matrix(rnorm(700), ncol = 10), row_names = paste("row", 1:70))
+#'
 #' @export
 clickme_heatmap <- function(data,
                             row_names = rownames(data), col_names = colnames(data),
+                            show_names = TRUE, show_row_names = show_names, show_col_names = show_names, # TODO document
                             title = NULL, main = NULL,
                             cell_width = 20, cell_height = cell_width,
                             row_groups = NULL, col_groups = NULL,
@@ -113,6 +120,7 @@ clickme_heatmap <- function(data,
                             ...){
     params <- as.list(environment())
     params <- validate_heatmap_params(params)
+    params$code <- paste(deparse(sys.calls()[[1]]), collapse="")
     data <- get_heatmap_data(data, params)
 
     clickme(data, "heatmap", params = params, ...)

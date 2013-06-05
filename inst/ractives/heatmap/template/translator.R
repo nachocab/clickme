@@ -20,13 +20,8 @@ get_palette_param <- function(opts){
 }
 
 get_d3_color_scale <- function(opts){
-    color_scale <- gettextf("d3.scale.linear().domain(%s).range(%s)", get_color_domain_params(opts), get_palette_param(opts))
+    color_scale <- gettextf("d3.scale.linear().domain(%s).range(%s)", get_color_domain_param(opts), get_palette_param(opts))
     color_scale
-}
-
-get_d3_col_group_scale <- function(opts){
-    scale <- gettextf("d3.scale.ordinal().domain(d3.range(%d)).rangeBands([0, plot.width])", max(1,length(opts$params$col_groups)))
-    scale
 }
 
 get_d3_x_scale <- function(opts){

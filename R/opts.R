@@ -14,7 +14,7 @@ add_ractive_opts <- function(ractive) {
     opts$name$translator_test_file <- "test-translator.R"
 
     # folder absolute paths
-    # PONDER: ractive is directly below the root path, maybe in the future we can allow nested paths for ractives (although, simple is better)
+    # TODO: ponder: ractive is directly below the root path, maybe in the future we can allow nested paths for ractives (although, simple is better)
     opts$path$ractive <- file.path(get_root_path(), opts$name$ractive)
     opts$path$data <- file.path(opts$path$ractive, opts$name$data)
     opts$path$template <- file.path(opts$path$ractive, opts$name$template)
@@ -29,6 +29,17 @@ add_ractive_opts <- function(ractive) {
     # paths relative to opts$path$ractive
     opts$relative_path$data <- file.path(opts$name$ractive, opts$name$data)
     opts$relative_path$external <- file.path(opts$name$ractive, opts$name$external)
+
+    opts
+}
+
+add_params <- function(opts, user_params) {
+    opts$params <- opts$template_config$params
+    valid_param_names <- names(opts$template_config$params)
+
+    for (param in names(user_params)){
+        opts$params[[param]] <- user_params[[param]]
+    }
 
     opts
 }
@@ -52,8 +63,8 @@ get_opts <- function(ractive, params = NULL, name_mappings = NULL, data_prefix =
     opts$template_config <- yaml.load_file(opts$path$template_config_file)
     opts <- validate_ractive(opts)
 
-    opts$params <- params
-    opts$name_mappings <- name_mappings # TODO: delete this
+    opts <- add_params(opts, params)
+    opts$name_mappings <- name_mappings
 
     opts$data_prefix <- data_prefix %||% basename(tempfile("data"))
     opts$name$html_file <- html_file_name %||% paste0(opts$data_prefix, "-", opts$name$ractive, ".html")

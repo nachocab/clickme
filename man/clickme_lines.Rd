@@ -1,25 +1,30 @@
-\name{clickme_points}
-\alias{clickme_points}
-\title{Generates an interactive scatterplot}
+\name{clickme_lines}
+\alias{clickme_lines}
+\title{Generates an interactive line plot}
 \usage{
-  clickme_points(x, y = NULL, point_names = rownames(x),
-    title = "Points", main = NULL, xlab = NULL,
-    ylab = NULL, xlim = NULL, ylim = NULL, width = 980,
-    height = 980, radius = 5, box = NULL, palette = NULL,
-    colorize = NULL, color_domain = NULL,
-    colorize_title = NULL,
+  clickme_lines(data, x = colnames(data),
+    line_names = rownames(data), lwd = 3,
+    interpolate = "linear", title = "Lines", main = NULL,
+    xlab = NULL, ylab = NULL, width = 980, height = 980,
+    box = NULL, palette = NULL, colorize = NULL,
+    color_domain = NULL, colorize_title = NULL,
     padding = list(top = 80, right = 200, bottom = 30, left = 100),
     ...)
 }
 \arguments{
-  \item{x}{x-values, but only if the "y" param is
-  specified, otherwise it represents the y-values. It can
-  be a dataframe, a matrix, a vector, a list, or a factor
-  (TODO test this).}
+  \item{data}{matrix, data frame, or vector specifying
+  y-values. A line is defined by the values of one row.}
 
-  \item{y}{y-values (optional)}
+  \item{x}{x-values (optional). If specified by a numeric
+  vector, it is used to set the tick values.}
 
-  \item{point_names}{point names}
+  \item{line_names}{line names}
+
+  \item{lwd}{line width}
+
+  \item{interpolate}{interpolation mode. Values linear
+  (default), basis, cardinal and more:
+  https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate}
 
   \item{title}{title of the plot}
 
@@ -28,13 +33,9 @@
 
   \item{xlab,ylab}{x- and y-axis labels}
 
-  \item{xlim,ylim}{x- and y-axis limits}
-
   \item{width,height}{width and height of the plot}
 
-  \item{radius}{the radius of the points}
-
-  \item{box}{draws a box around the plot}
+  \item{box}{draw a box around the plot}
 
   \item{palette}{color palette. Quantitative scales expect
   a vector with a start color, and an end color
@@ -74,6 +75,6 @@
   \item{...}{additional arguments for \code{clickme}}
 }
 \description{
-  Generates an interactive scatterplot
+  Generates an interactive line plot
 }
 

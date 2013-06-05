@@ -11,11 +11,10 @@ scripts:
     - bootstrap-tooltip.v2_3.js
 
 styles:
+    - clickme.css
     - bootstrap-tooltip.css
-    - main.css
 
 require_packages:
-    - df2json
 
 require_server: no
 

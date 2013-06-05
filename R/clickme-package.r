@@ -9,3 +9,4 @@
 NULL
 
 .clickme_env <- new.env()
+options(stringsAsFactors = FALSE)

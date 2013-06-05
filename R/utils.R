@@ -25,27 +25,7 @@ validate_colorize <- function(params) {
     }
 }
 
-#' Returns row names from objects that don't have rows
-#'
-#' @param data input data. It can be a vector, a list, or a matrix.
-#'
-#' @export
-get_row_names <- function(data) {
-    if (is.matrix(data)){
-        row_names <- as.character(1:nrow(data))
-    } else if (is.list(data)){
-        if (is.null(names(data))){
-            row_names <- as.character(1:length(data))
-        } else {
-            row_names <- names(data)
-        }
-    } else {
-        # TODO: what if it is a factor? if as.character(factor) is not unique, stop("not unique values: ")
-        row_names <- as.character(1:length(data))
-    }
 
-    row_names
-}
 #' Type of scale
 #'
 #' @param elements values
@@ -65,8 +45,8 @@ scale_type <- function(elements = NULL) {
 
 #' Reorder data by color
 #'
-#' @data data
-#' @param parameters
+#' @param data data
+#' @param params parameters
 #'
 #' It adds a colorize column and it uses it to reorder the data object. This ensures that rows are ordered in a way that elements with the first color in the palette are rendered on top
 #'
@@ -159,9 +139,6 @@ get_scripts <- function(opts) {
     scripts <- paste(sapply(opts$template_config$scripts, function(script_path){
         if (!grepl("^http", script_path)){
             script_path <- file.path(opts$relative_path$external, script_path)
-        }
-        if (!grepl("^shared/", script_path)){
-            script_path <- file.path(script_path)
         }
         paste0("<script src=\"", script_path, "\"></script>")
     }), collapse="\n")

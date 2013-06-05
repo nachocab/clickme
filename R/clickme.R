@@ -8,6 +8,8 @@ generate_visualization <- function(opts){
 #'
 #' @param data input data
 #' @param ractive template id, it must match a folder within \code{set_root_path}
+#' @param params parameters
+#' @param open open browser tab with the generated visualization.
 #' @param ... additional arguments for \code{get_opts}
 #' @export
 #' @examples
@@ -20,6 +22,8 @@ generate_visualization <- function(opts){
 #' df1 <- data.frame(source = sample(items, n, replace = TRUE), target = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace = TRUE))
 #' clickme(df1, "force_directed")
 clickme <- function(data, ractive, params = NULL, open = TRUE, ...){
+
+    # hack to avoid passing "open" to get_opts()
     aux_get_opts <- function(..., open) { get_opts(...) }
     opts <- aux_get_opts(ractive, params, ...)
 

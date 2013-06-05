@@ -1,6 +1,6 @@
 \name{demo_ractive}
 \alias{demo_ractive}
-\title{Run ractive examples}
+\title{Run a ractive demo}
 \usage{
   demo_ractive(ractive)
 }
@@ -8,6 +8,6 @@
   \item{ractive}{name of ractive}
 }
 \description{
-  Run ractive examples
+  Run a ractive demo
 }
 

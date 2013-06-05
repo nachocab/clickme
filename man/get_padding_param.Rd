@@ -3,7 +3,7 @@
 \title{Get padding around plot}
 \usage{
   get_padding_param(opts,
-    default = c(top = 10, right = 30, bottom = 30, left = 10))
+    default = c(top = 100, right = 100, bottom = 100, left = 100))
 }
 \arguments{
   \item{opts}{ractive options}

@@ -18,7 +18,6 @@ scripts:
 styles:
 
 require_packages:
-    - df2json
 
 require_server: no
 
@@ -27,7 +26,6 @@ require_coffeescript: no
 "
 
     translator_contents <- "get_data_as_json <- function(opts) {
-    library(df2json)
     data <- as.data.frame(opts$data, stringsAsFactors = FALSE)
     json_data <- df2json(data)
 

@@ -2,13 +2,18 @@
 \alias{clickme}
 \title{Generates a JavaScript visualization}
 \usage{
-  clickme(data, ractive, ...)
+  clickme(data, ractive, params = NULL, open = TRUE, ...)
 }
 \arguments{
   \item{data}{input data}
 
   \item{ractive}{template id, it must match a folder within
   \code{set_root_path}}
+
+  \item{params}{parameters}
+
+  \item{open}{open browser tab with the generated
+  visualization.}
 
   \item{...}{additional arguments for \code{get_opts}}
 }

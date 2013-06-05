@@ -41,6 +41,7 @@
     }
     main.width = opts.width;
     main.height = opts.height;
+    main.svg = opts.selector;
     return main;
   };
 

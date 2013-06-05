@@ -1,3 +1,7 @@
+get_colorize_counts <- function(opts){
+    toJSON(table(opts$data$unformatted$colorize))
+}
+
 get_x_tick_values <- function(opts) {
     if (!is.null(opts$params$x) & is.numeric(opts$params$x)){
         tick_values <- opts$params$x
@@ -10,7 +14,7 @@ get_x_tick_values <- function(opts) {
 
 get_d3_x_scale <- function(opts) {
     if (is.null(opts$params$x)){
-        x <- 1:ncol(unformat_lines_data(opts$data))
+        x <- 1:ncol(opts$data$unformatted)
     } else {
         x <- opts$params$x
     }
@@ -34,7 +38,11 @@ get_d3_x_scale <- function(opts) {
 }
 
 get_d3_y_scale <- function(opts) {
-    y <- unformat_lines_data(opts$data)
+    if (!is.null(opts$data$unformatted$colorize)){
+        y <- subset(opts$data$unformatted, select = -c(colorize))
+    } else {
+        y <- opts$data$unformatted
+    }
 
     if (!is.null(opts$params$ylim)){
         domain <- opts$params$ylim
@@ -51,8 +59,7 @@ get_d3_y_scale <- function(opts) {
 
 # only for quantitative scales
 get_color_domain_param <- function(opts){
-    colorize <- sapply(opts$data, "[[", "colorize")
-
+    colorize <- opts$data$unformatted$colorize
     # we don't do this in validate_lines_params because it depends on data$colorize, which is defined later, in get_lines_data().
     if (is.null(opts$params$color_domain)){
         opts$params$color_domain <- range(colorize, na.rm = TRUE)
@@ -63,7 +70,7 @@ get_color_domain_param <- function(opts){
 
 get_palette_param <- function(opts) {
     if (is.null(opts$params$palette)){
-        colorize <- sapply(opts$data, "[[", "colorize")
+        colorize <- opts$data$unformatted$colorize
         if (is.null(colorize) | length(unique(colorize)) == 1){
                 opts$params$palette <- c("#000")
         } else {
@@ -83,7 +90,7 @@ get_color_legend <- function(opts){
 }
 
 get_d3_color_scale <- function(opts) {
-    colorize <- sapply(opts$data, "[[", "colorize")
+    colorize <- opts$data$unformatted$colorize
     if (scale_type(colorize) == "quantitative") {
         color_scale <- paste0("d3.scale.linear()
                .domain(", get_color_domain_param(opts), ")
@@ -96,7 +103,7 @@ get_d3_color_scale <- function(opts) {
     color_scale
 }
 get_data_as_json <- function(opts) {
-    json_data <- toJSON(opts$data)
+    json_data <- toJSON(opts$data$formatted)
 
     json_data
 }
