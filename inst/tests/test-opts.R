@@ -3,7 +3,7 @@ library(yaml)
 context("opts")
 
 test_that("the ractive folder must exist", {
-    expect_error(get_opts("fake_ractive", data_prefix = "data"), "No ractive named fake_ractive found at")
+    expect_error(get_opts("fake_ractive"), "No ractive named fake_ractive found at")
 })
 
 test_that("the template_config file must exist", {

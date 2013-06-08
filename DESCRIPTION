@@ -9,7 +9,7 @@ Description: R has powerful data processing abilities, but it can only generate
     statically defined. Clickme bridges both worlds by making it easy to create
     interactive visualizations using data in R.
 Imports:
-    knitr,
+    knitr (>= 1.2),
     yaml (>= 2.1.7),
     stringr,
     rjson
