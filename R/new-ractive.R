@@ -7,7 +7,7 @@
 new_ractive <- function(ractive_name, overwrite = FALSE) {
     opts <- add_ractive_opts(ractive_name)
 
-    template_config_contents <- "info: |-
+            _contents <- "info: |-
 
 original_url:
 
@@ -51,7 +51,7 @@ test_that(\"input data is translated to the format expected by the template\", {
 })")
 
     if (overwrite){
-        unlink(file.path(get_root_path(), ractive_name), recursive = TRUE)
+        unlink(file.path(get_templates_path(), ractive_name), recursive = TRUE)
     } else {
         if (file.exists(opts$path$ractive)) stop("The ", opts$name$ractive, " ractive already exists: ", opts$path$ractive)
     }
@@ -64,13 +64,13 @@ test_that(\"input data is translated to the format expected by the template\", {
              })
 
     sapply(c(opts$path$template_file,
-             opts$path$template_config_file,
+             opts$path$config_file,
              opts$path$translator_test_file,
              opts$path$translator_file), function(path){
                 file.create(path)
              })
 
-    writeLines(template_config_contents, opts$path$template_config_file)
+    writeLines(config_contents, opts$path$config_file)
     writeLines(translator_contents, opts$path$translator_file)
     writeLines(translator_test_contents, opts$path$translator_test_file)
 

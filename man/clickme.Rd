@@ -9,7 +9,7 @@
   \item{data}{input data}
 
   \item{ractive}{template id, it must match a folder within
-  \code{set_root_path}}
+  \code{set_templates_path}}
 
   \item{params}{parameters}
 

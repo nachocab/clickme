@@ -9,20 +9,20 @@ add_ractive_opts <- function(ractive) {
 
     # file names
     opts$name$template_file <- "template.Rmd"
-    opts$name$template_config_file <- "template_config.yml"
+    opts$name$config_file <- "config.yml"
     opts$name$translator_file <- "translator.R"
     opts$name$translator_test_file <- "test-translator.R"
 
     # folder absolute paths
     # TODO: ponder: ractive is directly below the root path, maybe in the future we can allow nested paths for ractives (although, simple is better)
-    opts$path$ractive <- file.path(get_root_path(), opts$name$ractive)
+    opts$path$ractive <- file.path(get_templates_path(), opts$name$ractive)
     opts$path$data <- file.path(opts$path$ractive, opts$name$data)
     opts$path$template <- file.path(opts$path$ractive, opts$name$template)
     opts$path$external <- file.path(opts$path$ractive, opts$name$external)
 
     # file absolute paths
     opts$path$template_file <- file.path(opts$path$template, opts$name$template_file)
-    opts$path$template_config_file <- file.path(opts$path$template, opts$name$template_config_file)
+    opts$path$config_file <- file.path(opts$path$template, opts$name$config_file)
     opts$path$translator_file <- file.path(opts$path$template, opts$name$translator_file)
     opts$path$translator_test_file <- file.path(opts$path$template, opts$name$translator_test_file)
 
@@ -34,8 +34,8 @@ add_ractive_opts <- function(ractive) {
 }
 
 add_params <- function(opts, user_params) {
-    opts$params <- opts$template_config$params
-    valid_param_names <- names(opts$template_config$params)
+    opts$params <- opts$config$params
+    valid_param_names <- names(opts$config$params)
 
     for (param in names(user_params)){
         opts$params[[param]] <- user_params[[param]]
@@ -57,10 +57,10 @@ add_params <- function(opts, user_params) {
 get_opts <- function(ractive, params = NULL, name_mappings = NULL, data_prefix = "data", html_file_name = NULL, port = 8000){
     opts <- add_ractive_opts(ractive)
 
-    if (!file.exists(opts$path$ractive)) stop("No ractive named ", ractive, " found at: ", get_root_path())
-    if (!file.exists(opts$path$template_config_file)) stop("No template configuration file found at:", opts$path$template_config_file)
+    if (!file.exists(opts$path$ractive)) stop("No ractive named ", ractive, " found at: ", get_templates_path())
+    if (!file.exists(opts$path$config_file)) stop("No template configuration file found at:", opts$path$config_file)
 
-    opts$template_config <- yaml.load_file(opts$path$template_config_file)
+    opts$config <- yaml.load_file(opts$path$config_file)
     opts <- validate_ractive(opts)
 
     opts <- add_params(opts, params)
@@ -68,9 +68,9 @@ get_opts <- function(ractive, params = NULL, name_mappings = NULL, data_prefix =
 
     opts$data_prefix <- data_prefix %||% basename(tempfile("data"))
     opts$name$html_file <- html_file_name %||% paste0(opts$data_prefix, "-", opts$name$ractive, ".html")
-    opts$path$html_file <- file.path(get_root_path(), opts$name$html_file)
+    opts$path$html_file <- file.path(get_templates_path(), opts$name$html_file)
 
-    if (opts$template_config$require_server){
+    if (opts$config$require_server){
         opts$url <- paste0("http://localhost:", port, "/", opts$name$html_file)
     } else {
         opts$url <- opts$path$html_file

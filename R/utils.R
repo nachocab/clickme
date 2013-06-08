@@ -213,7 +213,7 @@ get_external <- function(opts){
 #' @param opts the options of the current template
 #' @export
 get_scripts <- function(opts) {
-    scripts <- paste(sapply(opts$template_config$scripts, function(script_path){
+    scripts <- paste(sapply(opts$config$scripts, function(script_path){
         if (!grepl("^http", script_path)){
             script_path <- file.path(opts$relative_path$external, script_path)
         }
@@ -228,7 +228,7 @@ get_scripts <- function(opts) {
 #' @param opts the options of the current template
 #' @export
 get_styles <- function(opts) {
-    styles <- paste(sapply(opts$template_config$styles, function(style_path){
+    styles <- paste(sapply(opts$config$styles, function(style_path){
         if (!grepl("^http", style_path)){
             style_path <- file.path(opts$relative_path$external, style_path)
         }
@@ -349,7 +349,7 @@ quote_escaped <- function(data) {
 #' @param path path where server is started
 #' @param port port used to start the server
 #' @export
-server <- function(path = get_root_path(), port = 8000){
+server <- function(path = get_templates_path(), port = 8000){
     system(paste0("cd ", path, "; python -m SimpleHTTPServer ", port))
     message("Server running at ", path)
 }
@@ -366,7 +366,7 @@ test_ractive <- test_translator <- function(ractive){
         source(opts$path$translator_file)
         test_file(opts$path$translator_test_file)
     } else {
-        stop(paste0("There is no test translator file at this location: ", opts$path$translator_test_file, "\nYou might have to create it or call set_root_path()"))
+        stop(paste0("There is no test translator file at this location: ", opts$path$translator_test_file, "\nYou might have to create it or call set_templates_path()"))
     }
 }
 
@@ -390,12 +390,12 @@ mat <- function(elements = NULL, num_elements = nrow*ncol, nrow = 5, ncol = 2, s
 #'
 #' @export
 list_ractives <- function() {
-    message("Available ractives at: ", get_root_path())
+    message("Available ractives at: ", get_templates_path())
     write(plain_list_ractives(), "")
 }
 
 plain_list_ractives <- function() {
-    basename(list.dirs(get_root_path(), recursive = F))
+    basename(list.dirs(get_templates_path(), recursive = F))
 }
 
 
@@ -435,13 +435,13 @@ open_all_demos <- function(){
 #' Get information about a ractive
 #'
 #' @param ractive ractive name
-#' @param fields any of the fields in template_config.yml
+#' @param fields any of the fields in config.yml
 #' @export
 show_ractive <- function(ractive, fields = NULL){
 
     opts <- get_opts(ractive)
 
-    fields <- fields %||% names(opts$template_config)
+    fields <- fields %||% names(opts$config)
 
     message("Ractive")
     cat(ractive, "\n\n")
@@ -449,23 +449,23 @@ show_ractive <- function(ractive, fields = NULL){
     for (field in fields){
         if (!is.null(opts$template[[field]])){
             if (field == "params") {
-                if (length(opts$template_config$params) > 0){
+                if (length(opts$config$params) > 0){
                     message(paste0(titleize(field)))
-                    cat(paste0(paste0(names(opts$template_config$params), ": ", opts$template_config$params), collapse="\n"), "\n\n")
+                    cat(paste0(paste0(names(opts$config$params), ": ", opts$config$params), collapse="\n"), "\n\n")
                 }
             } else if (field == "data_names") {
-                if (length(opts$template_config$data_names$required) > 0){
+                if (length(opts$config$data_names$required) > 0){
                     message(paste0(titleize(field)))
-                    cat(paste0(c("Required:", opts$template_config$data_names$required), collapse=" "), "\n")
+                    cat(paste0(c("Required:", opts$config$data_names$required), collapse=" "), "\n")
                 }
-                if (length(opts$template_config$data_names$optional) > 0){
+                if (length(opts$config$data_names$optional) > 0){
                     message(paste0(titleize(field)))
-                    cat(paste0(c("Optional:", opts$template_config$data_names$optional), collapse=" "), "\n")
+                    cat(paste0(c("Optional:", opts$config$data_names$optional), collapse=" "), "\n")
                 }
                 cat ("\n")
             } else {
                 message(paste0(titleize(field)))
-                cat(paste0(opts$template_config[[field]], collapse="\n"), "\n\n")
+                cat(paste0(opts$config[[field]], collapse="\n"), "\n\n")
             }
         }
     }
@@ -479,16 +479,16 @@ show_ractive <- function(ractive, fields = NULL){
 #' @export
 demo_ractive <- function(ractive) {
     opts <- get_opts(ractive)
-    if (is.null(opts$template_config$demo)){
+    if (is.null(opts$config$demo)){
         message("The ", ractive, " ractive didn't provide a demo example.")
     } else {
-        message("Getting ready to run the following demo for the ", ractive, " ractive:\n\n", opts$template_config$demo)
+        message("Getting ready to run the following demo for the ", ractive, " ractive:\n\n", opts$config$demo)
         message("\nPress Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
         response <- readline()
         if (tolower(response) %in% c("c")) {
             message("Demo was canceled.")
         } else {
-            eval(parse(text = opts$template_config$demo))
+            eval(parse(text = opts$config$demo))
         }
     }
 }

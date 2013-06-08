@@ -1,6 +1,6 @@
 context("utils")
 
-suppressMessages(set_root_path(system.file("ractives", package="clickme")))
+suppressMessages(set_templates_path(system.file("ractives", package="clickme")))
 
 test_that("appends styles and scripts", {
     ractive <- "par_coords"

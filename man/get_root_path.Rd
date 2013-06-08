@@ -1,8 +1,8 @@
-\name{get_root_path}
-\alias{get_root_path}
+\name{get_templates_path}
+\alias{get_templates_path}
 \title{Get the current root path}
 \usage{
-  get_root_path()
+  get_templates_path()
 }
 \description{
   Get the current root path

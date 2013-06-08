@@ -1,6 +1,6 @@
 context("ractives")
 
-suppressMessages(set_root_path(system.file("ractives", package="clickme")))
+suppressMessages(set_templates_path(system.file("ractives", package="clickme")))
 
 test_that("the HTML example file for the force_directed ractive is generated", {
     ractive <- "force_directed"

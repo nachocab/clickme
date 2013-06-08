@@ -21,13 +21,13 @@ map_data_names <- function(opts){
     }
 
     valid_names <- sapply(opts$name_mappings, "[[", 1)
-    all_data_names <- unlist(opts$template_config$data_names)
+    all_data_names <- unlist(opts$config$data_names)
     if (any(valid_names %notin% all_data_names)){
         unknown_valid_names <- valid_names[valid_names %notin% all_data_names]
         if (length(unknown_valid_names) == 1){
-            stop("The name \"", paste(unknown_valid_names, collapse = ", "),"\" is not specified as a valid data_name in the template_config.yml file of the ", opts$name$ractive, " ractive")
+            stop("The name \"", paste(unknown_valid_names, collapse = ", "),"\" is not specified as a valid data_name in the config.yml file of the ", opts$name$ractive, " ractive")
         } else {
-            stop("The names \"", paste(unknown_valid_names, collapse = ", "),"\" are not specified as valid data_names in the template_config.yml file of the ", opts$name$ractive, " ractive")
+            stop("The names \"", paste(unknown_valid_names, collapse = ", "),"\" are not specified as valid data_names in the config.yml file of the ", opts$name$ractive, " ractive")
         }
     }
 
@@ -40,7 +40,7 @@ map_data_names <- function(opts){
 }
 
 validate_data_names <- function(opts){
-    required_names <- opts$template_config$data_names$required
+    required_names <- opts$config$data_names$required
     missing_required_names <- required_names[required_names %notin% names(opts$data)]
 
     if (!is.null(required_names) && length(missing_required_names) > 0) {

@@ -7,7 +7,7 @@
 \arguments{
   \item{ractive}{ractive name}
 
-  \item{fields}{any of the fields in template_config.yml}
+  \item{fields}{any of the fields in config.yml}
 }
 \description{
   Get information about a ractive
