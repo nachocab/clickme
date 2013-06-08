@@ -1,3 +1,58 @@
+#' Make an HTML link
+#' @param url URL
+#' @param name name of the link ("link" by default)
+#'
+#' @export
+make_link <- function(url, name) {
+    name <- name %||% "link"
+    link <- gettextf("<a href=\"%s\" target = \"_blank\">%s</a>\n\n", url, name)
+    cat(link)
+}
+
+#' Split up two vectors into their intersecting sets
+#' @param a first vector
+#' @param b second vector
+#'
+#' It returns a list of three elements, those that are only in a, those that are in both, and those that are only in b.
+#'
+#' @export
+disjoint_sets <- function(a, b, names = c("a", "b", "both")) {
+    sets <- list(setdiff(a,b), setdiff(b,a), intersect(a,b))
+    names(sets) <- names
+    sets
+}
+
+#' Match elements to groups
+#' @param subset vector of elements
+#' @param groups list of groups
+#' @param replace_nas how to handle elements that don't appear in any of the groups. If a string is provided, it uses it as a new group for these elements.
+#' @param strict_dups how to handle elements that appear in multiple groups. By default, the first matching group is reported and a warning is issued. If TRUE, it raises an error.
+#'
+#' It returns the name of the group where each element in the subset appears. If not in any group, it combines them into the "other " group (intentional space, in case "other" exists)
+#'
+#' @export
+match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups = FALSE) {
+    if (any(duplicated(unlist(groups)))){
+        duplicated_elements <- unname(unlist(groups)[duplicated(unlist(groups))])
+        message <- gettextf("There are duplicated elements in your groups:\n%s", paste(duplicated_elements, collapse = "\n"))
+        if (strict_dups){
+            stop(message)
+        } else {
+            warning(message)
+        }
+    }
+
+    group_ranges <- cumsum(c(1, sapply(groups, length)))
+    match_indexes <- match(subset, unlist(groups))
+    group_indexes <- findInterval(match_indexes, group_ranges)
+    group_names <- names(groups)[group_indexes]
+
+    if (!is.null(replace_nas)){
+        group_names[is.na(group_names)] <- replace_nas
+    }
+
+    group_names
+}
 
 #' Validates colorize
 #'
@@ -73,15 +128,37 @@ reorder_data_by_color <- function(data, params){
 #' @export
 default_colors <- function(n = 9){
     # too similar purples: "#9467bd", "#8c564b"
-    d3_category9 <- c("#1f77b4", # blue
-                       "#ff7f0e", # orange
-                       "#2ca02c", # green
+    retro_tulips <- c(
+      "#0F808C", # blue
+      "#6C8C26", # green
+      "#F2A71B", # orange
+      "#F26A1B", # dark orange
+      "#D91818" # red
+    )
+
+    set3 <- c(
+        "#FB8072", # red
+        "#80B1D3", # blueish
+        "#B3DE69", # green
+        "#FDB462", # orange
+        "#8DD3C7", # teal green
+        "#FFFFB3", # yellow
+        "#BEBADA", # grey
+        "#FCCDE5", # salmon
+        "#D9D9D9" # lightgrey
+    )
+
+    d3_category9 <- c(
+                       "#1f77b4", # blue
                        "#d62728", # red
                        "#9467bd", # purple
+                       "#ff7f0e", # orange
+                       "#2ca02c", # green
                        "#17becf", # cyan
                        "#e377c2", # pink
                        "#7f7f7f",
-                       "#bcbd22")
+                       "#bcbd22"
+                       )
     # d3_category10 <- c("#1f77b4", "#d62728", "#2ca02c", "#ff7f0e", "#9467bd", "#17becf", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22")
     d3_category19 <- c(d3_category9, "#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5")
     # d3_category10b <- c("#aec7e8", "#ffbb78", "#98df8a", "#ff9896", "#c5b0d5", "#c49c94", "#f7b6d2", "#c7c7c7", "#dbdb8d", "#9edae5")

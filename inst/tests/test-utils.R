@@ -66,3 +66,26 @@ test_that("scale_type", {
     expect_equal(scale_type(c(1, 2, 3)), "quantitative")
 })
 
+test_that("match_to_groups", {
+    subset  <- c("w","b","p","e","j")
+    groups <- list(a=letters[1:10], b = letters[11:20], c = letters[21:26])
+    expect_equal(match_to_groups(subset, groups), c("c","a","b","a","a"))
+
+    subset  <- c("w","b","A","B","j")
+    expect_equal(match_to_groups(subset, groups, replace_nas = "Other"), c("c","a","Other","Other","a"))
+
+    subset <- c("a","b","c")
+    groups <- list(a = c("a","b"), b = c("a","b","c"))
+    suppressWarnings(expect_equal(match_to_groups(subset, groups, strict_dups = FALSE), c("a","a","b")))
+    expect_warning(match_to_groups(subset, groups, strict_dups = FALSE), "duplicated elements in your groups:\na\nb")
+    expect_error(match_to_groups(subset, groups, strict_dups = TRUE), "duplicated elements in your groups:\na\nb")
+})
+
+
+test_that("disjoint_sets", {
+    a <- c(1:3,5)
+    b <- c(0,2:4)
+    expect_equal(disjoint_sets(a,b), list(a = c(1,5), b = c(0,4), both = c(2,3)))
+
+    expect_equal(disjoint_sets(a,b, names = c("A", "B", "Both")), list(A = c(1,5), B = c(0,4), Both = c(2,3)))
+})

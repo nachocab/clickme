@@ -21,11 +21,10 @@ generate_visualization <- function(opts){
 #' n <- 30
 #' df1 <- data.frame(source = sample(items, n, replace = TRUE), target = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace = TRUE))
 #' clickme(df1, "force_directed")
-clickme <- function(data, ractive, params = NULL, open = TRUE, ...){
+clickme <- function(data, ractive, params = NULL, open = interactive(), link = FALSE, ...){
 
-    # hack to avoid passing "open" to get_opts()
-    aux_get_opts <- function(..., open) { get_opts(...) }
-    opts <- aux_get_opts(ractive, params, ...)
+    get_opts_fix_args <- function(..., open, link) get_opts(...)
+    opts <- get_opts_fix_args(ractive, params, ...)
 
     separator <- paste0(rep("=", 70, collapse = ""))
     if (opts$template_config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {
@@ -66,7 +65,11 @@ clickme <- function(data, ractive, params = NULL, open = TRUE, ...){
 
     if (open) browseURL(opts$url)
 
-    invisible(opts)
+    if (link){
+        make_link(opts$name$html_file, opts$params$title)
+    } else {
+        invisible(opts)
+    }
 }
 
 
