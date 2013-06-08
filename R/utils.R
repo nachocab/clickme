@@ -9,6 +9,10 @@ make_link <- function(url, name) {
     cat(link)
 }
 
+separator <- function(n = 70){
+    paste0(rep("=", n, collapse = ""))
+}
+
 validate_server <- function(opts) {
     separator <- paste0(rep("=", 70, collapse = ""))
     if (opts$config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {

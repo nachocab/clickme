@@ -53,6 +53,45 @@ validate_paths <- function(opts) {
         if (!file.exists(getOption("clickme_output_path")))
             dir.create(getOption("clickme_output_path"))
     }
+
+    invisible()
+}
+
+validate_required_packages <- function(opts) {
+    if (!is.null(opts$config$require_packages)){
+        missing_packages <- opts$config$require_packages[!is.installed(opts$config$require_packages)]
+
+        if (length(missing_packages) != 0){
+            message(separator())
+            message(gettextf("The %s template requires the following packages:\n\n%s\nPress Enter to install them automatically or \"c\" to cancel.",
+                    opts$name$template,
+                    paste0(missing_packages, collapse="\n"))
+            )
+            response <- readline()
+            if (tolower(response) == "c"){
+                message(gettextf("Try running: install.packages(%s)", paste0(missing_packages, collapse=",")))
+                capture.output(return())
+            } else {
+                install.packages(missing_packages)
+            }
+            message(separator())
+        }
+
+        sapply(opts$config$require_packages, library, character.only = TRUE)
+    }
+
+    invisible()
+}
+
+validate_assets <- function(opts) {
+    sapply(c(opts$config$styles, opts$config$scripts), function(asset){
+        if (!grepl("^http", asset)){
+            path <- file.path(opts$path$template_assets, asset)
+            if (!file.exists(path)) stop(asset, " not found at: ", path)
+        }
+    })
+
+    invisible()
 }
 
 add_params <- function(opts, user_params) {
@@ -82,8 +121,10 @@ get_opts <- function(template_name, params = NULL, name_mappings = NULL, data_pr
     validate_paths(opts)
 
     opts$config <- yaml.load_file(opts$path$config_file)
-    opts <- validate_template(opts)
+    validate_required_packages(opts)
+    validate_assets(opts)
 
+    # rethink the following lines
     opts <- add_params(opts, params)
     opts$name_mappings <- name_mappings
 

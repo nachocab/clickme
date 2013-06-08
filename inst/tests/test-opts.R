@@ -1,6 +1,6 @@
 library(yaml)
 
-context("get_opts")
+context("default path and names")
 
 test_that("clickme_templates_path exists", {
     old_clickme_templates_path <- getOption("clickme_templates_path")
@@ -80,6 +80,40 @@ test_that("clickme_output_path goes back to default when NULL", {
     unlink(opts$path$template, recursive = TRUE)
     options("clickme_output_path" = old_clickme_output_path)
 })
+
+
+context("validate assets")
+
+test_that("styles and scripts must be valid", {
+    test_path <- file.path(system.file("output", package = "clickme"), "test")
+    dir.create(test_path)
+    opts <- list(path=list(template_assets = test_path))
+
+    opts$config$styles <- c("abc.css")
+    expect_error(validate_assets(opts), "abc.css not found")
+
+    file.create(file.path(test_path, "abc.css"))
+    expect_true({validate_assets(opts); TRUE})
+
+    opts$config$scripts <- c("abc.js")
+    expect_error(validate_assets(opts), "abc.js not found")
+
+    file.create(file.path(test_path, "abc.js"))
+    expect_true({validate_assets(opts); TRUE})
+
+    opts$config$scripts <- c("http://d3js.org/d3.v3.min.js")
+    expect_true({validate_assets(opts); TRUE})
+
+    unlink(test_path, recursive = TRUE)
+})
+
+# test_that("require_server and require_coffeescript are false by default", {
+#     template <- "par_coords"
+#     opts <- get_opts(template, data_prefix = "data")
+
+#     opts$config$require_server <- NULL
+#     expect_false(validate_template(opts)$config$require_server)
+# })
 
 # test_that("data_prefix is data by default, and it appends random string when NULL", {
 #     opts <- validate_paths("force_directed")
