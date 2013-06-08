@@ -1,6 +1,6 @@
-#' Set the root path
+#' Set the templates path
 #'
-#' The root path is the folder that contains the ractives that you have installed in your system. It will also contain the HTML visualization files that you generate. If you a using a local server to serve your HTML files, you should run it at the root path. \code{set_templates_path} will set the root path and generate the ractives folder below it. The ractives folder is where you should install existing ractives, or create new ones (see \code{?new_ractive})
+#' The templates path is the folder that contains the ractives that you have installed in your system. It will also contain the HTML visualization files that you generate. If you a using a local server to serve your HTML files, you should run it at the templates path. \code{set_templates_path} will set the templates path and generate the ractives folder below it. The ractives folder is where you should install existing ractives, or create new ones (see \code{?new_ractive})
 #' @param path path to be used as root
 #' @export
 set_templates_path <- function(path) {
@@ -8,10 +8,10 @@ set_templates_path <- function(path) {
 
     .clickme_env$templates_path <- path
 
-    message("Root path set to: ", .clickme_env$templates_path)
+    message("templates path set to: ", .clickme_env$templates_path)
 }
 
-#' Get the current root path
+#' Get the current templates path
 #'
 #' @export
 get_templates_path <- function() {
@@ -24,10 +24,10 @@ get_templates_path <- function() {
         } else {
             separator <- paste0(rep("=", 70, collapse = ""))
             message(separator)
-            message("No clickme_templates_path option found, using default root path:")
+            message("No clickme_templates_path option found, using default templates path:")
             message("set_templates_path(\"", system.file("ractives", package = "clickme"), "\")")
             set_templates_path(system.file("ractives", package = "clickme"))
-            message("\nThe root path is the folder where your ractives live.\nSee the wiki for more info: bit.ly/clickme_wiki")
+            message("\nThe templates path is the folder where your ractives live.\nSee the wiki for more info: bit.ly/clickme_wiki")
             message(separator)
         }
 

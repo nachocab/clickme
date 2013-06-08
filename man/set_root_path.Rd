@@ -1,6 +1,6 @@
 \name{set_templates_path}
 \alias{set_templates_path}
-\title{Set the root path}
+\title{Set the templates path}
 \usage{
   set_templates_path(path)
 }
@@ -8,12 +8,12 @@
   \item{path}{path to be used as root}
 }
 \description{
-  The root path is the folder that contains the ractives
+  The templates path is the folder that contains the ractives
   that you have installed in your system. It will also
   contain the HTML visualization files that you generate.
   If you a using a local server to serve your HTML files,
-  you should run it at the root path. \code{set_templates_path}
-  will set the root path and generate the ractives folder
+  you should run it at the templates path. \code{set_templates_path}
+  will set the templates path and generate the ractives folder
   below it. The ractives folder is where you should install
   existing ractives, or create new ones (see
   \code{?new_ractive})

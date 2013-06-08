@@ -29,7 +29,7 @@ clickme <- function(data, ractive, params = NULL, open = interactive(), link = F
     separator <- paste0(rep("=", 70, collapse = ""))
     if (opts$config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {
         message(separator)
-        message(paste0("If you don't have a server running in your Clickme root path, open a new ", ifelse(.Platform$OS.type == "unix", "terminal", "Command Prompt"), " and type:"))
+        message(paste0("If you don't have a server running in your Clickme templates path, open a new ", ifelse(.Platform$OS.type == "unix", "terminal", "Command Prompt"), " and type:"))
         message("cd \"", get_templates_path(), "\"\npython -m SimpleHTTPServer")
 
         message("\n(add: options(clickme_server_warning = FALSE) in your .Rprofile to avoid seeing this warning again.)")

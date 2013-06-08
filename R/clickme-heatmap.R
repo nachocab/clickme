@@ -1,5 +1,5 @@
-# The heatmap data structure is not as straightforward as the points data structure because it has overlapping definitions: col_g[col_gn, col_n, col_v[rv[cv], rgn]]
 
+# The heatmap data structure is not as straightforward as the points data structure because it has overlapping definitions: col_g[col_gn, col_n, col_v[rv[cv], rgn]]
 get_col_values <- function(data, data_col_names, params){
     col_values <- unname(apply(data, 1, function(row){
         row_values <- lapply(1:length(row), function(row_index){

@@ -14,7 +14,7 @@ add_ractive_opts <- function(ractive) {
     opts$name$translator_test_file <- "test-translator.R"
 
     # folder absolute paths
-    # TODO: ponder: ractive is directly below the root path, maybe in the future we can allow nested paths for ractives (although, simple is better)
+    # TODO: ponder: ractive is directly below the templates path, maybe in the future we can allow nested paths for ractives (although, simple is better)
     opts$path$ractive <- file.path(get_templates_path(), opts$name$ractive)
     opts$path$data <- file.path(opts$path$ractive, opts$name$data)
     opts$path$template <- file.path(opts$path$ractive, opts$name$template)
