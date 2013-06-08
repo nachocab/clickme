@@ -1,6 +1,5 @@
 context("map_data_names")
 
-suppressMessages(set_templates_path(system.file("ractives", package="clickme")))
 
 opts <- get_opts("force_directed", data_prefix = "data")
 test_that("input data names can be mapped to those expected by the template", {

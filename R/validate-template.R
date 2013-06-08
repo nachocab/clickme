@@ -1,7 +1,7 @@
 
-validate_ractive <- function(opts) {
-    if (!file.exists(opts$path$ractive)) stop(opts$name$ractive, " ractive not found in: ", get_templates_path(), "\n(Use one of: ", paste(plain_list_ractives(), collapse=", "), ")")
-    if (!file.exists(opts$path$template)) stop(opts$name$template, " directory not found in: ", opts$path$ractive)
+validate_template <- function(opts) {
+    if (!file.exists(opts$path$template)) stop(opts$name$template, " template not found in: ", getOption("clickme_templates_path"), "\n(Use one of: ", paste(plain_list_templates(), collapse=", "), ")")
+    if (!file.exists(opts$path$template)) stop(opts$name$template, " directory not found in: ", opts$path$template)
     if (!file.exists(opts$path$template_file)) stop(opts$name$template_file, " not found in: ", opts$path$template)
     if (!file.exists(opts$path$translator_file)) stop(opts$name$translator_file, " not found in: ", opts$path$template)
     if (!file.exists(opts$path$config_file)) stop(opts$name$config_file, " not found in: ", opts$path$template)
@@ -12,8 +12,8 @@ validate_ractive <- function(opts) {
         if (length(missing_packages) != 0){
             separator <- paste0(rep("=", 70, collapse = ""))
             message(separator)
-            message("The ", opts$name$ractive,
-                    " ractive requires the following packages to be installed:\n\n",
+            message("The ", opts$name$template,
+                    " template requires the following packages to be installed:\n\n",
                     paste0(missing_packages, collapse="\n"),
                     "\nPress Enter to install them automatically or \"c\" to cancel.")
             response <- readline()
@@ -31,7 +31,7 @@ validate_ractive <- function(opts) {
 
     sapply(c(opts$config$styles, opts$config$scripts), function(style_or_script){
         if (!grepl("^http", style_or_script)){
-            path <- file.path(opts$path$external, style_or_script)
+            path <- file.path(opts$path$template_assets, style_or_script)
             if (!file.exists(path)) stop(style_or_script, " not found at: ", path)
         }
     })

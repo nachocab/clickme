@@ -2,14 +2,14 @@
 \alias{open_html}
 \title{Open an HTML file in the browser}
 \usage{
-  open_html(ractive, ...)
+  open_html(template, ...)
 }
 \arguments{
-  \item{ractive}{ractive name}
+  \item{template}{template name}
 
   \item{...}{additional fields for \code{get_opts}}
 }
 \description{
-  By default it will open \code{get_opts(ractive)$url}
+  By default it will open \code{get_opts(template)$url}
 }
 

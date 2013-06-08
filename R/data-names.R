@@ -25,9 +25,9 @@ map_data_names <- function(opts){
     if (any(valid_names %notin% all_data_names)){
         unknown_valid_names <- valid_names[valid_names %notin% all_data_names]
         if (length(unknown_valid_names) == 1){
-            stop("The name \"", paste(unknown_valid_names, collapse = ", "),"\" is not specified as a valid data_name in the config.yml file of the ", opts$name$ractive, " ractive")
+            stop("The name \"", paste(unknown_valid_names, collapse = ", "),"\" is not specified as a valid data_name in the config.yml file of the ", opts$name$template, " template")
         } else {
-            stop("The names \"", paste(unknown_valid_names, collapse = ", "),"\" are not specified as valid data_names in the config.yml file of the ", opts$name$ractive, " ractive")
+            stop("The names \"", paste(unknown_valid_names, collapse = ", "),"\" are not specified as valid data_names in the config.yml file of the ", opts$name$template, " template")
         }
     }
 

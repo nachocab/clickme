@@ -48,7 +48,7 @@ d3.parcoords = function(config) {
         brushable: false,
         reorderable: false,
         axes: false,
-        interactive: false,
+        intetemplate: false,
         shadows: false,
         debug: false
       },
@@ -74,7 +74,7 @@ d3.parcoords = function(config) {
     })
     .on("dimensions", function(d) {
       xscale.domain(__.dimensions);
-      if (flags.interactive) pc.render().updateAxes();
+      if (flags.intetemplate) pc.render().updateAxes();
     });
 
   pc.toString = function() { return "Parallel Coordinates: " + __.dimensions.length + " dimensions (" + d3.keys(__.data[0]).length + " total) , " + __.data.length + " rows"; };
@@ -316,8 +316,8 @@ d3.parcoords = function(config) {
     return this;
   };
 
-  pc.interactive = function() {
-    flags.interactive = true;
+  pc.intetemplate = function() {
+    flags.intetemplate = true;
     return this;
   };
 

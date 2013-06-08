@@ -14,7 +14,7 @@ info: |-
 original_url: http://syntagmatic.github.com/parallel-coordinates/examples/brushing.html
 
 demo: |-
-    cars <- read_ractive_csv("par_coords", "original_data.csv")
+    cars <- read_template_csv("par_coords", "original_data.csv")
     clickme(cars, "par_coords", list(color_by = "economy")) # quantitative
 
     cars$cylinders <- factor(cars$cylinders)

@@ -1,4 +1,4 @@
-#' Straight from R to JS: Create interactive visualizations from R
+#' Straight from R to JS: Create intetemplate visualizations from R
 #'
 #' @section Package options:
 #'
@@ -21,7 +21,7 @@ NULL
   opts <- options()
   opts_clickme <- list(
     clickme_templates_path = system.file("templates", package = "clickme"),
-    clickme_output_path = system.file("templates", package = "clickme")
+    clickme_output_path = system.file("output", package = "clickme")
   )
 
   # only set options that have not been already set by the user

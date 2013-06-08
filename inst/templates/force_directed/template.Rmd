@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>{{ opts$params$title }}</title>
-    {{ get_external(opts) }}
+    {{ get_assets(opts) }}
   </head>
 
   <body>
@@ -44,7 +44,7 @@
           .attr("width", w)
           .attr("height", h);
 
-      // Per-type markers, as they don’t inherit external.
+      // Per-type markers, as they don’t inherit assets.
       svg.append("svg:defs").selectAll("marker")
           .data(connection_types)
         .enter().append("svg:marker")

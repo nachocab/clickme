@@ -5,7 +5,7 @@
 
     <title>{{ opts$params$title }}</title>
 
-    {{ get_external(opts) }}
+    {{ get_assets(opts) }}
 
   </head>
 

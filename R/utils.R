@@ -14,7 +14,7 @@ validate_server <- function(opts) {
     if (opts$config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {
         message(separator)
         message(paste0("If you don't have a server running in your Clickme templates path, open a new ", ifelse(.Platform$OS.type == "unix", "terminal", "Command Prompt"), " and type:"))
-        message("cd \"", get_templates_path(), "\"\npython -m SimpleHTTPServer")
+        message("cd \"", getOption("clickme_templates_path"), "\"\npython -m SimpleHTTPServer")
 
         message("\n(add: options(clickme_server_warning = FALSE) in your .Rprofile to avoid seeing this warning again.)")
         message("Press Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
@@ -205,7 +205,7 @@ default_colors <- function(n = 9){
 
 #' Get padding around plot
 #'
-#' @param opts ractive options
+#' @param opts template options
 #' @param default default padding, a vector with top, left, bottom and right values
 #'
 #' @export
@@ -234,7 +234,7 @@ get_padding_param <- function(opts, default = c(top = 100, right = 100, bottom =
 #'
 #' @param opts the options of the current template
 #' @export
-get_external <- function(opts){
+get_assets <- function(opts){
     styles_and_scripts <- paste0(c(get_styles(opts), get_scripts(opts)), collapse="\n")
     styles_and_scripts
 }
@@ -246,7 +246,7 @@ get_external <- function(opts){
 get_scripts <- function(opts) {
     scripts <- paste(sapply(opts$config$scripts, function(script_path){
         if (!grepl("^http", script_path)){
-            script_path <- file.path(opts$relative_path$external, script_path)
+            script_path <- file.path(opts$relative_path$assets, script_path)
         }
         paste0("<script src=\"", script_path, "\"></script>")
     }), collapse="\n")
@@ -261,7 +261,7 @@ get_scripts <- function(opts) {
 get_styles <- function(opts) {
     styles <- paste(sapply(opts$config$styles, function(style_path){
         if (!grepl("^http", style_path)){
-            style_path <- file.path(opts$relative_path$external, style_path)
+            style_path <- file.path(opts$relative_path$assets, style_path)
         }
         paste0("<link href=\"", style_path, "\" rel=\"stylesheet\">")
     }), collapse="\n")
@@ -271,7 +271,7 @@ get_styles <- function(opts) {
 
 #' Create a data file
 #'
-#' Creates a file in the ractive data directory
+#' Creates a file in the template data directory
 #'
 #' @param opts the options of the current template
 #' @param extension the extension of the file
@@ -309,15 +309,15 @@ create_data_file <- function(opts, extension, sep=",", method = NULL, row_names 
     path
 }
 
-#' Read a ractive's CSV file
+#' Read a template's CSV file
 #'
 #'
 #'
-#' @param ractive ractive name
+#' @param template template name
 #' @param file_name CSV file name
 #' @export
-read_ractive_csv <- function(ractive, file_name) {
-    opts <- get_opts(ractive)
+read_template_csv <- function(template, file_name) {
+    opts <- get_opts(template)
     data <- read.csv(file.path(opts$path$data, file_name))
 
     data
@@ -380,17 +380,17 @@ quote_escaped <- function(data) {
 #' @param path path where server is started
 #' @param port port used to start the server
 #' @export
-server <- function(path = get_templates_path(), port = 8000){
+server <- function(path = getOption("clickme_templates_path"), port = 8000){
     system(paste0("cd ", path, "; python -m SimpleHTTPServer ", port))
     message("Server running at ", path)
 }
 
-#' Test the translator of a given ractive
+#' Test the translator of a given template
 #'
-#' @param ractive name of ractive
+#' @param template name of template
 #' @export
-test_ractive <- test_translator <- function(ractive){
-    opts <- get_opts(ractive)
+test_template <- test_translator <- function(template){
+    opts <- get_opts(template)
 
     if (file.exists(opts$path$translator_test_file)){
         library("testthat")
@@ -417,16 +417,16 @@ mat <- function(elements = NULL, num_elements = nrow*ncol, nrow = 5, ncol = 2, s
     mat
 }
 
-#' Show which ractives are available
+#' Show which templates are available
 #'
 #' @export
-list_ractives <- function() {
-    message("Available ractives at: ", get_templates_path())
-    write(plain_list_ractives(), "")
+list_templates <- function() {
+    message("Available templates at: ", getOption("clickme_templates_path"))
+    write(plain_list_templates(), "")
 }
 
-plain_list_ractives <- function() {
-    basename(list.dirs(get_templates_path(), recursive = F))
+plain_list_templates <- function() {
+    basename(list.dirs(getOption("clickme_templates_path"), recursive = F))
 }
 
 
@@ -441,41 +441,41 @@ titleize <- function(str){
 
 #' Open an HTML file in the browser
 #'
-#' By default it will open \code{get_opts(ractive)$url}
+#' By default it will open \code{get_opts(template)$url}
 #'
-#' @param ractive ractive name
+#' @param template template name
 #' @param ... additional fields for \code{get_opts}
 #' @export
-open_html <- function(ractive, ...) {
-    opts <- get_opts(ractive, ...)
+open_html <- function(template, ...) {
+    opts <- get_opts(template, ...)
     browseURL(opts$url)
 }
 
 open_all_html <- function(){
-    for (ractive in plain_list_ractives()){
-        open_html(ractive)
+    for (template in plain_list_templates()){
+        open_html(template)
     }
 }
 
 open_all_demos <- function(){
-    for (ractive in plain_list_ractives()){
-        demo_ractive(ractive)
+    for (template in plain_list_templates()){
+        demo_template(template)
     }
 }
 
-#' Get information about a ractive
+#' Get information about a template
 #'
-#' @param ractive ractive name
+#' @param template template name
 #' @param fields any of the fields in config.yml
 #' @export
-show_ractive <- function(ractive, fields = NULL){
+show_template <- function(template, fields = NULL){
 
-    opts <- get_opts(ractive)
+    opts <- get_opts(template)
 
     fields <- fields %||% names(opts$config)
 
-    message("Ractive")
-    cat(ractive, "\n\n")
+    message("template")
+    cat(template, "\n\n")
 
     for (field in fields){
         if (!is.null(opts$template[[field]])){
@@ -504,16 +504,16 @@ show_ractive <- function(ractive, fields = NULL){
     cat("\n")
 }
 
-#' Run a ractive demo
+#' Run a template demo
 #'
-#' @param ractive name of ractive
+#' @param template name of template
 #' @export
-demo_ractive <- function(ractive) {
-    opts <- get_opts(ractive)
+demo_template <- function(template) {
+    opts <- get_opts(template)
     if (is.null(opts$config$demo)){
-        message("The ", ractive, " ractive didn't provide a demo example.")
+        message("The ", template, " template didn't provide a demo example.")
     } else {
-        message("Getting ready to run the following demo for the ", ractive, " ractive:\n\n", opts$config$demo)
+        message("Getting ready to run the following demo for the ", template, " template:\n\n", opts$config$demo)
         message("\nPress Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
         response <- readline()
         if (tolower(response) %in% c("c")) {

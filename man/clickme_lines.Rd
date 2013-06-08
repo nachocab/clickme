@@ -1,6 +1,6 @@
 \name{clickme_lines}
 \alias{clickme_lines}
-\title{Generates an interactive line plot}
+\title{Generates an intetemplate line plot}
 \usage{
   clickme_lines(data, x = colnames(data),
     line_names = rownames(data), lwd = 3,
@@ -73,6 +73,6 @@
   \item{...}{additional arguments for \code{clickme}}
 }
 \description{
-  Generates an interactive line plot
+  Generates an intetemplate line plot
 }
 

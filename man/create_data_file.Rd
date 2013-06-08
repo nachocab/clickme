@@ -31,6 +31,6 @@
   method}
 }
 \description{
-  Creates a file in the ractive data directory
+  Creates a file in the template data directory
 }
 

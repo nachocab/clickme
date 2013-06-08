@@ -1,24 +1,23 @@
 context("utils")
 
-suppressMessages(set_templates_path(system.file("ractives", package="clickme")))
 
 test_that("appends styles and scripts", {
-    ractive <- "par_coords"
-    opts <- get_opts(ractive, data_prefix = "data")
+    template <- "par_coords"
+    opts <- get_opts(template, data_prefix = "data")
 
-    expected_scripts <- "<script src=\"par_coords/external/d3.v3.js\"></script>\n<script src=\"par_coords/external/d3.parcoords.js\"></script>"
+    expected_scripts <- "<script src=\"par_coords/assets/d3.v3.js\"></script>\n<script src=\"par_coords/assets/d3.parcoords.js\"></script>"
     expect_equal(get_scripts(opts), expected_scripts)
 
-    expected_styles <- "<link href=\"par_coords/external/d3.parcoords.css\" rel=\"stylesheet\">\n<link href=\"par_coords/external/style.css\" rel=\"stylesheet\">"
+    expected_styles <- "<link href=\"par_coords/assets/d3.parcoords.css\" rel=\"stylesheet\">\n<link href=\"par_coords/assets/style.css\" rel=\"stylesheet\">"
     expect_equal(get_styles(opts), expected_styles)
 
     expected_styles_and_scripts <- paste0(c(expected_styles, expected_scripts), collapse = "\n")
-    expect_equal(get_external(opts), expected_styles_and_scripts)
+    expect_equal(get_assets(opts), expected_styles_and_scripts)
 })
 
 test_that("create_data_file", {
-    ractive <- "par_coords"
-    opts <- get_opts(ractive, data_prefix = "test_data")
+    template <- "par_coords"
+    opts <- get_opts(template, data_prefix = "test_data")
     opts$data <- "[{\"a\":3,\"b\":5}]"
 
     json_file <- create_data_file(opts, "json", quote_escaped = FALSE)

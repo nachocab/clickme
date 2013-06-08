@@ -8,7 +8,7 @@ generate_visualization <- function(opts){
 #' Generates a JavaScript visualization
 #'
 #' @param data input data
-#' @param ractive template id, it must match a folder within \code{set_templates_path}
+#' @param template template id, it must match a folder within \code{set_templates_path}
 #' @param params parameters
 #' @param open open browser tab with the generated visualization.
 #' @param ... additional arguments for \code{get_opts}
@@ -17,15 +17,15 @@ generate_visualization <- function(opts){
 #'
 #' library(clickme)
 #'
-#' # visualize a force-directed interactive graph
+#' # visualize a force-directed intetemplate graph
 #' items <- paste0("GENE_", 1:40)
 #' n <- 30
 #' df1 <- data.frame(source = sample(items, n, replace = TRUE), target = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace = TRUE))
 #' clickme(df1, "force_directed")
-clickme <- function(data, ractive, params = NULL, open = interactive(), link = FALSE, ...){
+clickme <- function(data, template, params = NULL, open = intetemplate(), link = FALSE, ...){
 
     get_opts_fix_args <- function(..., open, link) get_opts(...)
-    opts <- get_opts_fix_args(ractive, params, ...)
+    opts <- get_opts_fix_args(template, params, ...)
 
     validate_server(opts)
     validate_coffee(opts)

@@ -4,7 +4,7 @@
 \alias{clickme-package}
 \title{Generate JavaScript visualizations directly from R}
 \description{
-  clickme lets you plot your R data as interactive
+  clickme lets you plot your R data as intetemplate
   JavaScript visualizations
 }
 \author{

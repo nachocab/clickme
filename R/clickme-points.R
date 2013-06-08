@@ -67,7 +67,7 @@ get_points_data <- function(x, y, params){
 
 
 
-#' Generates an interactive scatterplot
+#' Generates an intetemplate scatterplot
 #'
 #' @param x x-values, but only if the "y" param is specified, otherwise it represents the y-values. It can be a dataframe, a matrix, a vector, a list, or a factor (TODO test this).
 #' @param y y-values (optional)
