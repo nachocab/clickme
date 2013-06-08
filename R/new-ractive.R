@@ -7,7 +7,7 @@
 new_ractive <- function(ractive_name, overwrite = FALSE) {
     opts <- add_ractive_opts(ractive_name)
 
-            _contents <- "info: |-
+    config_contents <- "info: |-
 
 original_url:
 

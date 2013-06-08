@@ -26,7 +26,7 @@ NULL
 
   # only set options that have not been already set by the user
   to_set <- !(names(opts_clickme) %in% names(opts))
-  if(any(to_set)) options(op_clickme[to_set])
+  if(any(to_set)) options(opts_clickme[to_set])
 
   invisible()
 }

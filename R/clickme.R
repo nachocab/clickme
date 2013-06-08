@@ -1,5 +1,6 @@
 #' @import knitr
 generate_visualization <- function(opts){
+    source(opts$path$translator_file)
     raw_template <- knit_expand(opts$path$template_file)
     capture.output(knit(text = raw_template, output = opts$path$html_file))
 }
@@ -26,33 +27,10 @@ clickme <- function(data, ractive, params = NULL, open = interactive(), link = F
     get_opts_fix_args <- function(..., open, link) get_opts(...)
     opts <- get_opts_fix_args(ractive, params, ...)
 
-    separator <- paste0(rep("=", 70, collapse = ""))
-    if (opts$config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {
-        message(separator)
-        message(paste0("If you don't have a server running in your Clickme templates path, open a new ", ifelse(.Platform$OS.type == "unix", "terminal", "Command Prompt"), " and type:"))
-        message("cd \"", get_templates_path(), "\"\npython -m SimpleHTTPServer")
+    validate_server(opts)
+    validate_coffee(opts)
 
-        message("\n(add: options(clickme_server_warning = FALSE) in your .Rprofile to avoid seeing this warning again.)")
-        message("Press Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
-        response <- readline()
-        if (tolower(response) %in% c("c")) {
-            capture.output(return())
-        }
-        message(separator)
-    }
-
-    if (opts$config$require_coffeescript && system("coffee -v", ignore.stdout = TRUE, ignore.stderr = TRUE) != 0) {
-        message("\n", separator)
-        message("This visualization requires \"coffee\" and it seems that you don't have it installed.")
-        message("See http://coffeescript.org/ for installation instructions")
-        message("Press Enter after you install it or \"c\" to cancel: ", appendLF = FALSE)
-        response <- readline()
-        if (tolower(response) %in% c("c")) {
-            capture.output(return())
-        }
-        message(separator)
-    }
-
+    # could this go in get_opts?
     opts$data <- data
     if (!is.null(opts$name_mappings)){
         opts$data <- map_data_names(opts)
@@ -60,7 +38,6 @@ clickme <- function(data, ractive, params = NULL, open = interactive(), link = F
 
     validate_data_names(opts)
 
-    source(opts$path$translator_file)
     generate_visualization(opts)
 
     if (open) browseURL(opts$url)

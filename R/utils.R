@@ -9,6 +9,37 @@ make_link <- function(url, name) {
     cat(link)
 }
 
+validate_server <- function(opts) {
+    separator <- paste0(rep("=", 70, collapse = ""))
+    if (opts$config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {
+        message(separator)
+        message(paste0("If you don't have a server running in your Clickme templates path, open a new ", ifelse(.Platform$OS.type == "unix", "terminal", "Command Prompt"), " and type:"))
+        message("cd \"", get_templates_path(), "\"\npython -m SimpleHTTPServer")
+
+        message("\n(add: options(clickme_server_warning = FALSE) in your .Rprofile to avoid seeing this warning again.)")
+        message("Press Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
+        response <- readline()
+        if (tolower(response) %in% c("c")) {
+            capture.output(return())
+        }
+        message(separator)
+    }
+}
+
+validate_coffee <- function(opts) {
+    if (opts$config$require_coffeescript && system("coffee -v", ignore.stdout = TRUE, ignore.stderr = TRUE) != 0) {
+        message("\n", separator)
+        message("This visualization requires \"coffee\" and it seems that you don't have it installed.")
+        message("See http://coffeescript.org/ for installation instructions")
+        message("Press Enter after you install it or \"c\" to cancel: ", appendLF = FALSE)
+        response <- readline()
+        if (tolower(response) %in% c("c")) {
+            capture.output(return())
+        }
+        message(separator)
+    }
+}
+
 #' Split up two vectors into their intersecting sets
 #' @param a first vector
 #' @param b second vector
