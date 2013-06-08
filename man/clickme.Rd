@@ -2,7 +2,8 @@
 \alias{clickme}
 \title{Generates a JavaScript visualization}
 \usage{
-  clickme(data, ractive, params = NULL, open = TRUE, ...)
+  clickme(data, ractive, params = NULL,
+    open = interactive(), link = FALSE, ...)
 }
 \arguments{
   \item{data}{input data}

@@ -7,8 +7,8 @@
     interpolate = "linear", title = "Lines", main = NULL,
     xlab = NULL, ylab = NULL, width = 980, height = 980,
     box = NULL, palette = NULL, colorize = NULL,
-    color_domain = NULL, colorize_title = NULL,
-    padding = list(top = 80, right = 200, bottom = 30, left = 100),
+    color_domain = NULL, color_legend_title = NULL,
+    padding = list(top = 80, right = 400, bottom = 30, left = 100),
     ...)
 }
 \arguments{
@@ -47,10 +47,8 @@
   specified determines rendering order when points from
   different categories collide (colors specified first
   appear on top of later ones). Colors can be a variety of
-  formats: rgb decimal - "rgb(255,255,255)" hsl decimal -
-  "hsl(120,50%,20%)" rgb hexadecimal - "#ffeeaa" rgb
-  shorthand hexadecimal - "#fea" CSS named - "red",
-  "white", "blue" (see
+  formats: "#ffeeaa" "rgb(255,255,255)" "hsl(120,50%,20%)"
+  "blue" (see
   http://www.w3.org/TR/SVG/types.html#ColorKeywords)}
 
   \item{colorize}{a vector whose values are used to
@@ -68,7 +66,7 @@
   continuous and, for example, we want to ensure it is
   symmetric in negative and positive values.}
 
-  \item{colorize_title}{tthe title of the color legend}
+  \item{color_legend_title}{the title of the color legend}
 
   \item{padding}{padding around the top-level object}
 

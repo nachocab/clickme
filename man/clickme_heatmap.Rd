@@ -30,14 +30,18 @@
 
   \item{row_groups,col_groups}{row and column groups}
 
-  \item{palette}{color palette. A vector with a start
-  color, and an end color (optionally, a middle color may
-  be provided between both). The default palette is red,
-  white, and blue. Colors can be a variety of formats: rgb
-  decimal - "rgb(255,255,255)" hsl decimal -
-  "hsl(120,50%,20%)" rgb hexadecimal - "#ffeeaa" rgb
-  shorthand hexadecimal - "#fea" CSS named - "red",
-  "white", "blue" (see
+  \item{palette}{color palette. Quantitative scales expect
+  a vector with a start color, and an end color
+  (optionally, a middle color may be provided between
+  both). Categorical scales expect a vector with a color
+  for each category. Use category names to change the
+  default color assignment \code{c(category1="color1",
+  category2="color2")}. The order in which these colors are
+  specified determines rendering order when points from
+  different categories collide (colors specified first
+  appear on top of later ones). Colors can be a variety of
+  formats: "#ffeeaa" "rgb(255,255,255)" "hsl(120,50%,20%)"
+  "blue" (see
   http://www.w3.org/TR/SVG/types.html#ColorKeywords)}
 
   \item{color_domain}{a vector with a start and end value
