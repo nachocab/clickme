@@ -68,8 +68,11 @@
     lines = g_line.append("path")
         .attr(
             "class": "line_tooltip"
-            "title": (d) -> "<strong>#{d.line_name}</strong>"
             "d": (d) -> line(d.values)
+            "title": (d) ->
+                "<strong>#{d.line_name}</strong><br>
+                {{opts$params$ylab %||% "y"}}: <strong>#{decimal_format(d.y)}</strong><br>
+                {{opts$params$xlab %||% "x"}}: #{decimal_format(d.x)}"
         ).style(
             "stroke": (d) -> color_scale(d.colorize)
             "stroke-width": "{{ opts$params$lwd }}px"
@@ -100,7 +103,7 @@
         )
 
     sidebar = plot.append("g")
-        .attr("transform","translate(#{plot.width + 20},#{0})")
+        .attr("transform","translate(#{plot.width + 60},#{0})")
 
     g_line_names = sidebar.append("g")
         .style("cursor", "pointer")

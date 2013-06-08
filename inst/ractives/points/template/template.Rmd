@@ -86,11 +86,14 @@
         .data(data)
       .enter().append("svg:circle")
         .attr(
-            "r": radius
-            "title": (d) -> "<strong>#{d.point_name}</strong><br>x: #{decimal_format(d.x)}<br>y: #{decimal_format(d.y)}"
             "class": "circle_tooltip"
             "transform": transform
+            "r": radius
             "fill": (d) -> color_scale(d.colorize)
+            "title": (d) ->
+                "<strong>#{d.point_name}</strong><br>
+                {{opts$params$ylab %||% "y"}}: <strong>#{d.y}</strong><br>
+                {{opts$params$xlab %||% "x"}}: #{d.x}"
         )
 
     $(".circle_tooltip").tooltip
@@ -121,7 +124,7 @@
         point_names.attr("transform", transform)
 
     sidebar = plot.append("g")
-        .attr("transform","translate(#{plot.width + 20},#{0})")
+        .attr("transform","translate(#{plot.width + 60},#{0})")
 
     g_point_names = sidebar.append("g")
         .style("cursor", "pointer")

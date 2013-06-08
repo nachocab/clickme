@@ -86,7 +86,9 @@
 
                 cell_value = decimal_format(d3.select(this).data()[0].cell_value)
 
-                title = "#{row_name}<br>#{col_name}<br><strong>#{cell_value}</strong>"
+                title = "#{row_name}<br>
+                        #{col_name}<br>
+                        <strong>#{cell_value}</strong>"
                 # tooltip
                 #     .attr("x", d3.select(this).attr("x"))
                 #     .attr("y", 20)
