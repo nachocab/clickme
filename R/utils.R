@@ -250,7 +250,7 @@ get_assets <- function(opts){
 get_scripts <- function(opts) {
     scripts <- paste(sapply(opts$config$scripts, function(script_path){
         if (!grepl("^http", script_path)){
-            script_path <- file.path(opts$relative_path$assets, script_path)
+            script_path <- file.path(opts$relative_path, script_path)
         }
         paste0("<script src=\"", script_path, "\"></script>")
     }), collapse="\n")
@@ -265,7 +265,7 @@ get_scripts <- function(opts) {
 get_styles <- function(opts) {
     styles <- paste(sapply(opts$config$styles, function(style_path){
         if (!grepl("^http", style_path)){
-            style_path <- file.path(opts$relative_path$assets, style_path)
+            style_path <- file.path(opts$relative_path, style_path)
         }
         paste0("<link href=\"", style_path, "\" rel=\"stylesheet\">")
     }), collapse="\n")

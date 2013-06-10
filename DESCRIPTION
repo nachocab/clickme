@@ -26,6 +26,5 @@ Collate:
     'clickme-lines.R'
     'clickme-points.R'
     'new-template.R'
-    'validate-template.R'
     'data-names.R'
     'clickme.R'

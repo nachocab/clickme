@@ -1,4 +1,4 @@
-get_translator_test_contents <- function() {
+get_translator_test_contents <- function(template_name) {
     paste0("context(\"translate ", template_name, "\")
 
 test_that(\"input data is translated to the format expected by the template\", {
@@ -58,7 +58,7 @@ new_template <- function(template_name, overwrite = FALSE) {
 
     config_contents <- get_config_contents()
     translator_contents <- get_translator_contents()
-    translator_test_contents <- get_translator_test_contents()
+    translator_test_contents <- get_translator_test_contents(template_name)
 
     if (overwrite){
         unlink(file.path(getOption("clickme_templates_path"), template_name), recursive = TRUE)
