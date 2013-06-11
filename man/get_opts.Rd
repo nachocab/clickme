@@ -12,16 +12,17 @@
   parameters and values that will be accessible from the
   template}
 
-  \item{file_name}{name for the output HTML file (the .html
-  extension will be appended if not present). It will be
-  saved in the default output path
-  \code{getOption("clickme_output_path")}}
-
-  \item{dir}{folder where the output HTML file will be
-  created.}
-
   \item{file}{full path to the output HTML file.
   \code{file} overrides \code{file_name} and \code{dir}}
+
+  \item{dir}{folder where the output HTML file will be
+  created. Ignored if \code{file} is specified.}
+
+  \item{file_name}{name for the output HTML file (the .html
+  extension will be appended if not present). Ignored if
+  \code{file} is specified. If \code{dir} is not specified,
+  it will be created under the default output path
+  \code{getOption("clickme_output_path")}}
 
   \item{port}{port number used to open output files using a
   local server. Defaults to 8000.}

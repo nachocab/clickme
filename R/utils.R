@@ -531,14 +531,8 @@ demo_template <- function(template) {
     if (is.null(opts$config$demo)){
         message("The ", template, " template didn't provide a demo example.")
     } else {
-        message("Getting ready to run the following demo for the ", template, " template:\n\n", opts$config$demo)
-        message("\nPress Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
-        response <- readline()
-        if (tolower(response) %in% c("c")) {
-            message("Demo was canceled.")
-        } else {
-            eval(parse(text = opts$config$demo))
-        }
+        message("Running demo for the ", template, " template:\n\n", opts$config$demo)
+        eval(parse(text = opts$config$demo))
     }
 }
 
