@@ -1,103 +1,120 @@
 library(yaml)
 
-context("default path and names")
+context("opts: names and paths")
 
-test_that("clickme_templates_path exists", {
-    old_clickme_templates_path <- getOption("clickme_templates_path")
+test_that("default paths are added", {
+    opts <- get_default_opts("test_template")
+    expect_equal(opts$paths$template, file.path(getOption("clickme_templates_path"), "test_template"))
+    expect_equal(opts$paths$template_assets, file.path(opts$paths$template, "assets"))
 
-    options("clickme_templates_path" = "fake_clickme_templates_path")
-    opts <- get_default_paths("fake_template")
-    expect_error(validate_paths(opts), gettextf("doesn't contain a valid path: %s", "fake_clickme_templates_path"))
-
-    options("clickme_templates_path" = old_clickme_templates_path)
-})
-
-test_that("default path and name variables are assigned", {
-    opts <- get_default_paths("test_template")
-
-    expect_equal(opts$path$template, file.path(getOption("clickme_templates_path"), "test_template"))
-    expect_equal(opts$path$template_assets, file.path(opts$path$template, "assets"))
-    expect_equal(opts$path$clickme_assets, file.path(getOption("clickme_output_path"), "clickme_assets"))
-
-    expect_equal(opts$path$template_file, file.path(opts$path$template, "template.Rmd"))
-    expect_equal(opts$path$config_file, file.path(opts$path$template, "config.yml"))
-    expect_equal(opts$path$translator_file, file.path(opts$path$template, "translator.R"))
-    expect_equal(opts$path$translator_test_file, file.path(opts$path$template, "test-translator.R"))
-
-    expect_equal(opts$relative_path, "clickme_assets")
-})
-
-test_that("default paths are valid", {
-    old_paths <- list(templates = getOption("clickme_templates_path"), output = getOption("clickme_output_path"))
-    options("clickme_output_path" = system.file("output", package = "clickme"))
-    options("clickme_templates_path" = system.file("templates", package = "clickme"))
-
-    opts <- get_default_paths("fake_template")
-
-    expect_error(validate_paths(opts), gettextf("There is no template fake_template located in: %s", file.path(getOption("clickme_templates_path"), "fake_template")) )
-    dir.create(opts$path$template)
-
-    expect_error(validate_paths(opts), gettextf("The fake_template template doesn't contain a template file in: %s", opts$path$template_file))
-    file.create(opts$path$template_file)
-
-    expect_error(validate_paths(opts), gettextf("The fake_template template doesn't contain a configuration file in: %s", opts$path$config_file))
-    file.create(opts$path$config_file)
-
-    expect_error(validate_paths(opts), gettextf("The fake_template template doesn't contain a translator file in: %s", opts$path$translator_file))
-    file.create(opts$path$translator_file)
-
-    unlink(opts$path$template, recursive = TRUE)
-    options("clickme_templates_path" = old_paths$templates)
-    options("clickme_output_path" = old_paths$output)
+    expect_equal(opts$paths$template_file, file.path(opts$paths$template, "template.Rmd"))
+    expect_equal(opts$paths$config_file, file.path(opts$paths$template, "config.yml"))
+    expect_equal(opts$paths$translator_file, file.path(opts$paths$template, "translator.R"))
+    expect_equal(opts$paths$translator_test_file, file.path(opts$paths$template, "test-translator.R"))
 
 })
 
-test_that("clickme_output_path is created when it doesn't exist", {
-    old_clickme_output_path <- getOption("clickme_output_path")
 
-    options("clickme_output_path" = file.path(system.file(package = "clickme"), "output_test"))
-    opts <- get_default_paths("fake_template")
-    dir.create(opts$path$template)
-    sapply(c(opts$path$template_file, opts$path$translator_file, opts$path$config_file), file.create)
+test_that("output file name is added", {
+    opts <- get_default_opts("test_template")
 
+    opts <- add_output_file_name(opts, file = NULL, file_name = NULL)
+    expect_equal(opts$names$output_file, "temp-test_template.html")
+
+    opts <- add_output_file_name(opts, file = file.path("my_folder", "my_file.html"), file_name = NULL)
+    expect_equal(opts$names$output_file, "my_file.html")
+
+    opts <- add_output_file_name(opts, file = file.path("my_folder", "my_file"), file_name = NULL)
+    expect_equal(opts$names$output_file, "my_file.html")
+
+    opts <- add_output_file_name(opts, file = NULL, file_name = "my_file.html")
+    expect_equal(opts$names$output_file, "my_file.html")
+
+    opts <- add_output_file_name(opts, file = NULL, file_name = "my_file")
+    expect_equal(opts$names$output_file, "my_file.html")
+
+    expect_warning(opts <- add_output_file_name(opts, file = file.path("my_folder", "my_file1.html"), file_name = "my_file2.html"), "The \"file_name\" argument was ignored because the \"file\" argument was present: ")
+    expect_equal(opts$names$output_file, "my_file1.html")
+})
+
+test_that("output paths are added", {
+    opts <- get_default_opts("test_template")
+
+    opts <- add_output_file_name(opts, file = NULL, file_name = NULL)
+    opts <- add_output_paths(opts, file = NULL, dir = NULL)
+    expect_equal(opts$paths$output, system.file("output", package = "clickme"))
+    expect_equal(opts$paths$output_file, file.path(opts$paths$output, opts$names$output_file))
+
+    expect_equal(opts$paths$shared_assets, file.path(getOption("clickme_templates_path"), "__shared_assets"))
+    expect_equal(opts$paths$output_template_assets, file.path(opts$path$output, "clickme_assets", "test_template"))
+    expect_equal(opts$paths$output_shared_assets, file.path(opts$path$output, "clickme_assets"))
+
+    expect_equal(opts$relative_path$template_assets, file.path("clickme_assets", "test_template"))
+    expect_equal(opts$relative_path$shared_assets, "clickme_assets")
+
+    opts <- add_output_file_name(opts, file = NULL, file_name = NULL)
+    opts <- add_output_paths(opts, file = NULL, dir = "my_folder")
+    expect_equal(opts$paths$output, "my_folder")
+    expect_equal(opts$paths$output_file, file.path(opts$paths$output, opts$names$output_file))
+
+    opts <- add_output_file_name(opts, file = file.path("my_folder", "my_file1.html"), file_name = NULL)
+    opts <- add_output_paths(opts, file = file.path("my_folder", "my_file1.html"), dir = NULL)
+    expect_equal(opts$paths$output, "my_folder")
+    expect_equal(opts$paths$output_file, file.path(opts$paths$output, opts$names$output_file))
+
+    opts <- add_output_file_name(opts, file = file.path("my_folder1", "my_file1.html"), file_name = NULL)
+    expect_warning(opts <- add_output_paths(opts, file = file.path("my_folder1", "my_file1.html"), dir = "my_folder2"), "The \"dir\" argument was ignored because the \"file\" argument was present: ")
+    expect_equal(opts$paths$output, "my_folder1")
+    expect_equal(opts$paths$output_file, file.path(opts$paths$output, opts$names$output_file))
+})
+
+test_that("default paths and are valid", {
+
+    opts <- get_default_opts("test_template")
+    opts <- add_output_file_name(opts, file = NULL, file_name = NULL)
+    opts <- add_output_paths(opts, file = NULL, dir = NULL)
+
+    expect_error(validate_paths(opts), gettextf("There is no template test_template located in: %s", file.path(getOption("clickme_templates_path"), "test_template")) )
+
+    dir.create(opts$paths$template)
+    expect_error(validate_paths(opts), gettextf("The test_template template doesn't contain a template file in: %s", opts$paths$template_file))
+
+    file.create(opts$paths$template_file)
+    expect_error(validate_paths(opts), gettextf("The test_template template doesn't contain a configuration file in: %s", opts$paths$config_file))
+
+    file.create(opts$paths$config_file)
+    expect_error(validate_paths(opts), gettextf("The test_template template doesn't contain a translator file in: %s", opts$paths$translator_file))
+
+    file.create(opts$paths$translator_file)
+    expect_true({validate_paths(opts); TRUE})
+
+    dir_path <- file.path(system.file("output", package = "clickme"), "output_test")
+    opts <- add_output_paths(opts, file = NULL, dir = dir_path)
+    opts <- add_paths(opts)
     validate_paths(opts)
-    expect_true(file.exists(system.file("output_test", package = "clickme")))
-
-    unlink(system.file("output_test", package = "clickme"), recursive = TRUE)
-    unlink(opts$path$template, recursive = TRUE)
-    options("clickme_output_path" = old_clickme_output_path)
-})
-
-test_that("clickme_output_path goes back to default when NULL", {
-    old_clickme_output_path <- getOption("clickme_output_path")
-
-    options("clickme_output_path" = NULL)
-    opts <- get_default_paths("fake_template")
-    dir.create(opts$path$template)
-    sapply(c(opts$path$template_file, opts$path$translator_file, opts$path$config_file), file.create)
-    expect_warning(validate_paths(opts), gettextf("was NULL. Using: %s", system.file("output", package = "clickme")))
+    expect_true(file.exists(dir_path))
+    unlink(file.path(system.file("output", package = "clickme"), "output_test"), recursive = TRUE)
 
     unlink(opts$path$template, recursive = TRUE)
-    options("clickme_output_path" = old_clickme_output_path)
 })
 
-
-context("validate assets")
+context("opts: validate assets")
 
 test_that("styles and scripts must be valid", {
-    test_path <- file.path(system.file("output", package = "clickme"), "test")
+    test_path <- file.path(system.file("output", package = "clickme"), "test_assets")
     dir.create(test_path)
-    opts <- list(path=list(template_assets = test_path))
+    opts <- list(paths = list(template_assets = test_path, shared_assets = test_path))
+
+    opts$config$styles <- NULL
+    expect_true({validate_assets(opts); TRUE})
 
     opts$config$styles <- c("abc.css")
     expect_error(validate_assets(opts), "abc.css not found")
-
     file.create(file.path(test_path, "abc.css"))
     expect_true({validate_assets(opts); TRUE})
 
-    opts$config$scripts <- c("abc.js")
+    opts$config$scripts <- c("$shared/abc.js")
     expect_error(validate_assets(opts), "abc.js not found")
-
     file.create(file.path(test_path, "abc.js"))
     expect_true({validate_assets(opts); TRUE})
 
@@ -125,8 +142,8 @@ test_that("styles and scripts must be valid", {
 
 # opts <- get_opts("force_directed")
 # test_that("the output HTML file is named using the data_prefix and the template name", {
-#     expect_equal(opts$name$html_file, paste0(opts$data_prefix, "-", opts$name$template, ".html"))
-#     expect_equal(opts$path$html_file, file.path(getOption("clickme_templates_path"), opts$name$html_file))
+#     expect_equal(opts$names$html_file, paste0(opts$data_prefix, "-", opts$names$template, ".html"))
+#     expect_equal(opts$paths$output_file, file.path(getOption("clickme_templates_path"), opts$names$html_file))
 # })
 
 # test_that("name_mappings gets saved", {
@@ -136,7 +153,7 @@ test_that("styles and scripts must be valid", {
 # })
 
 # test_that("opts$url is set", {
-#     expect_equal(opts$url, opts$path$html_file)
+#     expect_equal(opts$url, opts$paths$output_file)
 
 #     opts <- get_opts("par_coords")
 #     expect_equal(opts$url, "http://localhost:8000/data-par_coords.html")

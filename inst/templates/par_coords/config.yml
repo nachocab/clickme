@@ -20,10 +20,6 @@ demo: |-
     cars$cylinders <- factor(cars$cylinders)
     clickme(cars, "par_coords", list(color_by = "cylinders")) # categorical
 
-data_names:
-    required:
-    optional:
-
 params:
     title: "PCP"
     width: 1024
@@ -38,12 +34,12 @@ params:
         left: 200
 
 scripts:
-    - d3.v3.js
+    - $shared/d3.v3.js
     - d3.parcoords.js
 
 styles:
-    - d3.parcoords.css
     - style.css
+    - d3.parcoords.css
 
 require_packages:
     - rjson

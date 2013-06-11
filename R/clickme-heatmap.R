@@ -86,7 +86,7 @@ validate_heatmap_params <- function(params) {
     params
 }
 
-#' Generates an intetemplate heatmap
+#' Generates an interactive heatmap
 #'
 #' @param data matrix, data frame, or vector specifying y-values. A line is defined by the values of one row.
 #' @param row_names row names

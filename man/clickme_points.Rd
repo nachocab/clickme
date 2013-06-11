@@ -1,6 +1,6 @@
 \name{clickme_points}
 \alias{clickme_points}
-\title{Generates an intetemplate scatterplot}
+\title{Generates an interactive scatterplot}
 \usage{
   clickme_points(x, y = NULL, point_names = rownames(x),
     title = "Points", main = NULL, xlab = NULL,
@@ -72,6 +72,6 @@
   \item{...}{additional arguments for \code{clickme}}
 }
 \description{
-  Generates an intetemplate scatterplot
+  Generates an interactive scatterplot
 }
 

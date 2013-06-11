@@ -7,14 +7,14 @@ demo: |-
     clickme_lines(mat(nrow=5,ncol=5), colorize = c("a","a","b","b","a"), interpolate = "basis")
 
 scripts:
-    - d3.v3.js
-    - d3_aux.js
-    - jquery.min.js
-    - bootstrap-tooltip.v2_3.js
+    - $shared/d3.v3.js
+    - $shared/d3_aux.js
+    - $shared/jquery.min.js
+    - $shared/bootstrap-tooltip.v2_3.js
 
 styles:
-    - clickme.css
-    - bootstrap-tooltip.css
+    - $shared/clickme.css
+    - $shared/bootstrap-tooltip.css
 
 require_packages:
 

@@ -54,7 +54,7 @@ require_coffeescript: no
 #' @param overwrite flag that indicates what to do when there is another template of the same name, default FALSE
 #' @export
 new_template <- function(template_name, overwrite = FALSE) {
-    opts <- get_default_paths(template_name)
+    opts <- get_default_opts(template_name)
 
     config_contents <- get_config_contents()
     translator_contents <- get_translator_contents()
@@ -63,29 +63,27 @@ new_template <- function(template_name, overwrite = FALSE) {
     if (overwrite){
         unlink(file.path(getOption("clickme_templates_path"), template_name), recursive = TRUE)
     } else {
-        if (file.exists(opts$path$template)) stop("The ", opts$name$template, " template already exists: ", opts$path$template)
+        if (file.exists(opts$paths$template)) stop("The ", opts$names$template, " template already exists: ", opts$paths$template)
     }
 
-    sapply(c(opts$path$template,
-             opts$path$template_assets,
-             opts$path$template,
-             opts$path$data), function(path){
+    sapply(c(opts$paths$template,
+             opts$paths$template_assets), function(path){
                 dir.create(path)
              })
 
-    sapply(c(opts$path$template_file,
-             opts$path$config_file,
-             opts$path$translator_test_file,
-             opts$path$translator_file), function(path){
+    sapply(c(opts$paths$template_file,
+             opts$paths$config_file,
+             opts$paths$translator_test_file,
+             opts$paths$translator_file), function(path){
                 file.create(path)
              })
 
-    writeLines(config_contents, opts$path$config_file)
-    writeLines(translator_contents, opts$path$translator_file)
-    writeLines(translator_test_contents, opts$path$translator_test_file)
+    writeLines(config_contents, opts$paths$config_file)
+    writeLines(translator_contents, opts$paths$translator_file)
+    writeLines(translator_test_contents, opts$paths$translator_test_file)
 
-    message("template created at: ", opts$path$template, "\n")
-    message("You can start by editing the template file using:\nfile.edit(\"", opts$path$template_file, "\")")
+    message("template created at: ", opts$paths$template, "\n")
+    message("You can start by editing the template file using:\nfile.edit(\"", opts$paths$template_file, "\")")
 
-    invisible()
+    invisible(opts)
 }

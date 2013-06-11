@@ -1,6 +1,6 @@
 # clickme
 
-**Clickme** is an R package that makes creating intetemplate JavaScript visualizations as easy as making a standard R plot.
+**Clickme** is an R package that makes creating interactive JavaScript visualizations as easy as making a standard R plot.
 
 Want to learn more? [See the wiki](https://github.com/nachocab/clickme/wiki) and join the [mailing list](https://groups.google.com/d/forum/rclickme).
 

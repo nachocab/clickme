@@ -1,6 +1,6 @@
 context("new_template")
 
-template <- "tmp_template"
+template <- "temp_template"
 
 test_that("doesn't overwrite an existing template, unless specified", {
     unlink(file.path(getOption("clickme_templates_path"), template), recursive = TRUE) # to be sure it doesn't exist
@@ -16,19 +16,17 @@ test_that("doesn't overwrite an existing template, unless specified", {
 test_that("creates a new blank template", {
     unlink(file.path(getOption("clickme_templates_path"), template), recursive = TRUE) # to be sure it doesn't exist
 
-    new_template(template)
-    opts <- get_opts(template)
+    opts <- new_template(template)
 
     # folders
-    expect_true(file.exists(file.path(opts$path$template)))
-    expect_true(file.exists(file.path(opts$path$template_assets)))
-    expect_true(file.exists(file.path(opts$path$clickme_assets)))
+    expect_true(file.exists(file.path(opts$paths$template)))
+    expect_true(file.exists(file.path(opts$paths$template_assets)))
 
     # files
-    expect_true(file.exists(file.path(opts$path$config_file)))
-    expect_true(file.exists(file.path(opts$path$template_file)))
-    expect_true(file.exists(file.path(opts$path$translator_file)))
-    expect_true(file.exists(file.path(opts$path$translator_test_file)))
+    expect_true(file.exists(file.path(opts$paths$config_file)))
+    expect_true(file.exists(file.path(opts$paths$template_file)))
+    expect_true(file.exists(file.path(opts$paths$translator_file)))
+    expect_true(file.exists(file.path(opts$paths$translator_test_file)))
 
     unlink(file.path(getOption("clickme_templates_path"), template), recursive = TRUE)
 })

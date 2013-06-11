@@ -83,7 +83,7 @@ validate_lines_params <- function(params) {
 }
 
 
-#' Generates an intetemplate line plot
+#' Generates an interactive line plot
 #'
 #' @param data matrix, data frame, or vector specifying y-values. A line is defined by the values of one row.
 #' @param x x-values (optional). If specified by a numeric vector, it is used to set the tick values.

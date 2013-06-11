@@ -13,6 +13,21 @@ separator <- function(n = 70){
     paste0(rep("=", n, collapse = ""))
 }
 
+export_assets <- function(opts){
+
+    if (file.exists(opts$paths$shared_assets) && (!file.exists(opts$paths$output_shared_assets) || file.info(opts$paths$shared_assets)$mtime > file.info(opts$paths$output_shared_assets)$mtime)){
+        dir.create(opts$paths$output_shared_assets, showWarnings = FALSE)
+        file.copy(from = list.files(opts$paths$shared_assets, full.names = TRUE), to = opts$paths$output_shared_assets, overwrite = TRUE)
+    }
+
+    if (file.exists(opts$paths$template_assets) && (!file.exists(opts$paths$output_template_assets) || file.info(opts$paths$template_assets)$mtime > file.info(opts$paths$output_template_assets)$mtime)){
+        dir.create(opts$paths$output_template_assets, showWarnings = FALSE)
+        file.copy(from = list.files(opts$paths$template_assets, full.names = TRUE), to = opts$paths$output_template_assets, overwrite = TRUE)
+    }
+
+    invisible()
+}
+
 validate_server <- function(opts) {
     separator <- paste0(rep("=", 70, collapse = ""))
     if (opts$config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {
@@ -234,6 +249,19 @@ get_padding_param <- function(opts, default = c(top = 100, right = 100, bottom =
     padding
 }
 
+get_asset_path <- function(opts, path){
+    if (!grepl("^http://", path)){
+        if (grepl("\\$shared/", path)) {
+            path <- gsub("\\$shared/", "", path)
+            path <- file.path(opts$relative_path$shared_assets, path)
+        } else {
+            path <- file.path(opts$relative_path$template_assets, path)
+        }
+    }
+
+    path
+}
+
 #' Generate HTML style and script tags
 #'
 #' @param opts the options of the current template
@@ -249,10 +277,8 @@ get_assets <- function(opts){
 #' @export
 get_scripts <- function(opts) {
     scripts <- paste(sapply(opts$config$scripts, function(script_path){
-        if (!grepl("^http", script_path)){
-            script_path <- file.path(opts$relative_path, script_path)
-        }
-        paste0("<script src=\"", script_path, "\"></script>")
+        script_path <- get_asset_path(opts, script_path)
+        gettextf("<script src=\"%s\"></script>", script_path)
     }), collapse="\n")
 
     scripts
@@ -264,10 +290,8 @@ get_scripts <- function(opts) {
 #' @export
 get_styles <- function(opts) {
     styles <- paste(sapply(opts$config$styles, function(style_path){
-        if (!grepl("^http", style_path)){
-            style_path <- file.path(opts$relative_path, style_path)
-        }
-        paste0("<link href=\"", style_path, "\" rel=\"stylesheet\">")
+        style_path <- get_asset_path(opts, style_path)
+        gettextf("<link href=\"%s\" rel=\"stylesheet\">", style_path)
     }), collapse="\n")
 
     styles
@@ -290,7 +314,7 @@ create_data_file <- function(opts, extension, sep=",", method = NULL, row_names 
     if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
 
     data_file_name <- paste0(opts$data_prefix, extension)
-    data_file_path <- file.path(opts$path$data, data_file_name)
+    data_file_path <- file.path(opts$paths$data, data_file_name)
     relative_data_file_path <- file.path(opts$relative_path$data, data_file_name)
 
     if ((is.null(method) && extension == ".csv") || (!is.null(method) && method == "write.csv")){
@@ -322,7 +346,7 @@ create_data_file <- function(opts, extension, sep=",", method = NULL, row_names 
 #' @export
 read_template_csv <- function(template, file_name) {
     opts <- get_opts(template)
-    data <- read.csv(file.path(opts$path$data, file_name))
+    data <- read.csv(file.path(opts$paths$data, file_name))
 
     data
 }
@@ -396,12 +420,12 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 test_template <- test_translator <- function(template){
     opts <- get_opts(template)
 
-    if (file.exists(opts$path$translator_test_file)){
+    if (file.exists(opts$paths$translator_test_file)){
         library("testthat")
-        source(opts$path$translator_file)
-        test_file(opts$path$translator_test_file)
+        source(opts$paths$translator_file)
+        test_file(opts$paths$translator_test_file)
     } else {
-        stop(paste0("There is no test translator file at this location: ", opts$path$translator_test_file, "\nYou might have to create it or call set_templates_path()"))
+        stop(paste0("There is no test translator file at this location: ", opts$paths$translator_test_file, "\nYou might have to create it or call set_templates_path()"))
     }
 }
 
@@ -488,16 +512,6 @@ show_template <- function(template, fields = NULL){
                     message(paste0(titleize(field)))
                     cat(paste0(paste0(names(opts$config$params), ": ", opts$config$params), collapse="\n"), "\n\n")
                 }
-            } else if (field == "data_names") {
-                if (length(opts$config$data_names$required) > 0){
-                    message(paste0(titleize(field)))
-                    cat(paste0(c("Required:", opts$config$data_names$required), collapse=" "), "\n")
-                }
-                if (length(opts$config$data_names$optional) > 0){
-                    message(paste0(titleize(field)))
-                    cat(paste0(c("Optional:", opts$config$data_names$optional), collapse=" "), "\n")
-                }
-                cat ("\n")
             } else {
                 message(paste0(titleize(field)))
                 cat(paste0(opts$config[[field]], collapse="\n"), "\n\n")
@@ -542,7 +556,7 @@ expect_correct_file <- function(opts, extension, expected_data = NULL, test_data
     if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
 
     expected_relative_path <- paste("\"", file.path(opts$relative_path$data, paste0(test_data_prefix, extension)), "\"")
-    expected_path <- file.path(opts$path$data, paste0(test_data_prefix, extension))
+    expected_path <- file.path(opts$paths$data, paste0(test_data_prefix, extension))
     expect_true(file.exists(expected_path))
     if (!is.null(expected_data)){
         expect_equal(readContents(expected_path), expected_data)

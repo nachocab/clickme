@@ -1,6 +1,6 @@
 \name{clickme_heatmap}
 \alias{clickme_heatmap}
-\title{Generates an intetemplate heatmap}
+\title{Generates an interactive heatmap}
 \usage{
   clickme_heatmap(data, row_names = rownames(data),
     col_names = colnames(data), show_names = TRUE,
@@ -53,7 +53,7 @@
   \item{...}{additional arguments for \code{clickme}}
 }
 \description{
-  Generates an intetemplate heatmap
+  Generates an interactive heatmap
 }
 \examples{
 clickme_heatmap(matrix(rnorm(700), ncol = 10), row_names = paste("row", 1:70))

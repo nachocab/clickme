@@ -2,10 +2,10 @@
 \name{clickme}
 \alias{clickme}
 \alias{clickme-package}
-\title{Straight from R to JS: Create intetemplate visualizations from R}
+\title{Straight from R to JS: Create interactive visualizations from R}
 \usage{
   clickme(data, template, params = NULL,
-    open = intetemplate(), link = FALSE, ...)
+    open = interactive(), link = FALSE, ...)
 }
 \arguments{
   \item{data}{input data}
@@ -21,7 +21,7 @@
   \item{...}{additional arguments for \code{get_opts}}
 }
 \description{
-  Straight from R to JS: Create intetemplate visualizations
+  Straight from R to JS: Create interactive visualizations
   from R
 
   Generates a JavaScript visualization
@@ -44,7 +44,7 @@
 \examples{
 library(clickme)
 
-# visualize a force-directed intetemplate graph
+# visualize a force-directed interactive graph
 items <- paste0("GENE_", 1:40)
 n <- 30
 df1 <- data.frame(source = sample(items, n, replace = TRUE), target = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace = TRUE))
