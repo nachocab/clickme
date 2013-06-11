@@ -1,6 +1,5 @@
 context("clickme_points")
 
-suppressMessages(set_root_path(system.file("ractives", package="clickme")))
 
 test_that("reads the correct data input", {
 

@@ -20,17 +20,17 @@ Try the demos:
 ```S
 library(clickme)
 
-# Try a few of the available ractives
+# Try a few of the available templates
 
-demo_ractive("force_directed") # drag the nodes around
+demo_template("force_directed") # drag the nodes around
 
-demo_ractive("points") # try zooming in and out, click the Show names button, hover over points
+demo_template("points") # try zooming in and out, click the Show names button, hover over points
 
-demo_ractive("heatmap") # hover over cells
+demo_template("heatmap") # hover over cells
 
-demo_ractive("lines") # click the Show names button
+demo_template("lines") # click the Show names button
 
-demo_ractive("par_coords") # click and drag up and down each axes, drag the axes horizontally (you need to run a local server for this one)
+demo_template("par_coords") # click and drag up and down each axes, drag the axes horizontally (you need to run a local server for this one)
 ```
 
 Your browser will open a new tab for each example. Here are some live examples: [force-directed network](http://reasoniamhere.com/clickme/data-lines.html), [zoomable scatterplot]((http://reasoniamhere.com/clickme/data-points.html), [line plot](http://reasoniamhere.com/clickme/data-lines.html), [parallel coordinates](http://reasoniamhere.com/clickme/data-par_coords.html), [heatmap](http://reasoniamhere.com/clickme/data-heatmap.html), [grouped heatmap](http://reasoniamhere.com/clickme/col_groups-heatmap.html).

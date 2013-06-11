@@ -2,7 +2,8 @@
 \alias{server}
 \title{Run a local server}
 \usage{
-  server(path = get_root_path(), port = 8000)
+  server(path = getOption("clickme_templates_path"),
+    port = 8000)
 }
 \arguments{
   \item{path}{path where server is started}

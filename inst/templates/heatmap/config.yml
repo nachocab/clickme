@@ -1,0 +1,25 @@
+info: |-
+
+original_url:
+
+demo: |-
+    clickme_heatmap(matrix(rnorm(700), ncol = 10), row_names = paste("row", 1:70))
+    clickme_heatmap(matrix(rnorm(600), ncol = 20), row_names = paste("row", 1:30), col_groups = c(rep("First group", 10), rep("Second group",10)))
+
+scripts:
+    - $shared/d3.v3.js
+    - $shared/d3_aux.js
+    - $shared/jquery.min.js
+    - $shared/bootstrap-tooltip.v2_3.js
+
+styles:
+    - $shared/bootstrap-tooltip.css
+    - $shared/clickme.css
+
+require_packages:
+
+require_server: no
+
+require_coffeescript: no
+
+

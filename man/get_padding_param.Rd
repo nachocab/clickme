@@ -6,7 +6,7 @@
     default = c(top = 100, right = 100, bottom = 100, left = 100))
 }
 \arguments{
-  \item{opts}{ractive options}
+  \item{opts}{template options}
 
   \item{default}{default padding, a vector with top, left,
   bottom and right values}

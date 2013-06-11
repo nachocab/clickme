@@ -3,11 +3,11 @@ Maintainer: Nacho Caballero <nachocab@gmail.com>
 Author: Nacho Caballero <nachocab@gmail.com>
 Version: 0.3.0
 License: GPL-3
-Title: Straight from R to JS: Render JavaScript visualizations using R objects.
+Title: Straight from R to JS: Create interactive visualizations from R
 Description: R has powerful data processing abilities, but it can only generate
-    static plots. Browsers allow interactivity but the data they use is often
-    statically defined. Clickme bridges both worlds by making it easy to create
-    interactive visualizations using data in R.
+    static plots. Browsers allow interactivity but the data they work with is
+    often statically defined. Clickme bridges both worlds by making it easy to
+    create interactive visualizations using R data.
 Imports:
     knitr (>= 1.2),
     yaml (>= 2.1.7),
@@ -20,13 +20,10 @@ Suggests:
 Collate:
     'utils.R'
     'json.R'
+    'zzz.R'
     'opts.R'
-    'root-path.R'
-    'clickme_points.R'
-    'clickme_lines.R'
-    'clickme_heatmap.R'
-    'new-ractive.R'
-    'validate-ractive.R'
-    'data-names.R'
+    'clickme-heatmap.R'
+    'clickme-lines.R'
+    'clickme-points.R'
+    'new-template.R'
     'clickme.R'
-    'clickme-package.r'
