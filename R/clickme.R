@@ -24,8 +24,8 @@ generate_visualization <- function(opts){
 #' clickme(df1, "force_directed")
 clickme <- function(data, template, params = NULL, open = interactive(), link = FALSE, ...){
 
-    get_opts_fix_args <- function(..., open, link) get_opts(...)
-    opts <- get_opts_fix_args(template, params, ...)
+    get_opts_skip_args <- function(..., open, link) get_opts(...)
+    opts <- get_opts_skip_args(template, params, ...)
     opts$data <- data
 
     generate_visualization(opts)

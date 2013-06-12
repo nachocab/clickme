@@ -18,21 +18,27 @@ test_that("default paths are added", {
 test_that("output file name is added", {
     opts <- get_default_opts("test_template")
 
+    opts$names$output_file <- NULL
     opts <- add_output_file_name(opts, file = NULL, file_name = NULL)
     expect_equal(opts$names$output_file, "temp-test_template.html")
 
+    opts$names$output_file <- NULL
     opts <- add_output_file_name(opts, file = file.path("my_folder", "my_file.html"), file_name = NULL)
     expect_equal(opts$names$output_file, "my_file.html")
 
+    opts$names$output_file <- NULL
     opts <- add_output_file_name(opts, file = file.path("my_folder", "my_file"), file_name = NULL)
     expect_equal(opts$names$output_file, "my_file.html")
 
+    opts$names$output_file <- NULL
     opts <- add_output_file_name(opts, file = NULL, file_name = "my_file.html")
     expect_equal(opts$names$output_file, "my_file.html")
 
+    opts$names$output_file <- NULL
     opts <- add_output_file_name(opts, file = NULL, file_name = "my_file")
     expect_equal(opts$names$output_file, "my_file.html")
 
+    opts$names$output_file <- NULL
     expect_warning(opts <- add_output_file_name(opts, file = file.path("my_folder", "my_file1.html"), file_name = "my_file2.html"), "The \"file_name\" argument was ignored because the \"file\" argument was present: ")
     expect_equal(opts$names$output_file, "my_file1.html")
 })

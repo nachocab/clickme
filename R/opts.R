@@ -22,6 +22,8 @@ add_output_file_name <- function(opts, file = NULL, file_name = NULL) {
         } else {
             if (!grepl(".\\.html$", file_name)) {
                 opts$names$output_file <- paste0(file_name, ".html")
+            } else {
+                opts$names$output_file <- file_name
             }
         }
     } else {
