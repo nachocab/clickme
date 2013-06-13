@@ -23,7 +23,7 @@
 
     draw_box = {{ toJSON(opts$params$box) }}
 
-    colorize_counts = {{ get_colorize_counts(opts) }}
+    color_legend_counts = {{ get_color_legend_counts(opts) }}
 
     plot = append_plot(
         selector: "#container"
@@ -179,7 +179,7 @@
                 "x": radius + 10
                 "y": 0
                 "dy": ".35em")
-            .text((d) -> "#{d} (#{colorize_counts[d]})")
+            .text((d) -> "#{d} (#{color_legend_counts[d]})")
             # ).text((d,i) -> legend_names[i])
 
 

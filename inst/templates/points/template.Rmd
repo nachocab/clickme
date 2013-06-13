@@ -15,138 +15,129 @@
 
     data = {{ get_data_as_json(opts) }}
 
-    decimal_format = d3.format(".2f")
-
     radius = {{ opts$params$radius }}
 
     color_scale = {{ get_d3_color_scale(opts) }}
 
-    draw_box = {{ toJSON(opts$params$box) }}
+    color_legend_counts = {{ get_color_legend_counts(opts) }}
 
-    colorize_counts = {{ get_colorize_counts(opts) }}
-
-    plot = append_plot(
-        selector: "#container"
+    plot = new_plot(
         width: {{ opts$params$width }}
         height: {{ opts$params$height }}
         padding: {{ get_padding_param(opts) }}
-        x_domain: {{ get_xlim_param(opts)}}
-        y_domain: {{ get_ylim_param(opts)}}
-        title: "{{ opts$params$title }}"
+        data: {{ toJSON(opts$data )}}
         xlab: "{{ opts$params$xlab }}"
         ylab: "{{ opts$params$ylab }}"
-    )
+        title: "{{ opts$params$title }}"
+        box: {{ toJSON(opts$data$box )}}
+        xlim: {{ toJSON(opts$params$xlim )}}
+        ylim: {{ toJSON(opts$params$ylim )}}
+        jitter: {{ opts$params$jitter }}
+        ordinal_scale_padding: 1
+        linear_scale_padding: 40)
 
-
-    if draw_box?
-        plot.append("path")
-            .attr(
-                "d": "M0,0L#{plot.width},0L#{plot.width},#{plot.height}"
-            ).style(
-                "stroke": "black"
-                "stroke-width": "2px"
-                "shape-rendering": "crispEdges"
-                "fill": "none"
-            )
-
+    plot.tooltip_text = (d) ->
+        "<strong>#{d.point_name}</strong><br>
+        #{plot.ylab}: <strong>#{format_property(d.y)}</strong><br>
+        #{plot.xlab}: #{format_property(d.x)}"
 
     plot.append("defs").append("clipPath")
         .attr("id", "clip")
       .append("rect")
         .attr(
             "width": plot.width
-            "height": plot.height
-        )
+            "height": plot.height)
 
-    clip = plot.append("g").attr("clip-path", "url(#clip)")
+    clip = plot.append("g")
+        .attr("clip-path", "url(#clip)")
 
+    if plot.zoom
+        clip.append("rect")
+          .attr(
+                "class": "overlay"
+                "width":  plot.width
+                "height": plot.height
+                "fill": "none"
+                "pointer-events": "all")
+          .style("cursor","move")
+          .call(d3.behavior.zoom()
+              .x(plot.scales.x)
+              .y(plot.scales.y)
+              .scaleExtent([1, Infinity])
+              .on("zoom", () -> redraw() ))
 
-    # the points and the labels use this function for placement after zoom
-    transform = (d) ->
-        "translate(#{plot.scales.x(d.x)},#{plot.scales.y(d.y)})"
+        transform = (d) ->
+            "translate(#{plot.scales.x(d.x)},#{plot.scales.y(d.y)})"
 
-    zoom = clip.append("rect")
-      .attr(
-            "class": "overlay"
-            "width":  plot.width
-            "height": plot.height
-            "fill": "none"
-            "pointer-events": "all"
-      ).style("cursor","move")
-      .call(d3.behavior.zoom()
-          .x(plot.scales.x)
-          .y(plot.scales.y)
-          .scaleExtent([1, Infinity])
-          .on("zoom", () -> redraw() )
-      )
+        redraw = () ->
+            plot.select(".x.axis").call(plot.axes.x);
+            plot.select(".y.axis").call(plot.axes.y);
+            g_points.attr("transform", transform)
 
-
-
-    circles = clip.selectAll("circle")
+    g_points = clip.selectAll(".point")
         .data(data)
-      .enter().append("svg:circle")
+      .enter().append("g")
+        .attr(
+              "class": "point"
+              "transform": (d) -> "translate(#{plot.scales.x(d.x) + plot.jitters.x * random()}, #{plot.scales.y(d.y) + plot.jitters.y * random()})")
+
+
+    points = g_points.append("svg:circle")
         .attr(
             "class": "circle_tooltip"
-            "transform": transform
             "r": radius
             "fill": (d) -> color_scale(d.colorize)
-            "title": (d) ->
-                "<strong>#{d.point_name}</strong><br>
-                {{opts$params$ylab %||% "y"}}: <strong>#{d.y}</strong><br>
-                {{opts$params$xlab %||% "x"}}: #{d.x}"
-        )
+            "title": (d) -> plot.tooltip_text(d) )
 
     $(".circle_tooltip").tooltip
         html: true
         container: "body"
         placement: "top"
 
-    point_names = clip.selectAll("text")
-        .data(data, (d) -> d.point_name)
-      .enter().append("text") # add .filter(function(d, i) { return d.colorize == "HSF1 target"; })
+    point_names = g_points.append("text")
         .text((d) -> d.point_name)
         .attr(
             "dy": ".32em"
             "dx": 8
             "text-anchor": "left"
-            "display": "none"
-            "transform":  transform
-        ).style(
+            "display": "none")
+        .style(
             "fill": (d) -> color_scale(d.colorize)
-            "font-size": "22px"
-            # "font-weight": "bold"
-        )
+            "font-size": "22px")
 
-    redraw = () ->
-        plot.select(".x.axis").call(plot.axes.x);
-        plot.select(".y.axis").call(plot.axes.y);
-        circles.attr("transform", transform)
-        point_names.attr("transform", transform)
+    # if plot.zoom
+        # g_points.attr("transform": transform)
 
+
+        # point_names.attr(
+        #     "x": (d,i)-> plot.jitters.x[i]
+        #     "y": (d,i)-> plot.jitters.y[i])
+
+    # Sidebar
     sidebar = plot.append("g")
         .attr("transform","translate(#{plot.width + 60},#{0})")
 
-    g_point_names = sidebar.append("g")
+    g_toggle_names = sidebar.append("g")
         .style("cursor", "pointer")
         .style("font-size","22px")
-        .on("click", () -> toggle_point_names())
+        .on("click", () -> toggle_names())
 
-    g_point_names.append("circle")
+    g_toggle_names.append("circle")
         .attr("r", 7)
         .attr("stroke","black")
         .attr("stroke-width", 2)
         .attr("fill","white")
 
-    g_point_names.append("text")
+    g_toggle_names.append("text")
         .attr('text-anchor', 'start')
         .attr('dy', '.32em')
         .attr('dx', '12')
-        .text("Show names")
+        .text("Show names (#{data.length})")
 
-    toggle_point_names = ()->
-        showing_point_names = g_point_names.classed("show_names")
+    toggle_names = ()->
+        showing_point_names = g_toggle_names.classed("show_names")
         point_names.attr("display", ()->        if showing_point_names then "none" else "inline")
-        g_point_names.attr("class", ()->        if showing_point_names then "" else "show_names")
+        g_toggle_names.attr("class", ()->        if showing_point_names then "" else "show_names")
             .select("circle").attr("fill", ()-> if showing_point_names then "white" else "black")
 
     # Draw color legend
@@ -179,7 +170,7 @@
                 "x": radius + 10
                 "y": 0
                 "dy": ".35em")
-            .text((d) -> "#{d} (#{colorize_counts[d]})")
+            .text((d) -> "#{d} (#{color_legend_counts[d]})")
             # ).text((d,i) -> legend_names[i])
 
 
@@ -192,6 +183,7 @@
     #     if (d3.event.keyCode in [78, 32]) # 'n' or 'space bar'
     #         change()
     # )
+
     ```
     </script>
     <div class = "code">

@@ -13,7 +13,6 @@ test_that(\"input data is translated to the format expected by the template\", {
 
 get_translator_contents <- function(){
     "get_data_as_json <- function(opts) {
-    data <- as.data.frame(opts$data, stringsAsFactors = FALSE)
     json_data <- df2json(data)
 
     json_data
@@ -83,7 +82,7 @@ new_template <- function(template_name, overwrite = FALSE) {
     writeLines(translator_test_contents, opts$paths$translator_test_file)
 
     message("template created at: ", opts$paths$template, "\n")
-    message("You can start by editing the template file using:\nfile.edit(\"", opts$paths$template_file, "\")")
+    message("You edit the template file by running: \nfile.edit(\"", opts$paths$template_file, "\")\n")
 
     invisible(opts)
 }

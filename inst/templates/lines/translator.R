@@ -1,4 +1,4 @@
-get_colorize_counts <- function(opts){
+get_color_legend_counts <- function(opts){
     toJSON(table(opts$data$unformatted$colorize))
 }
 

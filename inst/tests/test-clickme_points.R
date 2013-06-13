@@ -1,41 +1,4 @@
-context("clickme_points")
-
-
-test_that("reads the correct data input", {
-
-    # x is a vector, no y
-    data <- get_points_data(1:10, NULL, list(point_names = as.character(1:10)))
-    expect_equal(data, data.frame(x = 1:10, y = 1:10, point_name = as.character(1:10)))
-
-    # x is a vector, y is a vector
-    data <- get_points_data(2:4, 5:7, list(point_names = as.character(1:3)))
-    expect_equal(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
-
-    # x is a data frame (x, y, row names)
-    data <- data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3])
-    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
-
-    # x is a data frame (x, y, row names, extra column)
-    data <- data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3], extra = 11:13)
-    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
-
-    # x is a matrix (x, y, row names)
-    mat <- cbind(x = 2:4, y = 5:7)
-    rownames(mat) <- LETTERS[1:3]
-    data <- get_points_data(mat, NULL, list(point_names = rownames(mat)))
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
-
-    # x is a list (x, y, no names, uneven-size element)
-    data <- get_points_data(list(x = 2:4, y = 5:7, extra = 1:10), NULL, list(point_names = as.character(1:3)))
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
-
-    data <- list(x = 2:4, y = 5:7, extra = c("a", "b", "b"))
-    data <- get_points_data(data, NULL, list(point_names = as.character(1:3), colorize = data$extra))
-    expect_true(!is.null(data$colorize)) # we test this in more detail later
-
-})
+context("clickme_points: validate_points_params")
 
 test_that("main is changed to title", {
     params <- list(main = "paco")
@@ -57,6 +20,61 @@ test_that("the palette has valid names", {
 
     params <- list(colorize = 1:5, palette = c(a = "blue", c = "green", d = "red", e = "yellow"))
     expect_error(validate_points_params(params), "an unnamed vector")
+})
+
+
+context("clickme_points: get_points_data")
+
+test_that("numeric data is parsed", {
+
+    # x is a numeric vector, no y => x becomes y, x becomes 1:length(x)
+    data <- get_points_data(1:10, NULL, list(point_names = as.character(1:10)))
+    expect_equal(data, data.frame(x = 1:10, y = 1:10, point_name = as.character(1:10)))
+
+    # x is a numeric vector, y is a numeric vector
+    data <- get_points_data(2:4, 5:7, list(point_names = as.character(1:3)))
+    expect_equal(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
+
+    # x is a data frame (x, y, row names)
+    data <- data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3])
+    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
+
+    # x is a data frame (x, y, row names, extra column)
+    data <- data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3], extra = 11:13)
+    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
+
+    # x is a matrix (x, y, row names)
+    mat <- cbind(2:4,5:7)
+    rownames(mat) <- LETTERS[1:3]
+    data <- get_points_data(mat, NULL, list(point_names = rownames(mat)))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
+
+    # x is a list (x, y, no names, uneven-size element)
+    data <- get_points_data(list(x = 2:4, y = 5:7, extra = 1:10), NULL, list(point_names = as.character(1:3)))
+    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
+
+})
+
+test_that("x can be categorical", {
+
+    # x is a character vector, no y
+    expect_error(get_points_data(c("a", "b", "c"), NULL, list(point_names = as.character(1:3))), "y can't be NULL when x is a character vector")
+
+    # x is a character vector, y is a numeric vector
+    data <- get_points_data(c("a", "b", "c"), 2:4, list(point_names = as.character(1:3)))
+    expect_equal(data, data.frame(x = c("a","b", "c"), y = 2:4, point_name = as.character(1:3)))
+
+    # x is a data frame (x, y, row names)
+    data <- data.frame(x = c("a", "b", "c"), y = 5:7, row.names = LETTERS[1:3])
+    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
+    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3]))
+
+    # x is a list (x, y, no names, uneven-size element)
+    data <- get_points_data(list(x = c("a", "b", "c"), y = 5:7, extra = 1:10), NULL, list(point_names = as.character(1:3)))
+    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = as.character(1:3)))
+
 })
 
 test_that("the palette determines the order in which the points are rendered", {
@@ -82,4 +100,8 @@ test_that("limits reduce the size of the data", {
     data <- get_points_data(1:10, 1:10, params)
     expect_equal(data$x, 2:8)
 })
+
+
+
+
 
