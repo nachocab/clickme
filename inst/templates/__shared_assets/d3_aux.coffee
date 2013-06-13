@@ -265,9 +265,9 @@ my_light_red = "#b90000"
 @get_jitter = (plot, scale_name) ->
     if plot.scale_types[scale_name] is "ordinal"
         band_width = (d3.extent(plot.scale_ranges[scale_name])[1] / plot.scales[scale_name].domain().length)
-        jitter = band_width * plot.jitter
+        jitter = ()-> band_width * plot.jitter * random()
     else
-        jitter = 0
+        jitter = ()-> 0
 
     jitter
 

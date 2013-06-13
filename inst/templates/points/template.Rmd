@@ -53,33 +53,33 @@
 
     if plot.zoom
         clip.append("rect")
+          .style("cursor": "move")
           .attr(
                 "class": "overlay"
                 "width":  plot.width
                 "height": plot.height
                 "fill": "none"
                 "pointer-events": "all")
-          .style("cursor","move")
           .call(d3.behavior.zoom()
               .x(plot.scales.x)
               .y(plot.scales.y)
               .scaleExtent([1, Infinity])
               .on("zoom", () -> redraw() ))
 
-        transform = (d) ->
-            "translate(#{plot.scales.x(d.x)},#{plot.scales.y(d.y)})"
-
         redraw = () ->
             plot.select(".x.axis").call(plot.axes.x);
             plot.select(".y.axis").call(plot.axes.y);
             g_points.attr("transform", transform)
+
+    transform = (d) ->
+        "translate(#{plot.scales.x(d.x) + plot.jitters.x()}, #{plot.scales.y(d.y) + plot.jitters.y()})"
 
     g_points = clip.selectAll(".point")
         .data(data)
       .enter().append("g")
         .attr(
               "class": "point"
-              "transform": (d) -> "translate(#{plot.scales.x(d.x) + plot.jitters.x * random()}, #{plot.scales.y(d.y) + plot.jitters.y * random()})")
+              "transform": transform)
 
 
     points = g_points.append("svg:circle")
@@ -105,13 +105,6 @@
             "fill": (d) -> color_scale(d.colorize)
             "font-size": "22px")
 
-    # if plot.zoom
-        # g_points.attr("transform": transform)
-
-
-        # point_names.attr(
-        #     "x": (d,i)-> plot.jitters.x[i]
-        #     "y": (d,i)-> plot.jitters.y[i])
 
     # Sidebar
     sidebar = plot.append("g")

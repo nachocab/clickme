@@ -256,9 +256,13 @@
     var band_width, jitter;
     if (plot.scale_types[scale_name] === "ordinal") {
       band_width = d3.extent(plot.scale_ranges[scale_name])[1] / plot.scales[scale_name].domain().length;
-      jitter = band_width * plot.jitter;
+      jitter = function() {
+        return band_width * plot.jitter * random();
+      };
     } else {
-      jitter = 0;
+      jitter = function() {
+        return 0;
+      };
     }
     return jitter;
   };
