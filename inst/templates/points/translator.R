@@ -1,19 +1,5 @@
-get_colorize_counts <- function(opts){
+get_color_legend_counts <- function(opts){
     toJSON(table(opts$data$colorize))
-}
-
-get_xlim_param <- function(opts) {
-    if (is.null(opts$params$xlim)){
-        opts$params$xlim <- range(opts$data$x)
-    }
-    toJSON(opts$params$xlim)
-}
-
-get_ylim_param <- function(opts) {
-    if (is.null(opts$params$ylim)){
-        opts$params$ylim <- range(opts$data$y)
-    }
-    toJSON(opts$params$ylim)
 }
 
 # only for quantitative scales
@@ -66,7 +52,6 @@ get_data_as_json <- function(opts) {
 }
 
 get_data_as_json_file <- function(opts) {
-    opts$data <- as.data.frame(opts$data, stringsAsFactors= FALSE)
     opts$data <- get_data_as_json(opts)
     json_file <- create_data_file(opts, "json")
 

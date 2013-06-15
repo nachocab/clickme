@@ -15,6 +15,7 @@ get_point_names <- function(data) {
     point_names
 }
 
+# ensure that main is converted to title, and that there are point_names
 validate_points_params <- function(params) {
     validate_colorize(params)
 
@@ -32,7 +33,8 @@ validate_points_params <- function(params) {
     params
 }
 
-apply_points_limits <- function(data, params) {
+
+apply_axes_limits <- function(data, params) {
     if (!is.null(params$xlim)){
         data <- data[data$x >= params$xlim[1],]
         data <- data[data$x <= params$xlim[2],]
@@ -46,8 +48,24 @@ apply_points_limits <- function(data, params) {
 }
 
 get_points_data <- function(x, y, params){
-    data <- suppressWarnings(xy.coords(x,y))
-    data <- as.data.frame(data[c("x","y")])
+    if (is.character(x) && is.null(y)) {
+        stop("y can't be NULL when x is a character vector")
+    }
+
+    data <- suppressWarnings(xy.coords(x,y))[c("x","y")]
+    data <- as.data.frame(data)
+
+    # fix x if it is a character vector
+    if (all(is.na(data$x))){
+        if (is.list(x)){
+            data$x <- x[["x"]]
+        } else if (is.vector(x)) {
+            data$x <- x
+        } else {
+            # data frame
+            data$x <- x$x
+        }
+    }
 
     if (is.data.frame(x) | is.matrix(x)){
         rownames(data) <- rownames(x)
@@ -59,8 +77,7 @@ get_points_data <- function(x, y, params){
     if (!is.null(params$colorize)){
         data <- reorder_data_by_color(data, params)
     }
-
-    data <- apply_points_limits(data, params)
+    data <- apply_axes_limits(data, params)
 
     data
 }
@@ -90,17 +107,19 @@ get_points_data <- function(x, y, params){
 clickme_points <- function(x, y = NULL,
                       point_names = rownames(x),
                       title = "Points", main = NULL,
-                      xlab = NULL, ylab = NULL,
+                      xlab = "x", ylab = "y",
                       xlim = NULL, ylim = NULL,
                       width = 980, height = 980,
                       radius = 5,
-                      box = NULL,
+                      box = FALSE,
+                      jitter = 0,
                       palette = NULL, colorize = NULL, color_domain = NULL, color_legend_title = NULL,
                       padding = list(top = 80, right = 400, bottom = 30, left = 100),
                       ...){
     params <- as.list(environment())
     params <- validate_points_params(params)
     params$code <- paste(deparse(sys.calls()[[1]]), collapse="")
+
     data <- get_points_data(x, y, params)
 
     # this must be done *after* data has been sorted to ensure the first category (which will be rendered at the bottom) gets the last color

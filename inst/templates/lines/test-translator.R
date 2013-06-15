@@ -34,8 +34,8 @@ test_that("the palette has as many colors as levels (or unique elements) in colo
     expect_equal(length(fromJSON(palette)), 2)
 })
 
-test_that("colorize_counts has the right counts", {
+test_that("color_legend_counts has the right counts", {
     opts$data <- get_lines_data(mat(nrow=5,ncol=5), 1:5, list(colorize = c("a","a","b","b","a")))
-    colorize_counts <- get_colorize_counts(opts)
-    expect_equal(list(a=3, b =2), fromJSON(colorize_counts))
+    color_legend_counts <- get_color_legend_counts(opts)
+    expect_equal(list(a=3, b =2), fromJSON(color_legend_counts))
 })

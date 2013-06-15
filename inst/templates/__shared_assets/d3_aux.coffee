@@ -1,4 +1,4 @@
-@my_light_red = "#b90000"
+my_light_red = "#b90000"
 
 @append_main = (opts = {}) ->
     opts.element ?= "svg:svg"
@@ -32,7 +32,280 @@
     main.width = opts.width
     main.height = opts.height
     main.svg = opts.selector
+
     main
+
+# calculates padding, appends the svg + g, draws the title
+@new_plot = (opts = {}) ->
+    opts.padding ?=
+        top: 20
+        right: 150
+        bottom: 30
+        left: 50
+    opts.total_padding = d3.max([opts.padding.left + opts.padding.right, opts.padding.top + opts.padding.bottom])
+
+    opts.width ?= 400
+    opts.height ?= 400
+    opts.width = opts.width - opts.total_padding
+    opts.height = opts.height - opts.total_padding
+
+    opts.background ?= "#fff"
+    opts.zoom ?= true
+    opts.ordinal_scale_padding ?= 1
+    opts.linear_scale_padding ?= 40
+
+    plot = append_main(
+            id: opts.id
+            width: opts.width + opts.total_padding
+            height: opts.height + opts.total_padding
+            background: opts.background
+            margin: 20
+        ).append("svg:g")
+            .attr("transform", "translate(#{opts.padding.left},#{opts.padding.top})")
+
+    for key, value of opts
+        plot[key] = value
+
+    plot.get_scale_types = ()->
+        plot.scale_types = {}
+        # TODO: check if plot.log == "x"
+        plot.scale_types.x = get_scale_type(plot, "x")
+        plot.scale_types.y = get_scale_type(plot, "y")
+
+    plot.get_scale_limits = () ->
+        plot.scale_limits = {}
+        plot.scale_limits.x = plot.xlim
+        plot.scale_limits.y = plot.ylim
+
+    plot.get_scale_domains = ()->
+        plot.scale_domains = {}
+        plot.scale_domains.x = get_scale_domain(plot, "x")
+        plot.scale_domains.y = get_scale_domain(plot, "y")
+
+    plot.get_scale_ranges = () ->
+        plot.scale_ranges = {}
+        plot.scale_ranges.x = [0, plot.width]
+        plot.scale_ranges.y = [plot.height, 0]
+
+    plot.get_scales = ()->
+        plot.get_scale_types()
+        plot.get_scale_limits()
+        plot.get_scale_domains()
+        plot.get_scale_ranges()
+
+        plot.scales = {}
+        plot.scales.x = get_scale(plot, "x")
+        plot.scales.y = get_scale(plot, "y")
+
+    plot.get_jitters = ()->
+        plot.jitters = {}
+        plot.jitters.x = get_jitter(plot, "x")
+        plot.jitters.y = get_jitter(plot, "y")
+
+    plot.add_title = () ->
+        plot.append("text")
+            .text(plot.title)
+            .attr(
+                "class": "title"
+                "text-anchor": "middle"
+                "x": plot.width / 2
+                "y": -plot.padding.top / 2
+            )
+
+        plot
+
+    plot.add_box = () ->
+        plot.append("path")
+            .attr(
+                "d": "M0,0L#{plot.width},0L#{plot.width},#{plot.height}"
+            ).style(
+                "stroke": "black"
+                "stroke-width": "2px"
+                "shape-rendering": "crispEdges"
+                "fill": "none"
+            )
+
+        plot
+
+    plot.add_axes = () ->
+        plot.axes = {}
+        plot.add_x_axis()
+        plot.add_y_axis()
+
+        plot
+
+    plot.add_x_axis = () ->
+        plot.orientation_x ?= "bottom"
+
+        plot.axes.x = d3.svg.axis()
+            .scale(plot.scales.x)
+            .orient(plot.orientation_x)
+
+        # if tick_values?
+            # plot.axes.x.tickValues(tick_values)
+
+        plot.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0, #{plot.height})")
+            .call(plot.axes.x)
+
+        plot.selectAll(".x.axis line, .x.axis path")
+            .style(
+                "fill": "none"
+                "stroke": "black"
+                "shape-rendering": "crispEdges"
+                "stroke-width": 2
+            )
+
+        plot.add_x_axis_label(plot.xlab)
+
+        plot
+
+    plot.add_y_axis = () ->
+        plot.orientation_y ?= "left"
+
+        plot.axes.y = d3.svg.axis()
+            .scale(plot.scales.y)
+            .orient(plot.orientation_y)
+
+        plot.append("g")
+            .attr("class", "y axis")
+            .call(plot.axes.y)
+
+        plot.selectAll(".y.axis line, .y.axis path")
+            .style(
+                "fill": "none"
+                "stroke": "black"
+                "shape-rendering": "crispEdges"
+                "stroke-width": 2
+            )
+
+        plot.add_y_axis_label(plot.ylab)
+
+        plot
+
+    plot.add_x_axis_label = (text) ->
+        plot.append("text")
+            .text(text)
+            .attr(
+                "class": "x label"
+                "text-anchor": "middle"
+                "x": plot.width - plot.width/2
+                "y": plot.height + plot.padding.bottom/2
+                "dy": "2em"
+            )
+
+        plot
+
+    plot.add_y_axis_label = (text) ->
+        plot.append("text")
+            .text(text)
+            .attr(
+                "class": "y label"
+                "text-anchor": "middle"
+                "x": 0 - (plot.height/2)
+                "y": -plot.padding.left + 5
+                "dy": "1em"
+                "transform": "rotate(-90)"
+            )
+
+        plot
+
+    if plot.box?
+        plot.add_box()
+
+    plot.add_title()
+
+    plot.get_scales()
+    if plot.scale_types.x is "ordinal" or plot.scale_types.y is "ordinal"
+        plot.zoom = false
+
+    plot.get_jitters()
+
+    plot.add_axes()
+
+    plot
+
+
+@get_scale_type = (plot, scale_name) ->
+    if type(plot.data[scale_name][0]) is "number"
+        # TODO: check if plot.log == scale_name and return scale_type = "log"
+        scale_type = "linear"
+    else
+        scale_type = "ordinal"
+
+    scale_type
+
+@get_scale_domain = (plot, scale_name)->
+    if plot.scale_types[scale_name] is "linear"
+        if plot.scale_limits[scale_name]?
+            domain = plot.scale_limits[scale_name]
+        else
+            domain = d3.extent(plot.data[scale_name])
+    else
+        # d3 extracts the unique values automatically
+        domain = plot.data[scale_name]
+
+    domain
+
+
+@get_scale = (plot, scale_name)->
+    if plot.scale_types[scale_name] is "linear"
+        scale = d3.scale.linear()
+            .domain(plot.scale_domains[scale_name])
+            .range(plot.scale_ranges[scale_name])
+        scale = add_scale_padding(scale, plot.linear_scale_padding)
+    else
+        scale = d3.scale.ordinal()
+            .domain(plot.scale_domains[scale_name])
+            .rangePoints(plot.scale_ranges[scale_name], plot.ordinal_scale_padding)
+
+    scale
+
+@get_jitter = (plot, scale_name) ->
+    if plot.scale_types[scale_name] is "ordinal"
+        band_width = (d3.extent(plot.scale_ranges[scale_name])[1] / plot.scales[scale_name].domain().length)
+        jitter = ()-> band_width * plot.jitter * random()
+    else
+        jitter = ()-> 0
+
+    jitter
+
+@add_scale_padding = (scale, padding) ->
+    range = scale.range()
+    if (range[0] > range[1])
+        padding *= -1
+
+    # To increase the range by padding, you need to find the domain that will give you this modified range (to do that, you use scale.invert)
+    domain_with_padding = [range[0] - padding, range[1] + padding].map(scale.invert)
+    scale.domain(domain_with_padding)
+
+    scale
+
+@random = () ->
+    (Math.random() * 2) - 1
+
+@parent_of = (child)->
+    d3.select(child).node().parentNode
+
+@format_property = (x) ->
+    decimal_format = d3.format(".2f")
+
+    if type(x) == "number"
+        decimal_format(x)
+    else
+        x
+
+@type = (obj) ->
+  if obj == undefined or obj == null
+    return String obj
+  classToType = new Object
+  for name in "Boolean Number String Function Array Date RegExp".split(" ")
+    classToType["[object " + name + "]"] = name.toLowerCase()
+  myClass = Object.prototype.toString.call obj
+  if myClass of classToType
+    return classToType[myClass]
+  return "object"
 
 @append_container = (opts = {})->
     opts.selector ?= "body"
@@ -62,172 +335,3 @@
         div.attr("class", opts.class)
 
     div
-
-@get_scales = (width, height) ->
-    scales = {}
-    scales.x = d3.scale.linear()
-        .domain([0, width]) # you will likely have to redefine the domain
-        .range([0, width])
-
-    scales.y = d3.scale.linear()
-        .domain([0, height]) # you will likely have to redefine the domain
-        .range([height,0])
-
-    scales
-
-@append_plot = (opts = {}) ->
-    opts.padding ?=
-        top: 20
-        right: 150
-        bottom: 30
-        left: 50
-
-    opts.width ?= 400
-    opts.height ?= 400
-    opts.axis_padding ?= 20
-    opts.background ?= "#fff"
-
-    opts.x_domain ?= null
-    opts.y_domain ?= null
-    opts.title ?= ""
-    opts.xlab ?= ""
-    opts.ylab ?= ""
-
-    opts.total_padding = d3.max([opts.padding.left + opts.padding.right, opts.padding.top + opts.padding.bottom])
-    opts.width = opts.width - opts.total_padding
-    opts.height = opts.height - opts.total_padding
-
-    # TODO: refactor opts_for_main so you don't have to duplicate properties
-    plot = append_main(
-        background: opts.background
-        id: opts.id
-        width: opts.width + opts.total_padding
-        height: opts.height + opts.total_padding
-        margin: 20
-    )
-
-    plot = plot.append("svg:g")
-        .attr("transform", "translate(#{opts.padding.left},#{opts.padding.top})")
-
-    # somehow refactor this
-    plot.padding = opts.padding
-    plot.width = opts.width
-    plot.height = opts.height
-    plot.title = opts.title
-    plot.xlab = opts.xlab
-    plot.ylab = opts.ylab
-    plot.selector = opts.selector
-    plot.axes = {}
-
-    plot.scales = get_scales(opts.width, opts.height)
-
-    draw_title(plot)
-
-    if opts.x_domain?
-        plot.scales.x.domain(opts.x_domain)
-        plot.scales.x = add_scale_padding(plot.scales.x)
-        draw_x_axis(plot)
-        draw_x_axis_label(plot)
-
-    if opts.y_domain?
-        plot.scales.y.domain(opts.y_domain)
-        plot.scales.y = add_scale_padding(plot.scales.y)
-        draw_y_axis(plot)
-        draw_y_axis_label(plot)
-
-    plot
-
-@draw_x_axis = (plot, tick_values = null) ->
-    plot.orientation_x ?= "bottom"
-
-    plot.axes.x = d3.svg.axis()
-        .scale(plot.scales.x)
-        .orient(plot.orientation_x)
-
-    if tick_values?
-        plot.axes.x.tickValues(tick_values)
-
-    plot.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0,#{plot.height})")
-        .call(plot.axes.x)
-
-    plot.selectAll(".x.axis line, .x.axis path")
-        .style(
-            "fill": "none"
-            "stroke": "black"
-            "shape-rendering": "crispEdges"
-            "stroke-width": 2
-        )
-
-    plot
-
-@draw_y_axis = (plot) ->
-    plot.orientation_y ?= "left"
-
-    plot.axes.y = d3.svg.axis()
-        .scale(plot.scales.y)
-        .orient(plot.orientation_y)
-
-    plot.append("g")
-        .attr("class", "y axis")
-        .call(plot.axes.y)
-
-    plot.selectAll(".y.axis line, .y.axis path")
-        .style(
-            "fill": "none"
-            "stroke": "black"
-            "shape-rendering": "crispEdges"
-            "stroke-width": 2
-        )
-
-    plot
-
-@draw_title = (plot) ->
-    plot.append("text")
-        .text(plot.title)
-        .attr(
-            "class": "title"
-            "text-anchor": "middle"
-            "x": plot.width / 2
-            "y": -plot.padding.top / 2
-        )
-
-@draw_x_axis_label = (plot) ->
-
-    plot.append("text")
-        .text(plot.xlab)
-        .attr(
-            "class": "x label"
-            "text-anchor": "middle"
-            "x": plot.width - plot.width/2
-            "y": plot.height + plot.padding.bottom/2
-            "dy": "2em"
-        )
-
-@draw_y_axis_label = (plot) ->
-    plot.append("text")
-        .text(plot.ylab)
-        .attr(
-            "class": "y label"
-            "text-anchor": "middle"
-            "x": 0 - (plot.height/2)
-            "y": -plot.padding.left + 5
-            "dy": "1em"
-            "transform": "rotate(-90)"
-        )
-
-@parent_of = (child)->
-    d3.select(child).node().parentNode
-
-@add_scale_padding = (scale, padding = 20) ->
-    if typeof scale.rangePoints is "function" # it is an ordinal scale
-        scale
-    else
-        range = scale.range()
-        if (range[0] > range[1])
-            padding *= -1
-
-        # To increase the range by padding, you need to find the domain that will give you this modified range (to do that, you use scale.invert)
-        domain_with_padding = [range[0] - padding, range[1] + padding].map(scale.invert)
-        scale.domain(domain_with_padding)

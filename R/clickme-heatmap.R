@@ -94,10 +94,10 @@ validate_heatmap_params <- function(params) {
 #' @param title title of the plot
 #' @param main same as title, kept to be compatible with \code{base::plot}
 #' @param cell_width,cell_height width and height of a cell
-#' @param row_groups,col_groups row and column groups
+#' @param row_groups,col_groups row and column groups. A factor or vector with as many elements as rows (or columns). Repeated elements will belong to the same group
 #' @param palette color palette. Quantitative scales expect a vector with a start color, and an end color (optionally, a middle color may be provided between both). Categorical scales expect a vector with a color for each category. Use category names to change the default color assignment \code{c(category1="color1", category2="color2")}. The order in which these colors are specified determines rendering order when points from different categories collide (colors specified first appear on top of later ones). Colors can be a variety of formats: "#ffeeaa" "rgb(255,255,255)" "hsl(120,50%,20%)" "blue" (see http://www.w3.org/TR/SVG/types.html#ColorKeywords)
 #' @param color_domain a vector with a start and end value (an optionally a middle value between them). By default it is symmetric c(-max, 0, max)
-#' @param padding padding around the top-level object
+#' @param padding padding around the top-level object. A named list (top, right, bottom, left)
 #' @param ... additional arguments for \code{clickme}
 #'
 #' @examples
