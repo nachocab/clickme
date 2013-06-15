@@ -37,9 +37,7 @@
         linear_scale_padding: 40)
 
     plot.tooltip_text = (d) ->
-        "<strong>#{d.point_name}</strong><br>
-        #{plot.ylab}: <strong>#{format_property(d.y)}</strong><br>
-        #{plot.xlab}: #{format_property(d.x)}"
+        "{{ get_tooltip_content_points(opts$data) }}"
 
     plot.append("defs").append("clipPath")
         .attr("id", "clip")
@@ -84,12 +82,12 @@
 
     points = g_points.append("svg:circle")
         .attr(
-            "class": "circle_tooltip"
+            "class": "point_tooltip"
             "r": radius
             "fill": (d) -> color_scale(d.colorize)
             "title": (d) -> plot.tooltip_text(d) )
 
-    $(".circle_tooltip").tooltip
+    $(".point_tooltip").tooltip
         html: true
         container: "body"
         placement: "top"

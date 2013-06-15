@@ -28,7 +28,10 @@
 
   \item{cell_width,cell_height}{width and height of a cell}
 
-  \item{row_groups,col_groups}{row and column groups}
+  \item{row_groups,col_groups}{row and column groups. A
+  factor or vector with as many elements as rows (or
+  columns). Repeated elements will belong to the same
+  group}
 
   \item{palette}{color palette. Quantitative scales expect
   a vector with a start color, and an end color
@@ -48,7 +51,8 @@
   (an optionally a middle value between them). By default
   it is symmetric c(-max, 0, max)}
 
-  \item{padding}{padding around the top-level object}
+  \item{padding}{padding around the top-level object. A
+  named list (top, right, bottom, left)}
 
   \item{...}{additional arguments for \code{clickme}}
 }
