@@ -7,7 +7,7 @@
     interpolate = "linear", title = "Lines", main = NULL,
     xlab = NULL, ylab = NULL, width = 980, height = 980,
     box = NULL, palette = NULL, colorize = NULL,
-    color_domain = NULL, color_legend_title = NULL,
+    color_domain = NULL, color_title = NULL,
     padding = list(top = 80, right = 400, bottom = 30, left = 100),
     ...)
 }
@@ -66,7 +66,7 @@
   continuous and, for example, we want to ensure it is
   symmetric in negative and positive values.}
 
-  \item{color_legend_title}{the title of the color legend}
+  \item{color_title}{the title of the color legend}
 
   \item{padding}{padding around the top-level object}
 

@@ -126,3 +126,14 @@ test_that("export_assets updates output shared and output template assets", {
     unlink(file.path(opts$paths$shared_assets, "def.css"))
     unlink(file.path(opts$paths$output_shared_assets, "def.css"))
 })
+
+test_that("reorder_data_by_color", {
+    data <- data.frame(x=c(1,2,3))
+    params <- list(colorize = c("a","b","c"))
+    reordered_data <- reorder_data_by_color(data, params)
+    expect_equal(reordered_data$x, c(3, 2, 1))
+
+    params <- list(colorize = c("a","b","c"), palette = c(a = "blue", c = "red", b = "green"))
+    reordered_data <- reorder_data_by_color(data, params)
+    expect_equal(reordered_data$x, c(2, 3, 1))
+})

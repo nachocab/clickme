@@ -3,11 +3,11 @@
 \title{Generates an interactive scatterplot}
 \usage{
   clickme_points(x, y = NULL, point_names = rownames(x),
-    title = "Points", main = NULL, xlab = NULL,
-    ylab = NULL, xlim = NULL, ylim = NULL, width = 980,
-    height = 980, radius = 5, box = NULL, palette = NULL,
-    colorize = NULL, color_domain = NULL,
-    color_legend_title = NULL,
+    title = "Points", main = NULL, xlab = "x", ylab = "y",
+    xlim = NULL, ylim = NULL, width = 980, height = 980,
+    radius = 5, box = FALSE, jitter = 0, extra = NULL,
+    palette = NULL, colorize = NULL, color_domain = NULL,
+    color_title = NULL,
     padding = list(top = 80, right = 400, bottom = 30, left = 100),
     ...)
 }
@@ -65,7 +65,10 @@
   continuous and, for example, we want to ensure it is
   symmetric in negative and positive values.}
 
-  \item{color_legend_title}{the title of the color legend}
+  \item{color_title}{the title of the color legend}
+
+  \item{extra}{a data frame, list or matrix whose fields
+  will appear in the tooltip on hover}
 
   \item{padding}{padding around the top-level object}
 

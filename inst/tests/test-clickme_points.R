@@ -101,7 +101,30 @@ test_that("limits reduce the size of the data", {
     expect_equal(data$x, 2:8)
 })
 
+test_that("extra fields get added", {
+params <- list(xlim = c(2,8))
+    data <- data.frame(x = c("a", "b", "c"), y = 5:7, row.names = LETTERS[1:3])
 
+    # extra is a data frame
+    data <- get_points_data(data, NULL, list(point_names = rownames(data), extra = data.frame(extra1 = c(10,20,30), extra2 = c(100,200,300))))
+    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3], extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
+
+    # extra is a list
+    data <- get_points_data(data, NULL, list(point_names = rownames(data), extra = list(extra1 = c(10,20,30), extra2 = c(100,200,300))))
+    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3], extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
+
+    # extra is a matrix
+    data <- get_points_data(data, NULL, list(point_names = rownames(data), extra = cbind(extra1=c(10,20,30),extra2=c(100,200,300))))
+    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3], extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
+})
+
+test_that("get_tooltip_content_points", {
+    data <- data.frame(x = c("a", "b", "c"), y = 5:7, row.names = LETTERS[1:3])
+    data <- get_points_data(data, NULL, list(point_names = rownames(data), extra = cbind(extra1=c(10,20,30),extra2=c(100,200,300))))
+
+    tooltip_contents <- get_tooltip_content_points(data)
+    expect_equal(tooltip_contents, "<strong>#{d.point_name}</strong><br>y: #{format_property(d.y)}<br>x: #{format_property(d.x)}<br>extra1: #{format_property(d[\"extra1\"])}<br>extra2: #{format_property(d[\"extra2\"])}")
+})
 
 
 
