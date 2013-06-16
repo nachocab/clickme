@@ -38,7 +38,7 @@ format_heatmap_data <- function(data, data_col_names, params) {
 
 get_heatmap_data <- function(data, params){
     if (is.matrix(data)){
-        data <- as.data.frame(data)
+        data <- as.data.frame(data, stringsAsFactors = FALSE)
     }
 
     rownames(data) <- params$row_names

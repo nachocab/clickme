@@ -30,7 +30,7 @@ prepare_for_JSON <- function(data){
             paste0(key, ':', value)
         })
     })
-    as.data.frame(data)
+    as.data.frame(data, stringsAsFactors = FALSE)
 }
 
 

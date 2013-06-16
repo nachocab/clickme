@@ -1,6 +1,6 @@
 format_lines_data <- function(data, x, data_colnames, params){
     formatted_data <- lapply(1:nrow(data), function(index){
-        df <- data.frame(x = x, y = as.numeric(data[index, data_colnames]))
+        df <- data.frame(x = x, y = as.numeric(data[index, data_colnames]), stringsAsFactors = FALSE)
         values <- unname(lapply(split(df, rownames(df)), as.list))
         if (is.null(params$colorize)){
             list(line_name = rownames(data)[index], values = values)
@@ -14,11 +14,11 @@ format_lines_data <- function(data, x, data_colnames, params){
 
 get_lines_data <- function(data, x, params){
     if (is.vector(data)){
-        data <- as.data.frame(t(data))
+        data <- as.data.frame(t(data), stringsAsFactors = FALSE)
     }
 
     if (is.matrix(data)){
-        data <- as.data.frame(data)
+        data <- as.data.frame(data, stringsAsFactors = FALSE)
     }
 
     if (is.null(x)){
