@@ -137,3 +137,149 @@ test_that("reorder_data_by_color", {
     reordered_data <- reorder_data_by_color(data, params)
     expect_equal(reordered_data$x, c(2, 3, 1))
 })
+
+context("xy_to_data")
+
+test_that("x is not null and y is a dataframe, a matrix, or a list", {
+    expect_error(xy_to_data(x = 1:10, y = data.frame(a = 1:10)), "y cannot be a dataframe, a matrix, or a list")
+    expect_error(xy_to_data(x = 1:10, y = matrix(1:10, nrow = 2)), "y cannot be a dataframe, a matrix, or a list")
+    expect_error(xy_to_data(x = 1:10, y = list(1:10)), "y cannot be a dataframe, a matrix, or a list")
+})
+
+# x is a numeric vector
+test_that("x is a numeric vector and y is null", {
+    data <- xy_to_data(x = 1:10, y = NULL)
+    expect_equal(data, data.frame(x = 1:10, y = 1:10, row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = setNames(1:10, letters[1:10]), y = NULL)
+    expect_equal(data, data.frame(x = 1:10, y = 1:10, row.names = letters[1:10]))
+
+    expect_error(xy_to_data(x = setNames(1:10, rep("a", 10)), y = NULL), "duplicate row.names: a")
+})
+
+test_that("x is a numeric vector and y is a numeric vector", {
+    data <- xy_to_data(x = 1:10, y = 1:10)
+    expect_equal(data, data.frame(x = 1:10, y = 1:10, row.names = as.character(1:10)))
+
+    expect_error(xy_to_data(x = 1:10, y = 1:5), "x and y have different lengths")
+})
+
+test_that("x is a numeric vector and y is a character vector", {
+    data <- xy_to_data(x = 1:10, y = letters[1:10])
+    expect_equal(data, data.frame(x = 1:10, y = letters[1:10], row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = 1:10, y = as.character(1:10))
+    expect_equal(data, data.frame(x = 1:10, y = as.character(1:10), row.names = as.character(1:10)))
+})
+
+test_that("x is a numeric vector and y is a factor", {
+    data <- xy_to_data(x = 1:10, y = factor(letters[1:10]))
+    expect_equal(data, data.frame(x = 1:10, y = factor(letters[1:10]), row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = 1:10, y = factor(as.character(1:10)))
+    expect_equal(data, data.frame(x = 1:10, y = factor(as.character(1:10)), row.names = as.character(1:10)))
+})
+
+
+# x is a character vector
+test_that("x is a character vector and y is null", {
+    expect_error(xy_to_data(x = c("a", "b", "c"), y = NULL), "y cannot be NULL when x is a character vector or a factor")
+})
+
+test_that("x is a character vector and y is a numeric vector", {
+    data <- xy_to_data(x = letters[1:10], y = 1:10)
+    expect_equal(data, data.frame(x = letters[1:10], y = 1:10, row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = as.character(1:10), y = 1:10)
+    expect_equal(data, data.frame(x = as.character(1:10), y = 1:10, row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = setNames(as.character(1:10), letters[1:10]), y = 1:10)
+    expect_equal(data, data.frame(x = as.character(1:10), y = 1:10, row.names = letters[1:10]))
+})
+
+test_that("x is a character vector and y is a character vector", {
+    data <- xy_to_data(x = letters[1:10], y = as.character(1:10))
+    expect_equal(data, data.frame(x = letters[1:10], y = as.character(1:10), row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = as.character(1:10), y = letters[1:10])
+    expect_equal(data, data.frame(x = as.character(1:10), y = letters[1:10], row.names = as.character(1:10)))
+})
+
+test_that("x is a character vector and y is a factor", {
+    data <- xy_to_data(x = letters[1:10], y = factor(1:10))
+    expect_equal(data, data.frame(x = letters[1:10], y = factor(1:10), row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = as.character(1:10), y = factor(letters[1:10]))
+    expect_equal(data, data.frame(x = as.character(1:10), y = factor(letters[1:10]), row.names = as.character(1:10)))
+})
+
+# x is a factor
+test_that("x is a factor and y is null", {
+    expect_error(xy_to_data(x = c("a", "b", "c"), y = NULL), "y cannot be NULL when x is a character vector or a factor")
+})
+
+test_that("x is a factor and y is a numeric vector", {
+    data <- xy_to_data(x = factor(letters[1:10]), y = 1:10)
+    expect_equal(data, data.frame(x = factor(letters[1:10]), y = 1:10, row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = factor(as.character(1:10)), y = 1:10)
+    expect_equal(data, data.frame(x = factor(as.character(1:10)), y = 1:10, row.names = as.character(1:10)))
+})
+
+test_that("x is a factor and y is a character vector", {
+    data <- xy_to_data(x = factor(letters[1:10]), y = as.character(1:10))
+    expect_equal(data, data.frame(x = factor(letters[1:10]), y = as.character(1:10), row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = factor(as.character(1:10)), y = letters[1:10])
+    expect_equal(data, data.frame(x = factor(as.character(1:10)), y = letters[1:10], row.names = as.character(1:10)))
+})
+
+test_that("x is a factor and y is a factor", {
+    data <- xy_to_data(x = factor(letters[1:10]), y = factor(as.character(1:10)))
+    expect_equal(data, data.frame(x = factor(letters[1:10]), y = factor(as.character(1:10)), row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = factor(as.character(1:10)), y = factor(letters[1:10]))
+    expect_equal(data, data.frame(x = factor(as.character(1:10)), y = factor(letters[1:10]), row.names = as.character(1:10)))
+})
+
+# x is a data frame
+test_that("x is a data frame with only one column", {
+    expect_error(xy_to_data(x = data.frame(a=1:10), y = NULL), "When x is a dataframe or a matrix, it must contain at least two columns")
+})
+
+test_that("x is a data frame with at least two columns and y is null", {
+    data <- xy_to_data(x = data.frame(a = factor(as.character(1:10)), b = 1:10), y = NULL)
+    expect_equal(data, data.frame(x = factor(as.character(1:10)), y = 1:10, row.names = as.character(1:10)))
+
+    data <- xy_to_data(x = data.frame(a = factor(as.character(1:10)), b = 1:10, row.names = letters[1:10]), y = NULL)
+    expect_equal(data, data.frame(x = factor(as.character(1:10)), y = 1:10, row.names = letters[1:10]))
+})
+
+# x is a matrix
+test_that("x is a matrix with only one column", {
+    expect_error(xy_to_data(x = cbind(1:10), y = NULL), "When x is a dataframe or a matrix, it must contain at least two columns")
+})
+
+test_that("x is a matrix with at least two columns and y is null", {
+    data <- xy_to_data(x = matrix(1:20, nrow = 10), y = NULL)
+    expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = as.character(1:10)))
+
+    mat <- matrix(1:20, nrow = 10)
+    rownames(mat) <- letters[1:10]
+    data <- xy_to_data(x = mat, y = NULL)
+    expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = letters[1:10]))
+})
+
+# x is a list
+test_that("x is a list with only one element", {
+    expect_error(xy_to_data(x = list(1:10), y = NULL), "When x is a list, it must contain at least two elements")
+})
+
+test_that("x is a list with at least two elements and y is null", {
+
+    data <- xy_to_data(x = list(a = 1:10, b = 11:20), y = NULL)
+    expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = as.character(1:10)))
+
+    expect_error(xy_to_data(x = list(a = 1:10, b = list(1:5), y = NULL), "The first two elements of x have different lengths"))
+})
+

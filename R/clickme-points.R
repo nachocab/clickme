@@ -56,38 +56,21 @@ apply_axes_limits <- function(data, params) {
 }
 
 get_points_data <- function(x, y, params){
-    if (is.character(x) && is.null(y)) {
-        stop("y can't be NULL when x is a character vector")
+    data <- xy_to_data(x,y)
+
+    if (is.null(params$point_names)){
+        data$point_name <- rownames(data)
+    } else {
+        data$point_name <- params$point_names
     }
-
-    data <- suppressWarnings(xy.coords(x,y))[c("x","y")]
-    data <- as.data.frame(data)
-
-    # fix x if it is a character vector
-    if (all(is.na(data$x))){
-        if (is.list(x)){
-            data$x <- x[["x"]]
-        } else if (is.vector(x)) {
-            data$x <- x
-        } else {
-            # data frame
-            data$x <- x$x
-        }
-    }
-
-    if (is.data.frame(x) | is.matrix(x)){
-        rownames(data) <- rownames(x)
-    }
-
-    data$point_name <- params$point_names
+    rownames(data) <- NULL
 
     data <- add_extra_fields(data, params)
 
-    # we only create data$colorize when params$colorize is not NULL. When it is NULL, d3_color_scale(null) returns a color.
+    # we only create data$colorize when params$colorize is not NULL. When it is NULL, d3_color_scale(null) returns "black"
     if (!is.null(params$colorize)){
         data <- reorder_data_by_color(data, params)
     }
-
 
     data <- apply_axes_limits(data, params)
 
@@ -96,9 +79,9 @@ get_points_data <- function(x, y, params){
 
 
 # data is assumed to have at least x, y, and point_name
-get_tooltip_content_points <- function(data){
+get_tooltip_content_points <- function(data, params){
     names <- colnames(data)
-    tooltip_contents <- c("<strong>#{d.point_name}</strong>", "y: #{format_property(d.y)}", "x: #{format_property(d.x)}")
+    tooltip_contents <- c("<strong>#{d.point_name}</strong>", paste0(params$ylab, ": #{format_property(d.y)}"), paste0(params$xlab, ": #{format_property(d.x)}"))
     names <- setdiff(names, c("x", "y", "point_name", "colorize"))
 
     tooltip_contents <- c(tooltip_contents, sapply(names, function(name) paste0(name, ": #{format_property(d[\"", name, "\"])}")))

@@ -25,56 +25,29 @@ test_that("the palette has valid names", {
 
 context("clickme_points: get_points_data")
 
-test_that("numeric data is parsed", {
-
-    # x is a numeric vector, no y => x becomes y, x becomes 1:length(x)
-    data <- get_points_data(1:10, NULL, list(point_names = as.character(1:10)))
+test_that("point_names", {
+    data <- get_points_data(1:10, NULL, list())
     expect_equal(data, data.frame(x = 1:10, y = 1:10, point_name = as.character(1:10)))
 
-    # x is a numeric vector, y is a numeric vector
-    data <- get_points_data(2:4, 5:7, list(point_names = as.character(1:3)))
-    expect_equal(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
-
-    # x is a data frame (x, y, row names)
-    data <- data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3])
-    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
-
-    # x is a data frame (x, y, row names, extra column)
-    data <- data.frame(x = 2:4, y = 5:7, row.names = LETTERS[1:3], extra = 11:13)
-    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
-
-    # x is a matrix (x, y, row names)
-    mat <- cbind(2:4,5:7)
-    rownames(mat) <- LETTERS[1:3]
-    data <- get_points_data(mat, NULL, list(point_names = rownames(mat)))
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = LETTERS[1:3]))
-
-    # x is a list (x, y, no names, uneven-size element)
-    data <- get_points_data(list(x = 2:4, y = 5:7, extra = 1:10), NULL, list(point_names = as.character(1:3)))
-    expect_equivalent(data, data.frame(x = 2:4, y = 5:7, point_name = as.character(1:3)))
-
+    data <- get_points_data(1:10, NULL, list(point_names = letters[1:10]))
+    expect_equal(data, data.frame(x = 1:10, y = 1:10, point_name = letters[1:10]))
 })
 
-test_that("x can be categorical", {
-
-    # x is a character vector, no y
-    expect_error(get_points_data(c("a", "b", "c"), NULL, list(point_names = as.character(1:3))), "y can't be NULL when x is a character vector")
-
-    # x is a character vector, y is a numeric vector
-    data <- get_points_data(c("a", "b", "c"), 2:4, list(point_names = as.character(1:3)))
-    expect_equal(data, data.frame(x = c("a","b", "c"), y = 2:4, point_name = as.character(1:3)))
-
-    # x is a data frame (x, y, row names)
+test_that("extra fields get added", {
+params <- list(xlim = c(2,8))
     data <- data.frame(x = c("a", "b", "c"), y = 5:7, row.names = LETTERS[1:3])
-    data <- get_points_data(data, NULL, list(point_names = rownames(data)))
-    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3]))
 
-    # x is a list (x, y, no names, uneven-size element)
-    data <- get_points_data(list(x = c("a", "b", "c"), y = 5:7, extra = 1:10), NULL, list(point_names = as.character(1:3)))
-    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = as.character(1:3)))
+    # extra is a data frame
+    data <- get_points_data(data, NULL, list(point_names = rownames(data), extra = data.frame(extra1 = c(10,20,30), extra2 = c(100,200,300))))
+    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3], extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
 
+    # extra is a list
+    data <- get_points_data(data, NULL, list(point_names = LETTERS[1:3], extra = list(extra1 = c(10,20,30), extra2 = c(100,200,300))))
+    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3], extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
+
+    # extra is a matrix
+    data <- get_points_data(data, NULL, list(point_names = LETTERS[1:3], extra = cbind(extra1=c(10,20,30),extra2=c(100,200,300))))
+    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3], extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
 })
 
 test_that("the palette determines the order in which the points are rendered", {
@@ -101,30 +74,17 @@ test_that("limits reduce the size of the data", {
     expect_equal(data$x, 2:8)
 })
 
-test_that("extra fields get added", {
-params <- list(xlim = c(2,8))
-    data <- data.frame(x = c("a", "b", "c"), y = 5:7, row.names = LETTERS[1:3])
-
-    # extra is a data frame
-    data <- get_points_data(data, NULL, list(point_names = rownames(data), extra = data.frame(extra1 = c(10,20,30), extra2 = c(100,200,300))))
-    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3], extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
-
-    # extra is a list
-    data <- get_points_data(data, NULL, list(point_names = rownames(data), extra = list(extra1 = c(10,20,30), extra2 = c(100,200,300))))
-    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3], extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
-
-    # extra is a matrix
-    data <- get_points_data(data, NULL, list(point_names = rownames(data), extra = cbind(extra1=c(10,20,30),extra2=c(100,200,300))))
-    expect_equivalent(data, data.frame(x = c("a", "b", "c"), y = 5:7, point_name = LETTERS[1:3], extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
-})
-
 test_that("get_tooltip_content_points", {
     data <- data.frame(x = c("a", "b", "c"), y = 5:7, row.names = LETTERS[1:3])
     data <- get_points_data(data, NULL, list(point_names = rownames(data), extra = cbind(extra1=c(10,20,30),extra2=c(100,200,300))))
+    params <- list(xlab = "x", ylab = "y")
 
-    tooltip_contents <- get_tooltip_content_points(data)
+    tooltip_contents <- get_tooltip_content_points(data, params)
+    expect_equal(tooltip_contents, "<strong>#{d.point_name}</strong><br>y: #{format_property(d.y)}<br>x: #{format_property(d.x)}<br>extra1: #{format_property(d[\"extra1\"])}<br>extra2: #{format_property(d[\"extra2\"])}")
+
+    data <- get_points_data(data, NULL, list(point_names = rownames(data), colorize = c("a","a","b"), extra = cbind(extra1=c(10,20,30),extra2=c(100,200,300))))
+
+    tooltip_contents <- get_tooltip_content_points(data, params)
     expect_equal(tooltip_contents, "<strong>#{d.point_name}</strong><br>y: #{format_property(d.y)}<br>x: #{format_property(d.x)}<br>extra1: #{format_property(d[\"extra1\"])}<br>extra2: #{format_property(d[\"extra2\"])}")
 })
-
-
 

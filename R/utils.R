@@ -557,3 +557,67 @@ expect_correct_file <- function(opts, extension, expected_data = NULL, test_data
     }
     unlink(expected_path)
 }
+
+
+is_character_or_factor <- function(x) {
+    is.character(x) || is.factor(x)
+}
+
+is_data_frame_or_matrix <- function(x) {
+    is.data.frame(x) || is.matrix(x)
+}
+
+
+xy_to_data <- function(x, y) {
+    if (is_character_or_factor(x) && is.null(y)){
+        stop("y cannot be NULL when x is a character vector or a factor")
+    }
+
+    if (is_data_frame_or_matrix(y) || is.list(y)){
+        stop("y cannot be a dataframe, a matrix, or a list")
+    }
+
+    if (is_data_frame_or_matrix(x)){
+        if (ncol(x) < 2){
+            stop("When x is a dataframe or a matrix, it must contain at least two columns")
+        }
+        data_x <- x[, 1]
+        data_y <- x[, 2]
+        if (is.null(rownames(x))){
+            rownames <- as.character(1:nrow(x))
+        } else {
+            rownames <- rownames(x)
+        }
+    } else if (is.list(x)) {
+        if (length(x) < 2){
+            stop("When x is a list, it must contain at least two elements")
+        }
+        if (length(x[[1]]) != length(x[[2]])){
+            stop("The first two elements of x have different lengths")
+        }
+
+        data_x <- x[[1]]
+        data_y <- x[[2]]
+        rownames <- as.character(1:length(data_x))
+    } else {
+        data_x <- x
+        if (is.null(y)){
+            data_y <- 1:length(x)
+        } else {
+            if (length(x) != length(y)){
+                stop("x and y have different lengths")
+            }
+            data_y <- y
+        }
+
+        if (is.null(names(data_x))){
+            rownames <- as.character(1:length(data_x))
+        } else {
+            rownames <- names(data_x)
+        }
+    }
+
+    data <- data.frame(x = data_x, y = data_y, row.names = rownames, stringsAsFactors = FALSE)
+
+    data
+}
