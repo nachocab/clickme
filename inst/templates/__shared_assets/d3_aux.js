@@ -289,7 +289,7 @@
   this.format_property = function(x) {
     var decimal_format;
     decimal_format = d3.format(".2f");
-    if (type(x) === "number") {
+    if (type(x) === "number" && x % 1 !== 0) {
       return decimal_format(x);
     } else {
       return x;

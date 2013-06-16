@@ -37,7 +37,7 @@
         linear_scale_padding: 40)
 
     plot.tooltip_text = (d) ->
-        "{{ get_tooltip_content_points(opts$data) }}"
+        "{{ get_tooltip_content_points(opts$data, opts$params) }}"
 
     plot.append("defs").append("clipPath")
         .attr("id", "clip")
@@ -106,7 +106,7 @@
 
     # Sidebar
     sidebar = plot.append("g")
-        .attr("transform","translate(#{plot.width + 60},#{0})")
+        .attr("transform","translate(#{plot.width + 60},0)")
 
     g_toggle_names = sidebar.append("g")
         .style("cursor", "pointer")
@@ -135,19 +135,20 @@
     if color_scale.range().length > 1
         sidebar.append("text")
             .attr(
-                  "class": "colorize_title"
-                  "x": 0
-                  "y": 35
+                  "class": "color_title"
+                  "x": 15
+                  "y": 45
                   "dy": ".35em")
             .style(
-                  "font-size": "24px")
-            .text("{{ opts$params$colorize_title }}")
+                  "font-size": "16px"
+                  "font-weight": "bold")
+            .text("{{ opts$params$color_title }}")
 
         g_color_legend = sidebar.selectAll(".key")
             .data(color_scale.domain().reverse())
           .enter().append("g")
             .attr(
-                  "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 50})"
+                  "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 70})"
                   "class": "key")
 
         g_color_legend.append("circle")

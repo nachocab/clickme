@@ -291,7 +291,7 @@ my_light_red = "#b90000"
 @format_property = (x) ->
     decimal_format = d3.format(".2f")
 
-    if type(x) == "number"
+    if type(x) == "number" && x % 1 != 0
         decimal_format(x)
     else
         x

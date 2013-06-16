@@ -199,15 +199,14 @@ default_colors <- function(n = 9){
     )
 
     d3_category9 <- c(
-                       "#1f77b4", # blue
+                       "#24A5F9", # blue
                        "#d62728", # red
                        "#9467bd", # purple
                        "#ff7f0e", # orange
-                       "#2ca02c", # green
-                       "#17becf", # cyan
-                       "#e377c2", # pink
-                       "#7f7f7f",
-                       "#bcbd22"
+                       "#3CCB23", # green
+                       "#E027E4", # pink
+                       "#5711AC", # plum
+                       "#bcbd22" # pale olive
                        )
     # d3_category10 <- c("#1f77b4", "#d62728", "#2ca02c", "#ff7f0e", "#9467bd", "#17becf", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22")
     d3_category19 <- c(d3_category9, "#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5")
