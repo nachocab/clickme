@@ -17,7 +17,7 @@ get_point_names <- function(data) {
 
 # ensure that main is converted to title, and that there are point_names
 validate_points_params <- function(params) {
-    validate_colorize(params)
+    params <- validate_colorize_and_palette(params)
 
     if (!is.null(params$main)) {
         params$title <- params$main
@@ -55,8 +55,7 @@ apply_axes_limits <- function(data, params) {
     data
 }
 
-get_points_data <- function(x, y, params){
-    data <- xy_to_data(x,y)
+get_points_data <- function(data, params){
 
     if (is.null(params$point_names)){
         data$point_name <- rownames(data)
@@ -129,7 +128,9 @@ clickme_points <- function(x, y = NULL,
 
     params$code <- paste(deparse(sys.calls()[[1]]), collapse="")
 
-    data <- get_points_data(x, y, params)
+    data <- xy_to_data(x,y)
+    params$x_categorical_domain <- data$x
+    data <- get_points_data(data, params)
 
     # this must be done *after* data has been sorted to ensure the first category (which will be rendered at the bottom) gets the last color
     params$palette <- rev(params$palette)

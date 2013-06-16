@@ -32,6 +32,7 @@
         box: {{ toJSON(opts$data$box )}}
         xlim: {{ toJSON(opts$params$xlim )}}
         ylim: {{ toJSON(opts$params$ylim )}}
+        x_categorical_domain: {{ toJSON(opts$params$x_categorical_domain )}}
         jitter: {{ opts$params$jitter }}
         ordinal_scale_padding: 1
         linear_scale_padding: 40)
@@ -136,7 +137,7 @@
         sidebar.append("text")
             .attr(
                   "class": "color_title"
-                  "x": 15
+                  "x": -radius
                   "y": 45
                   "dy": ".35em")
             .style(

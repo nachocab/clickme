@@ -66,7 +66,7 @@ get_line_names <- function(data) {
 }
 
 validate_lines_params <- function(params) {
-    validate_colorize(params)
+    validate_colorize_and_palette(params)
 
     if (!is.null(params$main)) {
         params$title <- params$main

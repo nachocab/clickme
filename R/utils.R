@@ -104,12 +104,12 @@ match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups =
     group_names
 }
 
-#' Validates colorize
+#' Validates colorize and palette
 #'
 #' @param params parameters
 #'
 #' @export
-validate_colorize <- function(params) {
+validate_colorize_and_palette <- function(params) {
     if (scale_type(params$colorize) == "categorical" & !is.null(params$color_domain)){
         stop("A color domain can only be specified for quantitative scales. colorize has categorical values.")
     }
@@ -119,7 +119,9 @@ validate_colorize <- function(params) {
     if (!is.null(params$colorize) & !is.null(params$palette) & !is.null(palette_names)) {
         if (scale_type(params$colorize) == "categorical"){
             if (any(categories %notin% palette_names)){
-                stop("The following categories don't have a color in palette: ", paste0(categories[categories %notin% palette_names], collapse = ", "))
+                categories_without_color <- categories[categories %notin% palette_names]
+                missing_palette <- setNames(rev(default_colors(length(categories_without_color))), categories_without_color)
+                params$palette <- c(params$palette, missing_palette)
             }
             if (any(palette_names %notin% categories)) {
                 stop("The following palette names don't appear in colorize: ", paste0(palette_names[palette_names %notin% categories], collapse = ", "))
@@ -128,6 +130,8 @@ validate_colorize <- function(params) {
             stop("The values in colorize imply a quantitative scale, which requires an unnamed vector of the form c(start_color[, middle_color], end_color)")
         }
     }
+
+    params
 }
 
 
@@ -599,20 +603,21 @@ xy_to_data <- function(x, y) {
         data_y <- x[[2]]
         rownames <- as.character(1:length(data_x))
     } else {
-        data_x <- x
         if (is.null(y)){
-            data_y <- 1:length(x)
+            data_x <- 1:length(x)
+            data_y <- x
         } else {
             if (length(x) != length(y)){
                 stop("x and y have different lengths")
             }
+            data_x <- x
             data_y <- y
         }
 
-        if (is.null(names(data_x))){
-            rownames <- as.character(1:length(data_x))
+        if (is.null(names(x))){
+            rownames <- as.character(1:length(x))
         } else {
-            rownames <- names(data_x)
+            rownames <- names(x)
         }
     }
 

@@ -141,43 +141,43 @@ test_that("reorder_data_by_color", {
 context("xy_to_data")
 
 test_that("x is not null and y is a dataframe, a matrix, or a list", {
-    expect_error(xy_to_data(x = 1:10, y = data.frame(a = 1:10)), "y cannot be a dataframe, a matrix, or a list")
-    expect_error(xy_to_data(x = 1:10, y = matrix(1:10, nrow = 2)), "y cannot be a dataframe, a matrix, or a list")
-    expect_error(xy_to_data(x = 1:10, y = list(1:10)), "y cannot be a dataframe, a matrix, or a list")
+    expect_error(xy_to_data(x = 10:1, y = data.frame(a = 1:10)), "y cannot be a dataframe, a matrix, or a list")
+    expect_error(xy_to_data(x = 10:1, y = matrix(1:10, nrow = 2)), "y cannot be a dataframe, a matrix, or a list")
+    expect_error(xy_to_data(x = 10:1, y = list(1:10)), "y cannot be a dataframe, a matrix, or a list")
 })
 
 # x is a numeric vector
 test_that("x is a numeric vector and y is null", {
-    data <- xy_to_data(x = 1:10, y = NULL)
-    expect_equal(data, data.frame(x = 1:10, y = 1:10, row.names = as.character(1:10)))
+    data <- xy_to_data(x = 10:1, y = NULL)
+    expect_equal(data, data.frame(x = 1:10, y = 10:1, row.names = as.character(1:10)))
 
-    data <- xy_to_data(x = setNames(1:10, letters[1:10]), y = NULL)
-    expect_equal(data, data.frame(x = 1:10, y = 1:10, row.names = letters[1:10]))
+    data <- xy_to_data(x = setNames(10:1, letters[1:10]), y = NULL)
+    expect_equal(data, data.frame(x = 1:10, y = 10:1, row.names = letters[1:10]))
 
-    expect_error(xy_to_data(x = setNames(1:10, rep("a", 10)), y = NULL), "duplicate row.names: a")
+    expect_error(xy_to_data(x = setNames(10:1, rep("a", 10)), y = NULL), "duplicate row.names: a")
 })
 
 test_that("x is a numeric vector and y is a numeric vector", {
-    data <- xy_to_data(x = 1:10, y = 1:10)
-    expect_equal(data, data.frame(x = 1:10, y = 1:10, row.names = as.character(1:10)))
+    data <- xy_to_data(x = 10:1, y = 1:10)
+    expect_equal(data, data.frame(x = 10:1, y = 1:10, row.names = as.character(1:10)))
 
-    expect_error(xy_to_data(x = 1:10, y = 1:5), "x and y have different lengths")
+    expect_error(xy_to_data(x = 10:1, y = 1:5), "x and y have different lengths")
 })
 
 test_that("x is a numeric vector and y is a character vector", {
-    data <- xy_to_data(x = 1:10, y = letters[1:10])
-    expect_equal(data, data.frame(x = 1:10, y = letters[1:10], row.names = as.character(1:10)))
+    data <- xy_to_data(x = 10:1, y = letters[1:10])
+    expect_equal(data, data.frame(x = 10:1, y = letters[1:10], row.names = as.character(1:10)))
 
-    data <- xy_to_data(x = 1:10, y = as.character(1:10))
-    expect_equal(data, data.frame(x = 1:10, y = as.character(1:10), row.names = as.character(1:10)))
+    data <- xy_to_data(x = 10:1, y = as.character(1:10))
+    expect_equal(data, data.frame(x = 10:1, y = as.character(1:10), row.names = as.character(1:10)))
 })
 
 test_that("x is a numeric vector and y is a factor", {
-    data <- xy_to_data(x = 1:10, y = factor(letters[1:10]))
-    expect_equal(data, data.frame(x = 1:10, y = factor(letters[1:10]), row.names = as.character(1:10)))
+    data <- xy_to_data(x = 10:1, y = factor(letters[1:10]))
+    expect_equal(data, data.frame(x = 10:1, y = factor(letters[1:10]), row.names = as.character(1:10)))
 
-    data <- xy_to_data(x = 1:10, y = factor(as.character(1:10)))
-    expect_equal(data, data.frame(x = 1:10, y = factor(as.character(1:10)), row.names = as.character(1:10)))
+    data <- xy_to_data(x = 10:1, y = factor(as.character(1:10)))
+    expect_equal(data, data.frame(x = 10:1, y = factor(as.character(1:10)), row.names = as.character(1:10)))
 })
 
 

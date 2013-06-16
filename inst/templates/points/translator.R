@@ -13,6 +13,8 @@ get_color_domain_param <- function(opts){
 }
 
 get_palette_param <- function(opts) {
+    palette_names <- names(opts$params$palette)
+    categories <- unique(opts$params$colorize)
     if (is.null(opts$params$palette)){
         if (is.null(opts$data$colorize) | length(unique(opts$data$colorize)) == 1){
                 opts$params$palette <- c("#000")
@@ -20,7 +22,7 @@ get_palette_param <- function(opts) {
             if (scale_type(opts$data$colorize) == "quantitative"){
                 opts$params$palette <- c("steelblue", "#CA0020") # blue-red gradient
             } else {
-                opts$params$palette <- rev(default_colors(length(unique(opts$data$colorize))))
+                opts$params$palette <- rev(default_colors(length(categories)))
             }
         }
     }
@@ -46,6 +48,7 @@ get_d3_color_scale <- function(opts) {
 }
 
 get_data_as_json <- function(opts) {
+    opts$data <- opts$data[!is.na(opts$data$x) & !is.na(opts$data$y),]
     json_data <- df2json(opts$data)
 
     json_data

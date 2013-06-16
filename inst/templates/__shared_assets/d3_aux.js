@@ -236,7 +236,7 @@
         domain = d3.extent(plot.data[scale_name]);
       }
     } else {
-      domain = plot.data[scale_name];
+      domain = plot.x_categorical_domain;
     }
     return domain;
   };

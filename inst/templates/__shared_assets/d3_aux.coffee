@@ -243,8 +243,7 @@ my_light_red = "#b90000"
         else
             domain = d3.extent(plot.data[scale_name])
     else
-        # d3 extracts the unique values automatically
-        domain = plot.data[scale_name]
+        domain = plot.x_categorical_domain
 
     domain
 
