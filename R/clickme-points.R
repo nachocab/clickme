@@ -129,7 +129,20 @@ clickme_points <- function(x, y = NULL,
     params$code <- paste(deparse(sys.calls()[[1]]), collapse="")
 
     data <- xy_to_data(x,y)
-    params$x_categorical_domain <- data$x
+
+    if (is_character_or_factor(data$x)){
+        if (is.character(data$x))
+            params$x_categorical_domain <- unique(data$x)
+        else
+            params$x_categorical_domain <- levels(data$x)
+    }
+    if (is_character_or_factor(data$y)){
+        if (is.character(data$y))
+            params$y_categorical_domain <- unique(data$y)
+        else
+            params$y_categorical_domain <- levels(data$y)
+    }
+
     data <- get_points_data(data, params)
 
     # this must be done *after* data has been sorted to ensure the first category (which will be rendered at the bottom) gets the last color

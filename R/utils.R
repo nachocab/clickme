@@ -85,7 +85,7 @@ disjoint_sets <- function(a, b, names = c("a", "b", "both")) {
 match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups = FALSE) {
     if (any(duplicated(unlist(groups)))){
         duplicated_elements <- unname(unlist(groups)[duplicated(unlist(groups))])
-        message <- gettextf("There are duplicated elements in your groups:\n%s", paste(duplicated_elements, collapse = "\n"))
+        message <- gettextf("The following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"))
         if (strict_dups){
             stop(message)
         } else {
@@ -119,13 +119,20 @@ validate_colorize_and_palette <- function(params) {
     categories <- unique(params$colorize)
     if (!is.null(params$colorize) & !is.null(params$palette) & !is.null(palette_names)) {
         if (scale_type(params$colorize) == "categorical"){
+            if (any(palette_names %notin% categories)) {
+                warning("The following palette names don't appear in colorize: ", paste0(palette_names[palette_names %notin% categories], collapse = ", "))
+            }
+
+            if (any(is.na(params$palette))) {
+                categories_with_default_colors <- names(params$palette[is.na(params$palette)])
+                default_palette <- setNames(default_colors(length(categories_with_default_colors)), categories_with_default_colors)
+                params$palette <- c(default_palette, na.omit(params$palette))
+            }
+
             if (any(categories %notin% palette_names)){
                 categories_without_color <- categories[categories %notin% palette_names]
-                missing_palette <- setNames(rev(default_colors(length(categories_without_color))), categories_without_color)
-                params$palette <- c(params$palette, missing_palette)
-            }
-            if (any(palette_names %notin% categories)) {
-                stop("The following palette names don't appear in colorize: ", paste0(palette_names[palette_names %notin% categories], collapse = ", "))
+                missing_palette <- setNames(default_colors(length(categories_without_color)), categories_without_color)
+                params$palette <- c(missing_palette, params$palette)
             }
         } else {
             stop("The values in colorize imply a quantitative scale, which requires an unnamed vector of the form c(start_color[, middle_color], end_color)")

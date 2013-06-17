@@ -228,7 +228,7 @@ my_light_red = "#b90000"
 
 
 @get_scale_type = (plot, scale_name) ->
-    if type(plot.data[scale_name][0]) is "number"
+    if type(plot.data_ranges[scale_name][0]) is "number"
         # TODO: check if plot.log == scale_name and return scale_type = "log"
         scale_type = "linear"
     else
@@ -241,9 +241,9 @@ my_light_red = "#b90000"
         if plot.scale_limits[scale_name]?
             domain = plot.scale_limits[scale_name]
         else
-            domain = d3.extent(plot.data[scale_name])
+            domain = plot.data_ranges[scale_name]
     else
-        domain = plot.x_categorical_domain
+        domain = plot.categorical_domains[scale_name]
 
     domain
 
