@@ -5,6 +5,7 @@
 #' @export
 make_link <- function(url, name) {
     name <- name %||% "link"
+    if (is.null(url)) stop ("Invalid filename. The link cannot be generated")
     link <- gettextf("<a href=\"%s\" target = \"_blank\">%s</a>\n\n", url, name)
     cat(link)
 }

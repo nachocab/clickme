@@ -38,7 +38,7 @@ clickme <- function(data, template, params = NULL, open = interactive(), link = 
     if (open) browseURL(opts$url)
 
     if (link){
-        make_link(opts$names$html_file, opts$params$title)
+        make_link(opts$names$output_file, opts$params$title)
     } else {
         invisible(opts)
     }
