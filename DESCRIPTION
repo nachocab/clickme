@@ -20,6 +20,7 @@ Suggests:
 Collate:
     'utils.R'
     'json.R'
+    'generate-visualization.R'
     'zzz.R'
     'opts.R'
     'clickme-heatmap.R'

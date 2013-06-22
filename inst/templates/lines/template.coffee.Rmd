@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>{{ opts$params$title }}</title>
+
+    {{ get_assets(opts) }}
+
+  </head>
+
+  <body>
+    <script type="text/javascript">
+    ```{r engine="coffee", results="asis", echo = FALSE }
+
+    data = {{ get_data_as_json(opts) }}
+
+    decimal_format = d3.format(".2f")
+
+    color_scale = {{ get_d3_color_scale(opts) }}
+
+    draw_box = {{ toJSON(opts$params$box) }}
+
+    color_legend_counts = {{ get_color_legend_counts(opts) }}
+
+    plot = append_plot(
+        width: {{ opts$params$width }}
+        height: {{ opts$params$height }}
+        padding: {{ get_padding_param(opts) }}
+        title: "{{ opts$params$title }}"
+        xlab: "{{ opts$params$xlab }}"
+        ylab: "{{ opts$params$ylab }}"
+    )
+
+    if draw_box?
+        plot.append("path")
+            .attr(
+                "d": "M0,0L#{plot.width},0L#{plot.width},#{plot.height}"
+            ).style(
+                "stroke": "black"
+                "stroke-width": "2px"
+                "shape-rendering": "crispEdges"
+                "fill": "none"
+            )
+
+    plot.scales.x = {{ get_d3_x_scale(opts) }}
+    plot.scales.x = add_scale_padding(plot.scales.x)
+    draw_x_axis(plot, {{ get_x_tick_values(opts) }})
+    draw_x_axis_label(plot)
+
+    plot.scales.y = {{ get_d3_y_scale(opts) }}
+    plot.scales.y = add_scale_padding(plot.scales.y)
+    draw_y_axis(plot)
+    draw_y_axis_label(plot)
+
+    line = d3.svg.line()
+        .defined((d) -> !isNaN(d.y)) # skip null and NaN values
+        .interpolate("{{ opts$params$interpolate }}")
+        .x((d) -> plot.scales.x(d.x))
+        .y((d) -> plot.scales.y(d.y))
+
+
+    g_line = plot.selectAll(".line")
+        .data(data)
+      .enter().append("g")
+        .attr("class", ".line")
+
+    lines = g_line.append("path")
+        .attr(
+            "class": "line_tooltip"
+            "d": (d) -> line(d.values)
+            "title": (d) ->
+                "<strong>#{d.line_name}</strong><br>
+                {{opts$params$ylab %||% \"y\"}}: <strong>#{decimal_format(d.y)}</strong><br>
+                {{opts$params$xlab %||% \"x\"}}: #{decimal_format(d.x)}"
+        ).style(
+            "stroke": (d) -> color_scale(d.colorize)
+            "stroke-width": "{{ opts$params$lwd }}px"
+            "fill": "none"
+            "shape-rendering": "auto"
+        )
+
+    # $(".line_tooltip").tooltip
+    #     html: true
+    #     container: "body"
+    #     placement: "top"
+
+    line_names = g_line.append("text")
+        .datum((d) ->
+            "line_name": d.line_name
+            "value": d.values[d.values.length - 1]
+            "colorize": d.colorize
+        ).text((d) -> d.line_name)
+        .attr(
+            "transform": (d) -> "translate(#{plot.scales.x(d.value.x)} #{plot.scales.y(d.value.y)})"
+            "dx": 8
+            "dy": ".35em"
+            "display": "none"
+
+        ).style(
+            "fill": (d) -> color_scale(d.colorize)
+            "font-size": "22px"
+        )
+
+    sidebar = plot.append("g")
+        .attr("transform","translate(#{plot.width + 60},#{0})")
+
+    g_line_names = sidebar.append("g")
+        .style("cursor", "pointer")
+        .style("font-size","22px")
+        .on("click", () -> toggle_line_names() )
+
+    g_line_names.append("circle")
+        .attr("r", 7)
+        .attr("stroke","black")
+        .attr("stroke-width",2)
+        .attr("fill","white")
+
+    g_line_names.append("text")
+        .attr('text-anchor', 'start')
+        .attr('dy', '.32em')
+        .attr('dx', '12')
+        .text("Show names")
+
+
+    toggle_line_names = ()->
+        showing_line_names = g_line_names.classed("show_names")
+        line_names.attr("display", ()->         if showing_line_names then "none" else "inline")
+        g_line_names.attr("class", ()->         if showing_line_names then "" else "show_names")
+            .select("circle").attr("fill", ()-> if showing_line_names then "white" else "black")
+
+    # Draw color legend
+    if color_scale.range().length > 1
+        sidebar.append("text")
+            .attr(
+                  "class": "colorize_title"
+                  "x": 0
+                  "y": 35
+                  "dy": ".35em"
+            ).style(
+                    "font-size": "24px"
+            ).text("{{ opts$params$colorize_title }}")
+
+        g_color_legend = sidebar.selectAll(".key")
+            .data(color_scale.domain().reverse())
+          .enter().append("g")
+            .attr(
+                  "transform": (d, i) -> "translate(0, #{i * (5 * 2 + 15) + 70})"
+                  "class": "key"
+            )
+
+
+        g_color_legend.append("circle")
+            .attr(
+                "r": 5
+                "fill": color_scale
+            )
+
+        # legend_names = get_legend_names_param(opts)
+        g_color_legend.append("text")
+            .attr(
+                "x": 20 + 10
+                "y": 0
+                "dy": ".35em"
+            ).text((d) -> "#{d} (#{color_legend_counts[d]})")
+            # ).text((d,i) -> legend_names[i])
+    ```
+    </script>
+  </body>
+</html>

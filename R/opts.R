@@ -8,6 +8,7 @@ add_names <- function(opts, template_name) {
 
     # file names
     opts$names$template_file <- "template.Rmd"
+    opts$names$template_coffee_file <- "template.coffee.Rmd"
     opts$names$config_file <- "config.yml"
     opts$names$translator_file <- "translator.R"
     opts$names$translator_test_file <- "test-translator.R"
@@ -72,6 +73,7 @@ add_paths <- function(opts) {
 
     # file absolute paths
     opts$paths$template_file <- file.path(opts$paths$template, opts$names$template_file)
+    opts$paths$template_coffee_file <- file.path(opts$paths$template, opts$names$template_coffee_file)
     opts$paths$config_file <- file.path(opts$paths$template, opts$names$config_file)
     opts$paths$translator_file <- file.path(opts$paths$template, opts$names$translator_file)
     opts$paths$translator_test_file <- file.path(opts$paths$template, opts$names$translator_test_file)
@@ -86,7 +88,7 @@ validate_paths <- function(opts) {
     if (!file.exists(opts$paths$template))
         stop(gettextf("There is no template %s located in: %s ", opts$names$template, opts$paths$template))
 
-    if (!file.exists(opts$paths$template_file))
+    if (!file.exists(opts$paths$template_file) && !(opts$coffee && file.exists(opts$paths$template_coffee_file)))
         stop(gettextf("The %s template doesn't contain a template file in: %s ", opts$names$template, opts$paths$template_file))
 
     if (!file.exists(opts$paths$config_file))
@@ -192,9 +194,10 @@ get_default_opts <- function(template_name){
 #' @param port port number used to open output files using a local server. Defaults to 8000.
 #' @export
 #' @import yaml
-get_opts <- function(template_name, params = NULL, file_name = NULL, file = NULL, dir = NULL, port = 8000){
+get_opts <- function(template_name, params, coffee, port, file_name = NULL, file = NULL, dir = NULL){
 
     opts <- get_default_opts(template_name)
+    opts$coffee <- coffee
 
     opts <- add_output_file_name(opts, file, file_name)
     opts <- add_output_paths(opts, file, dir)

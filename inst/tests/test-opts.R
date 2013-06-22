@@ -74,15 +74,18 @@ test_that("output paths are added", {
     expect_equal(opts$paths$output_file, file.path(opts$paths$output, opts$names$output_file))
 })
 
-test_that("default paths and are valid", {
+test_that("default paths are valid", {
 
     opts <- get_default_opts("test_template")
+    opts$coffee <- FALSE
     opts <- add_output_file_name(opts, file = NULL, file_name = NULL)
     opts <- add_output_paths(opts, file = NULL, dir = NULL)
 
     expect_error(validate_paths(opts), gettextf("There is no template test_template located in: %s", file.path(getOption("clickme_templates_path"), "test_template")) )
 
     dir.create(opts$paths$template)
+    expect_error(validate_paths(opts), gettextf("The test_template template doesn't contain a template file in: %s", opts$paths$template_file))
+    file.create(opts$paths$template_coffee_file)
     expect_error(validate_paths(opts), gettextf("The test_template template doesn't contain a template file in: %s", opts$paths$template_file))
 
     file.create(opts$paths$template_file)

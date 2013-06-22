@@ -40,9 +40,6 @@ styles:
 require_packages:
 
 require_server: no
-
-require_coffeescript: no
-
 "
 }
 

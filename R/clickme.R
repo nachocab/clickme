@@ -1,10 +1,3 @@
-#' @import knitr
-generate_visualization <- function(opts){
-    source(opts$paths$translator_file)
-    raw_template <- knit_expand(opts$paths$template_file)
-    suppressMessages(knit(text = raw_template, output = opts$paths$output_file, quiet = TRUE))
-}
-
 #' Generates a JavaScript visualization
 #'
 #' @param data input data
@@ -22,10 +15,10 @@ generate_visualization <- function(opts){
 #' n <- 30
 #' df1 <- data.frame(source = sample(items, n, replace = TRUE), target = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace = TRUE))
 #' clickme(df1, "force_directed")
-clickme <- function(data, template, params = NULL, open = interactive(), link = FALSE, ...){
+clickme <- function(data, template, params = NULL, open = interactive(), link = FALSE, coffee = FALSE, port = 8000, ...){
 
-    get_opts_skip_args <- function(..., open, link) get_opts(...)
-    opts <- get_opts_skip_args(template, params, ...)
+    get_opts__ <- function(..., open, link) get_opts(...)
+    opts <- get_opts__(template, params, coffee, port, ...)
     opts$data <- data
 
     generate_visualization(opts)
@@ -33,7 +26,6 @@ clickme <- function(data, template, params = NULL, open = interactive(), link = 
     export_assets(opts)
 
     validate_server(opts)
-    validate_coffee(opts)
 
     if (open) browseURL(opts$url)
 
