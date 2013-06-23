@@ -3,188 +3,188 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <title>{{ opts$params$title }}</title>
+    <title>{{  opts$params$title  }}</title>
 
-    {{ get_assets(opts) }}
+    {{  get_assets(opts)  }}
 
   </head>
 
   <body>
     <script type="text/javascript">
-    ```{r engine="coffee", results="asis", echo = FALSE }
-
-    data = {{ get_data_as_json(opts) }}
-
-    radius = {{ opts$params$radius }}
-
-    color_scale = {{ get_d3_color_scale(opts) }}
-
-    color_legend_counts = {{ get_color_legend_counts(opts) }}
-
-    plot = new_plot(
-        width: {{ opts$params$width }}
-        height: {{ opts$params$height }}
-        padding: {{ get_padding_param(opts) }}
-        data_ranges:
-            x: {{ toJSON(range(opts$data$x, na.rm = TRUE)) }}
-            y: {{ toJSON(range(opts$data$y, na.rm = TRUE)) }}
-        xlab: "{{ opts$params$xlab }}"
-        ylab: "{{ opts$params$ylab }}"
-        title: "{{ opts$params$title }}"
-        box: {{ toJSON(opts$data$box )}}
-        xlim: {{ toJSON(opts$params$xlim )}}
-        ylim: {{ toJSON(opts$params$ylim )}}
-        categorical_domains:
-            x: {{ toJSON(opts$params$x_categorical_domain ) }}
-            y: {{ toJSON(opts$params$y_categorical_domain ) }}
-        jitter: {{ opts$params$jitter }}
-        ordinal_scale_padding: 1
-        linear_scale_padding: 40)
-
-    plot.tooltip_text = (d) ->
-        "{{ get_tooltip_content_points(opts$data, opts$params) }}"
-
-    plot.append("defs").append("clipPath")
-        .attr("id", "clip")
-      .append("rect")
-        .attr(
-            "width": plot.width
-            "height": plot.height)
-
-    clip = plot.append("g")
-        .attr("clip-path", "url(#clip)")
-
-    if plot.zoom
-        clip.append("rect")
-          .style("cursor": "move")
-          .attr(
-                "class": "overlay"
-                "width":  plot.width
-                "height": plot.height
-                "fill": "none"
-                "pointer-events": "all")
-          .call(d3.behavior.zoom()
-              .x(plot.scales.x)
-              .y(plot.scales.y)
-              .scaleExtent([1, Infinity])
-              .on("zoom", () -> redraw() ))
-
-        redraw = () ->
-            plot.select(".x.axis").call(plot.axes.x);
-            plot.select(".y.axis").call(plot.axes.y);
-            g_points.attr("transform", transform)
-
-    transform = (d) ->
-        "translate(#{plot.scales.x(d.x) + plot.jitters.x()}, #{plot.scales.y(d.y) + plot.jitters.y()})"
-
-    g_points = clip.selectAll(".point")
-        .data(data)
-      .enter().append("g")
-        .attr(
-              "class": "point"
-              "transform": transform)
-
-
-    points = g_points.append("svg:circle")
-        .attr(
-            "class": "point_tooltip"
-            "r": radius
-            "fill": (d) -> color_scale(d.colorize)
-            "title": (d) -> plot.tooltip_text(d) )
-
-    $(".point_tooltip").tooltip
-        html: true
-        container: "body"
+    (function() {
+      var clip, color_legend_counts, color_scale, data, g_color_legend, g_points, g_toggle_names, plot, point_names, points, radius, redraw, sidebar, toggle_names, transform;
+    
+    
+      data = {{  get_data_as_json(opts)  }};
+    
+      radius = {{  opts$params$radius  }};
+    
+      color_scale = {{  get_d3_color_scale(opts)  }};
+    
+      color_legend_counts = {{  get_color_legend_counts(opts)  }};
+    
+      plot = new_plot({
+        width: {{  opts$params$width  }},
+        height: {{  opts$params$height  }},
+        padding: {{  get_padding_param(opts)  }},
+        data_ranges: {
+          x: {{  toJSON(range(opts$data$x, na.rm = TRUE))  }},
+          y: {{  toJSON(range(opts$data$y, na.rm = TRUE))  }}
+        },
+        xlab: {{  toJSON(opts$params$xlab)  }},
+        ylab: {{  toJSON(opts$params$ylab)  }},
+        title: {{  toJSON(opts$params$title)  }},
+        box: {{  toJSON(opts$data$box ) }},
+        xlim: {{  toJSON(opts$params$xlim ) }},
+        ylim: {{  toJSON(opts$params$ylim ) }},
+        categorical_domains: {
+          x: {{  toJSON(opts$params$x_categorical_domain )  }},
+          y: {{  toJSON(opts$params$y_categorical_domain )  }}
+        },
+        jitter: {{  opts$params$jitter  }},
+        ordinal_scale_padding: 1,
+        linear_scale_padding: 40
+      });
+    
+      plot.tooltip_text = function(d) {
+        return {{  get_tooltip_content_points(opts$data, opts$params)  }};
+      };
+    
+      plot.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
+        "width": plot.width,
+        "height": plot.height
+      });
+    
+      clip = plot.append("g").attr("clip-path", "url(#clip)");
+    
+      if (plot.zoom) {
+        clip.append("rect").style({
+          "cursor": "move"
+        }).attr({
+          "class": "overlay",
+          "width": plot.width,
+          "height": plot.height,
+          "fill": "none",
+          "pointer-events": "all"
+        }).call(d3.behavior.zoom().x(plot.scales.x).y(plot.scales.y).scaleExtent([1, Infinity]).on("zoom", function() {
+          return redraw();
+        }));
+        redraw = function() {
+          plot.select(".x.axis").call(plot.axes.x);
+          plot.select(".y.axis").call(plot.axes.y);
+          return g_points.attr("transform", transform);
+        };
+      }
+    
+      transform = function(d) {
+        return "translate(" + (plot.scales.x(d.x) + plot.jitters.x()) + ", " + (plot.scales.y(d.y) + plot.jitters.y()) + ")";
+      };
+    
+      g_points = clip.selectAll(".point").data(data).enter().append("g").attr({
+        "class": "point",
+        "transform": transform
+      });
+    
+      points = g_points.append("svg:circle").attr({
+        "class": "point_tooltip",
+        "r": radius,
+        "fill": function(d) {
+          return color_scale(d.colorize);
+        },
+        "title": function(d) {
+          return plot.tooltip_text(d);
+        }
+      });
+    
+      $(".point_tooltip").tooltip({
+        html: true,
+        container: "body",
         placement: "top"
+      });
+    
+      point_names = g_points.append("text").text(function(d) {
+        return d.point_name;
+      }).attr({
+        "dy": ".32em",
+        "dx": 8,
+        "text-anchor": "left",
+        "display": "none"
+      }).style({
+        "fill": function(d) {
+          return color_scale(d.colorize);
+        },
+        "font-size": "22px"
+      });
+    
+      sidebar = plot.append("g").attr("transform", "translate(" + (plot.width + 60) + ",0)");
+    
+      g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
+        return toggle_names();
+      });
+    
+      g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
+    
+      g_toggle_names.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12').text("Show names (" + data.length + ")");
+    
+      toggle_names = function() {
+        var showing_point_names;
+        showing_point_names = g_toggle_names.classed("show_names");
+        point_names.attr("display", function() {
+          if (showing_point_names) {
+            return "none";
+          } else {
+            return "inline";
+          }
+        });
+        return g_toggle_names.attr("class", function() {
+          if (showing_point_names) {
+            return "";
+          } else {
+            return "show_names";
+          }
+        }).select("circle").attr("fill", function() {
+          if (showing_point_names) {
+            return "white";
+          } else {
+            return "black";
+          }
+        });
+      };
+    
+      if (color_scale.range().length > 1) {
+        sidebar.append("text").attr({
+          "class": "color_title",
+          "x": -radius,
+          "y": 45,
+          "dy": ".35em"
+        }).style({
+          "font-size": "16px",
+          "font-weight": "bold"
+        }).text({{  toJSON(opts$params$color_title)  }});
+        g_color_legend = sidebar.selectAll(".key").data(color_scale.domain().reverse()).enter().append("g").attr({
+          "transform": function(d, i) {
+            return "translate(0, " + (i * (radius * 2 + 15) + 70) + ")";
+          },
+          "class": "key"
+        });
+        g_color_legend.append("circle").attr({
+          "r": radius,
+          "fill": color_scale
+        });
+        g_color_legend.append("text").attr({
+          "x": radius + 10,
+          "y": 0,
+          "dy": ".35em"
+        }).text(function(d) {
+          return "" + d + " (" + color_legend_counts[d] + ")";
+        });
+      }
+    
+    }).call(this);
 
-    point_names = g_points.append("text")
-        .text((d) -> d.point_name)
-        .attr(
-            "dy": ".32em"
-            "dx": 8
-            "text-anchor": "left"
-            "display": "none")
-        .style(
-            "fill": (d) -> color_scale(d.colorize)
-            "font-size": "22px")
-
-
-    # Sidebar
-    sidebar = plot.append("g")
-        .attr("transform","translate(#{plot.width + 60},0)")
-
-    g_toggle_names = sidebar.append("g")
-        .style("cursor", "pointer")
-        .style("font-size","22px")
-        .on("click", () -> toggle_names())
-
-    g_toggle_names.append("circle")
-        .attr("r", 7)
-        .attr("stroke","black")
-        .attr("stroke-width", 2)
-        .attr("fill","white")
-
-    g_toggle_names.append("text")
-        .attr('text-anchor', 'start')
-        .attr('dy', '.32em')
-        .attr('dx', '12')
-        .text("Show names (#{data.length})")
-
-    toggle_names = ()->
-        showing_point_names = g_toggle_names.classed("show_names")
-        point_names.attr("display", ()->        if showing_point_names then "none" else "inline")
-        g_toggle_names.attr("class", ()->        if showing_point_names then "" else "show_names")
-            .select("circle").attr("fill", ()-> if showing_point_names then "white" else "black")
-
-    # Draw color legend
-    if color_scale.range().length > 1
-        sidebar.append("text")
-            .attr(
-                  "class": "color_title"
-                  "x": -radius
-                  "y": 45
-                  "dy": ".35em")
-            .style(
-                  "font-size": "16px"
-                  "font-weight": "bold")
-            .text("{{ opts$params$color_title }}")
-
-        g_color_legend = sidebar.selectAll(".key")
-            .data(color_scale.domain().reverse())
-          .enter().append("g")
-            .attr(
-                  "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 70})"
-                  "class": "key")
-
-        g_color_legend.append("circle")
-            .attr(
-                "r": radius
-                "fill": color_scale)
-
-        # legend_point_names = get_legend_names_param(opts)
-        g_color_legend.append("text")
-            .attr(
-                "x": radius + 10
-                "y": 0
-                "dy": ".35em")
-            .text((d) -> "#{d} (#{color_legend_counts[d]})")
-            # ).text((d,i) -> legend_names[i])
-
-
-    # d3.select(window).on("keydown", () ->
-    #     # switch (d3.event.keyCode) {
-    #       # case : year = Math.max(year0, year - 10); break;
-    #       # case 39: year = Math.min(year1, year + 10); break;
-    #     # }
-    #     # console.log(d3.event.keyCode)
-    #     if (d3.event.keyCode in [78, 32]) # 'n' or 'space bar'
-    #         change()
-    # )
-
-    ```
     </script>
     <div class = "code">
-    {{ opts$params$code }}
+    {{  opts$params$code  }}
     </div>
   </body>
 </html>

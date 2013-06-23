@@ -384,12 +384,6 @@ readContents <- function(path) {
   if (!is.null(a)) a else b
 }
 
-source_dir <- function(path){
-    sapply(list.files(path), function(file){
-        source(file.path(path, file))
-    })
-}
-
 is.installed <- function(package) {
     is.element(package, installed.packages()[,1])
 }
@@ -526,7 +520,8 @@ show_template <- function(template, fields = NULL){
 #' @param template name of template
 #' @export
 demo_template <- function(template) {
-    opts <- get_opts(template)
+    opts <- get_default_opts(template)
+    opts$config <- yaml.load_file(opts$paths$config_file)
     if (is.null(opts$config$demo)){
         message("The ", template, " template didn't provide a demo example.")
     } else {
@@ -567,57 +562,3 @@ is_data_frame_or_matrix <- function(x) {
 }
 
 
-xy_to_data <- function(x, y) {
-    if (is_character_or_factor(x) && is.null(y)){
-        stop("y cannot be NULL when x is a character vector or a factor")
-    }
-
-    if (is_data_frame_or_matrix(y) || is.list(y)){
-        stop("y cannot be a dataframe, a matrix, or a list")
-    }
-
-    if (is_data_frame_or_matrix(x)){
-        if (ncol(x) < 2){
-            stop("When x is a dataframe or a matrix, it must contain at least two columns")
-        }
-        data_x <- x[, 1]
-        data_y <- x[, 2]
-        if (is.null(rownames(x))){
-            rownames <- as.character(1:nrow(x))
-        } else {
-            rownames <- rownames(x)
-        }
-    } else if (is.list(x)) {
-        if (length(x) < 2){
-            stop("When x is a list, it must contain at least two elements")
-        }
-        if (length(x[[1]]) != length(x[[2]])){
-            stop("The first two elements of x have different lengths")
-        }
-
-        data_x <- x[[1]]
-        data_y <- x[[2]]
-        rownames <- as.character(1:length(data_x))
-    } else {
-        if (is.null(y)){
-            data_x <- 1:length(x)
-            data_y <- x
-        } else {
-            if (length(x) != length(y)){
-                stop("x and y have different lengths")
-            }
-            data_x <- x
-            data_y <- y
-        }
-
-        if (is.null(names(x))){
-            rownames <- as.character(1:length(x))
-        } else {
-            rownames <- names(x)
-        }
-    }
-
-    data <- data.frame(x = data_x, y = data_y, row.names = rownames, stringsAsFactors = FALSE)
-
-    data
-}

@@ -3,180 +3,159 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <title>{{ opts$params$title }}</title>
+    <title>{{  opts$params$title  }}</title>
 
-    {{ get_assets(opts) }}
+    {{  get_assets(opts)  }}
 
   </head>
 
   <body>
     <script type="text/javascript">
-    ```{r engine="coffee", results="asis", echo = FALSE }
+    (function() {
+      var cell_height, cell_width, col_group_scale_range, col_group_widths, col_group_x_values, color_scale, data, decimal_format, g_col_group, g_col_group_names, g_col_names, g_row_names, g_rows, get_row, i, plot, row_names, row_width;
+    
+      decimal_format = d3.format(".2f");
+    
+      data = {{ get_data_as_json(opts) }};
+    
+      color_scale = {{ get_d3_color_scale(opts) }};
+    
+      cell_width = {{ opts$params$cell_width }};
+    
+      cell_height = {{ opts$params$cell_height }};
+    
+      row_names = {{ get_row_names_param(opts) }};
+    
+      plot = append_plot({
+        width: 1500,
+        height: 2000,
+        padding: {{ get_padding_param(opts) }},
+        title: "{{  opts$params$title  }}",
+        xlab: "{{  opts$params$xlab  }}",
+        ylab: "{{  opts$params$ylab  }}"
+      });
+    
+      g_col_group = plot.selectAll(".col_group").data(data).enter().append("g").attr("class", "col_group");
+    
+      if ({{ toJSON(opts$params$show_col_names) }} != null) {
+        g_col_names = g_col_group.selectAll(".col_name").data(function(d) {
+          return d.col_names;
+        }).enter().append("text").attr({
+          "class": "col_name",
+          "x": function(d, i) {
+            return cell_width * i;
+          },
+          "y": 6,
+          "dy": "-.5em",
+          "dx": ".4em",
+          "text-anchor": "start"
+        }).text(function(d) {
+          return d;
+        });
+      }
+    
+      get_row = function(row) {
+        var cell;
+        return cell = d3.select(this).selectAll(".cell").data(row.row_values).enter().append("rect").attr({
+          "class": "cell",
+          "x": function(d, i) {
+            return cell_width * i;
+          },
+          "width": cell_width,
+          "height": cell_height
+        }).style("fill", function(d) {
+          return color_scale(d.cell_value);
+        }).on("mouseover", function() {
+          var $col_group, $current_row, $rows, cell_index, cell_value, col_name, row_index, row_name, title;
+          $col_group = $(this).closest(".col_group");
+          $rows = $col_group.find(".row");
+          $current_row = $(this).closest(".row");
+          row_index = $rows.index($current_row);
+          row_name = row_names[row_index];
+          cell_index = $current_row.find(".cell").index($(this));
+          col_name = d3.select($col_group[0]).data()[0].col_names[cell_index];
+          cell_value = decimal_format(d3.select(this).data()[0].cell_value);
+          title = "" + row_name + "<br>                    " + col_name + "<br>                    <strong>" + cell_value + "</strong>";
+          $(this).tooltip({
+            title: title,
+            html: true,
+            container: "body",
+            placement: "top"
+          });
+          return $(this).tooltip('show');
+        });
+      };
+    
+      g_rows = g_col_group.selectAll(".row").data(function(d) {
+        return d.col_values;
+      }).enter().append("g").attr("class", "row").attr("transform", function(d, i) {
+        return "translate(0," + (cell_height * i) + ")";
+      }).each(get_row);
+    
+      g_row_names = g_col_group.filter(function(d, i) {
+        return i === 0;
+      }).append("g");
+    
+      if ({{ toJSON(opts$params$show_row_names) }} != null) {
+        g_row_names.selectAll(".row_name").data(function() {
+          return row_names;
+        }).enter().append("text").attr("y", function(d, i) {
+          return cell_height * i;
+        }).attr("dy", "1em").attr("class", "row_name").text(function(d) {
+          return d;
+        });
+      }
+    
+      col_group_widths = g_col_group[0].map(function(col_group) {
+        return col_group.getBBox().width;
+      });
+    
+      if (data.length > 1) {
+        g_col_group_names = g_col_group.append("text").attr({
+          "x": function(d, i) {
+            return col_group_widths[i] / 2;
+          },
+          "y": "-2em",
+          "text-anchor": "middle",
+          "class": "col_group_name"
+        }).text(function(d) {
+          return d.col_group_name;
+        });
+      }
+    
+      col_group_x_values = [];
+    
+      i = 0;
+    
+      while (i < col_group_widths.length) {
+        if (i === 0) {
+          col_group_x_values[0] = 12;
+        } else {
+          col_group_x_values[i] = col_group_x_values[i - 1] + col_group_widths[i - 1] + 12;
+        }
+        i++;
+      }
+    
+      col_group_scale_range = [0, d3.sum(col_group_widths.slice(0, col_group_widths.length - 1)) + 24];
+    
+      plot.scales.col_group = d3.scale.linear().domain([0, d3.max(col_group_x_values)]).range(col_group_scale_range);
+    
+      g_col_group.attr("transform", function(d, i) {
+        return "translate(" + (plot.scales.col_group(col_group_x_values[i])) + ",0)";
+      });
+    
+      row_width = g_row_names.node().getBBox().width;
+    
+      g_row_names.selectAll("text").attr({
+        "x": -12.,
+        "text-anchor": "end"
+      });
+    
+    }).call(this);
 
-    decimal_format = d3.format(".2f")
-
-    data = {{ get_data_as_json(opts) }}
-    color_scale = {{ get_d3_color_scale(opts) }}
-    cell_width = {{ opts$params$cell_width }}
-    cell_height = {{ opts$params$cell_height }}
-
-    row_names = {{ get_row_names_param(opts) }}
-
-    plot = append_plot(
-        width: 1500
-        height: 2000
-        padding: {{ get_padding_param(opts) }}
-        title: "{{ opts$params$title }}"
-        xlab: "{{ opts$params$xlab }}"
-        ylab: "{{ opts$params$ylab }}"
-    )
-
-    # plot.scales.x = {{ get_d3_x_scale(opts) }}
-    # plot.scales.x = add_scale_padding(plot.scales.x)
-
-    # plot.scales.y = {{ get_d3_y_scale(opts) }}
-    # plot.scales.y = add_scale_padding(plot.scales.y)
-
-    # add col groups
-    g_col_group = plot.selectAll(".col_group")
-        .data(data)
-      .enter().append("g")
-        .attr("class", "col_group")
-
-    # add col names
-    if {{ toJSON(opts$params$show_col_names) }}?
-        g_col_names = g_col_group.selectAll(".col_name")
-            .data((d) -> d.col_names)
-          .enter().append("text")
-            .attr(
-                  "class": "col_name"
-                  "x": (d,i) -> cell_width * i
-                  "y": 6
-                  "dy": "-.5em"
-                  "dx": ".4em"
-                  "text-anchor": "start"
-            ).text((d) -> d)
-
-    # tooltip = plot
-    #     .append("text")
-    #     .attr(
-    #           "fill": "black"
-    #           "stroke": "white")
-    # Add cells
-    get_row = (row) ->
-        cell = d3.select(@).selectAll(".cell")
-            .data(row.row_values)
-          .enter().append("rect")
-            .attr(
-                "class": "cell"
-                "x": (d,i) -> cell_width*i
-                "width": cell_width
-                "height": cell_height)
-            .style("fill", (d) -> color_scale(d.cell_value))
-            .on("mouseover", ()->
-                # TODO: refactor this
-                $col_group = $(this).closest(".col_group")
-                $rows = $col_group.find(".row")
-                $current_row = $(this).closest(".row")
-                row_index = $rows.index($current_row)
-                row_name = row_names[row_index]
-
-                cell_index = $current_row.find(".cell").index($(this))
-                col_name = d3.select($col_group[0]).data()[0].col_names[cell_index]
-
-                cell_value = decimal_format(d3.select(this).data()[0].cell_value)
-
-                title = "#{row_name}<br>
-                        #{col_name}<br>
-                        <strong>#{cell_value}</strong>"
-                # tooltip
-                #     .attr("x", d3.select(this).attr("x"))
-                #     .attr("y", 20)
-                #     .text(title)
-                # console.log(title)
-
-                $(this).tooltip
-                    title: title
-                    html: true
-                    container: "body"
-                    placement: "top"
-                $(this).tooltip('show')
-            )
-
-
-
-    # Add rows
-    g_rows = g_col_group.selectAll(".row")
-        .data((d) -> d.col_values)
-      .enter().append("g")
-        .attr("class", "row")
-        .attr("transform", (d, i) -> "translate(0,#{cell_height*i})" )
-        .each(get_row)
-        # .attr("row-id", (d,i) -> @model.rowIds[i])
-        # .attr("cluster", (d,i) -> @model.clusters[i])
-
-    g_row_names = g_col_group.filter((d, i) -> i == 0).append("g")
-
-    # Add row names
-    if {{ toJSON(opts$params$show_row_names) }}?
-        g_row_names.selectAll(".row_name")
-            .data(()-> row_names)
-          .enter().append("text")
-            .attr("y", (d,i) -> cell_height*i)
-            .attr("dy", "1em")
-            .attr("class", "row_name")
-            .text((d) -> d)
-
-    # Calculate col group widths (after appending rows names, but before fixing them)
-    col_group_widths = g_col_group[0].map((col_group)-> col_group.getBBox().width)
-
-    if (data.length > 1)
-        # add col group names
-        g_col_group_names = g_col_group.append("text")
-            .attr(
-                "x": (d, i)-> col_group_widths[i]/2
-                "y": "-2em"
-                "text-anchor": "middle"
-                "class": "col_group_name"
-            ).text((d) -> d.col_group_name)
-
-    # refactor this madness
-    col_group_x_values = [];
-    i = 0
-    while i < col_group_widths.length
-      if i is 0
-        col_group_x_values[0] = 12
-      else
-        col_group_x_values[i] = col_group_x_values[i - 1] + col_group_widths[i-1] + 12
-      i++
-
-    col_group_scale_range = [0, d3.sum(col_group_widths.slice(0, col_group_widths.length - 1)) + 24]
-
-    # Fix col group widths (maybe we don't even need a scale)
-    plot.scales.col_group = d3.scale.linear()
-        .domain([0, d3.max(col_group_x_values)])
-        .range(col_group_scale_range)
-    # console.log(col_group_widths, d3.sum(col_group_widths))
-
-    g_col_group.attr("transform", (d, i) -> "translate(#{plot.scales.col_group(col_group_x_values[i])},0)")
-
-    # Fix row widths
-    row_width = g_row_names.node().getBBox().width
-
-    g_row_names.selectAll("text")
-        .attr(
-            "x": -(12)
-            "text-anchor": "end"
-        ) # right aligned
-        # .attr(
-        #     "x": -(row_width + 12)
-        #     "text-anchor": "start") # left aligned
-
-
-    ```
     </script>
     <div class = "code">
-    {{ opts$params$code }}
+    {{  opts$params$code  }}
     </div>
   </body>
 </html>

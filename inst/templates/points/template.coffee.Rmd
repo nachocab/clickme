@@ -28,9 +28,9 @@
         data_ranges:
             x: {{ toJSON(range(opts$data$x, na.rm = TRUE)) }}
             y: {{ toJSON(range(opts$data$y, na.rm = TRUE)) }}
-        xlab: "{{ opts$params$xlab }}"
-        ylab: "{{ opts$params$ylab }}"
-        title: "{{ opts$params$title }}"
+        xlab: {{ toJSON(opts$params$xlab) }}
+        ylab: {{ toJSON(opts$params$ylab) }}
+        title: {{ toJSON(opts$params$title) }}
         box: {{ toJSON(opts$data$box )}}
         xlim: {{ toJSON(opts$params$xlim )}}
         ylim: {{ toJSON(opts$params$ylim )}}
@@ -42,7 +42,7 @@
         linear_scale_padding: 40)
 
     plot.tooltip_text = (d) ->
-        "{{ get_tooltip_content_points(opts$data, opts$params) }}"
+        {{ get_tooltip_content_points(opts$data, opts$params) }}
 
     plot.append("defs").append("clipPath")
         .attr("id", "clip")
@@ -147,7 +147,7 @@
             .style(
                   "font-size": "16px"
                   "font-weight": "bold")
-            .text("{{ opts$params$color_title }}")
+            .text({{ toJSON(opts$params$color_title) }})
 
         g_color_legend = sidebar.selectAll(".key")
             .data(color_scale.domain().reverse())

@@ -80,11 +80,11 @@ get_points_data <- function(data, params){
 # data is assumed to have at least x, y, and point_name
 get_tooltip_content_points <- function(data, params){
     names <- colnames(data)
-    tooltip_contents <- c("<strong>#{d.point_name}</strong>", paste0(params$ylab, ": #{format_property(d.y)}"), paste0(params$xlab, ": #{format_property(d.x)}"))
+    tooltip_contents <- c("\"<strong>\" + d.point_name + \"</strong>\"", paste0("\"", params$ylab, ": \" + format_property(d.y)"), paste0("\"", params$xlab, ": \" + format_property(d.x)"))
     names <- setdiff(names, c("x", "y", "point_name", "colorize"))
 
-    tooltip_contents <- c(tooltip_contents, sapply(names, function(name) paste0(name, ": #{format_property(d[\"", name, "\"])}")))
-    tooltip_contents <- paste(tooltip_contents, collapse = "<br>")
+    tooltip_contents <- c(tooltip_contents, sapply(names, function(name) paste0("\"", name, ": \" + format_property(d[\"", name, "\"])")))
+    tooltip_contents <- paste(tooltip_contents, collapse = " + \"<br>\" + ")
     tooltip_contents
 }
 

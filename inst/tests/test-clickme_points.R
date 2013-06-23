@@ -17,7 +17,7 @@ test_that("the palette has valid names", {
     expect_true(all(names(palette) %in% c("a","b","c")))
 
     params <- list(colorize = c("a", "a", "b", "c", "b"), palette = c(a = "blue", b = "pink", c = "green", d = "red", e = "yellow"))
-    expect_error(validate_points_params(params), "palette names don't appear in colorize: d, e")
+    expect_warning(validate_points_params(params), "palette names don't appear in colorize: d, e")
 
     params <- list(colorize = 1:5, palette = c(a = "blue", c = "green", d = "red", e = "yellow"))
     expect_error(validate_points_params(params), "an unnamed vector")
@@ -85,11 +85,10 @@ test_that("get_tooltip_content_points", {
     params <- list(xlab = "x", ylab = "y")
 
     tooltip_contents <- get_tooltip_content_points(data, params)
-    expect_equal(tooltip_contents, "<strong>#{d.point_name}</strong><br>y: #{format_property(d.y)}<br>x: #{format_property(d.x)}<br>extra1: #{format_property(d[\"extra1\"])}<br>extra2: #{format_property(d[\"extra2\"])}")
+    expect_equal(tooltip_contents, "\"<strong>\" + d.point_name + \"</strong>\" + \"<br>\" + \"y: \" + format_property(d.y) + \"<br>\" + \"x: \" + format_property(d.x) + \"<br>\" + \"extra1: \" + format_property(d[\"extra1\"]) + \"<br>\" + \"extra2: \" + format_property(d[\"extra2\"])")
 
     data <- get_points_data(original_data, list(point_names = rownames(original_data), colorize = c("a","a","b"), extra = cbind(extra1=c(10,20,30),extra2=c(100,200,300))))
-
     tooltip_contents <- get_tooltip_content_points(data, params)
-    expect_equal(tooltip_contents, "<strong>#{d.point_name}</strong><br>y: #{format_property(d.y)}<br>x: #{format_property(d.x)}<br>extra1: #{format_property(d[\"extra1\"])}<br>extra2: #{format_property(d[\"extra2\"])}")
+    expect_equal(tooltip_contents, "\"<strong>\" + d.point_name + \"</strong>\" + \"<br>\" + \"y: \" + format_property(d.y) + \"<br>\" + \"x: \" + format_property(d.x) + \"<br>\" + \"extra1: \" + format_property(d[\"extra1\"]) + \"<br>\" + \"extra2: \" + format_property(d[\"extra2\"])")
 })
 

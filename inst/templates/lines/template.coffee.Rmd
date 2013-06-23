@@ -27,9 +27,9 @@
         width: {{ opts$params$width }}
         height: {{ opts$params$height }}
         padding: {{ get_padding_param(opts) }}
-        title: "{{ opts$params$title }}"
-        xlab: "{{ opts$params$xlab }}"
-        ylab: "{{ opts$params$ylab }}"
+        title: {{ toJSON(opts$params$title) }}
+        xlab: {{ toJSON(opts$params$xlab) }}
+        ylab: {{ toJSON(opts$params$ylab) }}
     )
 
     if draw_box?
@@ -55,7 +55,7 @@
 
     line = d3.svg.line()
         .defined((d) -> !isNaN(d.y)) # skip null and NaN values
-        .interpolate("{{ opts$params$interpolate }}")
+        .interpolate({{ toJSON(opts$params$interpolate) }})
         .x((d) -> plot.scales.x(d.x))
         .y((d) -> plot.scales.y(d.y))
 
@@ -69,13 +69,9 @@
         .attr(
             "class": "line_tooltip"
             "d": (d) -> line(d.values)
-            "title": (d) ->
-                "<strong>#{d.line_name}</strong><br>
-                {{opts$params$ylab %||% \"y\"}}: <strong>#{decimal_format(d.y)}</strong><br>
-                {{opts$params$xlab %||% \"x\"}}: #{decimal_format(d.x)}"
         ).style(
             "stroke": (d) -> color_scale(d.colorize)
-            "stroke-width": "{{ opts$params$lwd }}px"
+            "stroke-width": {{ toJSON(paste0(opts$params$lwd, "px")) }}
             "fill": "none"
             "shape-rendering": "auto"
         )
@@ -139,7 +135,7 @@
                   "dy": ".35em"
             ).style(
                     "font-size": "24px"
-            ).text("{{ opts$params$colorize_title }}")
+            ).text({{ toJSON(opts$params$colorize_title) }})
 
         g_color_legend = sidebar.selectAll(".key")
             .data(color_scale.domain().reverse())
