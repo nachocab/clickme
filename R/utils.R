@@ -93,42 +93,7 @@ match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups =
     group_names
 }
 
-#' Validates colorize and palette
-#'
-#' @param params parameters
-#'
-#' @export
-validate_colorize_and_palette <- function(params) {
-    if (scale_type(params$colorize) == "categorical" & !is.null(params$color_domain)){
-        stop("A color domain can only be specified for quantitative scales. colorize has categorical values.")
-    }
 
-    palette_names <- names(params$palette)
-    categories <- unique(params$colorize)
-    if (!is.null(params$colorize) & !is.null(params$palette) & !is.null(palette_names)) {
-        if (scale_type(params$colorize) == "categorical"){
-            if (any(palette_names %notin% categories)) {
-                warning("The following palette names don't appear in colorize: ", paste0(palette_names[palette_names %notin% categories], collapse = ", "))
-            }
-
-            if (any(is.na(params$palette))) {
-                categories_with_default_colors <- names(params$palette[is.na(params$palette)])
-                default_palette <- setNames(default_colors(length(categories_with_default_colors)), categories_with_default_colors)
-                params$palette <- c(default_palette, na.omit(params$palette))
-            }
-
-            if (any(categories %notin% palette_names)){
-                categories_without_color <- categories[categories %notin% palette_names]
-                missing_palette <- setNames(default_colors(length(categories_without_color)), categories_without_color)
-                params$palette <- c(missing_palette, params$palette)
-            }
-        } else {
-            stop("The values in colorize imply a quantitative scale, which requires an unnamed vector of the form c(start_color[, middle_color], end_color)")
-        }
-    }
-
-    params
-}
 
 
 #' Type of scale
@@ -148,28 +113,7 @@ scale_type <- function(elements = NULL) {
     type
 }
 
-#' Reorder data by color
-#'
-#' @param data data
-#' @param params parameters
-#'
-#' It adds a colorize column and it uses it to reorder the data object. This ensures that rows are ordered in a way that elements with the first color in the palette are rendered on top
-#'
-#' @export
-reorder_data_by_color <- function(data, params){
-    data$colorize <- params$colorize
 
-    if (!is.null(names(params$palette))){
-        category_order <- unlist(sapply(names(params$palette), function(category) {
-            which(data$colorize == category)
-        }))
-        data <- data[rev(category_order),]
-    } else {
-        data <- data[order(data$colorize, decreasing = TRUE),]
-    }
-
-    data
-}
 
 #' Default colors
 #'
