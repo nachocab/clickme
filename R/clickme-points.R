@@ -15,6 +15,12 @@ Points <- setRefClass('Points',
             if (!is.null(params$point_names)){
                 params$point_names <<- as.character(params$point_names)
             }
+
+            params$code <<- paste(deparse(sys.calls()[[1]]), collapse="")
+
+            if (!is.null(params$x)){
+                get_data()
+            }
         },
 
         validate_aliases = function(){
@@ -29,8 +35,8 @@ Points <- setRefClass('Points',
             }
         },
 
-        get_data = function(x, y = NULL){
-            data <<- xy_to_data(x, y)
+        get_data = function(){
+            data <<- xy_to_data(params$x, params$y)
 
             if (is.null(params$point_names)){
                 data$point_name <<- rownames(data)
@@ -45,14 +51,12 @@ Points <- setRefClass('Points',
             if (!is.null(params$colorize)){
                 reorder_data_by_color()
             }
+            # this must be done *after* data has been reordered to ensure the first category (which will be rendered at the bottom) gets the last color
+            params$palette <<- rev(params$palette)
 
             apply_axes_limits()
 
-            # this must be done *after* data has been sorted to ensure the first category (which will be rendered at the bottom) gets the last color
-            params$palette <<- rev(params$palette)
-
             get_categorical_domains()
-
         },
 
         # TODO: is this needed?
@@ -88,23 +92,6 @@ Points <- setRefClass('Points',
                 data <<- cbind(data, params$extra)
             }
         },
-
-        # get_point_names = function(data) {
-        #     if (is.matrix(data)){
-        #         point_names <- as.character(1:nrow(data))
-        #     } else if (is.list(data)){
-        #         if (is.null(names(data))){
-        #             point_names <- as.character(1:length(data))
-        #         } else {
-        #             point_names <- names(data)
-        #         }
-        #     } else {
-        #         # TODO: what if it is a factor? if as.character(factor) is not unique, stop("not unique values: ")
-        #         point_names <- as.character(1:length(data))
-        #     }
-
-        #     point_names
-        # },
 
         # TODO: This is the only method that is called from the translator()
         get_tooltip_content = function(){
@@ -158,11 +145,7 @@ clickme_points <- function(x, y = NULL,
                       ...){
 
     params <- as.list(environment())
-    params[c("x", "y")] <- NULL
-    params$code <- paste(deparse(sys.calls()[[1]]), collapse="")
-
     points <- Points$new(params)
-    points$get_data(x, y)
 
     clickme(points$data, "points", params = points$params, ...)
 }

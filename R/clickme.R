@@ -51,6 +51,22 @@ Clickme <- setRefClass('Clickme',
    )
 )
 
+# Ensures that a copy of all the assets used by the visualization exists in the output_xxx_assets path
+export_assets <- function(opts){
+
+    if (file.exists(opts$paths$shared_assets) && (!file.exists(opts$paths$output_shared_assets) || file.info(opts$paths$shared_assets)$mtime > file.info(opts$paths$output_shared_assets)$mtime)){
+        dir.create(opts$paths$output_shared_assets, showWarnings = FALSE)
+        file.copy(from = list.files(opts$paths$shared_assets, full.names = TRUE), to = opts$paths$output_shared_assets, overwrite = TRUE)
+    }
+
+    if (file.exists(opts$paths$template_assets) && (!file.exists(opts$paths$output_template_assets) || file.info(opts$paths$template_assets)$mtime > file.info(opts$paths$output_template_assets)$mtime)){
+        dir.create(opts$paths$output_template_assets, showWarnings = FALSE)
+        file.copy(from = list.files(opts$paths$template_assets, full.names = TRUE), to = opts$paths$output_template_assets, overwrite = TRUE)
+    }
+
+    invisible()
+}
+
 #' Generates a JavaScript visualization
 #'
 #' @param data input data
@@ -68,7 +84,12 @@ Clickme <- setRefClass('Clickme',
 #' n <- 30
 #' df1 <- data.frame(source = sample(items, n, replace = TRUE), target = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace = TRUE))
 #' clickme(df1, "force_directed")
-clickme <- function(data, template, params = NULL, open = interactive(), link = FALSE, coffee = FALSE, port = 8000, ...){
+clickme <- function(data,
+                    template,
+                    params = NULL,
+                    open = interactive(), link = FALSE, coffee = FALSE,
+                    port = 8000,
+                    ...){
 
     get_opts__ <- function(..., open, link) get_opts(...)
     opts <- get_opts__(template, params, coffee, port, ...)
@@ -77,8 +98,6 @@ clickme <- function(data, template, params = NULL, open = interactive(), link = 
     generate_visualization(opts)
 
     export_assets(opts)
-
-    validate_server(opts)
 
     if (open) browseURL(opts$url)
 

@@ -14,7 +14,6 @@
     (function() {
       var clip, color_legend_counts, color_scale, data, g_color_legend, g_points, g_toggle_names, plot, point_names, points, radius, redraw, sidebar, toggle_names, transform;
     
-    
       data = {{  get_data_as_json(opts)  }};
     
       radius = {{  opts$params$radius  }};
@@ -38,8 +37,8 @@
         xlim: {{  toJSON(opts$params$xlim ) }},
         ylim: {{  toJSON(opts$params$ylim ) }},
         categorical_domains: {
-          x: {{  toJSON(opts$params$x_categorical_domain )  }},
-          y: {{  toJSON(opts$params$y_categorical_domain )  }}
+          x: {{  toJSON(opts$params$x_categorical_domain)  }},
+          y: {{  toJSON(opts$params$y_categorical_domain)  }}
         },
         jitter: {{  opts$params$jitter  }},
         ordinal_scale_padding: 1,

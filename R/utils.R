@@ -14,40 +14,6 @@ separator <- function(n = 70){
     paste0(rep("=", n, collapse = ""))
 }
 
-export_assets <- function(opts){
-
-    if (file.exists(opts$paths$shared_assets) && (!file.exists(opts$paths$output_shared_assets) || file.info(opts$paths$shared_assets)$mtime > file.info(opts$paths$output_shared_assets)$mtime)){
-        dir.create(opts$paths$output_shared_assets, showWarnings = FALSE)
-        file.copy(from = list.files(opts$paths$shared_assets, full.names = TRUE), to = opts$paths$output_shared_assets, overwrite = TRUE)
-    }
-
-    if (file.exists(opts$paths$template_assets) && (!file.exists(opts$paths$output_template_assets) || file.info(opts$paths$template_assets)$mtime > file.info(opts$paths$output_template_assets)$mtime)){
-        dir.create(opts$paths$output_template_assets, showWarnings = FALSE)
-        file.copy(from = list.files(opts$paths$template_assets, full.names = TRUE), to = opts$paths$output_template_assets, overwrite = TRUE)
-    }
-
-    invisible()
-}
-
-validate_server <- function(opts) {
-    separator <- paste0(rep("=", 70, collapse = ""))
-    if (opts$config$require_server && (is.null(getOption("clickme_server_warning")) || getOption("clickme_server_warning")) ) {
-        message(separator)
-        message(paste0("If you don't have a server running in your Clickme templates path, open a new ", ifelse(.Platform$OS.type == "unix", "terminal", "Command Prompt"), " and type:"))
-        message("cd \"", getOption("clickme_templates_path"), "\"\npython -m SimpleHTTPServer")
-
-        message("\n(add: options(clickme_server_warning = FALSE) in your .Rprofile to avoid seeing this warning again.)")
-        message("Press Enter to continue or \"c\" to cancel: ", appendLF = FALSE)
-        response <- readline()
-        if (tolower(response) %in% c("c")) {
-            capture.output(return())
-        }
-        message(separator)
-    }
-}
-
-
-
 #' Split up two vectors into their intersecting sets
 #' @param a first vector
 #' @param b second vector
@@ -426,37 +392,6 @@ open_all_demos <- function(){
     for (template in plain_list_templates()){
         demo_template(template)
     }
-}
-
-#' Get information about a template
-#'
-#' @param template template name
-#' @param fields any of the fields in config.yml
-#' @export
-show_template <- function(template, fields = NULL){
-
-    opts <- get_opts(template)
-
-    fields <- fields %||% names(opts$config)
-
-    message("template")
-    cat(template, "\n\n")
-
-    for (field in fields){
-        if (!is.null(opts$template[[field]])){
-            if (field == "params") {
-                if (length(opts$config$params) > 0){
-                    message(paste0(titleize(field)))
-                    cat(paste0(paste0(names(opts$config$params), ": ", opts$config$params), collapse="\n"), "\n\n")
-                }
-            } else {
-                message(paste0(titleize(field)))
-                cat(paste0(opts$config[[field]], collapse="\n"), "\n\n")
-            }
-        }
-    }
-
-    cat("\n")
 }
 
 #' Run a template demo
