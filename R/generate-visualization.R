@@ -1,4 +1,4 @@
-coffee_installed <- function() {
+is_coffee_installed <- function() {
     system("coffee -v", ignore.stdout = TRUE, ignore.stderr = TRUE) == 0
 }
 
@@ -31,17 +31,17 @@ replace_delimiter <- function(template, old_delimiter, new_delimiter, deparse){
 }
 
 # Translate the coffeescript template into a javascript template
-translate_coffee <- function(opts) {
+# The delimiter "{{" is not valid coffeescript, so we change it to an unlikely sequence "[[[\"". When the template has been converted to JS, we replace the delimiter to "{{", the one used by plain JS templates.
+# "{{ \"4\" }}" => "[[[\" \\\"4\\\" \"]]]" => knit => "{{ \"4\" }}"
+translate_coffee_to_js <- function(opts) {
     if (opts$coffee && file.exists(opts$paths$template_coffee_file)){
-        if (!coffee_installed()) {
+        if (!is_coffee_installed()) {
             stop("\"coffee\" doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/")
         }
 
-        # The delimiter "{{" is not valid coffeescript, so we change it to an unlikely sequence "[[[\"". When the template has been converted to JS, we replace the delimiter to "{{" so it uses the same format as plain JS templates.
         coffee_template <- readLines(opts$paths$template_coffee_file, warn = FALSE)
         coffee_template <- paste(coffee_template, collapse = "\n")
 
-        # "{{ \"4\" }}" => "[[[\" \\\"4\\\" \"]]]" => knit => "{{ \"4\" }}"
         coffee_delimiter <- c("[[[", "]]]")
         js_delimiter <- c("{{", "}}")
         replaced_coffee_template <- replace_delimiter(coffee_template, js_delimiter, coffee_delimiter, deparse = TRUE)
@@ -57,10 +57,10 @@ translate_coffee <- function(opts) {
 
 #' @import knitr
 generate_visualization <- function(opts){
-    translate_coffee(opts)
+    translate_coffee_to_js(opts)
 
     source(opts$paths$translator_file)
-    a <- 4
     html_code <- knit_expand(opts$paths$template_file)
+
     writeLines(html_code, opts$paths$output_file)
 }

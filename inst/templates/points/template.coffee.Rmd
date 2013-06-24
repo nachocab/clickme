@@ -35,8 +35,8 @@
         xlim: {{ toJSON(opts$params$xlim )}}
         ylim: {{ toJSON(opts$params$ylim )}}
         categorical_domains:
-            x: {{ toJSON(opts$params$x_categorical_domain ) }}
-            y: {{ toJSON(opts$params$y_categorical_domain ) }}
+            x: {{ toJSON(opts$params$x_categorical_domain) }}
+            y: {{ toJSON(opts$params$y_categorical_domain) }}
         jitter: {{ opts$params$jitter }}
         ordinal_scale_padding: 1
         linear_scale_padding: 40)

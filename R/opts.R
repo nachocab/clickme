@@ -166,17 +166,6 @@ validate_assets <- function(opts) {
     invisible()
 }
 
-add_params <- function(opts, user_params) {
-    opts$params <- opts$config$params
-    valid_param_names <- names(opts$config$params)
-
-    for (param in names(user_params)){
-        opts$params[[param]] <- user_params[[param]]
-    }
-
-    opts
-}
-
 get_default_opts <- function(template_name){
     opts <- list()
     opts <- add_names(opts, template_name)
@@ -207,7 +196,7 @@ get_opts <- function(template_name, params, coffee, port, file_name = NULL, file
     validate_required_packages(opts)
     validate_assets(opts)
 
-    opts <- add_params(opts, params)
+    opts$params <- params
 
     if (opts$config$require_server){
         opts$url <- paste0("http://localhost:", port, "/", opts$names$output_file)
