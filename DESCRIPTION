@@ -22,7 +22,7 @@ Collate:
     'json.R'
     'generate-visualization.R'
     'xy-to-data.R'
-    'zzz.R'
+    'on-load.R'
     'opts.R'
     'clickme-heatmap.R'
     'clickme-lines.R'
