@@ -38,7 +38,7 @@ get_lines_data <- function(data, x, params){
 
     # we only create data$colorize when params$colorize is not null
     if (!is.null(params$colorize)){
-        data <- reorder_data_by_color(data, params)
+        data <- reorder_data_by_colorize(data, params)
     }
 
     # data <- apply_limits(data, params)

@@ -33,6 +33,4 @@ set_default_paths <- function() {
 
 .onLoad <- function(libname, pkgname) {
   set_default_paths()
-
-  invisible()
 }

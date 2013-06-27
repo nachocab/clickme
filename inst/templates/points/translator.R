@@ -47,16 +47,3 @@ get_d3_color_scale <- function(opts) {
     color_scale
 }
 
-get_data_as_json <- function(opts) {
-    opts$data <- opts$data[!is.na(opts$data$x) & !is.na(opts$data$y),]
-    json_data <- df2json(opts$data)
-
-    json_data
-}
-
-get_data_as_json_file <- function(opts) {
-    opts$data <- get_data_as_json(opts)
-    json_file <- create_data_file(opts, "json")
-
-    json_file
-}

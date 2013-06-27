@@ -7,14 +7,6 @@ test_that("appends styles and scripts", {
     opts <- add_output_file_name(opts)
     opts <- add_output_paths(opts)
 
-    path <- get_asset_path(opts, "http://some_file.js")
-    expect_equal(path, "http://some_file.js")
-
-    path <- get_asset_path(opts, "abc.css")
-    expect_equal(path, "clickme_assets/test_template/abc.css")
-
-    path <- get_asset_path(opts, "$shared/def.js")
-    expect_equal(path, "clickme_assets/def.js")
 
     opts$config$styles <- c("abc.css", "$shared/def.css", "http://some_file.css")
     opts$config$scripts <- c("abc.js", "$shared/def.js", "http://some_file.js")
@@ -127,14 +119,14 @@ test_that("export_assets updates output shared and output template assets", {
     unlink(file.path(opts$paths$output_shared_assets, "def.css"))
 })
 
-test_that("reorder_data_by_color", {
+test_that("reorder_data_by_colorize", {
     data <- data.frame(x=c(1,2,3))
     params <- list(colorize = c("a","b","c"))
-    reordered_data <- reorder_data_by_color(data, params)
+    reordered_data <- reorder_data_by_colorize(data, params)
     expect_equal(reordered_data$x, c(3, 2, 1))
 
     params <- list(colorize = c("a","b","c"), palette = c(a = "blue", c = "red", b = "green"))
-    reordered_data <- reorder_data_by_color(data, params)
+    reordered_data <- reorder_data_by_colorize(data, params)
     expect_equal(reordered_data$x, c(2, 3, 1))
 })
 

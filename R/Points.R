@@ -1,41 +1,42 @@
+# params:
+# point_names
+# xlab
+# ylab
+# xlim
+# ylim
+# jitter
+# radius
+# x_categorical_domain TODO: remove this
+# y_categorical_domain TODO: remove this
 Points <- setRefClass('Points',
 
-    fields = c("params", "data"),
-
-    contains = "Clickme",
+    contains = "Template",
 
     methods = list(
 
-        initialize = function(params = list()){
-            initFields(params = params)
-            validate_colorize_and_palette()
-
-            validate_aliases()
+        initialize = function(...){
+            callSuper(...)
 
             if (!is.null(params$point_names)){
+                # Whatever the user provides as point names, treat it as a character vector
                 params$point_names <<- as.character(params$point_names)
             }
 
-            params$code <<- paste(deparse(sys.calls()[[1]]), collapse="")
+            params$title <<- params$title %||% "Points"
+            params$xlab <<- params$xlab %||% "x"
+            params$ylab <<- params$ylab %||% "y"
 
-            if (!is.null(params$x)){
-                get_data()
-            }
-        },
+            get_file_structure()
+            get_config()
 
-        validate_aliases = function(){
-            if (!is.null(params$main)) {
-                params$title <<- params$main
-                params$main <<- NULL
-            }
-
-            if (!is.null(params[["col"]])) {
-                params$palette <<- params[["col"]]
-                params[["col"]] <<- NULL
-            }
+            get_data()
         },
 
         get_data = function(){
+
+            # used for testing
+            if (is.null(params$x)) return(NULL)
+
             data <<- xy_to_data(params$x, params$y)
 
             if (is.null(params$point_names)){
@@ -49,7 +50,7 @@ Points <- setRefClass('Points',
 
             # we only create data$colorize when params$colorize is not NULL. When it is NULL, d3_color_scale(null) returns "black"
             if (!is.null(params$colorize)){
-                reorder_data_by_color()
+                reorder_data_by_colorize()
             }
             # this must be done *after* data has been reordered to ensure the first category (which will be rendered at the bottom) gets the last color
             params$palette <<- rev(params$palette)
@@ -130,23 +131,14 @@ Points <- setRefClass('Points',
 #'
 #' @export
 clickme_points <- function(x, y = NULL,
-                      point_names = rownames(x),
-                      title = "Points", main = NULL,
-                      xlab = "x", ylab = "y",
+                      point_names = NULL,
                       xlim = NULL, ylim = NULL,
-                      width = 980, height = 980,
                       radius = 5,
-                      box = FALSE,
                       jitter = 0,
-                      extra = NULL,
-                      palette = NULL, col = NULL,
-                      colorize = NULL, color_domain = NULL, color_title = NULL,
-                      padding = list(top = 80, right = 400, bottom = 30, left = 100),
                       ...){
-
     params <- as.list(environment())
     points <- Points$new(params)
 
-    clickme(points$data, "points", params = points$params, ...)
+    points$display()
 }
 

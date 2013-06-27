@@ -3,9 +3,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <title>{{ opts$params$title }}</title>
+    <title>{{ params$title }}</title>
 
-    {{ get_assets(opts) }}
+    {{ get_assets() }}
 
   </head>
 
@@ -13,36 +13,38 @@
     <script type="text/javascript">
     ```{r engine="coffee", results="asis", echo = FALSE }
 
-    data = {{ get_data_as_json(opts) }}
+    data = {{ data }}
 
-    radius = {{ opts$params$radius }}
+    radius = {{ params$radius }}
 
     color_scale = {{ get_d3_color_scale(opts) }}
+
+    color_title = {{ params$color_title }}
 
     color_legend_counts = {{ get_color_legend_counts(opts) }}
 
     plot = new_plot(
-        width: {{ opts$params$width }}
-        height: {{ opts$params$height }}
-        padding: {{ get_padding_param(opts) }}
+        width: {{ params$width }}
+        height: {{ params$height }}
+        padding: {{ params$padding }}
         data_ranges:
-            x: {{ toJSON(range(opts$data$x, na.rm = TRUE)) }}
-            y: {{ toJSON(range(opts$data$y, na.rm = TRUE)) }}
-        xlab: {{ toJSON(opts$params$xlab) }}
-        ylab: {{ toJSON(opts$params$ylab) }}
-        title: {{ toJSON(opts$params$title) }}
-        box: {{ toJSON(opts$data$box )}}
-        xlim: {{ toJSON(opts$params$xlim )}}
-        ylim: {{ toJSON(opts$params$ylim )}}
+            x: {{ range(data$x, na.rm = TRUE) }}
+            y: {{ range(data$y, na.rm = TRUE) }}
+        xlab: {{ params$xlab }}
+        ylab: {{ params$ylab }}
+        title: {{ params$title }}
+        box: {{ opts$data$box }}
+        xlim: {{ params$xlim }}
+        ylim: {{ params$ylim }}
         categorical_domains:
-            x: {{ toJSON(opts$params$x_categorical_domain) }}
-            y: {{ toJSON(opts$params$y_categorical_domain) }}
-        jitter: {{ opts$params$jitter }}
+            x: {{ params$x_categorical_domain }}
+            y: {{ params$y_categorical_domain }}
+        jitter: {{ params$jitter }}
         ordinal_scale_padding: 1
         linear_scale_padding: 40)
 
     plot.tooltip_text = (d) ->
-        {{ get_tooltip_content_points(opts$data, opts$params) }}
+        {{ get_tooltip_content() }}
 
     plot.append("defs").append("clipPath")
         .attr("id", "clip")
@@ -133,7 +135,7 @@
     toggle_names = ()->
         showing_point_names = g_toggle_names.classed("show_names")
         point_names.attr("display", ()->        if showing_point_names then "none" else "inline")
-        g_toggle_names.attr("class", ()->        if showing_point_names then "" else "show_names")
+        g_toggle_names.attr("class", ()->       if showing_point_names then "" else "show_names")
             .select("circle").attr("fill", ()-> if showing_point_names then "white" else "black")
 
     # Draw color legend
@@ -147,7 +149,7 @@
             .style(
                   "font-size": "16px"
                   "font-weight": "bold")
-            .text({{ toJSON(opts$params$color_title) }})
+            .text(color_title)
 
         g_color_legend = sidebar.selectAll(".key")
             .data(color_scale.domain().reverse())
@@ -184,7 +186,7 @@
     ```
     </script>
     <div class = "code">
-    {{ opts$params$code }}
+    {{ params$code }}
     </div>
   </body>
 </html>
