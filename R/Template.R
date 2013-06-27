@@ -15,6 +15,9 @@
 # colorize
 # color_domain
 # color_title
+# file
+# file_name
+# dir
 Template <- setRefClass('Template',
 
     fields = c(
@@ -28,10 +31,15 @@ Template <- setRefClass('Template',
 
         initialize = function(params = list()) {
             initFields(params = params)
-            get_params()
         },
 
         display = function() {
+
+            get_params()
+            get_file_structure()
+            get_config()
+
+            get_data()
 
             generate_visualization()
 

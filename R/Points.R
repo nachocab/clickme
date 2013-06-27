@@ -14,8 +14,8 @@ Points <- setRefClass('Points',
 
     methods = list(
 
-        initialize = function(...){
-            callSuper(...)
+        get_params = function(){
+            callSuper()
 
             if (!is.null(params$point_names)){
                 # Whatever the user provides as point names, treat it as a character vector
@@ -26,10 +26,6 @@ Points <- setRefClass('Points',
             params$xlab <<- params$xlab %||% "x"
             params$ylab <<- params$ylab %||% "y"
 
-            get_file_structure()
-            get_config()
-
-            get_data()
         },
 
         get_data = function(){

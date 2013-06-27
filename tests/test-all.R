@@ -2,6 +2,7 @@ library(testthat)
 library(knitr)
 library(yaml)
 library(rjson)
+library(stringr)
 
 old_clickme_template_path <- getOption("clickme_template_path")
 old_clickme_output_path <- getOption("clickme_output_path")

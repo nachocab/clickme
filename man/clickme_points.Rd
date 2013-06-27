@@ -2,14 +2,8 @@
 \alias{clickme_points}
 \title{Generates an interactive scatterplot}
 \usage{
-  clickme_points(x, y = NULL, point_names = rownames(x),
-    title = "Points", main = NULL, xlab = "x", ylab = "y",
-    xlim = NULL, ylim = NULL, width = 980, height = 980,
-    radius = 5, box = FALSE, jitter = 0, extra = NULL,
-    palette = NULL, colorize = NULL, color_domain = NULL,
-    color_title = NULL,
-    padding = list(top = 80, right = 400, bottom = 30, left = 100),
-    ...)
+  clickme_points(x, y = NULL, point_names = NULL,
+    xlim = NULL, ylim = NULL, radius = 5, jitter = 0, ...)
 }
 \arguments{
   \item{x}{x-values, but only if the "y" param is
@@ -23,8 +17,7 @@
 
   \item{title}{title of the plot}
 
-  \item{main}{same as title, kept to be compatible with
-  \code{base::plot}}
+  \item{main}{alias for title}
 
   \item{xlab,ylab}{x- and y-axis labels}
 
@@ -49,6 +42,8 @@
   formats: "#ffeeaa" "rgb(255,255,255)" "hsl(120,50%,20%)"
   "blue" (see
   http://www.w3.org/TR/SVG/types.html#ColorKeywords)}
+
+  \item{col}{alias for palette}
 
   \item{colorize}{a vector whose values are used to
   determine the color of the points. If it is a numeric
