@@ -7,27 +7,27 @@ file.create(file.path(test_template_path, "template.Rmd"))
 file.create(file.path(test_template_path, "config.yml"))
 file.create(file.path(test_template_path, "translator.R")) # Todo: remove this requirement
 
-
 test_that("styles and scripts must be valid", {
-    test_path <- file.path(test_template_path, "assets")
-    dir.create(test_path)
-    test_template <- TestTemplate$new(list(template_assets = test_path, shared_assets = test_path))
+
+    test_template <- TestTemplate$new()
     test_template$get_params()
     test_template$get_file_structure()
     test_template$get_config()
+
+    dir.create(test_template$file_structure$paths$template_assets)
 
     expect_that(test_template$validate_assets(), not(throws_error()))
 
     test_template$config$styles <- c("abc.css")
     expect_error(test_template$validate_assets(), "abc.css not found")
-    file.create(file.path(test_path, "abc.css"))
+    file.create(file.path(test_template$file_structure$paths$template_assets, "abc.css"))
     expect_that(test_template$validate_assets(), not(throws_error()))
 
     test_template$config$scripts <- c("$shared/abc.js")
     expect_error(test_template$validate_assets(), "abc.js not found")
-    file.create(file.path(getOption("clickme_templates_path"), "__shared_assets", "abc.js"))
+    file.create(file.path(test_template$file_structure$paths$shared_assets, "abc.js"))
     expect_that(test_template$validate_assets(), not(throws_error()))
-    unlink(file.path(getOption("clickme_templates_path"), "__shared_assets", "abc.js"))
+    unlink(file.path(test_template$file_structure$paths$shared_assets, "abc.js"))
 
     test_template$config$scripts <- c("http://d3js.org/d3.v3.min.js")
     expect_that(test_template$validate_assets(), not(throws_error()))

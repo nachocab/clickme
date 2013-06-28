@@ -1,4 +1,6 @@
 # params:
+# x
+# y [NULL]
 # point_names
 # xlab
 # ylab

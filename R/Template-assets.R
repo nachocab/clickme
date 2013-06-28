@@ -15,7 +15,7 @@ Template$methods(
     #' @export
     get_scripts = function() {
         scripts <- paste(sapply(config$scripts, function(script_path){
-            script_path <- get_asset_path(opts, script_path)
+            script_path <- get_asset_path(script_path)
             gettextf("<script src=\"%s\"></script>", script_path)
         }), collapse="\n")
 

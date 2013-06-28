@@ -44,6 +44,7 @@ test_that("default paths are valid", {
 
     file.create(file.path(test_template_path, "template.Rmd"))
 
+    unlink(dir_path, recursive = TRUE)
 })
 
 

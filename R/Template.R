@@ -1,6 +1,5 @@
 # params:
-# x
-# y [NULL]
+# data
 # height [default]
 # width [default]
 # padding [default]
@@ -31,6 +30,10 @@ Template <- setRefClass('Template',
 
         initialize = function(params = list()) {
             initFields(params = params)
+        },
+
+        get_data = function(){
+            data <<- params$data
         },
 
         display = function() {

@@ -54,7 +54,10 @@ xy_to_data <- function(x, y) {
             data_y <- as.vector(as.matrix(x))
             rownames <- get_xy_rownames(data_x)
         } else {
-            warning("x is not numeric, using the first two columns: ", paste(colnames(x)[1:2], collapse = ", "))
+            warning("x is not numeric and it has more than two columns, using the first two: ", paste(colnames(x)[1:2], collapse = ", "))
+            data_x <- x[, 1]
+            data_y <- x[, 2]
+            rownames <- get_xy_rownames(x)
         }
     } else if (is.list(x)) {
         if (length(x) < 2) stop("When x is a list, it must contain at least two elements")

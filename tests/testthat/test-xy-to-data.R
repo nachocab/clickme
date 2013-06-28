@@ -142,7 +142,7 @@ test_that("x is a data frame with three numeric columns or more and y is null", 
     data <- xy_to_data(x = data.frame(a = 1:10, b = 11:20, c = 21:30), y = NULL)
     expect_equal(data, data.frame(x = rep(c("a","b","c"), each = 10), y = 1:30, row.names = as.character(1:30)))
 
-    expect_warning(xy_to_data(x = data.frame(a = letters[1:10], b = 11:20, c = 21:30), y = NULL), "x is not numeric, using the first two columns: a, b")
+    expect_warning(xy_to_data(x = data.frame(a = letters[1:10], b = 11:20, c = 21:30), y = NULL), "x is not numeric and it has more than two columns, using the first two: a, b")
 })
 
 # x is a matrix

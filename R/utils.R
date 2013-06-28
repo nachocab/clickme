@@ -198,12 +198,12 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 test_template <- test_translator <- function(template){
     opts <- get_opts(template)
 
-    if (file.exists(opts$paths$translator_test_file)){
+    if (file.exists(file_structure$paths$translator_test_file)){
         library("testthat")
-        source(opts$paths$translator_file)
-        test_file(opts$paths$translator_test_file)
+        source(file_structure$paths$translator_file)
+        test_file(file_structure$paths$translator_test_file)
     } else {
-        stop(paste0("There is no test translator file at this location: ", opts$paths$translator_test_file, "\nYou might have to create it or call set_templates_path()"))
+        stop(paste0("There is no test translator file at this location: ", file_structure$paths$translator_test_file, "\nYou might have to create it or call set_templates_path()"))
     }
 }
 
@@ -275,7 +275,7 @@ open_all_demos <- function(){
 #' @export
 demo_template <- function(template) {
     opts <- get_default_opts(template)
-    opts$config <- yaml.load_file(opts$paths$config_file)
+    opts$config <- yaml.load_file(file_structure$paths$config_file)
     if (is.null(opts$config$demo)){
         message("The ", template, " template didn't provide a demo example.")
     } else {
@@ -298,7 +298,7 @@ expect_correct_file <- function(opts, extension, expected_data = NULL, test_data
     if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
 
     expected_relative_path <- paste("\"", file.path(opts$relative_path$data, paste0(test_data_prefix, extension)), "\"")
-    expected_path <- file.path(opts$paths$data, paste0(test_data_prefix, extension))
+    expected_path <- file.path(file_structure$paths$data, paste0(test_data_prefix, extension))
     expect_true(file.exists(expected_path))
     if (!is.null(expected_data)){
         expect_equal(readContents(expected_path), expected_data)

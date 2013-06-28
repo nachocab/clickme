@@ -1,4 +1,4 @@
-context("new_template")
+context("Template-blank")
 
 template <- "temp_template"
 
@@ -19,14 +19,14 @@ test_that("creates a new blank template", {
     opts <- new_template(template)
 
     # folders
-    expect_true(file.exists(file.path(opts$paths$template)))
-    expect_true(file.exists(file.path(opts$paths$template_assets)))
+    expect_true(file.exists(file.path(file_structure$paths$template)))
+    expect_true(file.exists(file.path(file_structure$paths$template_assets)))
 
     # files
-    expect_true(file.exists(file.path(opts$paths$config_file)))
-    expect_true(file.exists(file.path(opts$paths$template_file)))
-    expect_true(file.exists(file.path(opts$paths$translator_file)))
-    expect_true(file.exists(file.path(opts$paths$translator_test_file)))
+    expect_true(file.exists(file.path(file_structure$paths$config_file)))
+    expect_true(file.exists(file.path(file_structure$paths$template_file)))
+    expect_true(file.exists(file.path(file_structure$paths$translator_file)))
+    expect_true(file.exists(file.path(file_structure$paths$translator_test_file)))
 
     unlink(file.path(getOption("clickme_templates_path"), template), recursive = TRUE)
 })
