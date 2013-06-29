@@ -96,3 +96,12 @@ json2df <- function(json){
 yaml2df <- function(yaml){
     json2df(toJSON(yaml))
 }
+
+
+#' Convert a string to JSON
+#'
+#' @param x input object
+#' @export
+to_json <- function(x){
+    rjson::toJSON(x)
+}

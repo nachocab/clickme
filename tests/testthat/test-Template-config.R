@@ -12,25 +12,24 @@ test_that("styles and scripts must be valid", {
     test_template <- TestTemplate$new()
     test_template$get_params()
     test_template$get_file_structure()
-    test_template$get_config()
 
     dir.create(test_template$file_structure$paths$template_assets)
 
-    expect_that(test_template$validate_assets(), not(throws_error()))
+    expect_that(test_template$get_config(), not(throws_error()))
 
     test_template$config$styles <- c("abc.css")
-    expect_error(test_template$validate_assets(), "abc.css not found")
+    expect_error(test_template$validate_config(), "abc.css not found")
     file.create(file.path(test_template$file_structure$paths$template_assets, "abc.css"))
-    expect_that(test_template$validate_assets(), not(throws_error()))
+    expect_that(test_template$validate_config(), not(throws_error()))
 
     test_template$config$scripts <- c("$shared/abc.js")
-    expect_error(test_template$validate_assets(), "abc.js not found")
+    expect_error(test_template$validate_config(), "abc.js not found")
     file.create(file.path(test_template$file_structure$paths$shared_assets, "abc.js"))
-    expect_that(test_template$validate_assets(), not(throws_error()))
+    expect_that(test_template$validate_config(), not(throws_error()))
     unlink(file.path(test_template$file_structure$paths$shared_assets, "abc.js"))
 
     test_template$config$scripts <- c("http://d3js.org/d3.v3.min.js")
-    expect_that(test_template$validate_assets(), not(throws_error()))
+    expect_that(test_template$validate_config(), not(throws_error()))
 
 })
 

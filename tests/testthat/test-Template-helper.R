@@ -1,4 +1,4 @@
-context("Template-assets")
+context("Template-helper")
 
 TestTemplate <- setRefClass('TestTemplate', contains = "Template", where=.GlobalEnv)
 test_template_path <- file.path(getOption("clickme_templates_path"), "testtemplate")

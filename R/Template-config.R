@@ -1,10 +1,19 @@
 Template$methods(
 
     get_config = function() {
-        config <<- yaml.load_file(file_structure$paths$config_file)
+        get_unvalidated_config()
+        validate_config()
+    },
 
+    get_unvalidated_config = function() {
+        config <<- yaml.load_file(file_structure$paths$config_file)
+    },
+
+    validate_config = function() {
         validate_required_packages()
         validate_assets()
+
+        return()
     },
 
     validate_required_packages = function() {

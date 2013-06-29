@@ -74,22 +74,20 @@ test_that("coffee templates are rendered", {
 <script type=\"text/javascript\">
 ```{r engine=\"coffee\", results=\"asis\", echo = FALSE }
     a = {{ params$a }}
-    b = {{ toJSON(\"4\") }}
-    c = {{ params$d %||% toJSON(\"b\") }}
+    b = {{ \"b\" }}
+    c = {{ params$c %||% is.installed(\"c\") }}
 ```
 </script>", test_template$file_structure$paths$template_coffee_file)
 
     test_template$generate_visualization()
 
     rendered_template <- readContents(test_template$file_structure$paths$template_file)
-    expected_template <- "\n<script type=\"text/javascript\">\n(function() {\n  var a, b, c;\n\n  a = {{  params$a  }};\n\n  b = {{  toJSON(\"4\")  }};\n\n  c = {{  params$d %||% toJSON(\"b\")  }};\n\n}).call(this);\n\n</script>"
+    expected_template <- "\n<script type=\"text/javascript\">\n(function() {\n  var a, b, c;\n\n  a = {{  params$a  }};\n\n  b = {{  \"b\"  }};\n\n  c = {{  params$c %||% is.installed(\"c\")  }};\n\n}).call(this);\n\n</script>"
     expect_equal(rendered_template, expected_template)
 
     rendered_output <- readContents(test_template$file_structure$paths$output_file)
-    expected_output <- "\n<script type=\"text/javascript\">\n(function() {\n  var a, b, c;\n\n  a = 3;\n\n  b = \"4\";\n\n  c = \"b\";\n\n}).call(this);\n\n</script>"
+    expected_output <- "\n<script type=\"text/javascript\">\n(function() {\n  var a, b, c;\n\n  a = 3;\n\n  b = \"b\";\n\n  c = false;\n\n}).call(this);\n\n</script>"
     expect_equal(rendered_output, expected_output)
-
-    # TODO: allow something like this: a = {{ params$a %||% \"b\" }}
 
 })
 

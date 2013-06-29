@@ -1,6 +1,20 @@
 Template$methods(
 
-    get_params = function(){
+    get_params = function() {
+        get_unvalidated_params()
+
+        validate_params()
+    },
+
+    validate_params = function() {
+        validate_padding()
+        validate_colorize_and_palette()
+        validate_aliases()
+
+        return()
+    },
+
+    get_unvalidated_params = function(){
 
         params$width <<- params$width %||% 980
         params$height <<- params$height %||% 980
@@ -10,10 +24,6 @@ Template$methods(
         params$coffee <<- params$coffee %||% FALSE
 
         params$code <<- params$code %||% paste(deparse(sys.calls()[[1]]), collapse="")
-
-        validate_padding()
-        validate_colorize_and_palette()
-        validate_aliases()
 
     },
 

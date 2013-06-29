@@ -7,16 +7,17 @@ test_template$get_params()
 
 test_that("default paths are valid", {
 
-    expect_error(test_template$get_file_structure(), gettextf("There is no template testtemplate located in: %s", test_template_path) )
+    test_template$get_unvalidated_file_structure()
+    expect_error(test_template$validate_file_structure(), gettextf("There is no template testtemplate located in: %s", test_template_path) )
     dir.create(test_template_path)
 
-    expect_error(test_template$get_file_structure(), gettextf("The testtemplate template doesn't contain a template file in: %s", file.path(test_template_path, "template.Rmd")))
+    expect_error(test_template$validate_file_structure(), gettextf("The testtemplate template doesn't contain a template file in: %s", file.path(test_template_path, "template.Rmd")))
     file.create(file.path(test_template_path, "template.Rmd"))
 
-    expect_error(test_template$get_file_structure(), gettextf("The testtemplate template doesn't contain a configuration file in: %s", file.path(test_template_path, "config.yml")))
+    expect_error(test_template$validate_file_structure(), gettextf("The testtemplate template doesn't contain a configuration file in: %s", file.path(test_template_path, "config.yml")))
     file.create(file.path(test_template_path, "config.yml"))
 
-    expect_error(test_template$get_file_structure(), gettextf("The testtemplate template doesn't contain a translator file in: %s", file.path(test_template_path, "translator.R")))
+    expect_error(test_template$validate_file_structure(), gettextf("The testtemplate template doesn't contain a translator file in: %s", file.path(test_template_path, "translator.R")))
     file.create(file.path(test_template_path, "translator.R")) # Todo: remove this requirement
 
 
@@ -35,11 +36,12 @@ test_that("default paths are valid", {
 
     test_template <- TestTemplate$new(list(coffee = TRUE))
     test_template$get_params()
+    test_template$get_unvalidated_file_structure()
     unlink(file.path(test_template_path, "template.Rmd"))
-    expect_error(test_template$get_file_structure(), gettextf("The testtemplate template doesn't contain a template file in: %s", test_template$file_structure$paths$template))
+    expect_error(test_template$validate_file_structure(), gettextf("The testtemplate template doesn't contain a template file in: %s", test_template$file_structure$paths$template))
 
     file.create(file.path(test_template_path, "template.coffee.Rmd"))
-    expect_that(test_template$get_file_structure(), not(throws_error()))
+    expect_that(test_template$validate_file_structure(), not(throws_error()))
     expect_equal(test_template$file_structure$paths$template_coffee_file, file.path(test_template_path, "template.coffee.Rmd"))
 
     file.create(file.path(test_template_path, "template.Rmd"))

@@ -1,10 +1,15 @@
 Template$methods(
 
-    get_file_structure = function(){
+    get_file_structure = function() {
+        get_unvalidated_file_structure()
+        validate_file_structure()
+    },
+
+    get_unvalidated_file_structure = function(){
 
         file_structure <<- list()
         # folder names
-        file_structure$names$template <<- tolower(as.character(class(.self))) # TODO: change this to snake case
+        file_structure$names$template <<- name
         file_structure$names$template_assets <<- "assets"
         file_structure$names$shared_assets <<- "__shared_assets"
         file_structure$names$output_assets <<- "clickme_assets"
@@ -29,7 +34,6 @@ Template$methods(
 
         get_output_file_name()
         get_output_paths()
-        validate_paths()
 
     },
 
@@ -45,7 +49,9 @@ Template$methods(
                 }
             }
         } else {
-            if (!is.null(params$file_name)) warning(gettextf("The \"file_name\" argument was ignored because the \"file\" argument was present: %s", params$file))
+            if (!is.null(params$file_name)) {
+                warning(gettextf("The \"file_name\" argument was ignored because the \"file\" argument was present: %s", params$file))
+            }
 
             if (!grepl(".\\.html$", params$file)) {
                 params$file <<- paste0(params$file, ".html")
@@ -78,7 +84,7 @@ Template$methods(
         file_structure$relative_path$shared_assets <<- file.path(file_structure$names$output_assets)
     },
 
-    validate_paths = function() {
+    validate_file_structure = function() {
         if (!file.exists(getOption("clickme_templates_path"))) {
             stop(gettextf("getOption(\"clickme_templates_path\") doesn't contain a valid path: %s", getOption("clickme_templates_path")))
         }
@@ -103,6 +109,8 @@ Template$methods(
         if (!file.exists(file_structure$paths$output)){
             dir.create(file_structure$paths$output)
         }
+
+        return()
     }
 
 )

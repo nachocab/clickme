@@ -7,7 +7,7 @@ file.create(file.path(test_template_path, "template.Rmd"))
 file.create(file.path(test_template_path, "config.yml"))
 file.create(file.path(test_template_path, "translator.R")) # Todo: remove this requirement
 
-test_that("validate_padding", {
+test_that("padding is valid", {
     # default global padding
     test_template <- TestTemplate$new(list(padding = c(24, 0, 12, 200)))
     test_template$get_params()
@@ -25,7 +25,8 @@ test_that("validate_padding", {
 
     # wrong input
     test_template <- TestTemplate$new(list(padding = c(10, 20, 30)))
-    expect_error(test_template$get_params(), "Please provide four padding values")
+    test_template$get_unvalidated_params()
+    expect_error(test_template$validate_params(), "Please provide four padding values")
 })
 
 test_that("reorder_data_by_colorize", {
@@ -37,20 +38,14 @@ test_that("reorder_data_by_colorize", {
     reordered_data <- test_template$reorder_data_by_colorize()
     expect_equal(reordered_data$x, c(3, 2, 1))
 
-    # params <- list(colorize = c("a","b","c"), palette = c(a = "blue", c = "red", b = "green"))
-    # reordered_data <- reorder_data_by_colorize(data, params)
-    # expect_equal(reordered_data$x, c(2, 3, 1))
-})
+    test_template <- TestTemplate$new(list(data = data.frame(x = c(1,2,3)),
+                                           colorize = c("a","b","c"),
+                                           palette = c(a = "blue", c = "red", b = "green")))
+    test_template$get_params()
+    test_template$get_data()
 
-test_that("reorder_data_by_colorize", {
-    # data <- data.frame(x=c(1,2,3))
-    # params <- list(colorize = c("a","b","c"))
-    # reordered_data <- reorder_data_by_colorize(data, params)
-    # expect_equal(reordered_data$x, c(3, 2, 1))
-
-    # params <- list(colorize = c("a","b","c"), palette = c(a = "blue", c = "red", b = "green"))
-    # reordered_data <- reorder_data_by_colorize(data, params)
-    # expect_equal(reordered_data$x, c(2, 3, 1))
+    reordered_data <- test_template$reorder_data_by_colorize()
+    expect_equal(reordered_data$x, c(2, 3, 1))
 })
 
 unlink(test_template_path, recursive = TRUE)

@@ -23,13 +23,16 @@ Template <- setRefClass('Template',
                "params",
                "file_structure",
                "config",
-               "data"
+               "data",
+               "name"
     ),
 
     methods = list(
 
         initialize = function(params = list()) {
             initFields(params = params)
+            name <<- tolower(as.character(class(.self))) # TODO: change this to snake case
+            return()
         },
 
         get_data = function(){
@@ -39,7 +42,9 @@ Template <- setRefClass('Template',
         display = function() {
 
             get_params()
+
             get_file_structure()
+
             get_config()
 
             get_data()
