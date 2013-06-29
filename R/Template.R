@@ -24,7 +24,8 @@ Template <- setRefClass('Template',
                "file_structure",
                "config",
                "data",
-               "name"
+               "name",
+               "placeholder"
     ),
 
     methods = list(
