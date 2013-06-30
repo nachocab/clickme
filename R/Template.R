@@ -17,7 +17,7 @@
 # file
 # file_name
 # dir
-Template <- setRefClass('Template',
+Template <- setRefClass("Template",
 
     fields = c(
                "params",

@@ -4,8 +4,8 @@ opts <- get_opts("lines")
 
 test_that("the scales are categorical or quantitative", {
     data_df <- data.frame(x1 = 1:3, x2 = 4:6, x3 = 7:9, row.names = letters[1:3])
-    opts$params$x <- colnames(data_df)
-    opts$data <- get_lines_data(data_df, opts$params$x, list(list_names = rownames(data_df)))
+    params$x <- colnames(data_df)
+    opts$data <- get_lines_data(data_df, params$x, list(list_names = rownames(data_df)))
     x_scale <- get_d3_x_scale(opts)
     expect_equal(strwrap(x_scale), strwrap("d3.scale.ordinal()
                                     .domain([\"x1\",\"x2\",\"x3\"])
@@ -16,8 +16,8 @@ test_that("the scales are categorical or quantitative", {
                                     .domain([1,9])
                                     .range([plot.height, 0])"))
 
-    opts$params$x <- 1:3
-    opts$data <- get_lines_data(data_df, opts$params$x, list(list_names = rownames(data_df)))
+    params$x <- 1:3
+    opts$data <- get_lines_data(data_df, params$x, list(list_names = rownames(data_df)))
     x_scale <- get_d3_x_scale(opts)
     expect_equal(strwrap(x_scale), strwrap("d3.scale.linear()
                                     .domain([1,3])
@@ -27,8 +27,8 @@ test_that("the scales are categorical or quantitative", {
 
 test_that("the palette has as many colors as levels (or unique elements) in colorize", {
     data_df <- data.frame(x1 = 1:3, x2 = 4:6, x3 = 7:9, row.names = letters[1:3])
-    opts$params$x <- colnames(data_df)
-    opts$data <- get_lines_data(data_df, opts$params$x, list(line_names = rownames(data_df), colorize = c("a", "a", "b")))
+    params$x <- colnames(data_df)
+    opts$data <- get_lines_data(data_df, params$x, list(line_names = rownames(data_df), colorize = c("a", "a", "b")))
 
     palette <- get_palette_param(opts)
     expect_equal(length(fromJSON(palette)), 2)

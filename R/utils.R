@@ -27,6 +27,19 @@ disjoint_sets <- function(a, b, names = c("a", "b", "both")) {
     sets
 }
 
+# move elements to the front of an array
+move_in_front <- function(in_front, everything_else) {
+    everything_else[c(which(everything_else %in% in_front), which(source_files %notin% in_front))]
+}
+
+error_title <- function(message){
+    paste0("\n\n*** ", message, " ***\n\n")
+}
+
+enumerate <- function(array) {
+    paste("\t", array, collapse = "\n")
+}
+
 #' Match elements to groups
 #' @param subset vector of elements
 #' @param groups list of groups

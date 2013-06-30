@@ -125,5 +125,3 @@ clickme_lines <- function(data, x = colnames(data),
 
     clickme(data, "lines", params = params, ...)
 }
-
-

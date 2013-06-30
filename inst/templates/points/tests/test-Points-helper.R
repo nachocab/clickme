@@ -19,10 +19,10 @@ test_that("the palette has as many colors as levels (or unique elements) in colo
 })
 
 test_that("the palette can be set manually", {
-    opts$params$palette <- c("#000","blue")
+    params$palette <- c("#000","blue")
     palette <- get_palette_param(opts)
 
-    expect_equal(palette, toJSON(opts$params$palette))
+    expect_equal(palette, toJSON(params$palette))
 })
 
 
@@ -55,7 +55,7 @@ test_that("the color_domain is calculated from the values of colorize", {
 })
 
 test_that("the color_domain parameter can be set manually", {
-    opts$params$color_domain <- c(2, 10)
+    params$color_domain <- c(2, 10)
     color_domain <- get_color_domain_param(opts)
 
     expect_equal(color_domain, "[2,10]")

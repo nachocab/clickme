@@ -10,7 +10,8 @@
 # radius
 # x_categorical_domain TODO: remove this
 # y_categorical_domain TODO: remove this
-Points <- setRefClass('Points',
+#' @export
+Points <- setRefClass("Points",
 
     contains = "Template",
 
@@ -128,15 +129,19 @@ Points <- setRefClass('Points',
 #' @param ... additional arguments for \code{clickme}
 #'
 #' @export
-clickme_points <- function(x, y = NULL,
+
+Clickme$methods(
+
+    points = function(x, y = NULL,
                       point_names = NULL,
                       xlim = NULL, ylim = NULL,
                       radius = 5,
                       jitter = 0,
                       ...){
-    params <- as.list(environment())
-    points <- Points$new(params)
+        params <- as.list(environment())
+        points <- Points$new(params)
 
-    points$display()
-}
+        points$display()
+    }
 
+)

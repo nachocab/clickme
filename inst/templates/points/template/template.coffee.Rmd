@@ -21,7 +21,7 @@
 
     color_title = {{ params$color_title }}
 
-    color_legend_counts = {{ get_color_legend_counts(opts) }}
+    color_legend_counts = {{ get_color_legend_counts() }}
 
     plot = new_plot(
         width: {{ params$width }}
@@ -134,8 +134,8 @@
 
     toggle_names = ()->
         showing_point_names = g_toggle_names.classed("show_names")
-        point_names.attr("display", ()->        if showing_point_names then "none" else "inline")
-        g_toggle_names.attr("class", ()->       if showing_point_names then "" else "show_names")
+        point_names.attr("display", ()-> if showing_point_names then "none" else "inline")
+        g_toggle_names.attr("class", ()-> if showing_point_names then "" else "show_names")
             .select("circle").attr("fill", ()-> if showing_point_names then "white" else "black")
 
     # Draw color legend

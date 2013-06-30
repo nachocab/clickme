@@ -1,22 +1,22 @@
 get_col_names_param <- function(opts){
-    toJSON(opts$params$col_names)
+    toJSON(params$col_names)
 }
 
 get_row_names_param <- function(opts){
-    toJSON(opts$params$row_names)
+    toJSON(params$row_names)
 }
 
 get_color_domain_param <- function(opts) {
-    if (is.null(opts$params$color_domain)){
+    if (is.null(params$color_domain)){
         max <- max(abs(range(opts$data$unformatted, na.rm = TRUE)))
-        opts$params$color_domain <- c(-max, 0, max)
+        params$color_domain <- c(-max, 0, max)
     }
 
-    toJSON(opts$params$color_domain)
+    toJSON(params$color_domain)
 }
 
 get_palette_param <- function(opts){
-    toJSON(opts$params$palette)
+    toJSON(params$palette)
 }
 
 get_d3_color_scale <- function(opts){

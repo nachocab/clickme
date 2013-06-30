@@ -3,8 +3,8 @@ get_color_legend_counts <- function(opts){
 }
 
 get_x_tick_values <- function(opts) {
-    if (!is.null(opts$params$x) & is.numeric(opts$params$x)){
-        tick_values <- opts$params$x
+    if (!is.null(params$x) & is.numeric(params$x)){
+        tick_values <- params$x
     } else {
         tick_values <- NULL
     }
@@ -13,15 +13,15 @@ get_x_tick_values <- function(opts) {
 }
 
 get_d3_x_scale <- function(opts) {
-    if (is.null(opts$params$x)){
+    if (is.null(params$x)){
         x <- 1:ncol(opts$data$unformatted)
     } else {
-        x <- opts$params$x
+        x <- params$x
     }
 
     if (scale_type(x) == "quantitative"){
-        if (!is.null(opts$params$xlim)){
-            domain <- opts$params$xlim
+        if (!is.null(params$xlim)){
+            domain <- params$xlim
         } else {
             domain <- range(x, na.rm = TRUE)
         }
@@ -44,8 +44,8 @@ get_d3_y_scale <- function(opts) {
         y <- opts$data$unformatted
     }
 
-    if (!is.null(opts$params$ylim)){
-        domain <- opts$params$ylim
+    if (!is.null(params$ylim)){
+        domain <- params$ylim
     } else {
         domain <- range(y, na.rm = TRUE)
     }
@@ -61,32 +61,32 @@ get_d3_y_scale <- function(opts) {
 get_color_domain_param <- function(opts){
     colorize <- opts$data$unformatted$colorize
     # we don't do this in validate_lines_params because it depends on data$colorize, which is defined later, in get_lines_data().
-    if (is.null(opts$params$color_domain)){
-        opts$params$color_domain <- range(colorize, na.rm = TRUE)
+    if (is.null(params$color_domain)){
+        params$color_domain <- range(colorize, na.rm = TRUE)
     }
 
-    toJSON(opts$params$color_domain)
+    toJSON(params$color_domain)
 }
 
 get_palette_param <- function(opts) {
-    if (is.null(opts$params$palette)){
+    if (is.null(params$palette)){
         colorize <- opts$data$unformatted$colorize
         if (is.null(colorize) | length(unique(colorize)) == 1){
-                opts$params$palette <- c("#000")
+                params$palette <- c("#000")
         } else {
             if (scale_type(colorize) == "quantitative"){
-                opts$params$palette <- c("steelblue", "#CA0020") # blue-red gradient
+                params$palette <- c("steelblue", "#CA0020") # blue-red gradient
             } else {
-                opts$params$palette <- rev(default_colors(length(unique(colorize))))
+                params$palette <- rev(default_colors(length(unique(colorize))))
             }
         }
     }
 
-    matrix2json(opts$params$palette) # toJSON(c(2)) returns "2" instead of "[2]"
+    matrix2json(params$palette) # toJSON(c(2)) returns "2" instead of "[2]"
 }
 
 get_color_legend <- function(opts){
-    toJSON(rev(opts$params$palette))
+    toJSON(rev(params$palette))
 }
 
 get_d3_color_scale <- function(opts) {

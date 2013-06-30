@@ -11,7 +11,7 @@ Template$methods(
         # folder names
         file_structure$names$template <<- name
         file_structure$names$template_assets <<- "assets"
-        file_structure$names$shared_assets <<- "__shared_assets"
+        file_structure$names$shared_assets <<- "shared_assets"
         file_structure$names$output_assets <<- "clickme_assets"
 
         # file names
@@ -75,7 +75,7 @@ Template$methods(
             file_structure$paths$output_file <<- params$file
         }
 
-        file_structure$paths$shared_assets <<- file.path(getOption("clickme_templates_path"), file_structure$names$shared_assets)
+        file_structure$paths$shared_assets <<- file.path(system.file(package = "clickme"), file_structure$names$shared_assets)
         file_structure$paths$output_template_assets <<- file.path(file_structure$paths$output, file_structure$names$output_assets, file_structure$names$template)
         file_structure$paths$output_shared_assets <<- file.path(file_structure$paths$output, file_structure$names$output_assets)
 

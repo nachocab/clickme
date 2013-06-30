@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <title>{{ opts$params$title }}</title>
+    <title>{{ params$title }}</title>
 
     {{ get_assets(opts) }}
 
@@ -19,17 +19,17 @@
 
     color_scale = {{ get_d3_color_scale(opts) }}
 
-    draw_box = {{ toJSON(opts$params$box) }}
+    draw_box = {{ toJSON(params$box) }}
 
     color_legend_counts = {{ get_color_legend_counts(opts) }}
 
     plot = append_plot(
-        width: {{ opts$params$width }}
-        height: {{ opts$params$height }}
+        width: {{ params$width }}
+        height: {{ params$height }}
         padding: {{ get_padding_param(opts) }}
-        title: {{ toJSON(opts$params$title) }}
-        xlab: {{ toJSON(opts$params$xlab) }}
-        ylab: {{ toJSON(opts$params$ylab) }}
+        title: {{ toJSON(params$title) }}
+        xlab: {{ toJSON(params$xlab) }}
+        ylab: {{ toJSON(params$ylab) }}
     )
 
     if draw_box?
@@ -55,7 +55,7 @@
 
     line = d3.svg.line()
         .defined((d) -> !isNaN(d.y)) # skip null and NaN values
-        .interpolate({{ toJSON(opts$params$interpolate) }})
+        .interpolate({{ toJSON(params$interpolate) }})
         .x((d) -> plot.scales.x(d.x))
         .y((d) -> plot.scales.y(d.y))
 
@@ -71,7 +71,7 @@
             "d": (d) -> line(d.values)
         ).style(
             "stroke": (d) -> color_scale(d.colorize)
-            "stroke-width": {{ toJSON(paste0(opts$params$lwd, "px")) }}
+            "stroke-width": {{ toJSON(paste0(params$lwd, "px")) }}
             "fill": "none"
             "shape-rendering": "auto"
         )
@@ -135,7 +135,7 @@
                   "dy": ".35em"
             ).style(
                     "font-size": "24px"
-            ).text({{ toJSON(opts$params$colorize_title) }})
+            ).text({{ toJSON(params$colorize_title) }})
 
         g_color_legend = sidebar.selectAll(".key")
             .data(color_scale.domain().reverse())
