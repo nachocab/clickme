@@ -60,6 +60,7 @@ Template <- setRefClass("Template",
 
         },
 
+        do_action = function(){
 
             if (config$require_server){
                 url <- paste0("http://localhost:", port, "/", file_structure$names$output_file)
@@ -67,11 +68,21 @@ Template <- setRefClass("Template",
                 url <- file_structure$paths$output_file
             }
 
-            if (open) browseURL(url)
-
-            if (link){
-                make_link(url, params$title)
+            if ("open" %in% params$action) {
+                browseURL(url)
             }
+
+            ret <- ""
+            if ("link" %in% params$action) {
+                ret <- paste(ret, make_link(url, params$title %||% "link"), sep = "\n")
+            }
+
+            if ("iframe" %in% params$action) {
+                ret <- paste(ret, make_iframe(url, params$width, params$height, params$frameborder), sep = "\n")
+            }
+
+            invisible(ret)
         }
+
    )
 )

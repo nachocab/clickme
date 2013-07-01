@@ -8,6 +8,7 @@ Template$methods(
 
     validate_params = function() {
         validate_padding()
+        validate_action()
         validate_colorize_and_palette()
         validate_aliases()
 
@@ -18,22 +19,33 @@ Template$methods(
 
         params$width <<- params$width %||% 980
         params$height <<- params$height %||% 980
+        params$frameborder <<- 0
         params$padding <<- params$padding %||% list(top = 80, right = 400, bottom = 30, left = 100)
         params$box <<- params$box %||% FALSE
 
         params$coffee <<- params$coffee %||% FALSE
 
+        params$action <<- as.character(params$action) %||% c("open")
         params$code <<- params$code %||% paste(deparse(sys.calls()[[1]]), collapse="")
 
     },
 
     validate_padding = function(){
         if (length(params$padding) != 4){
-            stop("Please provide four padding values. (currently ", paste(params$padding, collapse=", "), ")")
+            stop(gettextf("Please provide four padding values. (currently %s)", paste(params$padding, collapse=", ")))
         }
 
         if (is.null(names(params$padding))) {
             names(params$padding) <<- c("top", "right", "bottom", "left")
+        }
+    },
+
+    validate_action = function(){
+        valid_actions <- c("open", "link", "iframe", "none")
+        action_descriptions <- c("open a new browser tab", "return an HTML link", "return an HTML iframe", "don't do anything")
+        if (any(params$action %notin% valid_actions)) {
+            bad_action <- params$action[params$action %notin% valid_actions]
+            stop(gettextf("\n\nInvalid action \"%s\". Please choose one or several among:\n\n%s\n\n", bad_action, enumerate(paste(valid_actions, action_descriptions, sep = "\t => "))))
         }
     },
 
@@ -47,7 +59,7 @@ Template$methods(
         if (!is.null(params$colorize) & !is.null(params$palette) & !is.null(palette_names)) {
             if (scale_type(params$colorize) == "categorical"){
                 if (any(palette_names %notin% categories)) {
-                    warning("The following palette names don't appear in colorize: ", paste0(palette_names[palette_names %notin% categories], collapse = ", "))
+                    warning(gettextf("\n\nThe following palette names don't appear in colorize:\n\n%s", paste0(palette_names[palette_names %notin% categories], collapse = ", ")))
                 }
 
                 if (any(is.na(params$palette))) {

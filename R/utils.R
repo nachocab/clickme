@@ -4,14 +4,39 @@
 #'
 #' @export
 make_link <- function(url, name) {
-    name <- name %||% "link"
-    if (is.null(url)) stop ("Invalid filename. The link cannot be generated")
+    if (is.null(url)) {
+        stop ("Please provide a valid output_file")
+    }
     link <- gettextf("<a href=\"%s\" target = \"_blank\">%s</a>\n\n", url, name)
     cat(link)
 }
 
+#' Make an HTML iframe
+#' @param url URL
+#' @param width
+#'
+#' @export
+make_iframe <- function(url, width, height, frameborder) {
+    if (is.null(url)) {
+        stop ("Please provide a valid output_file")
+    }
+
+    iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" src=\"%s\" frameborder=\"%d\"> </iframe>\n\n", width, height, url, frameborder)
+    cat(iframe)
+}
+
 separator <- function(n = 70){
     paste0(rep("=", n, collapse = ""))
+}
+
+#' Get the parameters passed along to a helper function
+#' @export
+extract_params <- function() {
+    # TODO: T and F don't work, warn or try to fix
+    named_params <- as.list(parent.frame())
+    dots <- as.list(substitute(list(...), parent.frame()))[-1]
+    params <- c(named_params, dots)
+    params
 }
 
 #' Split up two vectors into their intersecting sets
@@ -29,7 +54,8 @@ disjoint_sets <- function(a, b, names = c("a", "b", "both")) {
 
 # move elements to the front of an array
 move_in_front <- function(in_front, everything_else) {
-    everything_else[c(which(everything_else %in% in_front), which(source_files %notin% in_front))]
+    everything_else <- everything_else[c(which(everything_else %in% in_front), which(everything_else %notin% in_front))]
+    everything_else
 }
 
 error_title <- function(message){
@@ -144,6 +170,7 @@ default_colors <- function(n = 9){
     colors
 }
 
+#' @export
 is_coffee_installed <- function() {
     system("coffee -v", ignore.stdout = TRUE, ignore.stderr = TRUE) == 0
 }
@@ -249,7 +276,6 @@ plain_list_templates <- function() {
 }
 
 
-#' @import stringr
 titleize <- function(str){
     str <- str_replace(str,"_"," ")
     words_in_str <- strsplit(str, " ")[[1]]
@@ -285,17 +311,16 @@ open_all_demos <- function(){
 #' Run a template demo
 #'
 #' @param template name of template
-#' @export
-demo_template <- function(template) {
-    opts <- get_default_opts(template)
-    opts$config <- yaml.load_file(file_structure$paths$config_file)
-    if (is.null(opts$config$demo)){
-        message("The ", template, " template didn't provide a demo example.")
-    } else {
-        message("Running demo for the ", template, " template:\n\n", opts$config$demo)
-        eval(parse(text = opts$config$demo))
-    }
-}
+# demo_template <- function(template) {
+#     opts <- get_default_opts(template)
+#     opts$config <- yaml.load_file(file_structure$paths$config_file)
+#     if (is.null(opts$config$demo)){
+#         message("The ", template, " template didn't provide a demo example.")
+#     } else {
+#         message("Running demo for the ", template, " template:\n\n", opts$config$demo)
+#         eval(parse(text = opts$config$demo))
+#     }
+# }
 
 
 #' Test generated file
@@ -319,11 +344,12 @@ expect_correct_file <- function(opts, extension, expected_data = NULL, test_data
     unlink(expected_path)
 }
 
-
+#' @export
 is_character_or_factor <- function(x) {
     is.character(x) || is.factor(x)
 }
 
+#' @export
 is_data_frame_or_matrix <- function(x) {
     is.data.frame(x) || is.matrix(x)
 }

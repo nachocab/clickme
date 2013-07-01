@@ -37,6 +37,7 @@ get_xy_rownames.default <- function(x) {
 }
 
 # Convert x and y into a data.frame object with x, y and row names.
+#' @export
 xy_to_data <- function(x, y) {
     if (is_character_or_factor(x) && is.null(y)){
         stop("y cannot be NULL when x is a character vector or a factor")

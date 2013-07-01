@@ -8,6 +8,15 @@ Template$methods(
     get_unvalidated_file_structure = function(){
 
         file_structure <<- list()
+        get_default_names()
+        get_default_paths()
+        get_output_file_name()
+        get_output_paths()
+
+    },
+
+    get_default_names = function() {
+
         # folder names
         file_structure$names$template <<- name
         file_structure$names$template_assets <<- "assets"
@@ -18,26 +27,28 @@ Template$methods(
         file_structure$names$template_file <<- "template.Rmd"
         file_structure$names$template_coffee_file <<- "template.coffee.Rmd"
         file_structure$names$config_file <<- "config.yml"
-        file_structure$names$translator_file <<- "translator.R"
-        file_structure$names$translator_test_file <<- "test-translator.R"
+        file_structure$names$translator_file <<- paste0(file_structure$names$template, ".R")
+        file_structure$names$translator_test_file <<- paste0("test-", nafile_structure$names$template, ".R")
+    },
+
+    get_default_paths = function() {
 
         # folder absolute paths
         file_structure$paths$template <<- file.path(getOption("clickme_templates_path"), file_structure$names$template)
         file_structure$paths$template_assets <<- file.path(file_structure$paths$template, file_structure$names$template_assets)
 
         # file absolute paths
-        file_structure$paths$template_file <<- file.path(file_structure$paths$template, file_structure$names$template_file)
-        file_structure$paths$template_coffee_file <<- file.path(file_structure$paths$template, file_structure$names$template_coffee_file)
+        file_structure$paths$template_file <<- file.path(file_structure$paths$template, "template", file_structure$names$template_file)
+        file_structure$paths$template_coffee_file <<- file.path(file_structure$paths$template, "template", file_structure$names$template_coffee_file)
         file_structure$paths$config_file <<- file.path(file_structure$paths$template, file_structure$names$config_file)
-        file_structure$paths$translator_file <<- file.path(file_structure$paths$template, file_structure$names$translator_file)
-        file_structure$paths$translator_test_file <<- file.path(file_structure$paths$template, file_structure$names$translator_test_file)
-
-        get_output_file_name()
-        get_output_paths()
+        file_structure$paths$translator_file <<- file.path(file_structure$paths$template, "translator", file_structure$names$translator_file)
+        file_structure$paths$translator_test_file <<- file.path(file_structure$paths$template, "tests", file_structure$names$translator_test_file)
+        file_structure$paths$shared_assets <<- file.path(getOption("clickme_templates_path"), "..", file_structure$names$shared_assets)
 
     },
 
     get_output_file_name = function() {
+
         if (is.null(params$file)){
             if (is.null(params$file_name)){
                 file_structure$names$output_file <<- paste0("temp-", file_structure$names$template, ".html")
@@ -58,9 +69,11 @@ Template$methods(
             }
             file_structure$names$output_file <<- basename(params$file)
         }
+
     },
 
     get_output_paths = function() {
+
         if (is.null(params$file)){
             if (is.null(params$dir)){
                 file_structure$paths$output <<- getOption("clickme_output_path")
@@ -75,16 +88,17 @@ Template$methods(
             file_structure$paths$output_file <<- params$file
         }
 
-        file_structure$paths$shared_assets <<- file.path(system.file(package = "clickme"), file_structure$names$shared_assets)
         file_structure$paths$output_template_assets <<- file.path(file_structure$paths$output, file_structure$names$output_assets, file_structure$names$template)
         file_structure$paths$output_shared_assets <<- file.path(file_structure$paths$output, file_structure$names$output_assets)
 
         # relative paths (they go in the HTML files)
         file_structure$relative_path$template_assets <<- file.path(file_structure$names$output_assets, file_structure$names$template)
         file_structure$relative_path$shared_assets <<- file.path(file_structure$names$output_assets)
+
     },
 
     validate_file_structure = function() {
+
         if (!file.exists(getOption("clickme_templates_path"))) {
             stop(gettextf("getOption(\"clickme_templates_path\") doesn't contain a valid path: %s", getOption("clickme_templates_path")))
         }
@@ -110,7 +124,6 @@ Template$methods(
             dir.create(file_structure$paths$output)
         }
 
-        return()
     }
 
 )

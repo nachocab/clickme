@@ -58,7 +58,6 @@ df2json <- function(df){
 #'
 #' @param mat input matrix object
 #' @export
-#' @import rjson
 #' @examples library(df2json)
 #' df <- matrix(1:9, byrow = TRUE, nrow=3)
 #' matrix2json(df)
@@ -73,7 +72,6 @@ matrix2json <- function(mat){
 #'
 #' @param json input json object
 #' @export
-#' @import rjson
 #' @examples library(df2json)
 #' json <- "[{\"a\":1, \"b\":2},{\"a\":3,\"b\":4}]"
 #' json2df(json)
@@ -89,7 +87,6 @@ json2df <- function(json){
 #'
 #' @param yaml input yaml object
 #' @export
-#' @import rjson
 #' @examples library(df2json)
 #' yaml <- "- a: 1.0\n  b: 2.0\n- a: 3.0\n  b: 4.0\n"
 #' yaml2df(json)
