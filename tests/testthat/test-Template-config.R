@@ -14,7 +14,6 @@ test_that("styles and scripts must be valid", {
     test_template$get_file_structure()
 
     dir.create(test_template$file_structure$paths$template_assets)
-
     expect_that(test_template$get_config(), not(throws_error()))
 
     test_template$config$styles <- c("abc.css")

@@ -87,7 +87,7 @@ test_that("output paths are added", {
     expect_equal(test_template$file_structure$paths$output, system.file("output", package = "clickme"))
     expect_equal(test_template$file_structure$paths$output_file, file.path(test_template$file_structure$paths$output, test_template$file_structure$names$output_file))
 
-    expect_equal(test_template$file_structure$paths$shared_assets, file.path(getOption("clickme_templates_path"), "__shared_assets"))
+    expect_equal(test_template$file_structure$paths$shared_assets, file.path(getOption("clickme_templates_path"), "..", "shared_assets"))
     expect_equal(test_template$file_structure$paths$output_template_assets, file.path(test_template$file_structure$path$output, "clickme_assets", "testtemplate"))
     expect_equal(test_template$file_structure$paths$output_shared_assets, file.path(test_template$file_structure$path$output, "clickme_assets"))
 

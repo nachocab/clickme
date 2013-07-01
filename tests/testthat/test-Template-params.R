@@ -48,5 +48,19 @@ test_that("reorder_data_by_colorize", {
     expect_equal(reordered_data$x, c(2, 3, 1))
 })
 
+test_that("action is valid", {
+    test_template <- TestTemplate$new(list(action = "open"))
+    test_template$get_params()
+    expect_equal(test_template$params$action, c("open"))
+
+    test_template <- TestTemplate$new(list(action = c("open", "link")))
+    test_template$get_params()
+    expect_equal(test_template$params$action, c("open", "link"))
+
+    test_template <- TestTemplate$new(list(action = c("open", "fake")))
+    test_template$get_unvalidated_params()
+    expect_error(test_template$validate_params(), "Invalid action \"fake\". Please choose one or several among:")
+})
+
 unlink(test_template_path, recursive = TRUE)
 
