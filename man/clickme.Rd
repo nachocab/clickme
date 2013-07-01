@@ -2,10 +2,9 @@
 \name{clickme}
 \alias{clickme}
 \alias{clickme-package}
-\title{Straight from R to JS: Create interactive visualizations from R}
+\title{Clickme: use R to create interactive visualizations}
 \description{
-  Straight from R to JS: Create interactive visualizations
-  from R
+  Clickme: use R to create interactive visualizations
 }
 \section{Package options}{
   Clickme uses the following \code{options} to configure

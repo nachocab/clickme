@@ -1,11 +1,8 @@
-#' @import knitr
 Template$methods(
     generate_visualization = function(){
         get_placeholders()
 
         translate_coffee_template_to_js()
-
-        source(file_structure$paths$translator_file)
 
         html_code <- parse_placeholders()
 
@@ -113,6 +110,8 @@ Template$methods(
 )
 
 # Borrowing heavily from Yihui Xie
+#' @export
+#' @keywords internal
 replace_delimiter <- function(template, old_placeholder_regex, new_delimiter, deparse){
     locations <- str_locate_all(template, old_placeholder_regex)[[1]]
     if (nrow(locations) > 0){
@@ -133,6 +132,8 @@ replace_delimiter <- function(template, old_placeholder_regex, new_delimiter, de
     template
 }
 
+#' @export
+#' @keywords internal
 replace_placeholders <- function(results, template, locations) {
 
     num_locations <- nrow(locations)
@@ -149,6 +150,8 @@ replace_placeholders <- function(results, template, locations) {
     template
 }
 
+#' @export
+#' @keywords internal
 get_placeholder_regex <- function(spec) {
     opening_symbol <- spec[1]
     num_repeats <- spec[2]
@@ -174,6 +177,8 @@ get_placeholder_regex <- function(spec) {
     regex
 }
 
+#' @export
+#' @keywords internal
 get_placeholder_delim <- function(spec){
     opening_symbol <- spec[1]
     num_repeats <- spec[2]

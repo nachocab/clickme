@@ -17,6 +17,7 @@
 # file
 # file_name
 # dir
+#' @export
 Template <- setRefClass("Template",
 
     fields = c(
@@ -32,7 +33,14 @@ Template <- setRefClass("Template",
 
         initialize = function(params = list()) {
             initFields(params = params)
-            name <<- tolower(as.character(class(.self))) # TODO: change this to snake case
+            name <<- as.character(class(.self))
+
+            # I'm adding them explicitly because when a subclass of Template gets source'd it loses the clickme namespace
+            library(yaml)
+            library(knitr)
+            library(stringr)
+            library(rjson)
+
             return()
         },
 
@@ -42,15 +50,16 @@ Template <- setRefClass("Template",
 
         display = function() {
 
-            get_params()
+            .self$get_params()
+            .self$get_file_structure()
+            .self$get_config()
+            .self$get_data()
+            .self$generate_visualization()
 
-            get_file_structure()
+            do_action()
 
-            get_config()
+        },
 
-            get_data()
-
-            generate_visualization()
 
             if (config$require_server){
                 url <- paste0("http://localhost:", port, "/", file_structure$names$output_file)

@@ -10,13 +10,16 @@ Template$methods(
     },
 
     validate_config = function() {
+
         validate_required_packages()
         validate_assets()
 
         return()
+
     },
 
     validate_required_packages = function() {
+
         if (!is.null(config$require_packages)){
             missing_packages <- config$require_packages[!is.installed(config$require_packages)]
 
@@ -38,6 +41,23 @@ Template$methods(
 
             sapply(config$require_packages, library, character.only = TRUE)
         }
+
+    },
+
+    validate_assets = function() {
+
+        assets <- get_template_and_shared_assets()
+
+        sapply(assets$template, function(asset){
+            path <- file.path(file_structure$paths$template_assets, asset)
+            if (!file.exists(path)) stop(asset, " not found at: ", path)
+        })
+
+        sapply(assets$shared, function(asset){
+            path <- file.path(file_structure$paths$shared_assets, asset)
+            if (!file.exists(path)) stop(asset, " not found at: ", path)
+        })
+
     },
 
     get_template_and_shared_assets = function() {
@@ -58,20 +78,6 @@ Template$methods(
         }
 
         assets
-    },
-
-    validate_assets = function() {
-        assets <- get_template_and_shared_assets()
-
-        sapply(assets$template, function(asset){
-            path <- file.path(file_structure$paths$template_assets, asset)
-            if (!file.exists(path)) stop(asset, " not found at: ", path)
-        })
-
-        sapply(assets$shared, function(asset){
-            path <- file.path(file_structure$paths$shared_assets, asset)
-            if (!file.exists(path)) stop(asset, " not found at: ", path)
-        })
     }
 
 )
