@@ -28,21 +28,24 @@ Template$methods(
         file_structure$names$template_coffee_file <<- "template.coffee.Rmd"
         file_structure$names$config_file <<- "config.yml"
         file_structure$names$translator_file <<- paste0(file_structure$names$template, ".R")
-        file_structure$names$translator_test_file <<- paste0("test-", nafile_structure$names$template, ".R")
+        file_structure$names$translator_test_file <<- paste0("test-", file_structure$names$template, ".R")
     },
 
     get_default_paths = function() {
 
         # folder absolute paths
         file_structure$paths$template <<- file.path(getOption("clickme_templates_path"), file_structure$names$template)
+        file_structure$paths$template_template <<- file.path(file_structure$paths$template, "template")
+        file_structure$paths$translator <<- file.path(file_structure$paths$template, "translator")
+        file_structure$paths$tests <<- file.path(file_structure$paths$template, "tests")
         file_structure$paths$template_assets <<- file.path(file_structure$paths$template, file_structure$names$template_assets)
 
         # file absolute paths
-        file_structure$paths$template_file <<- file.path(file_structure$paths$template, "template", file_structure$names$template_file)
-        file_structure$paths$template_coffee_file <<- file.path(file_structure$paths$template, "template", file_structure$names$template_coffee_file)
+        file_structure$paths$template_file <<- file.path(file_structure$paths$template_template, file_structure$names$template_file)
+        file_structure$paths$template_coffee_file <<- file.path(file_structure$paths$template_template, file_structure$names$template_coffee_file)
         file_structure$paths$config_file <<- file.path(file_structure$paths$template, file_structure$names$config_file)
-        file_structure$paths$translator_file <<- file.path(file_structure$paths$template, "translator", file_structure$names$translator_file)
-        file_structure$paths$translator_test_file <<- file.path(file_structure$paths$template, "tests", file_structure$names$translator_test_file)
+        file_structure$paths$translator_file <<- file.path(file_structure$paths$translator, file_structure$names$translator_file)
+        file_structure$paths$translator_test_file <<- file.path(file_structure$paths$tests, file_structure$names$translator_test_file)
         file_structure$paths$shared_assets <<- file.path(getOption("clickme_templates_path"), "..", file_structure$names$shared_assets)
 
     },

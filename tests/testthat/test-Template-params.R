@@ -2,10 +2,7 @@ context("Template-params")
 
 TestTemplate <- setRefClass('TestTemplate', contains = "Template", where=.GlobalEnv)
 test_template_path <- file.path(getOption("clickme_templates_path"), "testtemplate")
-dir.create(test_template_path)
-file.create(file.path(test_template_path, "template.Rmd"))
-file.create(file.path(test_template_path, "config.yml"))
-file.create(file.path(test_template_path, "translator.R")) # Todo: remove this requirement
+suppressMessages(new_template("TestTemplate"))
 
 test_that("padding is valid", {
     # default global padding
@@ -49,6 +46,10 @@ test_that("reorder_data_by_colorize", {
 })
 
 test_that("action is valid", {
+    test_template <- TestTemplate$new()
+    test_template$get_params()
+    expect_equal(test_template$params$action, c("open"))
+
     test_template <- TestTemplate$new(list(action = "open"))
     test_template$get_params()
     expect_equal(test_template$params$action, c("open"))

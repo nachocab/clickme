@@ -1,5 +1,5 @@
 #' @export
 clickme <- function(template, ...){
-    reload_templates()
+    reload_translators()
     clickme_helper[[template]](...)
 }

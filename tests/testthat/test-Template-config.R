@@ -1,20 +1,15 @@
 context("Template-config")
 
 TestTemplate <- setRefClass('TestTemplate', contains = "Template", where=.GlobalEnv)
-test_template_path <- file.path(getOption("clickme_templates_path"), "testtemplate")
-dir.create(test_template_path)
-file.create(file.path(test_template_path, "template.Rmd"))
-file.create(file.path(test_template_path, "config.yml"))
-file.create(file.path(test_template_path, "translator.R")) # Todo: remove this requirement
+test_template_path <- file.path(getOption("clickme_templates_path"), "TestTemplate")
+suppressMessages(new_template("TestTemplate"))
 
 test_that("styles and scripts must be valid", {
 
     test_template <- TestTemplate$new()
     test_template$get_params()
     test_template$get_file_structure()
-
-    dir.create(test_template$file_structure$paths$template_assets)
-    expect_that(test_template$get_config(), not(throws_error()))
+    test_template$get_config()
 
     test_template$config$styles <- c("abc.css")
     expect_error(test_template$validate_config(), "abc.css not found")

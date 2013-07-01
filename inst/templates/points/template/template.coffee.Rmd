@@ -3,9 +3,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <title>{{ params$title }}</title>
+    <title>{{{ params$title }}}</title>
 
-    {{ get_assets() }}
+    {{{ .self$get_assets() }}}
 
   </head>
 
@@ -17,11 +17,11 @@
 
     radius = {{ params$radius }}
 
-    color_scale = {{ get_d3_color_scale(opts) }}
+    color_scale = {{ .self$get_d3_color_scale() }}
 
     color_title = {{ params$color_title }}
 
-    color_legend_counts = {{ get_color_legend_counts() }}
+    color_legend_counts = {{ .self$get_color_legend_counts() }}
 
     plot = new_plot(
         width: {{ params$width }}
@@ -33,7 +33,7 @@
         xlab: {{ params$xlab }}
         ylab: {{ params$ylab }}
         title: {{ params$title }}
-        box: {{ opts$data$box }}
+        box: {{ params$box }}
         xlim: {{ params$xlim }}
         ylim: {{ params$ylim }}
         categorical_domains:
@@ -44,7 +44,7 @@
         linear_scale_padding: 40)
 
     plot.tooltip_text = (d) ->
-        {{ get_tooltip_content() }}
+        {{ .self$get_tooltip_content() }}
 
     plot.append("defs").append("clipPath")
         .attr("id", "clip")
@@ -163,7 +163,7 @@
                 "r": radius
                 "fill": color_scale)
 
-        # legend_point_names = get_legend_names_param(opts)
+        # legend_point_names = get_legend_names_param()
         g_color_legend.append("text")
             .attr(
                 "x": radius + 10
@@ -186,7 +186,7 @@
     ```
     </script>
     <div class = "code">
-    {{ params$code }}
+    {{{ params$code }}}
     </div>
   </body>
 </html>

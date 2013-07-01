@@ -25,7 +25,7 @@ Template$methods(
 
         params$coffee <<- params$coffee %||% FALSE
 
-        params$action <<- as.character(params$action) %||% c("open")
+        params$action <<- as.character(params$action %||% "open")
         params$code <<- params$code %||% paste(deparse(sys.calls()[[1]]), collapse="")
 
     },

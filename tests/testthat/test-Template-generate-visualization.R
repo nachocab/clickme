@@ -30,13 +30,9 @@ test_that("placeholders", {
 
 TestTemplate <- setRefClass('TestTemplate', contains = "Template", where=.GlobalEnv)
 test_template_path <- file.path(getOption("clickme_templates_path"), "testtemplate")
-dir.create(test_template_path)
-file.create(file.path(test_template_path, "template.Rmd"))
-file.create(file.path(test_template_path, "config.yml"))
-file.create(file.path(test_template_path, "translator.R")) # Todo: remove this requirement
+suppressMessages(new_template("TestTemplate"))
 
 test_output_dir <- file.path(system.file("output", package = "clickme"), "test")
-dir.create(test_output_dir)
 test_output_file <- file.path(test_output_dir, "test.html")
 
 test_that("replace_delimiter", {

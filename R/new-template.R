@@ -66,7 +66,10 @@ new_template <- function(template_name, overwrite = FALSE) {
     }
 
     sapply(c(template$file_structure$paths$template,
-             template$file_structure$paths$template_assets), function(path){
+             template$file_structure$paths$template_template,
+             template$file_structure$paths$template_assets,
+             template$file_structure$paths$translator,
+             template$file_structure$paths$tests), function(path){
                 dir.create(path)
              })
 
@@ -81,8 +84,8 @@ new_template <- function(template_name, overwrite = FALSE) {
     writeLines(translator_contents, template$file_structure$paths$translator_file)
     writeLines(translator_test_contents, template$file_structure$paths$translator_test_file)
 
-    message("template created at: ", template$file_structure$paths$template, "\n")
-    message("You edit the template file by running: \nfile.edit(\"", template$file_structure$paths$template_file, "\")\n")
+    message("Template created at: ", template$file_structure$paths$template, "\n")
+    # message("You can edit the template file by running: \nfile.edit(\"", template$file_structure$paths$template_file, "\")\n")
 
     invisible(template)
 }
