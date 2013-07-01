@@ -12,11 +12,13 @@ Imports:
     knitr (>= 1.2),
     yaml (>= 2.1.7),
     stringr,
+    methods,
     rjson
 Suggests:
     testthat (>= 0.7.1.99),
     roxygen2
 Collate:
+    'load-hooks.R'
     'utils.R'
     'xy-to-data.R'
     'json.R'
@@ -27,5 +29,5 @@ Collate:
     'Template-helper.R'
     'Template-generate-visualization.R'
     'new-template.R'
+    'reload-translators.R'
     'clickme.R'
-    'on-load.R'
