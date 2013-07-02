@@ -13,7 +13,7 @@ Points$methods(
         params$color_domain
     },
 
-    get_palette_param = function() {
+    get_d3_palette = function() {
         palette_names <- names(params$palette)
         categories <- unique(params$colorize)
         if (is.null(params$palette)){
@@ -28,7 +28,8 @@ Points$methods(
             }
         }
 
-        params$palette
+        d3_palette <- toJSON(as.list(params$palette))
+        d3_palette
     },
 
     get_d3_color_scale = function() {
@@ -38,7 +39,7 @@ Points$methods(
                    .range(", get_palette_param(), ")
                    .interpolate(d3.interpolateLab);")
         } else {
-            color_scale <- paste0("d3.scale.ordinal().range(", get_palette_param(),");")
+            color_scale <- gettextf("d3.scale.ordinal().range(%s);", get_d3_palette())
         }
 
         color_scale

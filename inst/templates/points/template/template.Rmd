@@ -18,7 +18,7 @@
     
       radius = {{ params$radius }};
     
-      color_scale = {{ .self$get_d3_color_scale() }};
+      color_scale = {{{ .self$get_d3_color_scale() }}};
     
       color_title = {{ params$color_title }};
     
