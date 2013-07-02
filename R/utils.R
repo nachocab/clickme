@@ -38,10 +38,17 @@ separator <- function(n = 70){
 #' Get the parameters passed along to a helper function
 #' @export
 extract_params <- function() {
-    # TODO: T and F don't work, warn or try to fix
     named_params <- as.list(parent.frame())
     dots <- as.list(substitute(list(...), parent.frame()))[-1]
     params <- c(named_params, dots)
+
+    # After substituting, T and F don't get automatically replaced to TRUE and FALSE
+    names <- sapply(params, is.name)
+    if (any(names)){
+        params[names & params == "T"] <- TRUE
+        params[names & params == "F"] <- FALSE
+    }
+
     params
 }
 
