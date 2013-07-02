@@ -204,7 +204,7 @@
       });
       return plot;
     };
-    if (plot.box != null) {
+    if (plot.box === true) {
       plot.add_box();
     }
     plot.add_title();

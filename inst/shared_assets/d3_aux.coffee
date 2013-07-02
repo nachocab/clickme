@@ -211,7 +211,7 @@ my_light_red = "#b90000"
 
         plot
 
-    if plot.box?
+    if plot.box is true
         plot.add_box()
 
     plot.add_title()
