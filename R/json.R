@@ -1,36 +1,89 @@
-is.valid <- function(x){
-    !is.na(x) & !is.nan(x) & !is.infinite(x)
+#' Convert a string to JSON
+#'
+#' @param x input object
+#' @export
+# S3 methods (generic functions)
+to_json <- function(x) {
+    UseMethod("to_json", x)
 }
 
-quote_for_JSON <- function(element){
-    paste0("\"", element, "\"")
-}
 
-translate_to_JSON <- function(value){
-    if (!is.valid(value)){
-        value <- "null"
-    } else if (is.logical(value)){
-        value <- if (value)  "true" else "false"
-    } else if (is.character(value)){
-        value <- quote_for_JSON(value)
-    } else if (is.factor(value)){
-        value <- quote_for_JSON(as.character(value))
+to_json.array <- function(x){
+    if (length(x) > 1){
+        json <- to_json.default(x)
     } else {
-        # numeric, don't do anything
+        json <- to_monovector(x)
     }
 
-    value
+    json
 }
 
-prepare_for_JSON <- function(data){
-    data <- lapply(colnames(data), function(key){
-        sapply(data[, key], function(value){
-            key <- quote_for_JSON(key)
-            value <- translate_to_JSON(value)
+to_json.matrix <- function(x){
+    if (length(x) > 1){
+        x <- as.list(as.data.frame(t(x), stringsAsFactors = FALSE))
+        names(x) <- NULL
+        json <- to_json(x)
+    } else {
+        json <- to_monovector(x)
+    }
+
+    json
+}
+
+to_json.list <- function(x){
+    json <- rjson::toJSON(x)
+    json
+}
+
+to_json.factor <- function(x){
+    if (length(x) > 1){
+        json <- rjson::toJSON(x)
+    } else {
+        json <- to_monovector(x)
+    }
+}
+
+to_json.data.frame <- function(x){
+    x <- prepare_for_json(x)
+    json <- apply(x, 1, function(row) {paste(row, collapse = ',')})
+    json <- paste0('{', json, '}')
+    json <- paste0('[', paste(json, collapse = ',\n'), ']')
+
+    json
+}
+
+to_json.default <- function(x) {
+    if (is.null(x)){
+        json <- "null"
+    } else if (length(x) > 0 && is.na(x)){
+        json <- "NaN"
+    } else if (length(x) > 0 && is.infinite(x)){
+        json <- ifelse(x > 0, "Infinity", "-Infinity")
+    } else {
+        json <- rjson::toJSON(x)
+    }
+
+    json
+}
+
+to_monovector <- function(x){
+    if (is.character(x) || is.factor(x)){
+        x <- deparse(as.character(x))
+    }
+    monovector <- gettextf("[%s]", x)
+    monovector
+}
+
+
+prepare_for_json <- function(x){
+    x <- lapply(colnames(x), function(key){
+        sapply(x[, key], function(value){
+            key <- deparse(key)
+            value <- to_json(value)
             paste0(key, ':', value)
         })
     })
-    as.data.frame(data, stringsAsFactors = FALSE)
+    as.data.frame(x, stringsAsFactors = FALSE)
 }
 
 
@@ -44,12 +97,7 @@ prepare_for_JSON <- function(data){
 #' df <- data.frame(name=c("a", "b", "c"), x=c(NA, 2 ,3), y=c(10, 20, -Inf), show=c(TRUE, FALSE, TRUE))
 #' df2json(df)
 df2json <- function(df){
-    df <- prepare_for_JSON(df)
-    objects <- apply(df, 1, function(row) {paste(row, collapse = ',')})
-    objects <- paste0('{', objects, '}')
-    objects <- paste0('[', paste(objects, collapse = ',\n'), ']')
 
-    objects
 }
 
 #' Convert a matrix to JSON
@@ -62,8 +110,7 @@ df2json <- function(df){
 #' df <- matrix(1:9, byrow = TRUE, nrow=3)
 #' matrix2json(df)
 matrix2json <- function(mat){
-    mat <- as.list(as.data.frame(t(mat), stringsAsFactors = FALSE))
-    names(mat) <- NULL
+
     json <- toJSON(mat)
     json
 }
@@ -92,13 +139,4 @@ json2df <- function(json){
 #' yaml2df(json)
 yaml2df <- function(yaml){
     json2df(toJSON(yaml))
-}
-
-
-#' Convert a string to JSON
-#'
-#' @param x input object
-#' @export
-to_json <- function(x){
-    rjson::toJSON(x)
 }

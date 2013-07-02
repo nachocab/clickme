@@ -1,3 +1,9 @@
+
+#' @export
+is.valid <- function(x){
+    !is.na(x) & !is.nan(x) & !is.infinite(x)
+}
+
 #' Make an HTML link
 #' @param url URL
 #' @param name name of the link ("link" by default)
