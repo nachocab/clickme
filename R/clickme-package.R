@@ -30,6 +30,6 @@ set_default_paths <- function() {
     if(any(to_set)) options(opts_clickme[to_set])
 }
 
-.onAttach <- function(libname, pkgname) {
+.onLoad <- function(libname, pkgname) {
   set_default_paths()
 }

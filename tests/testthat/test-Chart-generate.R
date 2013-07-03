@@ -1,4 +1,4 @@
-context("Template-generate-visualization")
+context("Chart-generate")
 
 test_that("placeholders", {
 
@@ -28,18 +28,18 @@ test_that("placeholders", {
 
 })
 
-TestTemplate <- setRefClass('TestTemplate', contains = "Template", where=.GlobalEnv)
-test_template_path <- file.path(getOption("clickme_templates_path"), "testtemplate")
-suppressMessages(new_template("TestTemplate"))
+TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
+test_chart_path <- file.path(getOption("clickme_templates_path"), "TestChart")
+suppressMessages(new_template("TestChart"))
 
 test_output_dir <- file.path(system.file("output", package = "clickme"), "test")
 test_output_file <- file.path(test_output_dir, "test.html")
 
 test_that("replace_delimiter", {
 
-    test_template <- TestTemplate$new()
-    test_template$get_placeholders()
-    placeholder <- test_template$placeholder
+    test_chart <- TestChart$new()
+    test_chart$get_placeholders()
+    placeholder <- test_chart$placeholder
 
     text <- "a = {{ a }}"
     converted_text <- replace_delimiter(text,
@@ -103,20 +103,20 @@ test_that("replace_delimiter", {
 
 test_that("regular templates are rendered", {
 
-    test_template <- TestTemplate$new(list(a = 3, b = "b", c = "my_function(3)", file = test_output_file))
-    test_template$get_params()
-    test_template$get_file_structure()
+    test_chart <- TestChart$new(list(a = 3, b = "b", c = "my_function(3)", file = test_output_file))
+    test_chart$get_params()
+    test_chart$get_file_structure()
 
     writeLines("
 <script type=\"text/javascript\">
     var a = {{ params$a }};
     var b = {{ params$b }};
     var c = {{{ params$c }}};
-</script>", test_template$file_structure$paths$template_file)
+</script>", test_chart$file_structure$paths$template_file)
 
-    test_template$generate_visualization()
+    test_chart$generate()
 
-    rendered_contents <- readContents(test_template$file_structure$paths$output_file)
+    rendered_contents <- readContents(test_chart$file_structure$paths$output_file)
     expected_contents <- "
 <script type=\"text/javascript\">
     var a = 3;
@@ -129,9 +129,9 @@ test_that("regular templates are rendered", {
 
 test_that("coffee templates are rendered", {
 
-    test_template <- TestTemplate$new(list(a = 3, b = "b", c = "my_function(3)", coffee = TRUE, file = test_output_file))
-    test_template$get_params()
-    test_template$get_file_structure()
+    test_chart <- TestChart$new(list(a = 3, b = "b", c = "my_function(3)", coffee = TRUE, file = test_output_file))
+    test_chart$get_params()
+    test_chart$get_file_structure()
 
     writeLines("
 <script type=\"text/javascript\">
@@ -140,11 +140,11 @@ test_that("coffee templates are rendered", {
     b = {{ params$b }}
     c = {{{ params$c }}}
 ```
-</script>", test_template$file_structure$paths$template_coffee_file)
+</script>", test_chart$file_structure$paths$template_coffee_file)
 
-    test_template$generate_visualization()
+    test_chart$generate()
 
-    rendered_template <- readContents(test_template$file_structure$paths$template_file)
+    rendered_template <- readContents(test_chart$file_structure$paths$template_file)
     expected_template <- "
 <script type=\"text/javascript\">
 (function() {
@@ -161,7 +161,7 @@ test_that("coffee templates are rendered", {
 </script>"
     expect_equal(rendered_template, expected_template)
 
-    rendered_output <- readContents(test_template$file_structure$paths$output_file)
+    rendered_output <- readContents(test_chart$file_structure$paths$output_file)
     expected_output <- "
 <script type=\"text/javascript\">
 (function() {
@@ -182,25 +182,25 @@ test_that("coffee templates are rendered", {
 
 # test_that("export_assets updates output shared and output template assets", {
 
-#     test_template <- TestTemplate$new()
-#     test_template$get_params()
-#     test_template$get_file_structure()
-#     test_template$get_config()
+#     test_chart <- TestChart$new()
+#     test_chart$get_params()
+#     test_chart$get_file_structure()
+#     test_chart$get_config()
 
-#     test_template$config$styles <- c("abc.css", "$shared/def.css", "http://somefile.css")
+#     test_chart$config$styles <- c("abc.css", "$shared/def.css", "http://somefile.css")
 
-#     dir.create(test_template$file_structure$paths$template_assets)
-#     template_asset_path <- file.path(test_template$file_structure$paths$template_assets, "abc.css")
+#     dir.create(test_chart$file_structure$paths$template_assets)
+#     template_asset_path <- file.path(test_chart$file_structure$paths$template_assets, "abc.css")
 #     file.create(template_asset_path)
-#     shared_asset_path <- file.path(test_template$file_structure$paths$shared_assets, "def.css")
+#     shared_asset_path <- file.path(test_chart$file_structure$paths$shared_assets, "def.css")
 #     file.create(shared_asset_path)
 
-#     test_template$export_assets()
+#     test_chart$export_assets()
 #     expect_true(file.exists(template_asset_path))
 #     expect_true(file.exists(shared_asset_path))
 
 #     unlink(shared_asset_path)
 # })
 
-unlink(test_template_path, recursive = TRUE)
+unlink(test_chart_path, recursive = TRUE)
 unlink(test_output_dir, recursive = TRUE)

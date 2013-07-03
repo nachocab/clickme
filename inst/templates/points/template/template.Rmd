@@ -5,7 +5,7 @@
 
     <title>{{{ params$title }}}</title>
 
-    {{{ .self$get_assets() }}}
+    {{{ get_assets() }}}
 
   </head>
 
@@ -18,11 +18,11 @@
     
       radius = {{ params$radius }};
     
-      color_scale = {{{ .self$get_d3_color_scale() }}};
+      color_scale = {{{ get_d3_color_scale() }}};
     
       color_title = {{ params$color_title }};
     
-      color_legend_counts = {{ .self$get_color_legend_counts() }};
+      color_legend_counts = {{ get_color_legend_counts() }};
     
       plot = new_plot({
         width: {{ params$width }},
@@ -48,7 +48,7 @@
       });
     
       plot.tooltip_text = function(d) {
-        return {{ .self$get_tooltip_content() }};
+        return {{ get_tooltip_content() }};
       };
     
       plot.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({

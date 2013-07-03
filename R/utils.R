@@ -1,4 +1,12 @@
 
+#' Extract function names from a list of placeholder expressions
+#' @export
+#' @keywords internal
+extract_functions <- function(expressions){
+    functions <- as.character(na.omit(str_match(expressions, "^\\s*(([[:alpha:]]|[.][._[:alpha:]])[._[:alnum:]]*)\\(.+|\\n\\)")[,2]))
+    functions
+}
+
 #' @export
 is.valid <- function(x){
     !is.na(x) & !is.nan(x) & !is.infinite(x)
@@ -248,7 +256,7 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 #'
 #' @param template name of template
 #' @export
-test_template <- test_translator <- function(template){
+test_chart <- test_translator <- function(template){
     opts <- get_opts(template)
 
     if (file.exists(file_structure$paths$translator_test_file)){

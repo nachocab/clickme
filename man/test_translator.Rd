@@ -1,8 +1,8 @@
-\name{test_template}
-\alias{test_template}
+\name{test_chart}
+\alias{test_chart}
 \title{Test the translator of a given template}
 \usage{
-  test_template(template)
+  test_chart(template)
 }
 \arguments{
   \item{template}{name of template}

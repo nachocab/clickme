@@ -2,12 +2,11 @@
 #'
 #' @param x input object
 #' @export
-# S3 methods (generic functions)
 to_json <- function(x) {
     UseMethod("to_json", x)
 }
 
-
+#' @S3method to_json array
 to_json.array <- function(x){
     if (length(x) > 1){
         json <- to_json.default(x)
@@ -18,6 +17,7 @@ to_json.array <- function(x){
     json
 }
 
+#' @S3method to_json matrix
 to_json.matrix <- function(x){
     if (length(x) > 1){
         x <- as.list(as.data.frame(t(x), stringsAsFactors = FALSE))
@@ -30,11 +30,13 @@ to_json.matrix <- function(x){
     json
 }
 
+#' @S3method to_json list
 to_json.list <- function(x){
     json <- rjson::toJSON(x)
     json
 }
 
+#' @S3method to_json factor
 to_json.factor <- function(x){
     if (length(x) > 1){
         json <- rjson::toJSON(x)
@@ -43,6 +45,7 @@ to_json.factor <- function(x){
     }
 }
 
+#' @S3method to_json data.frame
 to_json.data.frame <- function(x){
     x <- prepare_for_json(x)
     json <- apply(x, 1, function(row) {paste(row, collapse = ',')})
@@ -52,6 +55,7 @@ to_json.data.frame <- function(x){
     json
 }
 
+#' @S3method to_json default
 to_json.default <- function(x) {
     if (is.null(x)){
         json <- "null"

@@ -32,5 +32,15 @@ test_that("disjoint_sets", {
     expect_equal(disjoint_sets(a,b, names = c("A", "B", "Both")), list(A = c(1,5), B = c(0,4), Both = c(2,3)))
 })
 
+test_that("extract_functions", {
+    expressions <- c(" params$a ", "a")
+    expect_true(length(extract_functions(expressions)) == 0)
 
+    expressions <- c(" rjson::toJSON(paco) ", "clickme:::my_fun()")
+    expect_true(length(extract_functions(expressions)) == 0)
+
+    expressions <- c("a()", " myFun(b, b3) ", " my_fun2()  ", "my.fun3(a = 3)", ".my.fun4()")
+    expect_equal(extract_functions(expressions), c("a", "myFun", "my_fun2", "my.fun3", ".my.fun4"))
+
+})
 

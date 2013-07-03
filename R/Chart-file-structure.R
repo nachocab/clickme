@@ -1,4 +1,4 @@
-Template$methods(
+Chart$methods(
 
     get_file_structure = function() {
         get_unvalidated_file_structure()
@@ -34,16 +34,16 @@ Template$methods(
     get_default_paths = function() {
 
         # folder absolute paths
-        file_structure$paths$template <<- file.path(getOption("clickme_templates_path"), file_structure$names$template)
-        file_structure$paths$template_template <<- file.path(file_structure$paths$template, "template")
-        file_structure$paths$translator <<- file.path(file_structure$paths$template, "translator")
-        file_structure$paths$tests <<- file.path(file_structure$paths$template, "tests")
-        file_structure$paths$template_assets <<- file.path(file_structure$paths$template, file_structure$names$template_assets)
+        file_structure$paths$Template <<- file.path(getOption("clickme_templates_path"), file_structure$names$template)
+        file_structure$paths$template <<- file.path(file_structure$paths$Template, "template")
+        file_structure$paths$translator <<- file.path(file_structure$paths$Template, "translator")
+        file_structure$paths$tests <<- file.path(file_structure$paths$Template, "tests")
+        file_structure$paths$template_assets <<- file.path(file_structure$paths$Template, file_structure$names$template_assets)
 
         # file absolute paths
-        file_structure$paths$template_file <<- file.path(file_structure$paths$template_template, file_structure$names$template_file)
-        file_structure$paths$template_coffee_file <<- file.path(file_structure$paths$template_template, file_structure$names$template_coffee_file)
-        file_structure$paths$config_file <<- file.path(file_structure$paths$template, file_structure$names$config_file)
+        file_structure$paths$template_file <<- file.path(file_structure$paths$template, file_structure$names$template_file)
+        file_structure$paths$template_coffee_file <<- file.path(file_structure$paths$template, file_structure$names$template_coffee_file)
+        file_structure$paths$config_file <<- file.path(file_structure$paths$Template, file_structure$names$config_file)
         file_structure$paths$translator_file <<- file.path(file_structure$paths$translator, file_structure$names$translator_file)
         file_structure$paths$translator_test_file <<- file.path(file_structure$paths$tests, file_structure$names$translator_test_file)
         file_structure$paths$shared_assets <<- file.path(getOption("clickme_templates_path"), "..", file_structure$names$shared_assets)
@@ -106,8 +106,8 @@ Template$methods(
             stop(gettextf("getOption(\"clickme_templates_path\") doesn't contain a valid path: %s", getOption("clickme_templates_path")))
         }
 
-        if (!file.exists(file_structure$paths$template)) {
-            stop(gettextf("There is no template %s located in: %s ", file_structure$names$template, file_structure$paths$template))
+        if (!file.exists(file_structure$paths$Template)) {
+            stop(gettextf("There is no template %s located in: %s ", file_structure$names$template, file_structure$paths$Template))
         }
 
         # template.Rmd must exist, unless coffee is true and template.coffee.Rmd exists

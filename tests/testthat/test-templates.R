@@ -31,6 +31,6 @@
 
 # test_that("example translators work", {
 #     for(template in plain_list_templates()){
-#         test_template(template)
+#         test_chart(template)
 #     }
 # })

@@ -5,7 +5,7 @@
 
     <title>{{{ params$title }}}</title>
 
-    {{{ .self$get_assets() }}}
+    {{{ get_assets() }}}
 
   </head>
 
@@ -17,19 +17,19 @@
 
     radius = {{ params$radius }}
 
-    color_scale = {{{ .self$get_d3_color_scale() }}}
+    color_scale = {{{ get_d3_color_scale() }}}
 
     color_title = {{ params$color_title }}
 
-    color_legend_counts = {{ .self$get_color_legend_counts() }}
+    color_legend_counts = {{ get_color_legend_counts() }}
 
     plot = new_plot(
         width: {{ params$width }}
         height: {{ params$height }}
         padding: {{ params$padding }}
         data_ranges:
-            x: {{ range(data$x, na.rm = TRUE) }}
-            y: {{ range(data$y, na.rm = TRUE) }}
+            x: {{ range(data$x, na.rm = TRUE) }} # bad form
+            y: {{ range(data$y, na.rm = TRUE) }} # bad form
         xlab: {{ params$xlab }}
         ylab: {{ params$ylab }}
         title: {{ params$title }}
@@ -44,7 +44,7 @@
         linear_scale_padding: 40)
 
     plot.tooltip_text = (d) ->
-        {{ .self$get_tooltip_content() }}
+        {{ get_tooltip_content() }}
 
     plot.append("defs").append("clipPath")
         .attr("id", "clip")

@@ -1,4 +1,4 @@
-Template$methods(
+Chart$methods(
 
     get_config = function() {
         get_unvalidated_config()

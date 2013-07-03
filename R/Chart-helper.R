@@ -1,4 +1,4 @@
-Template$methods(
+Chart$methods(
 
     #' Generate HTML style and script tags
     #'

@@ -1,5 +1,5 @@
-Template$methods(
-    generate_visualization = function(){
+Chart$methods(
+    generate = function(){
         get_placeholders()
 
         translate_coffee_template_to_js()
@@ -64,7 +64,10 @@ Template$methods(
         if (nrow(locations) > 0){
             expressions <- str_extract_all(template, placeholder$regex$json)[[1]]
             expressions <- str_replace(expressions, placeholder$regex$json, "\\1")
+
+            force_use_methods(expressions)
             expressions <- paste0("clickme::to_json(", expressions, ")")
+
             template <- evaluate_placeholders(expressions, template, locations)
         }
 
@@ -72,13 +75,26 @@ Template$methods(
         if (nrow(locations) > 0){
             expressions <- str_extract_all(template, placeholder$regex$plain)[[1]]
             expressions <- str_replace(expressions, placeholder$regex$plain, "\\1")
+
+            force_use_methods(expressions)
+
             template <- evaluate_placeholders(expressions, template, locations)
         }
 
         template
     },
 
-    # This function needs to be a method so it can properly eval params
+    # Only actively used methods are loaded in the environment. To avoid having to append .self in the template, something like {{ .self$my_method() }} we to load them explicitely.
+    force_use_methods = function(expressions){
+        methods <- extract_functions(expressions)
+
+        # usingMethods(methods) doesn't work because it requires naming each method individually (it doesn't do anything at runtime), so we have to call .self$my_method to load it explicitly (without actually executing it).
+        sapply(methods, function(method){
+            tryCatch(eval(parse(text = paste0(".self$", method))), error = function(e) e)
+        })
+    },
+
+    # This function needs to be a method so it can eval the Chart's fields and methods.
     evaluate_placeholders = function(expressions, template, locations) {
         placeholder_values <- sapply(expressions, function(expression) {
             eval(parse(text = expression))

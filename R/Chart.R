@@ -17,8 +17,8 @@
 # file
 # file_name
 # dir
-#' @export
-Template <- setRefClass("Template",
+#' @exportClass
+Chart <- setRefClass("Chart",
 
     fields = c(
                "params",
@@ -35,7 +35,7 @@ Template <- setRefClass("Template",
             initFields(params = params)
             name <<- as.character(class(.self))
 
-            # I'm adding them explicitly because when a subclass of Template gets source'd it loses the clickme namespace
+            # When a subclass of Chart gets source'd it loses the packages loaded by the standard loading process (because it belongs to a different namespace), so they must be added manually
             library(yaml)
             library(knitr)
             library(stringr)
@@ -54,7 +54,7 @@ Template <- setRefClass("Template",
             .self$get_file_structure()
             .self$get_config()
             .self$get_data()
-            .self$generate_visualization()
+            .self$generate()
 
             do_action()
 

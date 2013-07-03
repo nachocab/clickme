@@ -1,4 +1,4 @@
-Template$methods(
+Chart$methods(
 
     get_params = function() {
         get_unvalidated_params()

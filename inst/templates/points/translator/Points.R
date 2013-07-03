@@ -12,7 +12,7 @@
 # y_categorical_domain TODO: remove this
 Points <- setRefClass("Points",
 
-    contains = "Template",
+    contains = "Chart",
 
     methods = list(
 

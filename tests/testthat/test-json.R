@@ -4,16 +4,34 @@ test_that("empty variables", {
     data <- ""
     expect_equal(to_json(data), "\"\"")
 
-    data <- numeric(0)
+    data <- numeric()
+    expect_equal(to_json(data), "[]")
+
+    data <- character()
     expect_equal(to_json(data), "[]")
 
     data <- character(0)
     expect_equal(to_json(data), "[]")
 
-    data <- logical(0)
+    data <- logical()
     expect_equal(to_json(data), "[]")
 
-    data <- NULL
+    data <- list()
+    expect_equal(to_json(data), "[]")
+
+    data <- matrix()
+    expect_equal(to_json(data), "[]")
+
+    data <- data.frame()
+    expect_equal(to_json(data), "[]")
+
+    data <- array()
+    expect_equal(to_json(data), "[]")
+
+    data <- factor()
+    expect_equal(to_json(data), "[]")
+
+    data <- NULL # same as c()
     expect_equal(to_json(data), "null")
 
     data <- NA
