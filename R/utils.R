@@ -292,11 +292,18 @@ test_template <- test_translator <- function(template_name){
 
     if (file.exists(template$file_structure$paths$translator_test_file)){
         library("testthat")
-        test_file(template$file_structure$paths$translator_test_file)
+        clickme:::source_dir(template$file_structure$paths$translator_file)
+        test_dir(template$file_structure$paths$tests)
     } else {
         stop(gettextf("\n\n\tThere is no test translator file at this location:\n\n%s",
                        template$file_structure$paths$translator_test_file))
     }
+}
+
+source_dir <- function(path){
+    # This order ensures that Points.R comes before Points-helper.R
+    files <- sort(list.files(path, full.names = TRUE), decreasing = TRUE)
+    sapply(files, source)
 }
 
 mat <- function(elements = NULL, num_elements = nrow*ncol, nrow = 5, ncol = 2, scale_by = 100, rownames = NULL, colnames = NULL){

@@ -19,7 +19,7 @@ test_that("the palette has valid names", {
 
     params <- list(colorize = c("a", "a", "b", "c", "b"), palette = c(a = "blue", b = "pink", c = "green", d = "red", e = "yellow"))
     points <- Points$new(params)
-    expect_warning(points$get_params(), "palette names don't appear in colorize: d, e")
+    expect_warning(points$get_params(), "The following palette names don't appear in colorize:\n\nd, e")
 
     params <- list(colorize = 1:5, palette = c(a = "blue", c = "green", d = "red", e = "yellow"))
     points <- Points$new(params)
@@ -34,13 +34,13 @@ test_that("color_domain is only used in quantitative scales", {
 
 context("Points: get_data")
 
-test_that("point_names", {
+test_that("point names", {
     params <- list(x = 1:10)
     points <- Points$new(params)
     points$get_data()
     expect_equal(points$data, data.frame(x = 1:10, y = 1:10, point_name = as.character(1:10)))
 
-    params <- list(x = 1:10, point_names = letters[1:10])
+    params <- list(x = 1:10, names = letters[1:10])
     points <- Points$new(params)
     points$get_data()
     expect_equal(points$data, data.frame(x = 1:10, y = 1:10, point_name = letters[1:10]))
