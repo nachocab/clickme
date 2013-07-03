@@ -5,19 +5,21 @@ Chart$methods(
         validate_file_structure()
     },
 
-    get_unvalidated_file_structure = function(){
-
-        file_structure <<- list()
-        get_default_names()
-        get_default_paths()
+    get_unvalidated_file_structure = function() {
+        get_default_names_and_paths()
         get_output_file_name()
         get_output_paths()
+    },
 
+    get_default_names_and_paths = function() {
+        get_default_names()
+        get_default_paths()
     },
 
     get_default_names = function() {
 
         # folder names
+        file_structure <<- list()
         file_structure$names$template <<- name
         file_structure$names$template_assets <<- "assets"
         file_structure$names$shared_assets <<- "shared_assets"
