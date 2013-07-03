@@ -17,7 +17,7 @@
 # file
 # file_name
 # dir
-#' @exportClass
+#' @exportClass Chart
 Chart <- setRefClass("Chart",
 
     fields = c(
