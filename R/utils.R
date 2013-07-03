@@ -7,6 +7,35 @@ extract_functions <- function(expressions){
     functions
 }
 
+#' Title Case
+#' @export
+title_case <- function(strings){
+    first_letter <- toupper(substring(strings, 1, 1))
+    everything_else <- substring(strings, 2, nchar(strings))
+    title_case <- paste0(first_letter, everything_else)
+    title_case
+}
+
+#' Convert to CamelCase
+#' @export
+camel_case <- function(strings){
+    strings <- gsub("_", ".", strings)
+    strings <- strsplit(strings, "\\.")
+    strings <- sapply(strings, title_case)
+    camel_case <- sapply(strings, paste, collapse = "")
+    camel_case
+}
+
+#' Convert to snake_case
+#' @export
+snake_case <- function(strings){
+    strings <- gsub("^[^[:alnum:]]+|[^[:alnum:]]+$", "", strings)
+    strings <- gsub("(?!^)(?=[[:upper:]])", " ", strings, perl = TRUE)
+    strings <- strsplit(tolower(strings), " ")
+    snake_case <- sapply(strings, paste, collapse = "_")
+    snake_case
+}
+
 #' @export
 is.valid <- function(x){
     !is.na(x) & !is.nan(x) & !is.infinite(x)
@@ -256,15 +285,17 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 #'
 #' @param template name of template
 #' @export
-test_chart <- test_translator <- function(template){
-    opts <- get_opts(template)
+test_template <- test_translator <- function(template_name){
+    template <- Chart$new()
+    template$name <- camel_case(template_name)
+    template$get_default_names_and_paths()
 
-    if (file.exists(file_structure$paths$translator_test_file)){
+    if (file.exists(template$file_structure$paths$translator_test_file)){
         library("testthat")
-        source(file_structure$paths$translator_file)
-        test_file(file_structure$paths$translator_test_file)
+        test_file(template$file_structure$paths$translator_test_file)
     } else {
-        stop(paste0("There is no test translator file at this location: ", file_structure$paths$translator_test_file, "\nYou might have to create it or call set_templates_path()"))
+        stop(gettextf("\n\n\tThere is no test translator file at this location:\n\n%s",
+                       template$file_structure$paths$translator_test_file))
     }
 }
 

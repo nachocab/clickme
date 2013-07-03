@@ -44,3 +44,18 @@ test_that("extract_functions", {
 
 })
 
+
+test_that("title_case", {
+    strings <- c("paco", "pepe")
+    expect_equal(title_case(strings), c("Paco","Pepe"))
+})
+
+test_that("camel_case", {
+    strings <- c("paco_pepe", "paco.pepe", "paco.pepe_luis")
+    expect_equal(camel_case(strings), c("PacoPepe","PacoPepe", "PacoPepeLuis"))
+})
+
+test_that("snake_case", {
+    strings <- c("PacoPepe", "pacoPepe", "Paco")
+    expect_equal(snake_case(strings), c("paco_pepe","paco_pepe", "paco"))
+})
