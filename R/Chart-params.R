@@ -23,9 +23,10 @@ Chart$methods(
         params$padding <<- params$padding %||% list(top = 80, right = 400, bottom = 30, left = 100)
         params$box <<- params$box %||% FALSE
 
-        params$coffee <<- params$coffee %||% FALSE
+        params$coffee <<- params$coffee %||% TRUE
 
         params$action <<- as.character(params$action %||% "open")
+        params$title <<- params$title %||% name
         params$code <<- params$code %||% paste(deparse(sys.calls()[[1]]), collapse="")
 
     },
