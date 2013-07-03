@@ -69,7 +69,7 @@ Points$methods(
 # @param ... additional arguments for \code{clickme}
 #
 clickme_helper$points <- function(x, y = NULL,
-                          point_names = NULL,
+                          names = NULL,
                           xlim = NULL, ylim = NULL,
                           radius = 5,
                           jitter = 0,

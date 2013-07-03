@@ -1,7 +1,7 @@
 # params:
 # x
 # y [NULL]
-# point_names
+# names
 # xlab
 # ylab
 # xlim
@@ -33,15 +33,13 @@ Points <- setRefClass("Points",
         get_data = function(){
 
             # used for testing
-            if (is.null(params$x)) return(NULL)
+            if (is.null(params$x)) {
+                return(NULL)
+            }
 
             data <<- xy_to_data(params$x, params$y)
 
-            if (is.null(params$point_names)){
-                data$point_name <<- rownames(data)
-            } else {
-                data$point_name <<- params$point_names
-            }
+            data$point_name <<- params$names %||% rownames(data)
             rownames(data) <<- NULL
 
             add_extra_fields()
