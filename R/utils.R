@@ -1,17 +1,92 @@
+
+#' Extract function names from a list of placeholder expressions
+#' @export
+#' @keywords internal
+extract_functions <- function(expressions){
+    functions <- as.character(na.omit(str_match(expressions, "^\\s*(([[:alpha:]]|[.][._[:alpha:]])[._[:alnum:]]*)\\(.+|\\n\\)")[,2]))
+    functions
+}
+
+#' Title Case
+#' @export
+title_case <- function(strings){
+    first_letter <- toupper(substring(strings, 1, 1))
+    everything_else <- substring(strings, 2, nchar(strings))
+    title_case <- paste0(first_letter, everything_else)
+    title_case
+}
+
+#' Convert to CamelCase
+#' @export
+camel_case <- function(strings){
+    strings <- gsub("_", ".", strings)
+    strings <- strsplit(strings, "\\.")
+    strings <- sapply(strings, title_case)
+    camel_case <- sapply(strings, paste, collapse = "")
+    camel_case
+}
+
+#' Convert to snake_case
+#' @export
+snake_case <- function(strings){
+    strings <- gsub("^[^[:alnum:]]+|[^[:alnum:]]+$", "", strings)
+    strings <- gsub("(?!^)(?=[[:upper:]])", " ", strings, perl = TRUE)
+    strings <- strsplit(tolower(strings), " ")
+    snake_case <- sapply(strings, paste, collapse = "_")
+    snake_case
+}
+
+#' @export
+is.valid <- function(x){
+    !is.na(x) & !is.nan(x) & !is.infinite(x)
+}
+
 #' Make an HTML link
 #' @param url URL
 #' @param name name of the link ("link" by default)
 #'
 #' @export
 make_link <- function(url, name) {
-    name <- name %||% "link"
-    if (is.null(url)) stop ("Invalid filename. The link cannot be generated")
+    if (is.null(url)) {
+        stop ("Please provide a valid output_file")
+    }
     link <- gettextf("<a href=\"%s\" target = \"_blank\">%s</a>\n\n", url, name)
     cat(link)
 }
 
+#' Make an HTML iframe
+#' @param url URL
+#' @param width
+#'
+#' @export
+make_iframe <- function(url, width, height, frameborder) {
+    if (is.null(url)) {
+        stop ("Please provide a valid output_file")
+    }
+
+    iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" src=\"%s\" frameborder=\"%d\"> </iframe>\n\n", width, height, url, frameborder)
+    cat(iframe)
+}
+
 separator <- function(n = 70){
     paste0(rep("=", n, collapse = ""))
+}
+
+#' Get the parameters passed along to a helper function
+#' @export
+extract_params <- function() {
+    named_params <- as.list(parent.frame())
+    dots <- as.list(substitute(list(...), parent.frame()))[-1]
+    params <- c(named_params, dots)
+
+    # After substituting, T and F don't get automatically replaced to TRUE and FALSE
+    names <- sapply(params, is.name)
+    if (any(names)){
+        params[names & params == "T"] <- TRUE
+        params[names & params == "F"] <- FALSE
+    }
+
+    params
 }
 
 #' Split up two vectors into their intersecting sets
@@ -25,6 +100,20 @@ disjoint_sets <- function(a, b, names = c("a", "b", "both")) {
     sets <- list(setdiff(a,b), setdiff(b,a), intersect(a,b))
     names(sets) <- names
     sets
+}
+
+# move elements to the front of an array
+move_in_front <- function(in_front, everything_else) {
+    everything_else <- everything_else[c(which(everything_else %in% in_front), which(everything_else %notin% in_front))]
+    everything_else
+}
+
+error_title <- function(message){
+    paste0("\n\n*** ", message, " ***\n\n")
+}
+
+enumerate <- function(array) {
+    paste("\t", array, collapse = "\n")
 }
 
 #' Match elements to groups
@@ -131,133 +220,9 @@ default_colors <- function(n = 9){
     colors
 }
 
-#' Get padding around plot
-#'
-#' @param opts template options
-#' @param default default padding, a vector with top, left, bottom and right values
-#'
 #' @export
-get_padding_param <- function(opts, default = c(top = 100, right = 100, bottom = 100, left = 100)) {
-    if (is.null(opts$params$padding)){
-        opts$params$padding <- default
-    }
-
-    library(rjson)
-    padding <- opts$params$padding
-
-    if (length(padding) != 4){
-        stop("Please provide four padding values. (currently ", paste(padding, collapse=", "), ")")
-    }
-
-    if (is.null(names(padding))) {
-        names(padding) <- c("top", "right", "bottom", "left")
-    }
-
-    padding <- toJSON(padding)
-
-    padding
-}
-
-get_asset_path <- function(opts, path){
-    if (!grepl("^http://", path)){
-        if (grepl("\\$shared/", path)) {
-            path <- gsub("\\$shared/", "", path)
-            path <- file.path(opts$relative_path$shared_assets, path)
-        } else {
-            path <- file.path(opts$relative_path$template_assets, path)
-        }
-    }
-
-    path
-}
-
-#' Generate HTML style and script tags
-#'
-#' @param opts the options of the current template
-#' @export
-get_assets <- function(opts){
-    styles_and_scripts <- paste0(c(get_styles(opts), get_scripts(opts)), collapse="\n")
-    styles_and_scripts
-}
-
-#' Generate HTML script tags
-#'
-#' @param opts the options of the current template
-#' @export
-get_scripts <- function(opts) {
-    scripts <- paste(sapply(opts$config$scripts, function(script_path){
-        script_path <- get_asset_path(opts, script_path)
-        gettextf("<script src=\"%s\"></script>", script_path)
-    }), collapse="\n")
-
-    scripts
-}
-
-#' Generate HTML style tags
-#'
-#' @param opts the options of the current template
-#' @export
-get_styles <- function(opts) {
-    styles <- paste(sapply(opts$config$styles, function(style_path){
-        style_path <- get_asset_path(opts, style_path)
-        gettextf("<link href=\"%s\" rel=\"stylesheet\">", style_path)
-    }), collapse="\n")
-
-    styles
-}
-
-#' Create a data file
-#'
-#' Creates a file in the template data directory
-#'
-#' @param opts the options of the current template
-#' @param extension the extension of the file
-#' @param sep the character used to separate fields in each line of the file ("," by default)
-#' @param method function used to generate the file (".csv" uses "write.csv" by default, every other file extension uses "writeLines")
-#' @param row_names show row names when using \code{write.csv}
-#' @param relative_path boolean indicating if the path to the file should be relative or absolute
-#' @param quote_escaped boolean indicating if the file name should be surrounded with escaped quotes.
-#' @param ... arguments passed to the function specified by method
-#' @export
-create_data_file <- function(opts, extension, sep=",", method = NULL, row_names = FALSE, relative_path = TRUE, quote_escaped = TRUE, ...) {
-    if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
-
-    data_file_name <- paste0(opts$data_prefix, extension)
-    data_file_path <- file.path(opts$paths$data, data_file_name)
-    relative_data_file_path <- file.path(opts$relative_path$data, data_file_name)
-
-    if ((is.null(method) && extension == ".csv") || (!is.null(method) && method == "write.csv")){
-        write.csv(opts$data, file = data_file_path, row.names = row_names,...)
-    } else {
-        writeLines(text = opts$data, con = data_file_path, ...)
-    }
-    message("Created data file at: ", data_file_path)
-
-    if (relative_path){
-        path <- relative_data_file_path
-    } else {
-        path <- data_file_path
-    }
-
-    if (quote_escaped){
-        path <- quote_escaped(path)
-    }
-
-    path
-}
-
-#' Read a template's CSV file
-#'
-#'
-#'
-#' @param template template name
-#' @param file_name CSV file name
-#' @export
-read_template_csv <- function(template, file_name) {
-    opts <- get_opts(template)
-    data <- read.csv(file.path(opts$paths$data, file_name))
-
-    data
+is_coffee_installed <- function() {
+    system("coffee -v", ignore.stdout = TRUE, ignore.stderr = TRUE) == 0
 }
 
 readContents <- function(path) {
@@ -320,16 +285,25 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 #'
 #' @param template name of template
 #' @export
-test_template <- test_translator <- function(template){
-    opts <- get_opts(template)
+test_template <- test_translator <- function(template_name){
+    template <- Chart$new()
+    template$name <- camel_case(template_name)
+    template$get_default_names_and_paths()
 
-    if (file.exists(opts$paths$translator_test_file)){
+    if (file.exists(template$file_structure$paths$translator_test_file)){
         library("testthat")
-        source(opts$paths$translator_file)
-        test_file(opts$paths$translator_test_file)
+        clickme:::source_dir(template$file_structure$paths$translator_file)
+        test_dir(template$file_structure$paths$tests)
     } else {
-        stop(paste0("There is no test translator file at this location: ", opts$paths$translator_test_file, "\nYou might have to create it or call set_templates_path()"))
+        stop(gettextf("\n\n\tThere is no test translator file at this location:\n\n%s",
+                       template$file_structure$paths$translator_test_file))
     }
+}
+
+source_dir <- function(path){
+    # This order ensures that Points.R comes before Points-helper.R
+    files <- sort(list.files(path, full.names = TRUE), decreasing = TRUE)
+    sapply(files, source)
 }
 
 mat <- function(elements = NULL, num_elements = nrow*ncol, nrow = 5, ncol = 2, scale_by = 100, rownames = NULL, colnames = NULL){
@@ -361,7 +335,6 @@ plain_list_templates <- function() {
 }
 
 
-#' @import stringr
 titleize <- function(str){
     str <- str_replace(str,"_"," ")
     words_in_str <- strsplit(str, " ")[[1]]
@@ -397,17 +370,16 @@ open_all_demos <- function(){
 #' Run a template demo
 #'
 #' @param template name of template
-#' @export
-demo_template <- function(template) {
-    opts <- get_default_opts(template)
-    opts$config <- yaml.load_file(opts$paths$config_file)
-    if (is.null(opts$config$demo)){
-        message("The ", template, " template didn't provide a demo example.")
-    } else {
-        message("Running demo for the ", template, " template:\n\n", opts$config$demo)
-        eval(parse(text = opts$config$demo))
-    }
-}
+# demo_template <- function(template) {
+#     opts <- get_default_opts(template)
+#     opts$config <- yaml.load_file(file_structure$paths$config_file)
+#     if (is.null(opts$config$demo)){
+#         message("The ", template, " template didn't provide a demo example.")
+#     } else {
+#         message("Running demo for the ", template, " template:\n\n", opts$config$demo)
+#         eval(parse(text = opts$config$demo))
+#     }
+# }
 
 
 #' Test generated file
@@ -423,7 +395,7 @@ expect_correct_file <- function(opts, extension, expected_data = NULL, test_data
     if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
 
     expected_relative_path <- paste("\"", file.path(opts$relative_path$data, paste0(test_data_prefix, extension)), "\"")
-    expected_path <- file.path(opts$paths$data, paste0(test_data_prefix, extension))
+    expected_path <- file.path(file_structure$paths$data, paste0(test_data_prefix, extension))
     expect_true(file.exists(expected_path))
     if (!is.null(expected_data)){
         expect_equal(readContents(expected_path), expected_data)
@@ -431,11 +403,12 @@ expect_correct_file <- function(opts, extension, expected_data = NULL, test_data
     unlink(expected_path)
 }
 
-
+#' @export
 is_character_or_factor <- function(x) {
     is.character(x) || is.factor(x)
 }
 
+#' @export
 is_data_frame_or_matrix <- function(x) {
     is.data.frame(x) || is.matrix(x)
 }

@@ -12,20 +12,22 @@ Imports:
     knitr (>= 1.2),
     yaml (>= 2.1.7),
     stringr,
+    methods,
     rjson
 Suggests:
-    testthat,
-    stringr,
+    testthat (>= 0.7.1.99),
     roxygen2
 Collate:
+    'clickme-package.R'
     'utils.R'
-    'json.R'
-    'generate-visualization.R'
     'xy-to-data.R'
-    'zzz.R'
-    'opts.R'
-    'clickme-heatmap.R'
-    'clickme-lines.R'
-    'clickme-points.R'
+    'json.R'
+    'Chart.R'
+    'Chart-params.R'
+    'Chart-file-structure.R'
+    'Chart-config.R'
+    'Chart-helper.R'
+    'Chart-generate.R'
     'new-template.R'
+    'reload-translators.R'
     'clickme.R'

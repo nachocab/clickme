@@ -2,14 +2,11 @@
 #'
 #' @param x data object
 #'
-#' @S3method get_xy_rownames data.frame
-#' @S3method get_xy_rownames matrix
-#' @S3method get_xy_rownames character
-#' @S3method get_xy_rownames default
 get_xy_rownames <- function(x) {
     UseMethod("get_xy_rownames", x)
 }
 
+#' @S3method get_xy_rownames data.frame
 get_xy_rownames.data.frame <- function(x) {
   if (!is.null(rownames(x))){
       rownames <- rownames(x)
@@ -19,10 +16,12 @@ get_xy_rownames.data.frame <- function(x) {
   rownames
 }
 
+#' @S3method get_xy_rownames matrix
 get_xy_rownames.matrix <- function(x){
     get_xy_rownames.data.frame(x)
 }
 
+#' @S3method get_xy_rownames character
 get_xy_rownames.character <- function(x){
     if (!is.null(names(x)) && !any(duplicated(names(x)))) {
         rownames <- names(x)
@@ -32,11 +31,13 @@ get_xy_rownames.character <- function(x){
     rownames
 }
 
+#' @S3method get_xy_rownames default
 get_xy_rownames.default <- function(x) {
     get_xy_rownames.character(x)
 }
 
 # Convert x and y into a data.frame object with x, y and row names.
+#' @export
 xy_to_data <- function(x, y) {
     if (is_character_or_factor(x) && is.null(y)){
         stop("y cannot be NULL when x is a character vector or a factor")
@@ -54,7 +55,10 @@ xy_to_data <- function(x, y) {
             data_y <- as.vector(as.matrix(x))
             rownames <- get_xy_rownames(data_x)
         } else {
-            warning("x is not numeric, using the first two columns: ", paste(colnames(x)[1:2], collapse = ", "))
+            warning("x is not numeric and it has more than two columns, using the first two: ", paste(colnames(x)[1:2], collapse = ", "))
+            data_x <- x[, 1]
+            data_y <- x[, 2]
+            rownames <- get_xy_rownames(x)
         }
     } else if (is.list(x)) {
         if (length(x) < 2) stop("When x is a list, it must contain at least two elements")

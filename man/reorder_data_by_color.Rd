@@ -1,8 +1,8 @@
-\name{reorder_data_by_color}
-\alias{reorder_data_by_color}
+\name{reorder_data_by_colorize}
+\alias{reorder_data_by_colorize}
 \title{Reorder data by color}
 \usage{
-  reorder_data_by_color(data, params)
+  reorder_data_by_colorize(data, params)
 }
 \arguments{
   \item{data}{data}

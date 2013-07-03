@@ -2,29 +2,9 @@
 \name{clickme}
 \alias{clickme}
 \alias{clickme-package}
-\title{Straight from R to JS: Create interactive visualizations from R}
-\usage{
-  clickme(data, template, params = NULL,
-    open = interactive(), link = FALSE, ...)
-}
-\arguments{
-  \item{data}{input data}
-
-  \item{template}{template id, it must match a folder
-  within \code{set_templates_path}}
-
-  \item{params}{parameters}
-
-  \item{open}{open browser tab with the generated
-  visualization.}
-
-  \item{...}{additional arguments for \code{get_opts}}
-}
+\title{Clickme: use R to create interactive visualizations}
 \description{
-  Straight from R to JS: Create interactive visualizations
-  from R
-
-  Generates a JavaScript visualization
+  Clickme: use R to create interactive visualizations
 }
 \section{Package options}{
   Clickme uses the following \code{options} to configure
@@ -40,15 +20,6 @@
   dependencies)
 
   }
-}
-\examples{
-library(clickme)
-
-# visualize a force-directed interactive graph
-items <- paste0("GENE_", 1:40)
-n <- 30
-df1 <- data.frame(source = sample(items, n, replace = TRUE), target = sample(items, n, replace = TRUE), type = sample(letters[1:3], n, replace = TRUE))
-clickme(df1, "force_directed")
 }
 \author{
   Nacho Caballero <\url{http://reasoniamhere.com}>
