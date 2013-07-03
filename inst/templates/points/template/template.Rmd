@@ -48,7 +48,7 @@
       });
     
       plot.tooltip_text = function(d) {
-        return {{ get_tooltip_content() }};
+        return {{{ get_tooltip_content() }}};
       };
     
       plot.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({

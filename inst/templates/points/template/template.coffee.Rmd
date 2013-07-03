@@ -44,7 +44,7 @@
         linear_scale_padding: 40)
 
     plot.tooltip_text = (d) ->
-        {{ get_tooltip_content() }}
+        {{{ get_tooltip_content() }}}
 
     plot.append("defs").append("clipPath")
         .attr("id", "clip")
