@@ -2,46 +2,46 @@ context("json")
 
 test_that("empty variables", {
     data <- ""
-    expect_equal(to_json(data), "\"\"")
+    expect_equal(to_json(data), "\"\"", info = "\"\"")
 
     data <- numeric()
-    expect_equal(to_json(data), "[]")
+    expect_equal(to_json(data), "[]", info = "numeric()")
 
     data <- character()
-    expect_equal(to_json(data), "[]")
+    expect_equal(to_json(data), "[]", info = "character()")
 
     data <- character(0)
-    expect_equal(to_json(data), "[]")
+    expect_equal(to_json(data), "[]", info = "character()")
 
     data <- logical()
-    expect_equal(to_json(data), "[]")
+    expect_equal(to_json(data), "[]", info = "logical()")
 
     data <- list()
-    expect_equal(to_json(data), "[]")
+    expect_equal(to_json(data), "[]", info = "list()")
 
     data <- matrix()
-    expect_equal(to_json(data), "[]")
+    expect_equal(to_json(data), "[]", info = "matrix()")
 
     data <- data.frame()
-    expect_equal(to_json(data), "[]")
+    expect_equal(to_json(data), "[]", info = "data.frame()")
 
     data <- array()
-    expect_equal(to_json(data), "[]")
+    expect_equal(to_json(data), "[]", info = "array()")
 
     data <- factor()
-    expect_equal(to_json(data), "[]")
+    expect_equal(to_json(data), "[]", info = "factor()")
 
     data <- NULL # same as c()
-    expect_equal(to_json(data), "null")
+    expect_equal(to_json(data), "null", info = "NULL")
 
     data <- NA
-    expect_equal(to_json(data), "NaN")
+    expect_equal(to_json(data), "NaN", info = "NA")
 
     data <- Inf
-    expect_equal(to_json(data), "Infinity")
+    expect_equal(to_json(data), "Infinity", info = "Inf")
 
     data <- -Inf
-    expect_equal(to_json(data), "-Infinity")
+    expect_equal(to_json(data), "-Infinity", info = "-Inf")
 })
 
 test_that("vectors of length 1", {

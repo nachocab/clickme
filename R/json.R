@@ -47,10 +47,14 @@ to_json.factor <- function(x){
 
 #' @S3method to_json data.frame
 to_json.data.frame <- function(x){
-    x <- prepare_for_json(x)
-    json <- apply(x, 1, function(row) {paste(row, collapse = ',')})
-    json <- paste0('{', json, '}')
-    json <- paste0('[', paste(json, collapse = ',\n'), ']')
+    if (length(x)){
+        x <- prepare_for_json(x)
+        json <- apply(x, 1, function(row) {paste(row, collapse = ',')})
+        json <- paste0('{', json, '}')
+        json <- paste0('[', paste(json, collapse = ',\n'), ']')
+    } else {
+        json <- "[]"
+    }
 
     json
 }
@@ -71,7 +75,9 @@ to_json.default <- function(x) {
 }
 
 to_monovector <- function(x){
-    if (is.character(x) || is.factor(x)){
+    if (!length(x) || is.na(x)){
+        x <- ""
+    } else if (is.character(x) || is.factor(x)){
         x <- deparse(as.character(x))
     }
     monovector <- gettextf("[%s]", x)
