@@ -31,3 +31,4 @@ Collate:
     'new-template.R'
     'reload-translators.R'
     'clickme.R'
+    'Chart-data.R'

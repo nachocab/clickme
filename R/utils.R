@@ -252,10 +252,10 @@ readContents <- function(path) {
 #' @examples
 #' a <- "a"
 #' b <- "b"
-#' d <- a %||% b # d == "a"
+#' d <- a %or% b # d == "a"
 #' a <- NULL
-#' d <- a %||% b # d == "b"
-"%||%" <- function(a, b) {
+#' d <- a %or% b # d == "b"
+"%or%" <- function(a, b) {
   if (!is.null(a)) a else b
 }
 

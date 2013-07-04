@@ -11,7 +11,7 @@
 # extra
 # palette
 # col (alias for palette)
-# colorize
+# color_groups
 # color_domain
 # color_title
 # file
@@ -40,16 +40,9 @@ Chart <- setRefClass("Chart",
             library(knitr)
             library(stringr)
             library(rjson)
-
-            return()
-        },
-
-        get_data = function(){
-            data <<- params$data
         },
 
         display = function() {
-
             .self$get_params()
             .self$get_file_structure()
             .self$get_config()
@@ -57,11 +50,14 @@ Chart <- setRefClass("Chart",
             .self$generate()
 
             do_action()
-
         },
 
+        # Multiple actions may be specified as a character vector
+        # If action includes "open", it opens a new browser tab with the output file
+        # If action includes "link", it returns an HTML link (invisible)
+        # If action includes "iframe", it returns an HTML iframe (invisible)
+        # If action includes is FALSE, no action is taken.
         do_action = function(){
-
             if (config$require_server){
                 url <- paste0("http://localhost:", port, "/", file_structure$names$output_file)
             } else {
@@ -74,7 +70,7 @@ Chart <- setRefClass("Chart",
 
             ret <- ""
             if ("link" %in% params$action) {
-                ret <- paste(ret, make_link(url, params$title %||% "link"), sep = "\n")
+                ret <- paste(ret, make_link(url, params$title %or% "link"), sep = "\n")
             }
 
             if ("iframe" %in% params$action) {

@@ -1,7 +1,8 @@
 context("Chart-file-structure")
 
-TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 test_chart_path <- file.path(getOption("clickme_templates_path"), "TestChart")
+unlink(test_chart_path, recursive = TRUE)
+TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 test_chart <- TestChart$new()
 test_chart$get_params()
 

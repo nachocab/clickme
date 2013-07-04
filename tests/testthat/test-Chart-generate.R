@@ -28,8 +28,9 @@ test_that("placeholders", {
 
 })
 
-TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 test_chart_path <- file.path(getOption("clickme_templates_path"), "TestChart")
+unlink(test_chart_path, recursive = TRUE)
+TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 suppressMessages(new_template("TestChart"))
 
 test_output_dir <- file.path(system.file("output", package = "clickme"), "test")
@@ -69,12 +70,12 @@ test_that("replace_delimiter", {
                                         deparse = TRUE)
     expect_equal(converted_text, "[[[\" a \"]]] [[[\" b \"]]] [[[\" c \"]]]")
 
-    text <- "a = {{ a %||% \"b\" }}"
+    text <- "a = {{ a %or% \"b\" }}"
     converted_text <- replace_delimiter(text,
                                         placeholder$regex$json,
                                         placeholder$delim$coffee_json,
                                         deparse = TRUE)
-    expect_equal(converted_text, "a = [[[\" a %||% \\\"b\\\" \"]]]")
+    expect_equal(converted_text, "a = [[[\" a %or% \\\"b\\\" \"]]]")
 
     text <- "a = {{{ a }}}"
     converted_text <- replace_delimiter(text,

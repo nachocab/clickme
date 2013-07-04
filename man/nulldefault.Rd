@@ -1,5 +1,5 @@
-\name{\%||\%}
-\alias{\%||\%}
+\name{\%or\%}
+\alias{\%or\%}
 \title{Set default value}
 \usage{
   a \%||\% b
@@ -15,8 +15,8 @@
 \examples{
 a <- "a"
 b <- "b"
-d <- a \%||\% b # d == "a"
+d <- a \%or\% b # d == "a"
 a <- NULL
-d <- a \%||\% b # d == "b"
+d <- a \%or\% b # d == "b"
 }
 

@@ -91,7 +91,7 @@
         .attr(
             "class": "point_tooltip"
             "r": radius
-            "fill": (d) -> color_scale(d.colorize)
+            "fill": (d) -> color_scale(d.color_groups)
             "title": (d) -> plot.tooltip_text(d) )
 
     $(".point_tooltip").tooltip
@@ -107,7 +107,7 @@
             "text-anchor": "left"
             "display": "none")
         .style(
-            "fill": (d) -> color_scale(d.colorize)
+            "fill": (d) -> color_scale(d.color_groups)
             "font-size": "22px")
 
 

@@ -1,48 +1,46 @@
 context("Chart-params")
 
-TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 test_chart_path <- file.path(getOption("clickme_templates_path"), "TestChart")
+unlink(test_chart_path, recursive = TRUE)
+TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 suppressMessages(new_template("TestChart"))
 
 test_that("padding is valid", {
-    # default global padding
-    test_chart <- TestChart$new(list(padding = c(24, 0, 12, 200)))
+    params <- list(padding = c(24, 0, 12, 200))
+    test_chart <- TestChart$new(params)
     test_chart$get_params()
     expect_equal(test_chart$params$padding, c(top = 24, right = 0, bottom = 12, left = 200))
 
-    # user-provided param padding
-    test_chart <- TestChart$new(list(padding = c(10, 20, 30, 40)))
+    params <- list(padding = c(right = 10, bottom = 20, left = 30, top = 40))
+    test_chart <- TestChart$new(params)
     test_chart$get_params()
-    expect_equal(test_chart$params$padding, c(top = 10, right = 20, bottom = 30, left = 40))
+    expect_equal(test_chart$params$padding, c(right = 10, bottom = 20, left = 30,top = 40), info = "changed order")
 
-    # changed order
-    test_chart <- TestChart$new(list(padding = c(right = 10, bottom = 20, left = 30, top = 40)))
-    test_chart$get_params()
-    expect_equal(test_chart$params$padding, c(right = 10, bottom = 20, left = 30,top = 40))
-
-    # wrong input
-    test_chart <- TestChart$new(list(padding = c(10, 20, 30)))
-    test_chart$get_unvalidated_params()
-    expect_error(test_chart$validate_params(), "Please provide four padding values")
+    params <- list(padding = c(10, 20, 30))
+    test_chart <- TestChart$new(params)
+    expect_error(test_chart$get_params(), "Please provide four padding values")
 })
 
-test_that("reorder_data_by_colorize", {
-    test_chart <- TestChart$new(list(data = data.frame(x = c(1,2,3)),
-                                           colorize = c("a","b","c")))
+test_that("the palette has valid names", {
+    params <- list(color_groups = c("a", "a", "b", "c", "b"), palette = c(a = "blue"))
+    test_chart <- TestChart$new(params)
     test_chart$get_params()
-    test_chart$get_data()
 
-    reordered_data <- test_chart$reorder_data_by_colorize()
-    expect_equal(reordered_data$x, c(3, 2, 1))
+    expect_true(all(names(test_chart$params$palette) %in% c("a","b","c")))
 
-    test_chart <- TestChart$new(list(data = data.frame(x = c(1,2,3)),
-                                           colorize = c("a","b","c"),
-                                           palette = c(a = "blue", c = "red", b = "green")))
-    test_chart$get_params()
-    test_chart$get_data()
+    params <- list(color_groups = c("a", "a", "b", "c", "b"), palette = c(a = "blue", b = "pink", c = "green", d = "red", e = "yellow"))
+    test_chart <- TestChart$new(params)
+    expect_warning(test_chart$get_params(), "The palette contains color group names that don't appear in color_groups:\n\nd, e")
 
-    reordered_data <- test_chart$reorder_data_by_colorize()
-    expect_equal(reordered_data$x, c(2, 3, 1))
+    params <- list(color_groups = 1:5, palette = c(a = "blue", c = "green", d = "red", e = "yellow"))
+    test_chart <- TestChart$new(params)
+    expect_error(test_chart$get_params(), "an unnamed vector")
+})
+
+test_that("color_domain is only used with numeric values", {
+    params <- list(color_groups = letters[1:10], color_domain = 1:10)
+    test_chart <- TestChart$new(params)
+    expect_error(test_chart$get_params(), "color_groups has categorical values")
 })
 
 test_that("action is valid", {
@@ -59,8 +57,7 @@ test_that("action is valid", {
     expect_equal(test_chart$params$action, c("open", "link"))
 
     test_chart <- TestChart$new(list(action = c("open", "fake")))
-    test_chart$get_unvalidated_params()
-    expect_error(test_chart$validate_params(), "Invalid action \"fake\". Please choose one or several among:")
+    expect_error(test_chart$get_params(), "Invalid action \"fake\". Please choose one or several among:")
 })
 
 unlink(test_chart_path, recursive = TRUE)

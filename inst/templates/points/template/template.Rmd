@@ -13,17 +13,17 @@
     <script type="text/javascript">
     (function() {
       var clip, color_legend_counts, color_scale, color_title, data, g_color_legend, g_points, g_toggle_names, plot, point_names, points, radius, redraw, sidebar, toggle_names, transform;
-    
+
       data = {{ data }};
-    
+
       radius = {{ params$radius }};
-    
+
       color_scale = {{{ get_d3_color_scale() }}};
-    
+
       color_title = {{ params$color_title }};
-    
+
       color_legend_counts = {{ get_color_legend_counts() }};
-    
+
       plot = new_plot({
         width: {{ params$width }},
         height: {{ params$height }},
@@ -46,18 +46,18 @@
         ordinal_scale_padding: 1,
         linear_scale_padding: 40
       });
-    
+
       plot.tooltip_text = function(d) {
         return {{{ get_tooltip_content() }}};
       };
-    
+
       plot.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
         "width": plot.width,
         "height": plot.height
       });
-    
+
       clip = plot.append("g").attr("clip-path", "url(#clip)");
-    
+
       if (plot.zoom) {
         clip.append("rect").style({
           "cursor": "move"
@@ -76,33 +76,33 @@
           return g_points.attr("transform", transform);
         };
       }
-    
+
       transform = function(d) {
         return "translate(" + (plot.scales.x(d.x) + plot.jitters.x()) + ", " + (plot.scales.y(d.y) + plot.jitters.y()) + ")";
       };
-    
+
       g_points = clip.selectAll(".point").data(data).enter().append("g").attr({
         "class": "point",
         "transform": transform
       });
-    
+
       points = g_points.append("svg:circle").attr({
         "class": "point_tooltip",
         "r": radius,
         "fill": function(d) {
-          return color_scale(d.colorize);
+          return color_scale(d.color_groups);
         },
         "title": function(d) {
           return plot.tooltip_text(d);
         }
       });
-    
+
       $(".point_tooltip").tooltip({
         html: true,
         container: "body",
         placement: "top"
       });
-    
+
       point_names = g_points.append("text").text(function(d) {
         return d.point_name;
       }).attr({
@@ -112,21 +112,21 @@
         "display": "none"
       }).style({
         "fill": function(d) {
-          return color_scale(d.colorize);
+          return color_scale(d.color_groups);
         },
         "font-size": "22px"
       });
-    
+
       sidebar = plot.append("g").attr("transform", "translate(" + (plot.width + 60) + ",0)");
-    
+
       g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
         return toggle_names();
       });
-    
+
       g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
-    
+
       g_toggle_names.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12').text("Show names (" + data.length + ")");
-    
+
       toggle_names = function() {
         var showing_point_names;
         showing_point_names = g_toggle_names.classed("show_names");
@@ -151,7 +151,7 @@
           }
         });
       };
-    
+
       if (color_scale.range().length > 1) {
         sidebar.append("text").attr({
           "class": "color_title",
@@ -180,7 +180,7 @@
           return "" + d + " (" + color_legend_counts[d] + ")";
         });
       }
-    
+
     }).call(this);
 
     </script>
