@@ -285,15 +285,19 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 #'
 #' @param template name of template
 #' @export
-test_template <- test_translator <- function(template_name){
+test_template <- test_translator <- function(template_name, filter = NULL){
     template <- Chart$new()
     template$name <- camel_case(template_name)
     template$get_default_names_and_paths()
 
     if (file.exists(template$file_structure$paths$translator_test_file)){
         library("testthat")
-        clickme:::source_dir(template$file_structure$paths$translator_file)
-        test_dir(template$file_structure$paths$tests)
+        pkg <- file.path(system.file(package = "clickme"), "..")
+        load_all(pkg)
+        reload_translators()
+        env <- new.env(parent = ns_env(pkg))
+        with_envvar(r_env_vars(), test_dir(template$file_structure$paths$tests, filter = filter, env = env))
+        # clickme:::source_dir(template$file_structure$paths$translator_file)
     } else {
         stop(gettextf("\n\n\tThere is no test translator file at this location:\n\n%s",
                        template$file_structure$paths$translator_test_file))
