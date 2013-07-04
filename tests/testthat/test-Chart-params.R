@@ -21,28 +21,6 @@ test_that("padding is valid", {
     expect_error(test_chart$get_params(), "Please provide four padding values")
 })
 
-test_that("the palette has valid names", {
-    params <- list(color_groups = c("a", "a", "b", "c", "b"), palette = c(a = "blue"))
-    test_chart <- TestChart$new(params)
-    test_chart$get_params()
-
-    expect_true(all(names(test_chart$params$palette) %in% c("a","b","c")))
-
-    params <- list(color_groups = c("a", "a", "b", "c", "b"), palette = c(a = "blue", b = "pink", c = "green", d = "red", e = "yellow"))
-    test_chart <- TestChart$new(params)
-    expect_warning(test_chart$get_params(), "The palette contains color group names that don't appear in color_groups:\n\nd, e")
-
-    params <- list(color_groups = 1:5, palette = c(a = "blue", c = "green", d = "red", e = "yellow"))
-    test_chart <- TestChart$new(params)
-    expect_error(test_chart$get_params(), "an unnamed vector")
-})
-
-test_that("color_domain is only used with numeric values", {
-    params <- list(color_groups = letters[1:10], color_domain = 1:10)
-    test_chart <- TestChart$new(params)
-    expect_error(test_chart$get_params(), "color_groups has categorical values")
-})
-
 test_that("action is valid", {
     test_chart <- TestChart$new()
     test_chart$get_params()

@@ -11,8 +11,6 @@
 # extra
 # palette
 # col (alias for palette)
-# color_groups
-# color_domain
 # color_title
 # file
 # file_name

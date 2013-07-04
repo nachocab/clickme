@@ -17,14 +17,14 @@ test_that("group_data_rows", {
     test_chart$get_params()
     test_chart$get_data()
     test_chart$group_data_rows(params$groups)
-    expect_equal(test_chart$data$x, c(1, 4, 3, 2))
+    expect_equal(test_chart$data$x, c(2, 3, 4, 1)) # c b a ("a" on top)
 
     params <- list(data = data.frame(x = c(1, 2, 3, 4)), groups = c("a", "c", "b", "a"), order = c("c","b","a"))
     test_chart <- TestChart$new(params)
     test_chart$get_params()
     test_chart$get_data()
     test_chart$group_data_rows(params$groups, params$order)
-    expect_equal(test_chart$data$x, c(2, 3, 1, 4))
+    expect_equal(test_chart$data$x, c(4, 1, 3, 2)) # a b c ("c" on top)
 
 })
 

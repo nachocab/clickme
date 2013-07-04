@@ -53,7 +53,7 @@ reload_translators <- function() {
         }
     })
 
-    # ensure that main translator files are loaded before the helper translator files
+    # ensure that the translator file where the template is defined gets loaded before any of the other helper files
     translator_files <- list.files(file.path(template_paths, "translator"), full.names = TRUE)
     main_translator_files <- file.path(template_paths, "translator", sapply(template_paths, function(path) paste0(basename(path), ".R")))
     translator_files <- move_in_front(main_translator_files, translator_files)

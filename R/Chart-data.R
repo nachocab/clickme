@@ -33,7 +33,7 @@ Chart$methods(
             }
 
             # We reverse it so the first element is plotted last (and therefore appears on top)
-            data <<- data[order,]
+            data <<- data[rev(order),]
         }
     }
 
