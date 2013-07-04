@@ -1,21 +1,24 @@
 context("translate points")
 
-opts <- get_opts("points")
-opts$data <- data.frame(a = 1:5)
+test_that("the palette is black when color_groups is NULL or it has length 1", {
+    params <- list(data = data.frame(a = 1:5))
+    points <- Points$new(params)
+    points$get_params()
+    expect_equal(points$params$palette, "[\"#000\"]")
 
-test_that("the palette is black when colorize is NULL or it has length 1", {
-    palette <- get_palette_param(opts)
-    expect_equal(palette, "[\"#000\"]")
-
-    opts$data$colorize <- "a"
-    palette <- get_palette_param(opts)
-    expect_equal(palette, "[\"#000\"]")
+    params <- list(data = data.frame(a = 1:5), color_groups = "a")
+    points <- Points$new(params)
+    points$get_params()
+    points$get_data()
+    expect_equal(points$params$palette, "[\"#000\"]")
 })
 
-test_that("the palette has as many colors as levels (or unique elements) in colorize", {
-    opts$data$colorize <- c("a", "a", "b", "c", "b")
-    palette <- get_palette_param(opts)
-    expect_equal(length(fromJSON(palette)), 3)
+test_that("the palette has as many colors as levels (or unique elements) in color_groups", {
+    params <- list(data = data.frame(a = 1:5), color_groups = c("a", "a", "b", "c", "b"))
+    points <- Points$new(params)
+    points$get_params()
+    points$get_data()
+    expect_equal(length(fromJSON(points$params$palette)), 3)
 })
 
 test_that("the palette can be set manually", {
@@ -30,13 +33,13 @@ test_that("the palette can be set manually", {
 
 
 test_that("the d3_color_scale can be categorical or quantitative", {
-    opts$data$colorize <- c(1:5)
+    opts$data$color_groups <- c(1:5)
     color_scale <- get_d3_color_scale(opts)
 
     expected_color_scale <- "d3.scale.linear().domain([1,5]).range([\"steelblue\",\"#CA0020\"]).interpolate(d3.interpolateLab);"
     expect_equal(gsub("\\s","", color_scale), expected_color_scale)
 
-    opts$data$colorize <- c("a", "a", "b", "c", "b")
+    opts$data$color_groups <- c("a", "a", "b", "c", "b")
     color_scale <- get_d3_color_scale(opts)
 
 
@@ -47,8 +50,8 @@ test_that("the d3_color_scale can be categorical or quantitative", {
     expect_equal(color_scale, expected_color_scale)
 })
 
-test_that("the color_domain is calculated from the values of colorize", {
-    opts$data$colorize <- c(1, NA, 3, 5, 4)
+test_that("the color_domain is calculated from the values of color_groups", {
+    opts$data$color_groups <- c(1, NA, 3, 5, 4)
     color_domain <- get_color_domain_param(opts)
 
     expect_equal(color_domain, "[1,5]")

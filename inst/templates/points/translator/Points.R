@@ -19,41 +19,35 @@ Points <- setRefClass("Points",
         get_params = function(){
             callSuper()
 
-            if (!is.null(params$point_names)){
-                # Whatever the user provides as point names, treat it as a character vector
-                params$point_names <<- as.character(params$point_names)
-            }
-
-            params$title <<- params$title %||% "Points"
-            params$xlab <<- params$xlab %||% "x"
-            params$ylab <<- params$ylab %||% "y"
+            params$title <<- params$title %or% "Points"
+            params$xlab <<- params$xlab %or% "x"
+            params$ylab <<- params$ylab %or% "y"
 
         },
 
         get_data = function(){
-
-            # used for testing
             if (is.null(params$x)) {
+                # used for testing
                 return(NULL)
             }
 
             data <<- xy_to_data(params$x, params$y)
-
-            data$point_name <<- params$names %||% rownames(data)
+            data$point_name <<- as.character(params$names %or% rownames(data))
             rownames(data) <<- NULL
 
-            add_extra_fields()
-
-            # we only create data$colorize when params$colorize is not NULL. When it is NULL, d3_color_scale(null) returns "black"
-            if (!is.null(params$colorize)){
-                reorder_data_by_colorize()
-            }
-            # this must be done *after* data has been reordered to ensure the first category (which will be rendered at the bottom) gets the last color
-            params$palette <<- rev(params$palette)
+            add_extra_data_fields()
+            group_data_rows()
 
             apply_axes_limits()
 
             get_categorical_domains()
+        },
+
+        group_data_rows = function(){
+            callSuper(params$color_groups, rev(names(params$palette)))
+
+            # We reverse it so the last color group gets the last color
+            params$palette <<- rev(params$palette)
         },
 
         # TODO: is this needed?
@@ -84,17 +78,10 @@ Points <- setRefClass("Points",
             }
         },
 
-        add_extra_fields = function() {
-            if (!is.null(params$extra)){
-                data <<- cbind(data, params$extra)
-            }
-        },
-
-        # TODO: This is the only method that is called from the translator()
         get_tooltip_content = function(){
             names <- colnames(data)
             tooltip_contents <- c("\"<strong>\" + d.point_name + \"</strong>\"", paste0("\"", params$ylab, ": \" + format_property(d.y)"), paste0("\"", params$xlab, ": \" + format_property(d.x)"))
-            names <- setdiff(names, c("x", "y", "point_name", "colorize"))
+            names <- setdiff(names, c("x", "y", "point_name", "color_groups"))
 
             tooltip_contents <- c(tooltip_contents, sapply(names, function(name) paste0("\"", name, ": \" + format_property(d[\"", name, "\"])")))
             tooltip_contents <- paste(tooltip_contents, collapse = " + \"<br>\" + ")
