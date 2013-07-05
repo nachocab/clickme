@@ -50,8 +50,8 @@ Points$methods(
     },
 
     get_data_ranges = function(){
-        x_data_range <- range(data$x, na.rm = TRUE)
-        y_data_range <- range(data$y, na.rm = TRUE)
+        x_data_range <- get_unique_elements(data$x)
+        y_data_range <- get_unique_elements(data$y)
 
         data_ranges <- gettextf("{
           x: %s,

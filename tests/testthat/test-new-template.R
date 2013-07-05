@@ -23,7 +23,7 @@ test_that("creates a new template", {
     expect_true(file.exists(file.path(test_chart$file_structure$paths$translator_file)))
     expect_true(file.exists(file.path(test_chart$file_structure$paths$translator_test_file)))
 
-    expect_that(clickme("test_chart", 1:10, action = FALSE), not(throws_error()))
+    expect_that(clickme("test_chart", 1:10, actions = FALSE), not(throws_error()))
 
     capture.output(t <- test_template("TestChart"))
     expect_false(t$failed)

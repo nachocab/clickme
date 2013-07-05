@@ -6,14 +6,11 @@
 # ylab
 # xlim
 # ylim
-# jitter
+# jitter - number
+# radius - number
 # color_groups - can be a categorical or a continuous variable
-# color_group_order
 # palette
 # color_domain
-# radius
-# x_categorical_domain TODO: remove this
-# y_categorical_domain TODO: remove this
 Points <- setRefClass("Points",
 
     contains = "Chart",
@@ -32,7 +29,9 @@ Points <- setRefClass("Points",
         # Responsible for getting color_group_order, palette and color_domain
         get_color_params = function(){
             if (!is.null(params$color_groups)){
-                params$color_group_order <<- params$color_group_order %or% get_color_group_order()
+
+                # we could make params$color_group_order a public param, but it can be done just as well with params$palette.
+                params$color_group_order <<- get_color_group_order()
                 params$palette <<- validate_palette(params$palette)
             } else {
                 if (!is.null(params$palette)){
@@ -127,7 +126,7 @@ Points <- setRefClass("Points",
             }
 
             if (is.null(color_domain) && scale_type(params$color_groups) == "quantitative") {
-                color_domain <- range(params$color_groups, na.rm = TRUE)
+                color_domain <- c(min(params$color_groups, na.rm = TRUE), 0 , max(params$color_groups, na.rm = TRUE))
             }
 
             color_domain
@@ -198,7 +197,6 @@ clickme_helper$points <- function(x, y = NULL,
                           radius = 5,
                           jitter = 0,
                           ...){
-
     params <- extract_params()
     points <- Points$new(params)
 

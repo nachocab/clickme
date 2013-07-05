@@ -1,4 +1,4 @@
-context("Chart-helper")
+context("Chart-placeholders")
 
 test_chart_path <- file.path(getOption("clickme_templates_path"), "TestChart")
 unlink(test_chart_path, recursive = TRUE)

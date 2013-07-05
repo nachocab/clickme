@@ -22,7 +22,7 @@ Chart$methods(
         }
 
         if (length(groups) > 1){
-            data$group <<- groups
+            data$group <<- as.character(groups)
 
             if (!is.null(group_order)){
                 order <- unlist(sapply(group_order, function(group_name) {

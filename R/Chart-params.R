@@ -12,7 +12,7 @@ Chart$methods(
         params$frameborder <<- params$frameborder %or% 0
         params$box <<- params$box %or% FALSE
         params$coffee <<- params$coffee %or% TRUE
-        params$action <<- validate_action(params$action %or% "open")
+        params$actions <<- validate_actions(params$actions %or% "open")
         params$code <<- params$code %or% paste(deparse(sys.calls()[[1]]), collapse = "")
     },
 
@@ -29,20 +29,20 @@ Chart$methods(
         padding
     },
 
-    # Ensure the action is FALSE (no action) or any of the valid actions ("open", "link", "iframe")
-    validate_action = function(action){
-        if (action != FALSE){
-            action <- as.character(action)
+    # Ensure the actions is any of the valid actions ("open", "link", "iframe") or FALSE (no action)
+    validate_actions = function(actions){
+        if (FALSE %notin% actions){
+            actions <- as.character(actions)
             valid_actions <- c("open", "link", "iframe")
             action_descriptions <- c("open a new browser tab", "return an HTML link", "return an HTML iframe")
-            if (any(action %notin% valid_actions)) {
-                bad_action <- action[action %notin% valid_actions]
+            if (any(actions %notin% valid_actions)) {
+                bad_action <- actions[actions %notin% valid_actions]
                 alternatives <- c(paste(gettextf("\"%s\"",valid_actions), action_descriptions, sep = " => "), "FALSE => Don't do anything")
                 stop(gettextf("\n\nInvalid action \"%s\". Please choose one or several among:\n\n%s\n\n", bad_action, enumerate(alternatives)))
             }
         }
 
-        action
+        actions
     }
 
 )

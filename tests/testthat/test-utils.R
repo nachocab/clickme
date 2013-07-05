@@ -59,3 +59,7 @@ test_that("snake_case", {
     strings <- c("PacoPepe", "pacoPepe", "Paco")
     expect_equal(snake_case(strings), c("paco_pepe","paco_pepe", "paco"))
 })
+
+test_that("clickme", {
+    expect_match(make_iframe("test.html", 980, 980), "<iframe width = \"980\" height = \"980\" src=\"test\\.html\"> </iframe>")
+})

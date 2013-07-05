@@ -131,6 +131,7 @@ test_that("limits reduce the size of the data", {
 context("Points: clickme")
 
 test_that("clickme", {
-    ret <- clickme("points", 1:10, action = "iframe")
-    expect_match(ret, "<iframe width = \"980\" height = \"980\" src=\".+temp-Points\\.html\" frameborder=\"0\"> </iframe>")
+    expect_that(clickme("points", 1:10, actions = FALSE), not(throws_error()))
+    capture.output(expect_that(clickme("points", 1:10, actions = "iframe"), not(throws_error())))
+    capture.output(expect_that(clickme("points", 1:10, actions = c("link", "iframe")), not(throws_error())))
 })

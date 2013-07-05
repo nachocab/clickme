@@ -19,6 +19,8 @@ test_that("group_data_rows", {
     test_chart$group_data_rows(params$groups)
     expect_equal(test_chart$data$x, c(2, 3, 4, 1)) # c b a ("a" on top)
 
+    # TODO: params <- list(data = data.frame(x = c(1, 2, 3, 4)), groups = c(FALSE, FALSE, TRUE, FALSE))
+
     params <- list(data = data.frame(x = c(1, 2, 3, 4)), groups = c("a", "c", "b", "a"), order = c("c","b","a"))
     test_chart <- TestChart$new(params)
     test_chart$get_params()

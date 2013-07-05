@@ -24,17 +24,21 @@ test_that("padding is valid", {
 test_that("action is valid", {
     test_chart <- TestChart$new()
     test_chart$get_params()
-    expect_equal(test_chart$params$action, c("open"))
+    expect_equal(test_chart$params$actions, c("open"))
 
-    test_chart <- TestChart$new(list(action = "open"))
+    test_chart <- TestChart$new(list(actions = "open"))
     test_chart$get_params()
-    expect_equal(test_chart$params$action, c("open"))
+    expect_equal(test_chart$params$actions, c("open"))
 
-    test_chart <- TestChart$new(list(action = c("open", "link")))
+    test_chart <- TestChart$new(list(actions = c("open", "link")))
     test_chart$get_params()
-    expect_equal(test_chart$params$action, c("open", "link"))
+    expect_equal(test_chart$params$actions, c("open", "link"))
 
-    test_chart <- TestChart$new(list(action = c("open", "fake")))
+    test_chart <- TestChart$new(list(actions = c("iframe", "link")))
+    test_chart$get_params()
+    expect_equal(test_chart$params$actions, c("iframe", "link"))
+
+    test_chart <- TestChart$new(list(actions = c("open", "fake")))
     expect_error(test_chart$get_params(), "Invalid action \"fake\". Please choose one or several among:")
 })
 

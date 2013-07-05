@@ -50,8 +50,8 @@ make_link <- function(url, name) {
     if (is.null(url)) {
         stop ("Please provide a valid output_file")
     }
-    link <- gettextf("<a href=\"%s\" target = \"_blank\">%s</a>\n\n", url, name)
-    cat(link)
+    link <- gettextf("<a href=\"%s\" class=\"clickme\">%s</a>", url, name)
+    link
 }
 
 #' Make an HTML iframe
@@ -59,13 +59,13 @@ make_link <- function(url, name) {
 #' @param width
 #'
 #' @export
-make_iframe <- function(url, width, height, frameborder) {
+make_iframe <- function(url, width, height) {
     if (is.null(url)) {
         stop ("Please provide a valid output_file")
     }
 
-    iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" src=\"%s\" frameborder=\"%d\"> </iframe>\n\n", width, height, url, frameborder)
-    cat(iframe)
+    iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" src=\"%s\"> </iframe>", width, height, url)
+    iframe
 }
 
 separator <- function(n = 70){
@@ -76,16 +76,8 @@ separator <- function(n = 70){
 #' @export
 extract_params <- function() {
     named_params <- as.list(parent.frame())
-    dots <- as.list(substitute(list(...), parent.frame()))[-1]
+    dots <- eval(substitute(list(...), parent.frame()))
     params <- c(named_params, dots)
-
-    # After substituting, T and F don't get automatically replaced to TRUE and FALSE
-    names <- sapply(params, is.name)
-    if (any(names)){
-        params[names & params == "T"] <- TRUE
-        params[names & params == "F"] <- FALSE
-    }
-
     params
 }
 
@@ -161,6 +153,7 @@ get_unique_elements <- function(elements) {
         unique_elements <- unique(elements)
     }
 
+    unique_elements <- na.omit(unique_elements)
     unique_elements
 }
 

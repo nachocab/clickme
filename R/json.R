@@ -99,8 +99,8 @@ prepare_for_json <- function(x){
 #' Convert a JSON string into a data frame
 #'
 #' @param json input json object
+# "[{\"a\":1, \"b\":2},{\"a\":3,\"b\":4}]"
 #' @export
-#' "[{\"a\":1, \"b\":2},{\"a\":3,\"b\":4}]"
 json2df <- function(json){
     json <- fromJSON(json)
     df <- do.call(rbind.data.frame, json)
@@ -112,8 +112,8 @@ json2df <- function(json){
 #' Convert a YAML string into a data frame
 #'
 #' @param yaml input yaml object
+# yaml <- "- a: 1.0\n  b: 2.0\n- a: 3.0\n  b: 4.0\n"
 #' @export
-#' yaml <- "- a: 1.0\n  b: 2.0\n- a: 3.0\n  b: 4.0\n"
 yaml2df <- function(yaml){
     json2df(toJSON(yaml))
 }

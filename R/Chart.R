@@ -15,6 +15,7 @@
 # file
 # file_name
 # dir
+# link_text
 #' @exportClass Chart
 Chart <- setRefClass("Chart",
 
@@ -51,10 +52,10 @@ Chart <- setRefClass("Chart",
         },
 
         # Multiple actions may be specified as a character vector
-        # If action includes "open", it opens a new browser tab with the output file
-        # If action includes "link", it returns an HTML link (invisible)
-        # If action includes "iframe", it returns an HTML iframe (invisible)
-        # If action includes is FALSE, no action is taken.
+        # If actions includes "open", it opens a new browser tab with the output file
+        # If actions includes "link", it returns an HTML link (invisible)
+        # If actions includes "iframe", it returns an HTML iframe (invisible)
+        # If actions includes is FALSE, no action is taken.
         do_action = function(){
             if (config$require_server){
                 url <- paste0("http://localhost:", port, "/", file_structure$names$output_file)
@@ -67,15 +68,21 @@ Chart <- setRefClass("Chart",
             }
 
             ret <- ""
-            if ("link" %in% params$action) {
-                ret <- paste(ret, make_link(url, params$title %or% "link"), sep = "\n")
-            }
-
             if ("iframe" %in% params$action) {
-                ret <- paste(ret, make_iframe(url, params$width, params$height, params$frameborder), sep = "\n")
+                width <- params$iframe_width %or% params$width
+                height <- params$iframe_height %or% params$height
+
+                ret <- paste(ret, make_iframe(url, width, height), sep = "\n")
             }
 
-            invisible(ret)
+            if ("link" %in% params$action) {
+                link_text <- params$link_text %or% params$title %or% "link"
+
+                ret <- paste(ret, make_link(url, link_text), sep = "\n")
+            }
+
+
+            cat(ret)
         }
 
    )
