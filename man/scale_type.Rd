@@ -2,7 +2,7 @@
 \alias{scale_type}
 \title{Type of scale}
 \usage{
-  scale_type(elements = NULL)
+  scale_type(elements)
 }
 \arguments{
   \item{elements}{values

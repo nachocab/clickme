@@ -112,8 +112,11 @@ error_title <- function(message){
     paste0("\n\n*** ", message, " ***\n\n")
 }
 
-enumerate <- function(array) {
-    paste("\t", array, collapse = "\n")
+#' Return the elements of a character vector separated by newlines
+#'
+#' @export
+enumerate <- function(x) {
+    paste("\t", x, collapse = "\n")
 }
 
 #' Match elements to groups
@@ -148,7 +151,25 @@ match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups =
     group_names
 }
 
+#' Return the levels of a factor, or the unique elements of a character vector
+#' @param elements values
+#' @export
+get_unique_elements <- function(elements) {
+    if (is.factor(elements)){
+        unique_elements <- levels(elements)
+    } else {
+        unique_elements <- unique(elements)
+    }
 
+    unique_elements
+}
+
+#' Remove whitespace from a string
+#'
+#'
+no_whitespace <- function(str){
+    gsub("\\s","", str)
+}
 
 
 #' Type of scale
@@ -158,8 +179,8 @@ match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups =
 #' If elements is numeric and has a length greater than one, it returns "quantitative". If elements is NULL, or not numeric, or has a length of one, it returns "categorical".
 #'
 #' @export
-scale_type <- function(elements = NULL) {
-    if (!is.null(elements) & is.numeric(elements) & length(elements) > 1){
+scale_type <- function(elements) {
+    if (!is.null(elements) && is.numeric(elements) && length(elements) > 1){
         type <- "quantitative"
     } else {
         type <- "categorical"

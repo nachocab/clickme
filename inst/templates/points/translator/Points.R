@@ -42,6 +42,7 @@ Points <- setRefClass("Points",
             }
 
             params$color_domain <<- validate_color_domain(params$color_domain)
+
         },
 
         # If palette doesn't have names and color_groups is a factor, use its levels to define the order of the color groups
@@ -52,14 +53,14 @@ Points <- setRefClass("Points",
                 if (is.factor(params$color_groups)) {
                     color_group_order <- levels(params$color_groups)
                 } else {
-                    if (get_scale_type() == "quantitative"){
-                        color_group_order <- sort((params$color_groups))
+                    if (scale_type(params$color_groups) == "quantitative"){
+                        color_group_order <- sort(params$color_groups)
                     } else {
                         color_group_order <- sort(as.character(unique(params$color_groups)))
                     }
                 }
             } else {
-                if (get_scale_type() != "categorical"){
+                if (scale_type(params$color_groups) != "categorical"){
                     stop("\n\n\tA named palette can only be used with categorical color groups, but these appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)")
                 }
 
@@ -68,11 +69,6 @@ Points <- setRefClass("Points",
 
             color_group_order
         },
-
-        get_scale_type = function(){
-            scale_type(params$color_groups)
-        },
-
 
         # If the palette is missing names used in color_groups, append them
         # If the palette has extra names not used in color_groups, give a warning and remove them
@@ -93,13 +89,13 @@ Points <- setRefClass("Points",
 
         validate_palette = function(palette) {
             if (is.null(palette)){
-                if (get_scale_type() == "quantitative"){
+                if (scale_type(params$color_groups) == "quantitative"){
                     palette <- c("#278DD6", "#fff", "#d62728")
                 } else {
                     palette <- setNames(default_colors(length(params$color_group_order)), params$color_group_order)
                 }
             } else {
-                if (get_scale_type() == "categorical"){
+                if (scale_type(params$color_groups) == "categorical"){
                     if (!is.null(names(palette))){
                         palette <- palette[params$color_group_order]
                     }
@@ -126,8 +122,12 @@ Points <- setRefClass("Points",
 
         # Ensure that the domain used with a D3 color scale is only specified when the scale is quantitative
         validate_color_domain = function(color_domain){
-            if (!is.null(color_domain) && get_scale_type() == "categorical"){
+            if (!is.null(color_domain) && scale_type(params$color_groups) == "categorical") {
                 stop("\n\ncolor_domain can only be used with numeric scales, but color_groups has categorical values.")
+            }
+
+            if (is.null(color_domain) && scale_type(params$color_groups) == "quantitative") {
+                color_domain <- range(params$color_groups, na.rm = TRUE)
             }
 
             color_domain

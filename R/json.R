@@ -96,42 +96,11 @@ prepare_for_json <- function(x){
     as.data.frame(x, stringsAsFactors = FALSE)
 }
 
-
-#' Convert a data frame to JSON
-#'
-#' It returns a string that contains an array of objects. There are as many JS objects as there are rows in the data frame. The column names are used as the keys of each object. The objects are separated by newlines.
-#'
-#' @param df input dataframe object
-#' @export
-#' @examples
-#' df <- data.frame(name=c("a", "b", "c"), x=c(NA, 2 ,3), y=c(10, 20, -Inf), show=c(TRUE, FALSE, TRUE))
-#' df2json(df)
-df2json <- function(df){
-
-}
-
-#' Convert a matrix to JSON
-#'
-#' It returns a string of nested arrays. One array per row.
-#'
-#' @param mat input matrix object
-#' @export
-#' @examples library(df2json)
-#' df <- matrix(1:9, byrow = TRUE, nrow=3)
-#' matrix2json(df)
-matrix2json <- function(mat){
-
-    json <- toJSON(mat)
-    json
-}
-
 #' Convert a JSON string into a data frame
 #'
 #' @param json input json object
 #' @export
-#' @examples library(df2json)
-#' json <- "[{\"a\":1, \"b\":2},{\"a\":3,\"b\":4}]"
-#' json2df(json)
+#' "[{\"a\":1, \"b\":2},{\"a\":3,\"b\":4}]"
 json2df <- function(json){
     json <- fromJSON(json)
     df <- do.call(rbind.data.frame, json)
@@ -144,9 +113,7 @@ json2df <- function(json){
 #'
 #' @param yaml input yaml object
 #' @export
-#' @examples library(df2json)
 #' yaml <- "- a: 1.0\n  b: 2.0\n- a: 3.0\n  b: 4.0\n"
-#' yaml2df(json)
 yaml2df <- function(yaml){
     json2df(toJSON(yaml))
 }
