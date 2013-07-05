@@ -27,21 +27,22 @@
         width: {{ params$width }}
         height: {{ params$height }}
         padding: {{ params$padding }}
-        data_ranges:
-            x: {{ range(data$x, na.rm = TRUE) }} # bad form
-            y: {{ range(data$y, na.rm = TRUE) }} # bad form
+
+        # TODO: refactor into a labels object
         xlab: {{ params$xlab }}
         ylab: {{ params$ylab }}
         title: {{ params$title }}
         box: {{ params$box }}
+
+        # TODO: refactor these into a get_scales function
         xlim: {{ params$xlim }}
         ylim: {{ params$ylim }}
-        categorical_domains:
-            x: {{ params$x_categorical_domain }}
-            y: {{ params$y_categorical_domain }}
+        data_ranges: {{{ get_data_ranges() }}}
+        categorical_domains: {{{ get_categorical_domains() }}}
+
         jitter: {{ params$jitter }}
         ordinal_scale_padding: 1
-        linear_scale_padding: 40)
+        linear_scale_padding: 40 )
 
     plot.tooltip_text = (d) ->
         {{{ get_tooltip_content() }}}

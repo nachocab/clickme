@@ -1,41 +1,24 @@
 Points$methods(
 
     get_color_legend_counts = function() {
-        table(data$color_groups)
+        table(params$color_groups)
     },
 
-    # only for quantitative scales
-    get_color_domain_param = function(){
-        if (is.null(params$color_domain)){
-            params$color_domain <<- range(data$color_groups, na.rm = TRUE)
-        }
-
-        params$color_domain
-    },
-
-    get_d3_palette = function() {
-        palette_names <- names(params$palette)
-        categories <- unique(params$color_groups)
-        if (is.null(params$palette)){
-            if (scale_type(data$color_groups) == "quantitative"){
-                params$palette <<- c("steelblue", "#CA0020") # blue-red gradient
-            } else {
-                params$palette <<- rev(default_colors(length(categories)))
-            }
-        }
-
-        d3_palette <- toJSON(as.list(params$palette))
-        d3_palette
-    },
-
+    # A D3 color scale may be quantitative or categorical, depending on params$color_groups
+    # Both types of scales have a range (the colors they use)
+    # Quantitative scales also have a domain (the min and max values used to interpolate them into colors)
     get_d3_color_scale = function() {
-        if (scale_type(data$color_groups) == "quantitative") {
-            color_scale <- paste0("d3.scale.linear()
-                   .domain(", get_color_domain_param(), ")
-                   .range(", get_palette_param(), ")
-                   .interpolate(d3.interpolateLab);")
+        # we use as.list so c("#000") gets converted to ["#000"] and not "#000"
+        color_range <- as.list(unname(params$palette))
+        if (scale_type(params$color_groups) == "quantitative") {
+            color_scale <- gettextf("d3.scale.linear()
+                   .domain(%s)
+                   .range(%s)
+                   .interpolate(d3.interpolateLab);",
+                   to_json(params$color_domain),
+                   to_json(color_range))
         } else {
-            color_scale <- gettextf("d3.scale.ordinal().range(%s);", get_d3_palette())
+            color_scale <- gettextf("d3.scale.ordinal().range(%s);", to_json(color_range))
         }
 
         color_scale
@@ -51,20 +34,31 @@ Points$methods(
         tooltip_contents
     },
 
-    # TODO: is this needed?
+    # When one of the axes is categorical, we need its domain
     get_categorical_domains = function(){
-        if (is_character_or_factor(data$x)){
-            if (is.character(data$x))
-                params$x_categorical_domain <<- unique(data$x)
-            else
-                params$x_categorical_domain <<- levels(data$x)
-        }
-        if (is_character_or_factor(data$y)){
-            if (is.character(data$y))
-                params$y_categorical_domain <<- unique(data$y)
-            else
-                params$y_categorical_domain <<- levels(data$y)
-        }
+
+        # ifelse() can't return NULL
+        x_categorical_domain <- if(scale_type(data$x) == "categorical") get_unique_elements(data$x) else NULL
+        y_categorical_domain <- if(scale_type(data$y) == "categorical") get_unique_elements(data$y) else NULL
+
+        categorical_domains <- gettextf("{
+          x: %s,
+          y: %s
+        }", to_json(x_categorical_domain), to_json(y_categorical_domain))
+
+        categorical_domains
+    },
+
+    get_data_ranges = function(){
+        x_data_range <- range(data$x, na.rm = TRUE)
+        y_data_range <- range(data$y, na.rm = TRUE)
+
+        data_ranges <- gettextf("{
+          x: %s,
+          y: %s
+        }", to_json(x_data_range), to_json(y_data_range))
+
+        data_ranges
     }
 
 )
