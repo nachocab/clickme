@@ -223,16 +223,18 @@ my_light_red = "#b90000"
             .text(text)
             .attr(
                 "class": "y label"
-                "text-anchor": "middle")
-                "dy": "1em"
+                "text-anchor": "middle"
                 "x": -plot.height/2)
 
-        if plot.rotate_label.y
+        if plot.rotate_label.y is true
             label.attr(
                        "y": -plot.padding.left + 5
+                       "dy": "1em"
                        "transform": "rotate(-90)")
         else
-            label.attr("y": plot.padding.left - 5)
+            label.attr(
+                       "dx": "1em"
+                       "y": plot.padding.left - 5)
 
 
         plot

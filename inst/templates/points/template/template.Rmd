@@ -180,7 +180,7 @@
 
     </script>
     <div class = "code">
-    {{{ params$code }}}
+        {{{ code }}}
     </div>
   </body>
 </html>

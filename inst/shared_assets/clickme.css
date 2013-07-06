@@ -30,7 +30,7 @@ text {
     width: 1024px;
     padding: 20px;
     font-family: Monaco, Courier, monospace;
-    background: #eeeeee;
+    /*background: #eeeeee;*/
 }
 
 iframe {

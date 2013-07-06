@@ -29,7 +29,8 @@ Chart <- setRefClass("Chart",
                # internal
                file_structure = "list",
                config = "list",
-               placeholder = "list"
+               placeholder = "list",
+               code = "character"
     ),
 
     methods = list(

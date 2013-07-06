@@ -204,20 +204,19 @@
       var label;
       label = plot.left_margin.append("text").text(text).attr({
         "class": "y label",
-        "text-anchor": "middle"
+        "text-anchor": "middle",
+        "x": -plot.height / 2
       });
-      if (plot.rotate_label.y) {
+      if (plot.rotate_label.y === true) {
         label.attr({
-          "x": -plot.height / 2,
           "y": -plot.padding.left + 5,
           "dy": "1em",
           "transform": "rotate(-90)"
         });
       } else {
         label.attr({
-          "x": -plot.height / 2,
-          "y": plot.padding.left - 5,
-          "dy": "1em"
+          "dx": "1em",
+          "y": plot.padding.left - 5
         });
       }
       return plot;

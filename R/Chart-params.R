@@ -2,6 +2,9 @@ Chart$methods(
 
     # Set the default parameters
     get_params = function(){
+        params$code <<- params$code %or% TRUE
+        get_code()
+
         params$width <<- params$width %or% 500
         params$height <<- params$height %or% 500
         params$title <<- params$title %or% params$main %or% name
@@ -16,7 +19,18 @@ Chart$methods(
         params$box <<- params$box %or% FALSE
         params$coffee <<- params$coffee %or% TRUE
         params$actions <<- validate_actions(params$actions %or% "open")
-        params$code <<- params$code %or% paste(deparse(sys.calls()[[1]]), collapse = "")
+    },
+
+    # Any parameters to the declared after "hide_right" are removed from the code.
+    # Kind of a hack, but useful for sharing code without showing local file names.
+    get_code = function(){
+        if (params$code){
+            code <<- paste(deparse(sys.calls()[[1]]), collapse = "")
+            code <<- gsub(",\\s+hide_right.+", "", code)
+            code <<- paste0("Code:<br><br>", code, ")")
+        } else {
+            code <<- ""
+        }
     },
 
     # Ensure there are four padding values named top, right, left and bottom
