@@ -46,12 +46,12 @@
         return {{{ get_tooltip_content() }}};
       };
     
-      plot.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
+      plot.center.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
         "width": plot.width,
         "height": plot.height
       });
     
-      clip = plot.append("g").attr("clip-path", "url(#clip)");
+      clip = plot.center.append("g").attr("clip-path", "url(#clip)");
     
       if (plot.zoom) {
         clip.append("rect").style({
@@ -112,7 +112,7 @@
         "font-size": "22px"
       });
     
-      sidebar = plot.append("g").attr("transform", "translate(" + (plot.width + 60) + ",0)");
+      sidebar = plot.right_margin.append("g").attr("transform", "translate(60,0)");
     
       g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
         return toggle_names();

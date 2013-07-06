@@ -46,8 +46,8 @@ my_light_red = "#b90000"
 
     opts.width ?= 400
     opts.height ?= 400
-    opts.width = opts.width - opts.total_padding
-    opts.height = opts.height - opts.total_padding
+    opts.total_height = opts.height + opts.padding.top + opts.padding.bottom
+    opts.total_width = opts.width + opts.padding.left + opts.padding.right
 
     opts.background ?= "#fff"
     opts.zoom ?= true
@@ -56,15 +56,36 @@ my_light_red = "#b90000"
 
     plot = append_main(
             id: opts.id
-            width: opts.width + opts.total_padding
-            height: opts.height + opts.total_padding
+            width: opts.total_width
+            height: opts.total_height
             background: opts.background
             margin: 20
         ).append("svg:g")
-            .attr("transform", "translate(#{opts.padding.left},#{opts.padding.top})")
+            # .attr("transform", "translate(#{opts.padding.left},#{opts.padding.top})")
 
+    # move all the opts elements to plot
     for key, value of opts
         plot[key] = value
+
+    plot.top_margin = plot.append("g")
+        .attr("transform", "translate(#{plot.padding.left}, 0)")
+        .attr("class", "top")
+
+    plot.right_margin = plot.append("g")
+        .attr("transform", "translate(#{plot.padding.left + plot.width}, #{plot.padding.top})")
+        .attr("class", "right")
+
+    plot.bottom_margin = plot.append("g")
+        .attr("transform", "translate(#{plot.padding.left}, #{plot.padding.top + plot.height})")
+        .attr("class", "bottom")
+
+    plot.left_margin = plot.append("g")
+        .attr("transform", "translate(#{plot.padding.left}, #{plot.padding.top})")
+        .attr("class", "left")
+
+    plot.center = plot.append("g")
+        .attr("transform", "translate(#{plot.padding.left}, #{plot.padding.top})")
+        .attr("class", "center")
 
     plot.get_scale_types = ()->
         plot.scale_types = {}
@@ -103,13 +124,13 @@ my_light_red = "#b90000"
         plot.jitters.y = get_jitter(plot, "y")
 
     plot.add_title = () ->
-        plot.append("text")
+        plot.top_margin.append("text")
             .text(plot.title)
             .attr(
                 "class": "title"
                 "text-anchor": "middle"
                 "x": plot.width / 2
-                "y": -plot.padding.top / 2
+                "y": plot.padding.top / 2
             )
 
         plot
@@ -144,12 +165,11 @@ my_light_red = "#b90000"
         # if tick_values?
             # plot.axes.x.tickValues(tick_values)
 
-        plot.append("g")
+        plot.bottom_margin.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0, #{plot.height})")
             .call(plot.axes.x)
 
-        plot.selectAll(".x.axis line, .x.axis path")
+        plot.bottom_margin.selectAll(".x.axis line, .x.axis path")
             .style(
                 "fill": "none"
                 "stroke": "black"
@@ -168,11 +188,11 @@ my_light_red = "#b90000"
             .scale(plot.scales.y)
             .orient(plot.orientation_y)
 
-        plot.append("g")
+        plot.left_margin.append("g")
             .attr("class", "y axis")
             .call(plot.axes.y)
 
-        plot.selectAll(".y.axis line, .y.axis path")
+        plot.left_margin.selectAll(".y.axis line, .y.axis path")
             .style(
                 "fill": "none"
                 "stroke": "black"
@@ -185,25 +205,24 @@ my_light_red = "#b90000"
         plot
 
     plot.add_x_axis_label = (text) ->
-        plot.append("text")
+        plot.bottom_margin.append("text")
             .text(text)
             .attr(
                 "class": "x label"
                 "text-anchor": "middle"
-                "x": plot.width - plot.width/2
-                "y": plot.height + plot.padding.bottom/2
-                "dy": "2em"
+                "x": plot.width/2
+                "y": plot.padding.bottom - 5
             )
 
         plot
 
     plot.add_y_axis_label = (text) ->
-        plot.append("text")
+        plot.left_margin.append("text")
             .text(text)
             .attr(
                 "class": "y label"
                 "text-anchor": "middle"
-                "x": 0 - (plot.height/2)
+                "x": -plot.height/2
                 "y": -plot.padding.left + 5
                 "dy": "1em"
                 "transform": "rotate(-90)"

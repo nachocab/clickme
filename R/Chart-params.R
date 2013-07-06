@@ -2,9 +2,9 @@ Chart$methods(
 
     # Set the default parameters
     get_params = function(){
-        params$width <<- params$width %or% 980
-        params$height <<- params$height %or% 980
-        params$padding <<- validate_padding(params$padding %or% list(top = 80, right = 400, bottom = 30, left = 100))
+        params$width <<- params$width %or% 500
+        params$height <<- params$height %or% 500
+        params$padding <<- validate_padding(params$padding %or% list(top = 100, right = 400, bottom = 100, left = 100))
         params$title <<- params$title %or% params$main %or% name
 
         params$palette <<- params$palette %or% params[["col"]]

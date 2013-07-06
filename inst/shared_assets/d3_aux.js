@@ -66,8 +66,8 @@
     if ((_ref2 = opts.height) == null) {
       opts.height = 400;
     }
-    opts.width = opts.width - opts.total_padding;
-    opts.height = opts.height - opts.total_padding;
+    opts.total_height = opts.height + opts.padding.top + opts.padding.bottom;
+    opts.total_width = opts.width + opts.padding.left + opts.padding.right;
     if ((_ref3 = opts.background) == null) {
       opts.background = "#fff";
     }
@@ -82,15 +82,20 @@
     }
     plot = append_main({
       id: opts.id,
-      width: opts.width + opts.total_padding,
-      height: opts.height + opts.total_padding,
+      width: opts.total_width,
+      height: opts.total_height,
       background: opts.background,
       margin: 20
-    }).append("svg:g").attr("transform", "translate(" + opts.padding.left + "," + opts.padding.top + ")");
+    }).append("svg:g");
     for (key in opts) {
       value = opts[key];
       plot[key] = value;
     }
+    plot.top_margin = plot.append("g").attr("transform", "translate(" + plot.padding.left + ", 0)").attr("class", "top");
+    plot.right_margin = plot.append("g").attr("transform", "translate(" + (plot.padding.left + plot.width) + ", " + plot.padding.top + ")").attr("class", "right");
+    plot.bottom_margin = plot.append("g").attr("transform", "translate(" + plot.padding.left + ", " + (plot.padding.top + plot.height) + ")").attr("class", "bottom");
+    plot.left_margin = plot.append("g").attr("transform", "translate(" + plot.padding.left + ", " + plot.padding.top + ")").attr("class", "left");
+    plot.center = plot.append("g").attr("transform", "translate(" + plot.padding.left + ", " + plot.padding.top + ")").attr("class", "center");
     plot.get_scale_types = function() {
       plot.scale_types = {};
       plot.scale_types.x = get_scale_type(plot, "x");
@@ -126,11 +131,11 @@
       return plot.jitters.y = get_jitter(plot, "y");
     };
     plot.add_title = function() {
-      plot.append("text").text(plot.title).attr({
+      plot.top_margin.append("text").text(plot.title).attr({
         "class": "title",
         "text-anchor": "middle",
         "x": plot.width / 2,
-        "y": -plot.padding.top / 2
+        "y": plot.padding.top / 2
       });
       return plot;
     };
@@ -157,8 +162,8 @@
         plot.orientation_x = "bottom";
       }
       plot.axes.x = d3.svg.axis().scale(plot.scales.x).orient(plot.orientation_x);
-      plot.append("g").attr("class", "x axis").attr("transform", "translate(0, " + plot.height + ")").call(plot.axes.x);
-      plot.selectAll(".x.axis line, .x.axis path").style({
+      plot.bottom_margin.append("g").attr("class", "x axis").call(plot.axes.x);
+      plot.bottom_margin.selectAll(".x.axis line, .x.axis path").style({
         "fill": "none",
         "stroke": "black",
         "shape-rendering": "crispEdges",
@@ -173,8 +178,8 @@
         plot.orientation_y = "left";
       }
       plot.axes.y = d3.svg.axis().scale(plot.scales.y).orient(plot.orientation_y);
-      plot.append("g").attr("class", "y axis").call(plot.axes.y);
-      plot.selectAll(".y.axis line, .y.axis path").style({
+      plot.left_margin.append("g").attr("class", "y axis").call(plot.axes.y);
+      plot.left_margin.selectAll(".y.axis line, .y.axis path").style({
         "fill": "none",
         "stroke": "black",
         "shape-rendering": "crispEdges",
@@ -184,20 +189,19 @@
       return plot;
     };
     plot.add_x_axis_label = function(text) {
-      plot.append("text").text(text).attr({
+      plot.bottom_margin.append("text").text(text).attr({
         "class": "x label",
         "text-anchor": "middle",
-        "x": plot.width - plot.width / 2,
-        "y": plot.height + plot.padding.bottom / 2,
-        "dy": "2em"
+        "x": plot.width / 2,
+        "y": plot.padding.bottom - 5
       });
       return plot;
     };
     plot.add_y_axis_label = function(text) {
-      plot.append("text").text(text).attr({
+      plot.left_margin.append("text").text(text).attr({
         "class": "y label",
         "text-anchor": "middle",
-        "x": 0 - (plot.height / 2),
+        "x": -plot.height / 2,
         "y": -plot.padding.left + 5,
         "dy": "1em",
         "transform": "rotate(-90)"
