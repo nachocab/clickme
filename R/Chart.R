@@ -16,6 +16,8 @@
 # file_name
 # dir
 # link_text
+# rotate_label_y
+# sidebar
 #' @exportClass Chart
 Chart <- setRefClass("Chart",
 

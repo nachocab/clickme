@@ -10,6 +10,7 @@ Chart$methods(
 
         params$palette <<- params$palette %or% params[["col"]]
         params$rotate_label_y <<- params$rotate_label_y %or% TRUE
+        params$sidebar <<- params$sidebar %or% TRUE
 
         params$frameborder <<- params$frameborder %or% 0
         params$box <<- params$box %or% FALSE
