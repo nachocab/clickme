@@ -6,19 +6,24 @@ TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 suppressMessages(new_template("TestChart"))
 
 test_that("padding is valid", {
-    params <- list(padding = c(24, 0, 12, 200))
+    params <- list(padding = c(100, 200, 300, top = 400))
+    test_chart <- TestChart$new(params)
+    expect_error(test_chart$get_params(), "Wrong padding elements:\n\t 100\n\t 200\n\t 300", info = "any number of unnamed values")
+
+    params <- list(padding = c(right = 100, bottom = 200, left = 300, top = 400))
     test_chart <- TestChart$new(params)
     test_chart$get_params()
-    expect_equal(test_chart$params$padding, c(top = 24, right = 0, bottom = 12, left = 200))
+    expect_equal(test_chart$params$padding, list(right = 100, bottom = 200, left = 300, top = 400), info = "four named values")
 
-    params <- list(padding = c(right = 10, bottom = 20, left = 30, top = 40))
+    params <- list(padding = c(right = 100, bottom = 200, top = 400))
     test_chart <- TestChart$new(params)
     test_chart$get_params()
-    expect_equal(test_chart$params$padding, c(right = 10, bottom = 20, left = 30,top = 40), info = "changed order")
+    expect_equal(test_chart$params$padding, list(right = 100, bottom = 200, top = 400, left = 100), info = "less than four named values")
 
-    params <- list(padding = c(10, 20, 30))
+    params <- list(padding = c(botom = 20))
     test_chart <- TestChart$new(params)
-    expect_error(test_chart$get_params(), "Please provide four padding values")
+    expect_error(test_chart$get_params(), "Wrong padding elements:\n\t 20", info = "wrong names")
+
 })
 
 test_that("action is valid", {

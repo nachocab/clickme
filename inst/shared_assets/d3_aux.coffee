@@ -54,6 +54,8 @@ my_light_red = "#b90000"
     opts.ordinal_scale_padding ?= 1
     opts.linear_scale_padding ?= 40
 
+    opts.rotate_label.y ?= true
+
     plot = append_main(
             id: opts.id
             width: opts.total_width
@@ -217,16 +219,21 @@ my_light_red = "#b90000"
         plot
 
     plot.add_y_axis_label = (text) ->
-        plot.left_margin.append("text")
+        label = plot.left_margin.append("text")
             .text(text)
             .attr(
                 "class": "y label"
-                "text-anchor": "middle"
-                "x": -plot.height/2
-                "y": -plot.padding.left + 5
+                "text-anchor": "middle")
                 "dy": "1em"
-                "transform": "rotate(-90)"
-            )
+                "x": -plot.height/2)
+
+        if plot.rotate_label.y
+            label.attr(
+                       "y": -plot.padding.left + 5
+                       "transform": "rotate(-90)")
+        else
+            label.attr("y": plot.padding.left - 5)
+
 
         plot
 

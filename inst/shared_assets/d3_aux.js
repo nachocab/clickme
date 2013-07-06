@@ -47,7 +47,7 @@
   };
 
   this.new_plot = function(opts) {
-    var key, plot, value, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
+    var key, plot, value, _base, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
     if (opts == null) {
       opts = {};
     }
@@ -79,6 +79,9 @@
     }
     if ((_ref6 = opts.linear_scale_padding) == null) {
       opts.linear_scale_padding = 40;
+    }
+    if ((_ref7 = (_base = opts.rotate_label).y) == null) {
+      _base.y = true;
     }
     plot = append_main({
       id: opts.id,
@@ -157,8 +160,8 @@
       return plot;
     };
     plot.add_x_axis = function() {
-      var _ref7;
-      if ((_ref7 = plot.orientation_x) == null) {
+      var _ref8;
+      if ((_ref8 = plot.orientation_x) == null) {
         plot.orientation_x = "bottom";
       }
       plot.axes.x = d3.svg.axis().scale(plot.scales.x).orient(plot.orientation_x);
@@ -173,8 +176,8 @@
       return plot;
     };
     plot.add_y_axis = function() {
-      var _ref7;
-      if ((_ref7 = plot.orientation_y) == null) {
+      var _ref8;
+      if ((_ref8 = plot.orientation_y) == null) {
         plot.orientation_y = "left";
       }
       plot.axes.y = d3.svg.axis().scale(plot.scales.y).orient(plot.orientation_y);
@@ -198,14 +201,25 @@
       return plot;
     };
     plot.add_y_axis_label = function(text) {
-      plot.left_margin.append("text").text(text).attr({
+      var label;
+      label = plot.left_margin.append("text").text(text).attr({
         "class": "y label",
-        "text-anchor": "middle",
-        "x": -plot.height / 2,
-        "y": -plot.padding.left + 5,
-        "dy": "1em",
-        "transform": "rotate(-90)"
+        "text-anchor": "middle"
       });
+      if (plot.rotate_label.y) {
+        label.attr({
+          "x": -plot.height / 2,
+          "y": -plot.padding.left + 5,
+          "dy": "1em",
+          "transform": "rotate(-90)"
+        });
+      } else {
+        label.attr({
+          "x": -plot.height / 2,
+          "y": plot.padding.left - 5,
+          "dy": "1em"
+        });
+      }
       return plot;
     };
     if (plot.box === true) {

@@ -31,6 +31,9 @@
         padding: {{ params$padding }},
         xlab: {{ params$xlab }},
         ylab: {{ params$ylab }},
+        rotate_label: {
+          y: {{ params$rotate_label_y }}
+        },
         title: {{ params$title }},
         box: {{ params$box }},
         xlim: {{ params$xlim }},

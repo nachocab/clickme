@@ -32,6 +32,8 @@
         # TODO: refactor into a labels object
         xlab: {{ params$xlab }}
         ylab: {{ params$ylab }}
+        rotate_label:
+            y : {{ params$rotate_label_y }}
         title: {{ params$title }}
         box: {{ params$box }}
 
