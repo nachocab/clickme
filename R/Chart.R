@@ -19,13 +19,15 @@
 #' @exportClass Chart
 Chart <- setRefClass("Chart",
 
-    fields = c(
-               "params",
-               "file_structure",
-               "config",
-               "data",
-               "name",
-               "placeholder"
+    fields = list(
+               name = "character",
+               data = "ANY",
+               params = "list",
+
+               # internal
+               file_structure = "list",
+               config = "list",
+               placeholder = "list"
     ),
 
     methods = list(

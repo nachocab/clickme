@@ -77,7 +77,6 @@ Points <- setRefClass("Points",
                 color_groups_without_color <- color_group_unique_elements[color_group_unique_elements %notin% palette_names]
                 palette_names <- c(palette_names, color_groups_without_color)
             }
-
             if (any(palette_names %notin% color_group_unique_elements)) {
                 message(gettextf("\n\tThe palette contains color group names that don't appear in color_groups:\n\n\t%s", paste(palette_names[palette_names %notin% color_group_unique_elements], collapse = ", ")), "\n")
                 palette_names <- palette_names[palette_names %in% color_group_unique_elements]
@@ -89,7 +88,7 @@ Points <- setRefClass("Points",
         validate_palette = function(palette) {
             if (is.null(palette)){
                 if (scale_type(params$color_groups) == "quantitative"){
-                    palette <- c("#278DD6", "#fff", "#d62728")
+                    palette <- c("#278DD6", "#d62728")
                 } else {
                     palette <- setNames(default_colors(length(params$color_group_order)), params$color_group_order)
                 }
@@ -126,7 +125,14 @@ Points <- setRefClass("Points",
             }
 
             if (is.null(color_domain) && scale_type(params$color_groups) == "quantitative") {
-                color_domain <- c(min(params$color_groups, na.rm = TRUE), 0 , max(params$color_groups, na.rm = TRUE))
+                min <- min(params$color_groups, na.rm = TRUE)
+                max <- max(params$color_groups, na.rm = TRUE)
+                if (min < 0 && max > 0) {
+                    color_domain <- c(min, 0, max)
+                    params$palette <<- c(params$palette[1], "#fff", params$palette[2])
+                } else {
+                    color_domain <- c(min, max)
+                }
             }
 
             color_domain

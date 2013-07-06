@@ -15,7 +15,12 @@ test_that("get_d3_color_scale", {
     params <- list(color_groups = c(1:5))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.linear().domain([1,5]).range([\"#278DD6\",\"#fff\",\"#d62728\"]).interpolate(d3.interpolateLab);", info = "quantitative, color_groups")
+    expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.linear().domain([1,5]).range([\"#278DD6\",\"#d62728\"]).interpolate(d3.interpolateLab);", info = "quantitative, color_groups")
+
+    params <- list(color_groups = c(-2:2))
+    points <- Points$new(params)
+    points$get_params()
+    expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.linear().domain([-2,0,2]).range([\"#278DD6\",\"#fff\",\"#d62728\"]).interpolate(d3.interpolateLab);", info = "quantitative, color_groups")
 
     params <- list(color_groups = c("a", "a", "b", "c", "b"))
     points <- Points$new(params)
@@ -56,14 +61,19 @@ test_that("get_categorical_domains", {
     expect_equal(no_whitespace(points$get_categorical_domains()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:null}")
 })
 
-# test_that("get_data_ranges", {
-#     params <- list(x = 1:10)
-#     points <- Points$new(params)
-#     points$get_data()
-#     expect_equal(points$get_data_ranges(), "{x:null,y:null}")
+test_that("get_data_ranges", {
+    params <- list(x = 1:10)
+    points <- Points$new(params)
+    points$get_data()
+    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[1,10],y:[1,10]}", info = "numeric x")
 
-#     params <- list(x = letters[1:10])
-#     points <- Points$new(params)
-#     points$get_data()
-#     expect_equal(points$get_categorical_domains(), letters[1:10])
-# })
+    params <- list(x = factor(1:10, levels = 10:1), y = 1:10)
+    points <- Points$new(params)
+    points$get_data()
+    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[\"10\",\"9\",\"8\",\"7\",\"6\",\"5\",\"4\",\"3\",\"2\",\"1\"],y:[1,10]}")
+
+    params <- list(x = letters[1:10], y = 1:10)
+    points <- Points$new(params)
+    points$get_data()
+    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:[1,10]}")
+})

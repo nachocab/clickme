@@ -312,6 +312,7 @@ test_template <- test_translator <- function(template_name, filter = NULL){
 
     if (file.exists(template$file_structure$paths$translator_test_file)){
         library("testthat")
+        # TODO: this only works after doing load_all("path to my package"). Don't know how to fix it.
         pkg <- file.path(system.file(package = "clickme"), "..")
         load_all(pkg)
         reload_translators()

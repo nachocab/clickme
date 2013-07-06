@@ -49,9 +49,10 @@ Points$methods(
         categorical_domains
     },
 
+    # returns the min/max if numeric and unique elements otherwise
     get_data_ranges = function(){
-        x_data_range <- get_unique_elements(data$x)
-        y_data_range <- get_unique_elements(data$y)
+        x_data_range <- if (is.numeric(data$x)) range(data$x, na.rm = TRUE) else get_unique_elements(data$x)
+        y_data_range <- if (is.numeric(data$y)) range(data$y, na.rm = TRUE) else get_unique_elements(data$y)
 
         data_ranges <- gettextf("{
           x: %s,
