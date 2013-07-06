@@ -123,11 +123,11 @@ enumerate <- function(x) {
 match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups = FALSE) {
     if (any(duplicated(unlist(groups)))){
         duplicated_elements <- unname(unlist(groups)[duplicated(unlist(groups))])
-        message <- gettextf("The following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"))
+        message <- gettextf("\n\tThe following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"), "\n")
         if (strict_dups){
             stop(message)
         } else {
-            warning(message)
+            message(message)
         }
     }
 
@@ -164,6 +164,12 @@ no_whitespace <- function(str){
     gsub("\\s","", str)
 }
 
+#' Sample with replacement
+#'
+#' @export
+sample_r <- function(input, n){
+    sample(input, n, replace = TRUE)
+}
 
 #' Type of scale
 #'

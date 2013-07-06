@@ -20,7 +20,11 @@ test_that("the palette has valid names", {
 
     params <- list(color_groups = c("a", "a", "b", "c", "b"), palette = c(a = "blue", b = "pink", c = "green", d = "red", e = "yellow"))
     points <- Points$new(params)
-    expect_warning(points$get_params(), "The palette contains color group names that don't appear in color_groups:\n\nd, e")
+    expect_message(points$get_params(), "The palette contains color group names that don't appear in color_groups:\n\nd, e")
+
+    params <- list(color_groups = c("a", "a", "b", "c", "b"), palette = c("blue", d="pink", "green"))
+    points <- Points$new(params)
+    expect_message(points$get_params(), "The palette contains color group names that don't appear in color_groups:\n\nd[^,]+")
 
     params <- list(color_groups = 1:5, palette = c(a = "blue", c = "green", d = "red", e = "yellow"))
     points <- Points$new(params)
@@ -35,7 +39,7 @@ test_that("palette and color_groups", {
 
     params <- list(data = data.frame(a = 1:5), palette = c("a","b"))
     points <- Points$new(params)
-    expect_warning(points$get_params(), "No color_groups provided. Ignoring palette.")
+    expect_message(points$get_params(), "No color_groups provided. Ignoring palette.")
     expect_equal(points$params$palette, "#000", info = "no color groups, palette")
 
     params <- list(data = data.frame(a = 1:5), color_groups = "a")

@@ -35,7 +35,7 @@ Points <- setRefClass("Points",
                 params$palette <<- validate_palette(params$palette)
             } else {
                 if (!is.null(params$palette)){
-                    warning("\n\nNo color_groups provided. Ignoring palette.")
+                    message("\n\tNo color_groups provided. Ignoring palette.\n")
                 }
                 params$palette <<- "#000"
             }
@@ -79,7 +79,7 @@ Points <- setRefClass("Points",
             }
 
             if (any(palette_names %notin% color_group_unique_elements)) {
-                warning(gettextf("\n\nThe palette contains color group names that don't appear in color_groups:\n\n%s", paste0(palette_names[palette_names %notin% color_group_unique_elements], collapse = ", ")))
+                message(gettextf("\n\tThe palette contains color group names that don't appear in color_groups:\n\n\t%s", paste(palette_names[palette_names %notin% color_group_unique_elements], collapse = ", ")), "\n")
                 palette_names <- palette_names[palette_names %in% color_group_unique_elements]
             }
 

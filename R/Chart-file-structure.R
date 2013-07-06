@@ -66,7 +66,7 @@ Chart$methods(
             }
         } else {
             if (!is.null(params$file_name)) {
-                warning(gettextf("The \"file_name\" argument was ignored because the \"file\" argument was present: %s", params$file))
+                message(gettextf("\n\tThe \"file_name\" argument was ignored because the \"file\" argument was present: %s", params$file), "\n")
             }
 
             if (!grepl(".\\.html$", params$file)) {
@@ -87,7 +87,9 @@ Chart$methods(
             }
             file_structure$paths$output_file <<- file.path(file_structure$paths$output, file_structure$names$output_file)
         } else {
-            if (!is.null(params$dir)) warning(gettextf("The \"dir\" argument was ignored because the \"file\" argument was present: %s", params$file))
+            if (!is.null(params$dir)) {
+                message(gettextf("\n\tThe \"dir\" argument was ignored because the \"file\" argument was present: %s", params$file))
+            }
 
             file_structure$paths$output <<- dirname(params$file)
             file_structure$paths$output_file <<- params$file

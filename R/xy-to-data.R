@@ -55,7 +55,7 @@ xy_to_data <- function(x, y) {
             data_y <- as.vector(as.matrix(x))
             rownames <- get_xy_rownames(data_x)
         } else {
-            warning("x is not numeric and it has more than two columns, using the first two: ", paste(colnames(x)[1:2], collapse = ", "))
+            message("\n\tx is not numeric and it has more than two columns, using the first two: ", paste(colnames(x)[1:2], collapse = ", "), "\n")
             data_x <- x[, 1]
             data_y <- x[, 2]
             rownames <- get_xy_rownames(x)
