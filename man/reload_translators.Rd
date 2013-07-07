@@ -6,6 +6,7 @@
 }
 \description{
   Translators are only allowed to create one object with
-  the name of their template in the global namespace.
+  the name of their template and a clickme helper function
+  in the global namespace.
 }
 
