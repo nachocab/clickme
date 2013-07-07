@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <base target="_blank"> <!-- open all links on a new tab -->
+
+    <script src="d3.v3.js"></script>
+    <script src="d3_aux.js"></script>
+
+  </head>
+
+  <body>
+    <script type="text/javascript">
+        plot = new_plot({
+
+            // these are the dimensions of the chart area
+            width: 1000,
+            height: 800,
+
+            // these are the dimensions of the axes labels, the sidebar, and the title
+            padding: {
+                "top":      100,
+                "right":    500,
+                "bottom":   100,
+                "left":     200
+            },
+            xlab: "x label",
+            ylab: "y label",
+            title: "hola",
+            data_ranges: {
+              x: ["4","3","2","1"],
+              y: [1,100]
+            },
+            categorical_domains: {
+              x: ["4","3","2","1"],
+              y: null
+            }
+        });
+        plot.select(".x.axis").call(plot.axes.x);
+        plot.select(".y.axis").call(plot.axes.y);
+    </script>
+    <div>hola2</div>
+  </body>
+</html>
