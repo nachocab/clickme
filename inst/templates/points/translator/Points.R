@@ -20,6 +20,9 @@ Points <- setRefClass("Points",
         get_params = function(){
             callSuper()
 
+            params$radius <<- params$radius %or% 5
+            params$jitter <<- params$jitter %or% 0
+
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
 
@@ -197,12 +200,7 @@ Points <- setRefClass("Points",
 # padding padding around the top-level object
 # ... additional arguments for \code{clickme}
 #
-clickme_helper$points <- function(x, y = NULL,
-                          names = NULL,
-                          xlim = NULL, ylim = NULL,
-                          radius = 5,
-                          jitter = 0,
-                          ...){
+clickme_helper$points <- function(x, y = NULL, ...){
     params <- extract_params()
     points <- Points$new(params)
 

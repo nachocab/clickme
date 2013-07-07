@@ -21,8 +21,8 @@ NULL
 set_default_paths <- function() {
     opts <- options()
     opts_clickme <- list(
-      clickme_templates_path = system.file("templates", package = "clickme"),
-      clickme_output_path = system.file("output", package = "clickme")
+      clickme_templates_path = file.path(system.file(package = "clickme"), "templates"),
+      clickme_output_path = file.path(system.file(package = "clickme"), "output")
     )
 
     # only set options that have not already been set by the user
