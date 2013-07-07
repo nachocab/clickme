@@ -8,7 +8,7 @@ suppressMessages(new_template("TestChart"))
 test_that("padding is valid", {
     params <- list(padding = c(100, 200, 300, top = 400))
     test_chart <- TestChart$new(params)
-    expect_error(test_chart$get_params(), "Wrong padding elements:\n\t 100\n\t 200\n\t 300", info = "any number of unnamed values")
+    expect_error(test_chart$get_params(), "Wrong padding elements:\n\t100\n\t200\n\t300", info = "any number of unnamed values")
 
     params <- list(padding = c(right = 100, bottom = 200, left = 300, top = 400))
     test_chart <- TestChart$new(params)
@@ -22,7 +22,7 @@ test_that("padding is valid", {
 
     params <- list(padding = c(botom = 20))
     test_chart <- TestChart$new(params)
-    expect_error(test_chart$get_params(), "Wrong padding elements:\n\t 20", info = "wrong names")
+    expect_error(test_chart$get_params(), "Wrong padding elements:\n\t20", info = "wrong names")
 
 })
 

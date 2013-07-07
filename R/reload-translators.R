@@ -4,8 +4,10 @@ get_objects <- function(paths) {
         # TODO: handle case when path doesn't exist, no files in path, etc.
 
         # ensure the main translator file is loaded before the helper files
-        translator_files <- list.files(file.path(path, "translator"), full.names = TRUE) # TODO: "translator" should be stored in a variable
-        main_translator_file <- file.path(path, "translator", paste0(basename(path), ".R"))
+        translator_files <- list.files(file.path(path, "translator"), full.names = TRUE)
+
+        # the extra camel_case call is to avoid a weird issue with lowercase folders renamed to uppercase in OSX
+        main_translator_file <- file.path(path, "translator", paste0(camel_case(basename(path)), ".R"))
         translator_files <- move_in_front(main_translator_file, translator_files)
 
         temp <- new.env()

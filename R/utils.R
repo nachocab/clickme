@@ -95,9 +95,14 @@ disjoint_sets <- function(a, b, names = c("a", "b", "both")) {
 }
 
 # move elements to the front of an array
-move_in_front <- function(in_front, everything_else) {
-    everything_else <- everything_else[c(which(everything_else %in% in_front), which(everything_else %notin% in_front))]
-    everything_else
+move_in_front <- function(first_elements, all_elements) {
+    if (any(first_elements %notin% all_elements)){
+        stop(gettextf("\n\n\tThe following elements don't appear in \"%s\":\n%s\n",
+             deparse(substitute(all_elements)),
+             enumerate(first_elements[any(first_elements %notin% all_elements)])))
+    }
+    all_elements <- all_elements[c(which(all_elements %in% first_elements), which(all_elements %notin% first_elements))]
+    all_elements
 }
 
 error_title <- function(message){
@@ -108,7 +113,7 @@ error_title <- function(message){
 #'
 #' @export
 enumerate <- function(x) {
-    paste("\t", x, collapse = "\n")
+    paste0("\t", x, collapse = "\n")
 }
 
 #' Match elements to groups
