@@ -18,6 +18,8 @@
 # link_text
 # rotate_label_y
 # sidebar
+# iframe_width
+# iframe_height
 #' @exportClass Chart
 Chart <- setRefClass("Chart",
 
@@ -74,8 +76,8 @@ Chart <- setRefClass("Chart",
 
             ret <- ""
             if ("iframe" %in% params$action) {
-                width <- params$iframe_width %or% params$width
-                height <- params$iframe_height %or% params$height
+                width <- params$iframe_width %or% params$width + params$padding$right + params$padding$left
+                height <- params$iframe_height %or% params$height + params$padding$top + params$padding$bottom + 100
 
                 ret <- paste(ret, make_iframe(url, width, height), sep = "\n")
             }
