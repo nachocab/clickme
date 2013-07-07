@@ -1,7 +1,8 @@
 context("Chart-config")
 
-TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 test_chart_path <- file.path(getOption("clickme_templates_path"), "TestChart")
+unlink(test_chart_path, recursive = TRUE)
+TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 suppressMessages(new_template("TestChart"))
 
 test_that("styles and scripts must be valid", {

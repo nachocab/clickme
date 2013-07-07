@@ -1,7 +1,8 @@
 context("Chart-file-structure")
 
-TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 test_chart_path <- file.path(getOption("clickme_templates_path"), "TestChart")
+unlink(test_chart_path, recursive = TRUE)
+TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 test_chart <- TestChart$new()
 test_chart$get_params()
 
@@ -82,7 +83,7 @@ test_that("output file name is added", {
 
     test_chart <- TestChart$new(list(file = file.path("my_folder", "my_file1.html"), file_name = "my_file2.html"))
     test_chart$get_params()
-    expect_warning(test_chart$get_file_structure(), "The \"file_name\" argument was ignored because the \"file\" argument was present: ")
+    expect_message(test_chart$get_file_structure(), "The \"file_name\" argument was ignored because the \"file\" argument was present: ")
     expect_equal(test_chart$file_structure$names$output_file, "my_file1.html")
 })
 
@@ -115,7 +116,7 @@ test_that("output paths are added", {
 
     test_chart <- TestChart$new(list(file = file.path("my_folder1", "my_file1.html"), dir = "my_folder2"))
     test_chart$get_params()
-    expect_warning(test_chart$get_file_structure(), "The \"dir\" argument was ignored because the \"file\" argument was present: ")
+    expect_message(test_chart$get_file_structure(), "The \"dir\" argument was ignored because the \"file\" argument was present: ")
     expect_equal(test_chart$file_structure$paths$output, "my_folder1")
     expect_equal(test_chart$file_structure$paths$output_file, file.path(test_chart$file_structure$paths$output, test_chart$file_structure$names$output_file))
     unlink("my_folder", recursive = TRUE)

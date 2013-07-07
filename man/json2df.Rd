@@ -10,9 +10,4 @@
 \description{
   Convert a JSON string into a data frame
 }
-\examples{
-library(df2json)
-json <- "[{\\"a\\":1, \\"b\\":2},{\\"a\\":3,\\"b\\":4}]"
-json2df(json)
-}
 

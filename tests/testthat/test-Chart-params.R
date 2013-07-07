@@ -1,66 +1,50 @@
 context("Chart-params")
 
-TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 test_chart_path <- file.path(getOption("clickme_templates_path"), "TestChart")
+unlink(test_chart_path, recursive = TRUE)
+TestChart <- setRefClass('TestChart', contains = "Chart", where=.GlobalEnv)
 suppressMessages(new_template("TestChart"))
 
 test_that("padding is valid", {
-    # default global padding
-    test_chart <- TestChart$new(list(padding = c(24, 0, 12, 200)))
+    params <- list(padding = c(100, 200, 300, top = 400))
+    test_chart <- TestChart$new(params)
+    expect_error(test_chart$get_params(), "Wrong padding elements:\n\t 100\n\t 200\n\t 300", info = "any number of unnamed values")
+
+    params <- list(padding = c(right = 100, bottom = 200, left = 300, top = 400))
+    test_chart <- TestChart$new(params)
     test_chart$get_params()
-    expect_equal(test_chart$params$padding, c(top = 24, right = 0, bottom = 12, left = 200))
+    expect_equal(test_chart$params$padding, list(right = 100, bottom = 200, left = 300, top = 400), info = "four named values")
 
-    # user-provided param padding
-    test_chart <- TestChart$new(list(padding = c(10, 20, 30, 40)))
+    params <- list(padding = c(right = 100, bottom = 200, top = 400))
+    test_chart <- TestChart$new(params)
     test_chart$get_params()
-    expect_equal(test_chart$params$padding, c(top = 10, right = 20, bottom = 30, left = 40))
+    expect_equal(test_chart$params$padding, list(right = 100, bottom = 200, top = 400, left = 100), info = "less than four named values")
 
-    # changed order
-    test_chart <- TestChart$new(list(padding = c(right = 10, bottom = 20, left = 30, top = 40)))
-    test_chart$get_params()
-    expect_equal(test_chart$params$padding, c(right = 10, bottom = 20, left = 30,top = 40))
+    params <- list(padding = c(botom = 20))
+    test_chart <- TestChart$new(params)
+    expect_error(test_chart$get_params(), "Wrong padding elements:\n\t 20", info = "wrong names")
 
-    # wrong input
-    test_chart <- TestChart$new(list(padding = c(10, 20, 30)))
-    test_chart$get_unvalidated_params()
-    expect_error(test_chart$validate_params(), "Please provide four padding values")
-})
-
-test_that("reorder_data_by_colorize", {
-    test_chart <- TestChart$new(list(data = data.frame(x = c(1,2,3)),
-                                           colorize = c("a","b","c")))
-    test_chart$get_params()
-    test_chart$get_data()
-
-    reordered_data <- test_chart$reorder_data_by_colorize()
-    expect_equal(reordered_data$x, c(3, 2, 1))
-
-    test_chart <- TestChart$new(list(data = data.frame(x = c(1,2,3)),
-                                           colorize = c("a","b","c"),
-                                           palette = c(a = "blue", c = "red", b = "green")))
-    test_chart$get_params()
-    test_chart$get_data()
-
-    reordered_data <- test_chart$reorder_data_by_colorize()
-    expect_equal(reordered_data$x, c(2, 3, 1))
 })
 
 test_that("action is valid", {
     test_chart <- TestChart$new()
     test_chart$get_params()
-    expect_equal(test_chart$params$action, c("open"))
+    expect_equal(test_chart$params$actions, c("open"))
 
-    test_chart <- TestChart$new(list(action = "open"))
+    test_chart <- TestChart$new(list(actions = "open"))
     test_chart$get_params()
-    expect_equal(test_chart$params$action, c("open"))
+    expect_equal(test_chart$params$actions, c("open"))
 
-    test_chart <- TestChart$new(list(action = c("open", "link")))
+    test_chart <- TestChart$new(list(actions = c("open", "link")))
     test_chart$get_params()
-    expect_equal(test_chart$params$action, c("open", "link"))
+    expect_equal(test_chart$params$actions, c("open", "link"))
 
-    test_chart <- TestChart$new(list(action = c("open", "fake")))
-    test_chart$get_unvalidated_params()
-    expect_error(test_chart$validate_params(), "Invalid action \"fake\". Please choose one or several among:")
+    test_chart <- TestChart$new(list(actions = c("iframe", "link")))
+    test_chart$get_params()
+    expect_equal(test_chart$params$actions, c("iframe", "link"))
+
+    test_chart <- TestChart$new(list(actions = c("open", "fake")))
+    expect_error(test_chart$get_params(), "Invalid action \"fake\". Please choose one or several among:")
 })
 
 unlink(test_chart_path, recursive = TRUE)

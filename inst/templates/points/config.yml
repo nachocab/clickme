@@ -8,8 +8,8 @@ info: |-
 original_url:
 
 demo: |-
-    clickme_points(rnorm(500),rnorm(500), colorize = sample(letters[1:9], 500, replace = TRUE))
-    clickme_points(rnorm(50),rnorm(50), colorize = sample(letters[1:3], 50, replace = TRUE), palette = c(a="green", c = "red", b = "blue"))
+    clickme_points(rnorm(500),rnorm(500), color_groups = sample(letters[1:9], 500, replace = TRUE))
+    clickme_points(rnorm(50),rnorm(50), color_groups = sample(letters[1:3], 50, replace = TRUE), palette = c(a="green", c = "red", b = "blue"))
 
 scripts:
     - $shared/d3.v3.js

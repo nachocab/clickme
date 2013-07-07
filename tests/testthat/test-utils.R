@@ -19,7 +19,7 @@ test_that("match_to_groups", {
     subset <- c("a","b","c")
     groups <- list(a = c("a","b"), b = c("a","b","c"))
     suppressWarnings(expect_equal(match_to_groups(subset, groups, strict_dups = FALSE), c("a","a","b")))
-    expect_warning(match_to_groups(subset, groups, strict_dups = FALSE), "The following elements appear in more than one group:\na\nb")
+    expect_message(match_to_groups(subset, groups, strict_dups = FALSE), "The following elements appear in more than one group:\na\nb")
     expect_error(match_to_groups(subset, groups, strict_dups = TRUE), "The following elements appear in more than one group:\na\nb")
 })
 
@@ -58,4 +58,8 @@ test_that("camel_case", {
 test_that("snake_case", {
     strings <- c("PacoPepe", "pacoPepe", "Paco")
     expect_equal(snake_case(strings), c("paco_pepe","paco_pepe", "paco"))
+})
+
+test_that("clickme", {
+    expect_match(make_iframe("test.html", 980, 980), "<iframe width = \"980\" height = \"980\" src=\"test\\.html\"> </iframe>")
 })

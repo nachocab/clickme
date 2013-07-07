@@ -27,10 +27,8 @@
 #     expect_true(file.exists(file_structure$paths$output_file))
 # })
 
-# context("example translators")
+context("Installed templates")
 
-# test_that("example translators work", {
-#     for(template in plain_list_templates()){
-#         test_chart(template)
-#     }
-# })
+for(template in plain_list_templates()){
+    test_template(template)
+}

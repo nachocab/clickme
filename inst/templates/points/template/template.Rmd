@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <base target="_blank"> <!-- open all links on a new tab -->
 
     <title>{{{ params$title }}}</title>
 
@@ -28,20 +29,17 @@
         width: {{ params$width }},
         height: {{ params$height }},
         padding: {{ params$padding }},
-        data_ranges: {
-          x: {{ range(data$x, na.rm = TRUE) }},
-          y: {{ range(data$y, na.rm = TRUE) }}
-        },
         xlab: {{ params$xlab }},
         ylab: {{ params$ylab }},
+        rotate_label: {
+          y: {{ params$rotate_label_y }}
+        },
         title: {{ params$title }},
         box: {{ params$box }},
         xlim: {{ params$xlim }},
         ylim: {{ params$ylim }},
-        categorical_domains: {
-          x: {{ params$x_categorical_domain }},
-          y: {{ params$y_categorical_domain }}
-        },
+        data_ranges: {{{ get_data_ranges() }}},
+        categorical_domains: {{{ get_categorical_domains() }}},
         jitter: {{ params$jitter }},
         ordinal_scale_padding: 1,
         linear_scale_padding: 40
@@ -51,12 +49,12 @@
         return {{{ get_tooltip_content() }}};
       };
     
-      plot.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
+      plot.center.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
         "width": plot.width,
         "height": plot.height
       });
     
-      clip = plot.append("g").attr("clip-path", "url(#clip)");
+      clip = plot.center.append("g").attr("clip-path", "url(#clip)");
     
       if (plot.zoom) {
         clip.append("rect").style({
@@ -90,7 +88,7 @@
         "class": "point_tooltip",
         "r": radius,
         "fill": function(d) {
-          return color_scale(d.colorize);
+          return color_scale(d.group);
         },
         "title": function(d) {
           return plot.tooltip_text(d);
@@ -112,80 +110,77 @@
         "display": "none"
       }).style({
         "fill": function(d) {
-          return color_scale(d.colorize);
+          return color_scale(d.group);
         },
         "font-size": "22px"
       });
     
-      sidebar = plot.append("g").attr("transform", "translate(" + (plot.width + 60) + ",0)");
-    
-      g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
-        return toggle_names();
-      });
-    
-      g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
-    
-      g_toggle_names.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12').text("Show names (" + data.length + ")");
-    
-      toggle_names = function() {
-        var showing_point_names;
-        showing_point_names = g_toggle_names.classed("show_names");
-        point_names.attr("display", function() {
-          if (showing_point_names) {
-            return "none";
-          } else {
-            return "inline";
-          }
+      if ({{ params$sidebar }}) {
+        sidebar = plot.right_margin.append("g").attr("transform", "translate(60,0)");
+        g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
+          return toggle_names();
         });
-        return g_toggle_names.attr("class", function() {
-          if (showing_point_names) {
-            return "";
-          } else {
-            return "show_names";
-          }
-        }).select("circle").attr("fill", function() {
-          if (showing_point_names) {
-            return "white";
-          } else {
-            return "black";
-          }
-        });
-      };
-    
-      if (color_scale.range().length > 1) {
-        sidebar.append("text").attr({
-          "class": "color_title",
-          "x": -radius,
-          "y": 45,
-          "dy": ".35em"
-        }).style({
-          "font-size": "16px",
-          "font-weight": "bold"
-        }).text(color_title);
-        g_color_legend = sidebar.selectAll(".key").data(color_scale.domain().reverse()).enter().append("g").attr({
-          "transform": function(d, i) {
-            return "translate(0, " + (i * (radius * 2 + 15) + 70) + ")";
-          },
-          "class": "key"
-        });
-        g_color_legend.append("circle").attr({
-          "r": radius,
-          "fill": color_scale
-        });
-        g_color_legend.append("text").attr({
-          "x": radius + 10,
-          "y": 0,
-          "dy": ".35em"
-        }).text(function(d) {
-          return "" + d + " (" + color_legend_counts[d] + ")";
-        });
+        g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
+        g_toggle_names.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12').text("Show names (" + data.length + ")");
+        toggle_names = function() {
+          var showing_point_names;
+          showing_point_names = g_toggle_names.classed("show_names");
+          point_names.attr("display", function() {
+            if (showing_point_names) {
+              return "none";
+            } else {
+              return "inline";
+            }
+          });
+          return g_toggle_names.attr("class", function() {
+            if (showing_point_names) {
+              return "";
+            } else {
+              return "show_names";
+            }
+          }).select("circle").attr("fill", function() {
+            if (showing_point_names) {
+              return "white";
+            } else {
+              return "black";
+            }
+          });
+        };
+        if (color_scale.range().length > 1) {
+          sidebar.append("text").attr({
+            "class": "color_title",
+            "x": -radius,
+            "y": 45,
+            "dy": ".35em"
+          }).style({
+            "font-size": "16px",
+            "font-weight": "bold"
+          }).text(color_title);
+          g_color_legend = sidebar.selectAll(".key").data(color_scale.domain().reverse()).enter().append("g").attr({
+            "transform": function(d, i) {
+              return "translate(0, " + (i * (radius * 2 + 15) + 70) + ")";
+            },
+            "class": "key"
+          });
+          g_color_legend.append("circle").attr({
+            "r": radius,
+            "fill": color_scale
+          });
+          g_color_legend.append("text").attr({
+            "x": radius + 10,
+            "y": 0,
+            "dy": ".35em"
+          }).text(function(d) {
+            return "" + d + " (" + color_legend_counts[d] + ")";
+          });
+        }
       }
     
     }).call(this);
 
     </script>
     <div class = "code">
-    {{{ params$code }}}
+        {{{ code }}}
     </div>
   </body>
 </html>

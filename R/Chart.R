@@ -11,22 +11,28 @@
 # extra
 # palette
 # col (alias for palette)
-# colorize
-# color_domain
 # color_title
 # file
 # file_name
 # dir
+# link_text
+# rotate_label_y
+# sidebar
+# iframe_width
+# iframe_height
 #' @exportClass Chart
 Chart <- setRefClass("Chart",
 
-    fields = c(
-               "params",
-               "file_structure",
-               "config",
-               "data",
-               "name",
-               "placeholder"
+    fields = list(
+               name = "character",
+               data = "ANY",
+               params = "list",
+
+               # internal
+               file_structure = "list",
+               config = "list",
+               placeholder = "list",
+               code = "character"
     ),
 
     methods = list(
@@ -40,16 +46,9 @@ Chart <- setRefClass("Chart",
             library(knitr)
             library(stringr)
             library(rjson)
-
-            return()
-        },
-
-        get_data = function(){
-            data <<- params$data
         },
 
         display = function() {
-
             .self$get_params()
             .self$get_file_structure()
             .self$get_config()
@@ -57,11 +56,14 @@ Chart <- setRefClass("Chart",
             .self$generate()
 
             do_action()
-
         },
 
+        # Multiple actions may be specified as a character vector
+        # If actions includes "open", it opens a new browser tab with the output file
+        # If actions includes "link", it returns an HTML link (invisible)
+        # If actions includes "iframe", it returns an HTML iframe (invisible)
+        # If actions includes is FALSE, no action is taken.
         do_action = function(){
-
             if (config$require_server){
                 url <- paste0("http://localhost:", port, "/", file_structure$names$output_file)
             } else {
@@ -73,15 +75,21 @@ Chart <- setRefClass("Chart",
             }
 
             ret <- ""
-            if ("link" %in% params$action) {
-                ret <- paste(ret, make_link(url, params$title %||% "link"), sep = "\n")
-            }
-
             if ("iframe" %in% params$action) {
-                ret <- paste(ret, make_iframe(url, params$width, params$height, params$frameborder), sep = "\n")
+                width <- params$iframe_width %or% params$width + params$padding$right + params$padding$left
+                height <- params$iframe_height %or% params$height + params$padding$top + params$padding$bottom + 100
+
+                ret <- paste(ret, make_iframe(url, width, height), sep = "\n")
             }
 
-            invisible(ret)
+            if ("link" %in% params$action) {
+                link_text <- params$link_text %or% params$title %or% "link"
+
+                ret <- paste(ret, make_link(url, link_text), sep = "\n")
+            }
+
+
+            cat(ret)
         }
 
    )

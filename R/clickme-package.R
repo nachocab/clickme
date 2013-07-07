@@ -31,5 +31,7 @@ set_default_paths <- function() {
 }
 
 .onLoad <- function(libname, pkgname) {
-  set_default_paths()
+    # I need to load it explicitly or I get an error when running in non-interactive mode
+    library(methods)
+    set_default_paths()
 }

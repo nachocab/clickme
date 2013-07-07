@@ -2,7 +2,7 @@
 \alias{make_iframe}
 \title{Make an HTML iframe}
 \usage{
-  make_iframe(url, width, height, frameborder)
+  make_iframe(url, width, height)
 }
 \arguments{
   \item{url}{URL}

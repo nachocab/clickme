@@ -50,8 +50,8 @@ make_link <- function(url, name) {
     if (is.null(url)) {
         stop ("Please provide a valid output_file")
     }
-    link <- gettextf("<a href=\"%s\" target = \"_blank\">%s</a>\n\n", url, name)
-    cat(link)
+    link <- gettextf("<a href=\"%s\" class=\"clickme\">%s</a>", url, name)
+    link
 }
 
 #' Make an HTML iframe
@@ -59,13 +59,13 @@ make_link <- function(url, name) {
 #' @param width
 #'
 #' @export
-make_iframe <- function(url, width, height, frameborder) {
+make_iframe <- function(url, width, height) {
     if (is.null(url)) {
         stop ("Please provide a valid output_file")
     }
 
-    iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" src=\"%s\" frameborder=\"%d\"> </iframe>\n\n", width, height, url, frameborder)
-    cat(iframe)
+    iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" src=\"%s\"> </iframe>", width, height, url)
+    iframe
 }
 
 separator <- function(n = 70){
@@ -76,16 +76,8 @@ separator <- function(n = 70){
 #' @export
 extract_params <- function() {
     named_params <- as.list(parent.frame())
-    dots <- as.list(substitute(list(...), parent.frame()))[-1]
+    dots <- eval(substitute(list(...), parent.frame()))
     params <- c(named_params, dots)
-
-    # After substituting, T and F don't get automatically replaced to TRUE and FALSE
-    names <- sapply(params, is.name)
-    if (any(names)){
-        params[names & params == "T"] <- TRUE
-        params[names & params == "F"] <- FALSE
-    }
-
     params
 }
 
@@ -112,8 +104,11 @@ error_title <- function(message){
     paste0("\n\n*** ", message, " ***\n\n")
 }
 
-enumerate <- function(array) {
-    paste("\t", array, collapse = "\n")
+#' Return the elements of a character vector separated by newlines
+#'
+#' @export
+enumerate <- function(x) {
+    paste("\t", x, collapse = "\n")
 }
 
 #' Match elements to groups
@@ -128,11 +123,11 @@ enumerate <- function(array) {
 match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups = FALSE) {
     if (any(duplicated(unlist(groups)))){
         duplicated_elements <- unname(unlist(groups)[duplicated(unlist(groups))])
-        message <- gettextf("The following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"))
+        message <- gettextf("\n\tThe following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"), "\n")
         if (strict_dups){
             stop(message)
         } else {
-            warning(message)
+            message(message)
         }
     }
 
@@ -148,8 +143,33 @@ match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups =
     group_names
 }
 
+#' Return the levels of a factor, or the unique elements of a character vector
+#' @param elements values
+#' @export
+get_unique_elements <- function(elements) {
+    if (is.factor(elements)){
+        unique_elements <- levels(elements)
+    } else {
+        unique_elements <- unique(elements)
+    }
 
+    unique_elements <- na.omit(unique_elements)
+    unique_elements
+}
 
+#' Remove whitespace from a string
+#'
+#'
+no_whitespace <- function(str){
+    gsub("\\s","", str)
+}
+
+#' Sample with replacement
+#'
+#' @export
+sample_r <- function(input, n){
+    sample(input, n, replace = TRUE)
+}
 
 #' Type of scale
 #'
@@ -158,8 +178,8 @@ match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups =
 #' If elements is numeric and has a length greater than one, it returns "quantitative". If elements is NULL, or not numeric, or has a length of one, it returns "categorical".
 #'
 #' @export
-scale_type <- function(elements = NULL) {
-    if (!is.null(elements) & is.numeric(elements) & length(elements) > 1){
+scale_type <- function(elements) {
+    if (!is.null(elements) && is.numeric(elements) && length(elements) > 1){
         type <- "quantitative"
     } else {
         type <- "categorical"
@@ -252,10 +272,10 @@ readContents <- function(path) {
 #' @examples
 #' a <- "a"
 #' b <- "b"
-#' d <- a %||% b # d == "a"
+#' d <- a %or% b # d == "a"
 #' a <- NULL
-#' d <- a %||% b # d == "b"
-"%||%" <- function(a, b) {
+#' d <- a %or% b # d == "b"
+"%or%" <- function(a, b) {
   if (!is.null(a)) a else b
 }
 
@@ -292,6 +312,7 @@ test_template <- test_translator <- function(template_name, filter = NULL){
 
     if (file.exists(template$file_structure$paths$translator_test_file)){
         library("testthat")
+        # TODO: this only works after doing load_all("path to my package"). Don't know how to fix it.
         pkg <- file.path(system.file(package = "clickme"), "..")
         load_all(pkg)
         reload_translators()

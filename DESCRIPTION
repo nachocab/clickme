@@ -4,6 +4,8 @@ Author: Nacho Caballero <nachocab@gmail.com>
 Version: 0.3.0
 License: GPL-3
 Title: Straight from R to JS: Create interactive visualizations from R
+URL: https://github.com/nachocab/clickme
+BugReports: https://github.com/nachocab/clickme/issues
 Description: R has powerful data processing abilities, but it can only generate
     static plots. Browsers allow interactivity but the data they work with is
     often statically defined. Clickme bridges both worlds by making it easy to
@@ -24,10 +26,11 @@ Collate:
     'json.R'
     'Chart.R'
     'Chart-params.R'
+    'Chart-data.R'
     'Chart-file-structure.R'
     'Chart-config.R'
-    'Chart-helper.R'
     'Chart-generate.R'
+    'Chart-placeholders.R'
     'new-template.R'
     'reload-translators.R'
     'clickme.R'
