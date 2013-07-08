@@ -61,29 +61,29 @@ test_that("default paths are valid", {
 test_that("output file name is added", {
     expect_equal(test_chart$file_structure$names$output_file, "temp-TestChart.html")
 
-    test_chart <- TestChart$new(list(file = file.path("my_folder", "my_file.html")))
+    test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file.html")))
     test_chart$get_params()
     test_chart$get_file_structure()
     expect_equal(test_chart$file_structure$names$output_file, "my_file.html")
 
-    test_chart <- TestChart$new(list(file = file.path("my_folder", "my_file")))
+    test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file")))
     test_chart$get_params()
     test_chart$get_file_structure()
     expect_equal(test_chart$file_structure$names$output_file, "my_file.html")
 
-    test_chart <- TestChart$new(list(file = "my_file.html"))
+    test_chart <- TestChart$new(list(file_path = "my_file.html"))
     test_chart$get_params()
     test_chart$get_file_structure()
     expect_equal(test_chart$file_structure$names$output_file, "my_file.html")
 
-    test_chart <- TestChart$new(list(file = "my_file"))
+    test_chart <- TestChart$new(list(file_path = "my_file"))
     test_chart$get_params()
     test_chart$get_file_structure()
     expect_equal(test_chart$file_structure$names$output_file, "my_file.html")
 
-    test_chart <- TestChart$new(list(file = file.path("my_folder", "my_file1.html"), file_name = "my_file2.html"))
+    test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file1.html"), file = "my_file2.html"))
     test_chart$get_params()
-    expect_message(test_chart$get_file_structure(), "The \"file_name\" argument was ignored because the \"file\" argument was present: ")
+    expect_message(test_chart$get_file_structure(), "The \"file\" argument was ignored because the \"file_path\" argument was present: ")
     expect_equal(test_chart$file_structure$names$output_file, "my_file1.html")
 })
 
@@ -108,15 +108,15 @@ test_that("output paths are added", {
     expect_equal(test_chart$file_structure$paths$output, "my_folder")
     expect_equal(test_chart$file_structure$paths$output_file, file.path(test_chart$file_structure$paths$output, test_chart$file_structure$names$output_file))
 
-    test_chart <- TestChart$new(list(file = file.path("my_folder", "my_file1.html")))
+    test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file1.html")))
     test_chart$get_params()
     test_chart$get_file_structure()
     expect_equal(test_chart$file_structure$paths$output, "my_folder")
     expect_equal(test_chart$file_structure$paths$output_file, file.path(test_chart$file_structure$paths$output, test_chart$file_structure$names$output_file))
 
-    test_chart <- TestChart$new(list(file = file.path("my_folder1", "my_file1.html"), dir = "my_folder2"))
+    test_chart <- TestChart$new(list(file_path = file.path("my_folder1", "my_file1.html"), dir = "my_folder2"))
     test_chart$get_params()
-    expect_message(test_chart$get_file_structure(), "The \"dir\" argument was ignored because the \"file\" argument was present: ")
+    expect_message(test_chart$get_file_structure(), "The \"dir\" argument was ignored because the \"file_path\" argument was present")
     expect_equal(test_chart$file_structure$paths$output, "my_folder1")
     expect_equal(test_chart$file_structure$paths$output_file, file.path(test_chart$file_structure$paths$output, test_chart$file_structure$names$output_file))
     unlink("my_folder", recursive = TRUE)

@@ -54,32 +54,33 @@ Chart$methods(
 
     get_output_file_name = function() {
 
-        if (is.null(params$file)){
-            if (is.null(params$file_name)){
+        if (is.null(params$file_path)){
+            if (is.null(params$file)){
                 file_structure$names$output_file <<- paste0("temp-", file_structure$names$template, ".html")
             } else {
-                if (!grepl(".\\.html$", params$file_name)) {
-                    file_structure$names$output_file <<- paste0(params$file_name, ".html")
+                if (!grepl(".\\.html$", params$file)) {
+                    file_structure$names$output_file <<- paste0(params$file, ".html")
                 } else {
-                    file_structure$names$output_file <<- params$file_name
+                    file_structure$names$output_file <<- params$file
                 }
             }
         } else {
-            if (!is.null(params$file_name)) {
-                message(gettextf("\n\tThe \"file_name\" argument was ignored because the \"file\" argument was present: %s", params$file), "\n")
+            if (!is.null(params$file)) {
+                message(gettextf("\n\tThe \"file\" argument was ignored because the \"file_path\" argument was present: %s", params$file_path), "\n")
             }
 
-            if (!grepl(".\\.html$", params$file)) {
-                params$file <<- paste0(params$file, ".html")
+            if (!grepl(".\\.html$", params$file_path)) {
+                params$file_path <<- paste0(params$file_path, ".html")
             }
-            file_structure$names$output_file <<- basename(params$file)
+            file_structure$names$output_file <<- basename(params$file_path)
         }
 
     },
 
+    # Absolute and relative paths to output folder, output file, and output template and shared assets
     get_output_paths = function() {
 
-        if (is.null(params$file)){
+        if (is.null(params$file_path)){
             if (is.null(params$dir)){
                 file_structure$paths$output <<- getOption("clickme_output_path")
             } else {
@@ -88,11 +89,11 @@ Chart$methods(
             file_structure$paths$output_file <<- file.path(file_structure$paths$output, file_structure$names$output_file)
         } else {
             if (!is.null(params$dir)) {
-                message(gettextf("\n\tThe \"dir\" argument was ignored because the \"file\" argument was present: %s", params$file))
+                message(gettextf("\n\tThe \"dir\" argument was ignored because the \"file_path\" argument was present\n\t(use \"file\" if you just want to specify the file name):\n\t%s\n", params$file_path))
             }
 
-            file_structure$paths$output <<- dirname(params$file)
-            file_structure$paths$output_file <<- params$file
+            file_structure$paths$output <<- dirname(params$file_path)
+            file_structure$paths$output_file <<- params$file_path
         }
 
         file_structure$paths$output_template_assets <<- file.path(file_structure$paths$output, file_structure$names$output_assets, file_structure$names$template)

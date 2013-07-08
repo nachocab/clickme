@@ -104,7 +104,7 @@ test_that("replace_delimiter", {
 
 test_that("regular templates are rendered", {
 
-    test_chart <- TestChart$new(list(a = 3, b = "b", c = "my_function(3)", file = test_output_file))
+    test_chart <- TestChart$new(list(a = 3, b = "b", c = "my_function(3)", file_path = test_output_file))
     test_chart$get_params()
     test_chart$get_file_structure()
 
@@ -130,7 +130,7 @@ test_that("regular templates are rendered", {
 
 test_that("coffee templates are rendered", {
 
-    test_chart <- TestChart$new(list(a = 3, b = "b", c = "my_function(3)", coffee = TRUE, file = test_output_file))
+    test_chart <- TestChart$new(list(a = 3, b = "b", c = "my_function(3)", coffee = TRUE, file_path = test_output_file))
     test_chart$get_params()
     test_chart$get_file_structure()
 
