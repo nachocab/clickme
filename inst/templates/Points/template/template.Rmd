@@ -35,6 +35,7 @@
           y: {{ params$rotate_label_y }}
         },
         title: {{ params$title }},
+        subtitle: {{ params$subtitle }},
         box: {{ params$box }},
         xlim: {{ params$xlim }},
         ylim: {{ params$ylim }},

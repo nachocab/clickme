@@ -142,6 +142,15 @@
       });
       return plot;
     };
+    plot.add_subtitle = function() {
+      plot.top_margin.append("text").text(plot.subtitle).attr({
+        "class": "subtitle",
+        "text-anchor": "middle",
+        "x": plot.width / 2,
+        "y": plot.padding.top / 2 + 30
+      });
+      return plot;
+    };
     plot.add_box = function() {
       plot.append("path").attr({
         "d": "M0,0L" + plot.width + ",0L" + plot.width + "," + plot.height
@@ -225,6 +234,7 @@
       plot.add_box();
     }
     plot.add_title();
+    plot.add_subtitle();
     plot.get_scales();
     if (plot.scale_types.x === "ordinal" || plot.scale_types.y === "ordinal") {
       plot.zoom = false;

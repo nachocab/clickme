@@ -137,6 +137,18 @@ my_light_red = "#b90000"
 
         plot
 
+    plot.add_subtitle = () ->
+        plot.top_margin.append("text")
+            .text(plot.subtitle)
+            .attr(
+                "class": "subtitle"
+                "text-anchor": "middle"
+                "x": plot.width / 2
+                "y": plot.padding.top / 2 + 30
+            )
+
+        plot
+
     plot.add_box = () ->
         plot.append("path")
             .attr(
@@ -243,6 +255,7 @@ my_light_red = "#b90000"
         plot.add_box()
 
     plot.add_title()
+    plot.add_subtitle()
 
     plot.get_scales()
     if plot.scale_types.x is "ordinal" or plot.scale_types.y is "ordinal"
