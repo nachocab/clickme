@@ -107,16 +107,20 @@ Chart$methods(
     # Ensures that all the assets used by the visualization are copied to the output_xxx_assets path
     export_assets = function(){
 
+        # if the clickme shared assets folder exists,
+        # and either the output shared assets folder
+        # doesn't exist, or
+        # it was modified before (or after!) the clickme shared assets folder, rewrite everything.
         if (file.exists(file_structure$paths$shared_assets) &&
                 (!file.exists(file_structure$paths$output_shared_assets) ||
-                 file.info(file_structure$paths$shared_assets)$mtime > file.info(file_structure$paths$output_shared_assets)$mtime)){
+                 file.info(file_structure$paths$shared_assets)$mtime != file.info(file_structure$paths$output_shared_assets)$mtime)){
             dir.create(file_structure$paths$output_shared_assets, showWarnings = FALSE)
             file.copy(from = list.files(file_structure$paths$shared_assets, full.names = TRUE), to = file_structure$paths$output_shared_assets, overwrite = TRUE)
         }
 
         if (file.exists(file_structure$paths$template_assets) &&
                 (!file.exists(file_structure$paths$output_template_assets) ||
-                 file.info(file_structure$paths$template_assets)$mtime > file.info(file_structure$paths$output_template_assets)$mtime)){
+                 file.info(file_structure$paths$template_assets)$mtime != file.info(file_structure$paths$output_template_assets)$mtime)){
             dir.create(file_structure$paths$output_template_assets, showWarnings = FALSE)
             file.copy(from = list.files(file_structure$paths$template_assets, full.names = TRUE), to = file_structure$paths$output_template_assets, overwrite = TRUE)
         }
