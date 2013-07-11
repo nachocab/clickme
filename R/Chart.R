@@ -59,10 +59,10 @@ Chart <- setRefClass("Chart",
         },
 
         # Multiple actions may be specified as a character vector
-        # If actions includes "open", it opens a new browser tab with the output file
-        # If actions includes "link", it returns an HTML link (invisible)
-        # If actions includes "iframe", it returns an HTML iframe (invisible)
-        # If actions includes is FALSE, no action is taken.
+        # If action includes "open", it opens a new browser tab with the output file
+        # If action includes "link", it returns an HTML link (invisible)
+        # If action includes "iframe", it returns an HTML iframe (invisible)
+        # If action includes FALSE, no action is taken.
         do_action = function(){
             if (config$require_server){
                 url <- paste0("http://localhost:", port, "/", file_structure$names$output_file)

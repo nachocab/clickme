@@ -136,7 +136,7 @@ test_that("limits reduce the size of the data", {
 context("Points: clickme")
 
 test_that("clickme", {
-    # expect_that(clickme("points", 1:10, actions = FALSE), not(throws_error()))
-    # capture.output(expect_that(clickme("points", 1:10, actions = "iframe"), not(throws_error())))
-    capture.output(expect_that(clickme("points", 1:10, actions = c("link", "iframe")), not(throws_error())))
+    # expect_that(clickme("points", 1:10, action = FALSE), not(throws_error()))
+    # capture.output(expect_that(clickme("points", 1:10, action = "iframe"), not(throws_error())))
+    capture.output(expect_that(clickme("points", 1:10, action = c("link", "iframe")), not(throws_error())))
 })
