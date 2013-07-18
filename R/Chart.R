@@ -79,7 +79,7 @@ Chart <- setRefClass("Chart",
                 width <- params$iframe_width %or% params$width + params$padding$right + params$padding$left
                 height <- params$iframe_height %or% params$height + params$padding$top + params$padding$bottom + 100
 
-                ret <- paste(ret, make_iframe(url, width, height), sep = "\n")
+                ret <- paste(ret, make_iframe(url, width, height, src_name = "data-src"), sep = "\n")
             }
 
             if ("link" %in% params$action) {

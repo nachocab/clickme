@@ -59,12 +59,16 @@ make_link <- function(url, name) {
 #' @param width
 #'
 #' @export
-make_iframe <- function(url, width, height) {
+make_iframe <- function(url, width, height, src_name = "src") {
     if (is.null(url)) {
         stop ("Please provide a valid output_file")
     }
 
-    iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" src=\"%s\"> </iframe>", width, height, url)
+    iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" %s=\"%s\"> </iframe>",
+                       width,
+                       height,
+                       src_name,
+                       url)
     iframe
 }
 
@@ -148,6 +152,22 @@ match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups =
     group_names
 }
 
+
+#' Classify the elements of a vector into Venn categories
+#' @export
+vennize <- function(a, b, only_in_a = "Only in A", only_in_b = "Only in B", in_both = "In both") {
+    results <- list()
+    results[[only_in_a]] <- setdiff(a,b)
+    results[[in_both]] <- intersect(a,b)
+    results[[only_in_b]] <- setdiff(b,a)
+
+    results
+}
+
+percentage <- function(x){
+    x/sum(x)*100
+}
+
 #' Return the levels of a factor, or the unique elements of a character vector
 #' @param elements values
 #' @export
@@ -225,8 +245,8 @@ default_colors <- function(n = 9){
     d3_category9 <- c(
                        "#24A5F9", # blue
                        "#d62728", # red
-                       "#9467bd", # purple
                        "#ff7f0e", # orange
+                       "#9467bd", # purple
                        "#3CCB23", # green
                        "#E027E4", # pink
                        "#5711AC", # plum
