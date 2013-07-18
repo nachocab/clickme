@@ -37,7 +37,7 @@ Chart$methods(
     translate_coffee_template_to_js = function() {
         if (params$coffee && file.exists(file_structure$paths$template_coffee_file)){
             if (!is_coffee_installed()) {
-                stop("\"coffee\" doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/")
+                stop("\n\n\tCoffeeScript doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/")
             }
 
             coffee_template <- readLines(file_structure$paths$template_coffee_file, warn = FALSE)
@@ -46,7 +46,9 @@ Chart$methods(
             replaced_coffee_template <- replace_delimiter(coffee_template, placeholder$regex$json, placeholder$delim$coffee_json, deparse = TRUE)
             replaced_coffee_template <- replace_delimiter(replaced_coffee_template, placeholder$regex$plain, placeholder$delim$coffee_plain, deparse = TRUE)
 
-            suppressMessages(knit(text = replaced_coffee_template, output = file_structure$paths$template_file, quiet = TRUE))
+            # output.dir needs to be set explicitly because knit_child expects to be called within knit
+            opts_knit$set(output.dir = getwd())
+            suppressMessages(capture.output(knit_child(text = replaced_coffee_template, output = file_structure$paths$template_file, quiet = TRUE)))
 
             js_template <- paste(readLines(file_structure$paths$template_file), collapse = "\n")
             replaced_js_template <- replace_delimiter(js_template, placeholder$regex$coffee_json, placeholder$delim$json, deparse = FALSE)

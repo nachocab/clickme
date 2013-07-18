@@ -29,6 +29,10 @@ text {
     font-family: Rockwell, Helvetica, Arial, sans;
 }
 
+.hide {
+    display: none;
+}
+
 .code {
     float:left;
     width: 1024px;

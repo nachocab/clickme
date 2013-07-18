@@ -159,6 +159,7 @@ test_that("coffee templates are rendered", {
 
 }).call(this);
 
+
 </script>"
     expect_equal(rendered_template, expected_template)
 
@@ -175,6 +176,7 @@ test_that("coffee templates are rendered", {
   c = my_function(3);
 
 }).call(this);
+
 
 </script>"
     expect_equal(rendered_output, expected_output)

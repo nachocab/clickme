@@ -12,13 +12,15 @@
 
   <body>
     <script type="text/javascript">
-    ```{r points_coffee, engine="coffee", results="asis", echo = FALSE }
+    ```{r engine="coffee", results="asis", echo = FALSE }
 
     data = {{ data }}
 
     radius = {{ params$radius }}
 
     color_scale = {{{ get_d3_color_scale() }}}
+
+    opacity = {{ params$opacity }}
 
     color_title = {{ params$color_title }}
 
@@ -97,6 +99,7 @@
             "class": "point_tooltip"
             "r": radius
             "fill": (d) -> color_scale(d.group)
+            "opacity": (d,i) -> opacity
             "title": (d) -> plot.tooltip_text(d) )
 
     $(".point_tooltip").tooltip
@@ -124,7 +127,7 @@
         g_toggle_names = sidebar.append("g")
             .style("cursor", "pointer")
             .style("font-size","22px")
-            .on("click", () -> toggle_names())
+            .on("click", ()-> toggle_names())
 
         g_toggle_names.append("circle")
             .attr("r", 7)
@@ -163,11 +166,13 @@
                 .attr(
                       "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 70})"
                       "class": "key")
+                .style("cursor", "pointer")
 
             g_color_legend.append("circle")
                 .attr(
                     "r": radius
                     "fill": color_scale)
+                .on("click", (d)-> toggle_points(d))
 
             # legend_point_names = get_legend_names_param()
             g_color_legend.append("text")
@@ -176,7 +181,17 @@
                     "y": 0
                     "dy": ".35em")
                 .text((d) -> "#{d} (#{color_legend_counts[d]})")
+                .on("click", (d)-> toggle_points(d))
                 # ).text((d,i) -> legend_names[i])
+
+    toggle_points = (category)->
+        g_points.filter((d)-> d.group == category).classed("hide", ()->
+            !d3.select(this).classed("hide")
+        )
+        # TODO: change the interaction so you can subselect categories one by one, but when you get to the last, they all show up (so there's no empty space)
+        # TODO: give feedback as to which colors are selected/unselected
+        g_points.filter((d)-> d.group != category).classed("hide", false)
+            # .attr("display", (d)-> if d.attr())
 
 
     # d3.select(window).on("keydown", () ->
