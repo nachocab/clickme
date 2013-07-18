@@ -2,7 +2,9 @@ Chart$methods(
     generate = function(){
         get_placeholders()
 
-        translate_coffee_template_to_js()
+        if ((!is.null(params$coffee) && params$coffee) || (is.null(params$coffee) && is_coffee_installed() && file.exists(file_structure$paths$template_coffee_file))) {
+            translate_coffee_template_to_js()
+        }
 
         html_code <- parse_placeholders()
 
@@ -35,27 +37,29 @@ Chart$methods(
     # The delimiter "{{" is not valid coffeescript, so we change it to an unlikely sequence "[[[\"". When the template has been converted to JS, we replace the delimiter to "{{", the one used by plain JS templates.
     # "{{ \"4\" }}" => "[[[\" \\\"4\\\" \"]]]" => knit => "{{ \"4\" }}"
     translate_coffee_template_to_js = function() {
-        if (params$coffee && file.exists(file_structure$paths$template_coffee_file)){
-            if (!is_coffee_installed()) {
-                stop("\n\n\tCoffeeScript doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/")
-            }
-
-            coffee_template <- readLines(file_structure$paths$template_coffee_file, warn = FALSE)
-            coffee_template <- paste(coffee_template, collapse = "\n")
-
-            replaced_coffee_template <- replace_delimiter(coffee_template, placeholder$regex$json, placeholder$delim$coffee_json, deparse = TRUE)
-            replaced_coffee_template <- replace_delimiter(replaced_coffee_template, placeholder$regex$plain, placeholder$delim$coffee_plain, deparse = TRUE)
-
-            # output.dir needs to be set explicitly because knit_child expects to be called within knit
-            opts_knit$set(output.dir = getwd())
-            suppressMessages(capture.output(knit_child(text = replaced_coffee_template, output = file_structure$paths$template_file, quiet = TRUE)))
-
-            js_template <- paste(readLines(file_structure$paths$template_file), collapse = "\n")
-            replaced_js_template <- replace_delimiter(js_template, placeholder$regex$coffee_json, placeholder$delim$json, deparse = FALSE)
-            replaced_js_template <- replace_delimiter(replaced_js_template, placeholder$regex$coffee_plain, placeholder$delim$plain, deparse = FALSE)
-
-            writeLines(replaced_js_template, file_structure$paths$template_file)
+        if (!is_coffee_installed()) {
+            stop("\n\n\tCoffeeScript doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/\n\n")
         }
+
+        if (!file.exists(file_structure$paths$template_coffee_file)) {
+            stop(gettextf("\n\n\tNo coffeescript file found at:\n\t%s\n\n", file_structure$paths$template_coffee_file))
+        }
+
+        coffee_template <- readLines(file_structure$paths$template_coffee_file, warn = FALSE)
+        coffee_template <- paste(coffee_template, collapse = "\n")
+
+        replaced_coffee_template <- replace_delimiter(coffee_template, placeholder$regex$json, placeholder$delim$coffee_json, deparse = TRUE)
+        replaced_coffee_template <- replace_delimiter(replaced_coffee_template, placeholder$regex$plain, placeholder$delim$coffee_plain, deparse = TRUE)
+
+        # output.dir needs to be set explicitly because knit_child expects to be called within knit
+        opts_knit$set(output.dir = getwd())
+        suppressMessages(capture.output(knit_child(text = replaced_coffee_template, output = file_structure$paths$template_file, quiet = TRUE)))
+
+        js_template <- paste(readLines(file_structure$paths$template_file), collapse = "\n")
+        replaced_js_template <- replace_delimiter(js_template, placeholder$regex$coffee_json, placeholder$delim$json, deparse = FALSE)
+        replaced_js_template <- replace_delimiter(replaced_js_template, placeholder$regex$coffee_plain, placeholder$delim$plain, deparse = FALSE)
+
+        writeLines(replaced_js_template, file_structure$paths$template_file)
     },
 
     parse_placeholders = function() {

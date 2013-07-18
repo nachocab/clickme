@@ -25,7 +25,7 @@ test_that("get_d3_color_scale", {
     params <- list(color_groups = c("a", "a", "b", "c", "b"))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.ordinal().range([\"#24A5F9\",\"#d62728\",\"#9467bd\"]);", info = "categorical, color_groups")
+    expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.ordinal().range([\"#24A5F9\",\"#d62728\",\"#ff7f0e\"]);", info = "categorical, color_groups")
 })
 
 

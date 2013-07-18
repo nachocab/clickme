@@ -15,9 +15,10 @@ Chart$methods(
         params$rotate_label_y <<- params$rotate_label_y %or% TRUE
         params$sidebar <<- params$sidebar %or% TRUE
 
+        params$hide_x_tick_labels <<- params$hide_x_tick_labels %or% FALSE # should probably be xaxt = "n"?
+
         params$frameborder <<- params$frameborder %or% 0
         params$box <<- params$box %or% FALSE
-        params$coffee <<- params$coffee %or% TRUE
         params$action <<- validate_actions(params$action)
     },
 
@@ -44,7 +45,7 @@ Chart$methods(
             bad_padding_elements <- padding[names(padding) %notin% valid_padding_names]
             stop(gettextf("\n\nWrong padding elements:\n%s", enumerate(bad_padding_elements)))
         } else {
-            padding$top <- padding$top       %or% 100
+            padding$top <- padding$top       %or% 150
             padding$right <- padding$right   %or% 400
             padding$bottom <- padding$bottom %or% 70
             padding$left <- padding$left     %or% 100

@@ -47,6 +47,7 @@
         categorical_domains: {{{ get_categorical_domains() }}}
 
         jitter: {{ params$jitter }}
+        hide_x_tick_labels: {{ params$hide_x_tick_labels }}
         ordinal_scale_padding: 1
         linear_scale_padding: 40 )
 

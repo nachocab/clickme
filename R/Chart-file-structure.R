@@ -115,8 +115,8 @@ Chart$methods(
             stop(gettextf("There is no template %s located in: %s ", file_structure$names$template, file_structure$paths$Template))
         }
 
-        # template.Rmd must exist, unless coffee is true and template.coffee.Rmd exists
-        if (!file.exists(file_structure$paths$template_file) && !(params$coffee && file.exists(file_structure$paths$template_coffee_file))){
+        # template.Rmd must exist, unless template.coffee.Rmd exists
+        if (!file.exists(file_structure$paths$template_file) && !file.exists(file_structure$paths$template_coffee_file)){
             stop(gettextf("The %s template doesn't contain a template file in: %s ", file_structure$names$template, file_structure$paths$template_file))
         }
 

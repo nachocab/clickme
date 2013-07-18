@@ -174,6 +174,9 @@
         plot.orientation_x = "bottom";
       }
       plot.axes.x = d3.svg.axis().scale(plot.scales.x).orient(plot.orientation_x);
+      if (plot.hide_x_tick_labels === true) {
+        plot.axes.x.tickFormat("");
+      }
       plot.bottom_margin.append("g").attr("class", "x axis").call(plot.axes.x);
       plot.bottom_margin.selectAll(".x.axis line, .x.axis path").style({
         "fill": "none",

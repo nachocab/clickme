@@ -176,6 +176,9 @@ my_light_red = "#b90000"
             .scale(plot.scales.x)
             .orient(plot.orientation_x)
 
+        if plot.hide_x_tick_labels is true
+            plot.axes.x.tickFormat("")
+
         # if tick_values?
             # plot.axes.x.tickValues(tick_values)
 
