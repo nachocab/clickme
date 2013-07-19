@@ -2,6 +2,8 @@
 clickme <- function(template, ...){
     reload_translators()
 
+    template <- as.character(substitute(template))
+
     snake_case_template <- snake_case(template)
     camel_case_template <- camel_case(template)
 

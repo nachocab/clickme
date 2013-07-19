@@ -60,9 +60,9 @@ Chart <- setRefClass("Chart",
         show = function(){
             if (interactive()){
                 if (config$require_server){
-                    browseURL(urls$local)
-                } else {
                     browseURL(urls$server)
+                } else {
+                    browseURL(urls$local)
                 }
             }
             .self
