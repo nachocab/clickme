@@ -76,15 +76,6 @@ separator <- function(n = 70){
     paste0(rep("=", n, collapse = ""))
 }
 
-#' Get the parameters passed along to a helper function
-#' @export
-extract_params <- function() {
-    named_params <- as.list(parent.frame())
-    dots <- eval(substitute(list(...), parent.frame()))
-    params <- c(named_params, dots)
-    params
-}
-
 #' Split up two vectors into their intersecting sets
 #' @param a first vector
 #' @param b second vector
