@@ -31,7 +31,7 @@ Chart <- setRefClass("Chart",
                file_structure = "list",
                config = "list",
                placeholder = "list",
-               url = "character"
+               urls = "list"
     ),
 
     methods = list(
@@ -51,15 +51,19 @@ Chart <- setRefClass("Chart",
             .self$get_params()
             .self$get_file_structure()
             .self$get_config()
+            .self$get_urls()
             .self$get_data()
             .self$generate()
-            .self$get_url()
             .self
         },
 
         show = function(){
             if (interactive()){
-                browseURL(url)
+                if (config$require_server){
+                    browseURL(urls$local)
+                } else {
+                    browseURL(urls$server)
+                }
             }
             .self
         }

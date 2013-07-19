@@ -60,10 +60,6 @@ test_that("snake_case", {
     expect_equal(snake_case(strings), c("paco_pepe","paco_pepe", "paco"))
 })
 
-test_that("clickme", {
-    expect_match(make_iframe("test.html", 980, 980), "<iframe width = \"980\" height = \"980\" src=\"test\\.html\"> </iframe>")
-})
-
 test_that("move_in_front", {
     files <- c("second", "first", "third")
     expect_equal(move_in_front("first", files), c("first", "second", "third"))

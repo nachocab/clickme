@@ -2,6 +2,8 @@ Chart$methods(
 
     # Set the default parameters
     get_params = function(){
+        params$port <<- params$port %or% 8000
+
         params$width <<- params$width %or% 500
         params$height <<- params$height %or% 500
         params$title <<- params$title %or% params$main %or% name

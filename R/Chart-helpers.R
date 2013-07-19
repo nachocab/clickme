@@ -1,17 +1,18 @@
 Chart$methods(
 
-    get_url = function(){
-        if (config$require_server){
-            url <<- paste0("http://localhost:", port, "/", file_structure$names$output_file)
-        } else {
-            url <<- file_structure$paths$output_file
-        }
+    get_urls = function(){
+        urls$local <<- file_structure$paths$output_file
+        urls$server <<- paste0("http://localhost:", params$port, "/", file_structure$names$output_file)
     },
 
     # I can use Mike Bostock's lazy iframes trick by setting "data-src" instead of "src"
     iframe = function(width = params$width + params$padding$right + params$padding$left,
                       height = params$height + params$padding$top + params$padding$bottom + 4,
-                      data_src = "src"){
+                      data_src = "src",
+                      relative_path = NULL){
+
+        url <- get_relative_url(relative_path)
+
         iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" %s=\"%s\"> </iframe>\n",
                                width,
                                height,
@@ -22,7 +23,10 @@ Chart$methods(
         .self
     },
 
-    link = function(name = params$title, class = "clickme"){
+    link = function(name = params$title, class = "clickme", relative_path = NULL){
+
+        url <- get_relative_url(relative_path)
+
         link <- gettextf("<a href=\"%s\" class=\"%s\">%s</a>\n", url, class, name)
 
         cat(link)
@@ -31,7 +35,17 @@ Chart$methods(
 
     # dummy function to not open the current chart
     hide = function(){
+        invisible()
+    },
 
+    get_relative_url = function(relative_path){
+        if (is.null(relative_path)){
+            url <- file_structure$names$output_file
+        } else {
+            url <- gettextf("%s/%s", relative_path, file_structure$names$output_file)
+        }
+
+        url
     }
 
 )
