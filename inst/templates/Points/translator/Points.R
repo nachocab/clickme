@@ -201,8 +201,7 @@ Points <- setRefClass("Points",
 # ... additional arguments for \code{clickme}
 #
 clickme_helper$points <- function(x, y = NULL, ...){
-    params <- extract_params()
+    params <- list(x = x, y = y, ...)
     points <- Points$new(params)
-
-    points$display()
+    points
 }

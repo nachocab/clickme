@@ -54,42 +54,18 @@ Chart <- setRefClass("Chart",
             .self$get_config()
             .self$get_data()
             .self$generate()
-
-            do_action()
+            .self
         },
 
-        # Multiple actions may be specified as a character vector
-        # If action includes "open", it opens a new browser tab with the output file
-        # If action includes "link", it returns an HTML link (invisible)
-        # If action includes "iframe", it returns an HTML iframe (invisible)
-        # If action includes FALSE, no action is taken.
-        do_action = function(){
+        show = function(){
+            display()
             if (config$require_server){
                 url <- paste0("http://localhost:", port, "/", file_structure$names$output_file)
             } else {
                 url <- file_structure$paths$output_file
             }
 
-            if ("open" %in% params$action) {
-                browseURL(url)
-            }
-
-            ret <- ""
-            if ("iframe" %in% params$action) {
-                width <- params$iframe_width %or% params$width + params$padding$right + params$padding$left
-                height <- params$iframe_height %or% params$height + params$padding$top + params$padding$bottom + 100
-
-                ret <- paste(ret, make_iframe(url, width, height, src_name = "data-src"), sep = "\n")
-            }
-
-            if ("link" %in% params$action) {
-                link_text <- params$link_text %or% params$title %or% "link"
-
-                ret <- paste(ret, make_link(url, link_text), sep = "\n")
-            }
-
-
-            cat(ret)
+            browseURL(url)
         }
 
    )
