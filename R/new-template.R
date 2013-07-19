@@ -111,7 +111,7 @@ get_translator_helper_contents <- function(template_name) {
     snake_template_name <- snake_case(template_name)
 
     paste0("clickme_helper$", snake_template_name," <- function(x,...){
-    params <- extract_params()
+    params <- list(x = x, ...)
     ", snake_template_name, " <- ", template_name, "$new(params)
 
     ", snake_template_name, "$display()
