@@ -5,7 +5,6 @@
 # padding [default]
 # box [FALSE]
 # coffee [FALSE]
-# code [default]
 # title [template name]
 # main (alias for title)
 # extra
@@ -32,7 +31,7 @@ Chart <- setRefClass("Chart",
                file_structure = "list",
                config = "list",
                placeholder = "list",
-               code = "character"
+               url = "character"
     ),
 
     methods = list(
@@ -54,18 +53,15 @@ Chart <- setRefClass("Chart",
             .self$get_config()
             .self$get_data()
             .self$generate()
+            .self$get_url()
             .self
         },
 
         show = function(){
-            display()
-            if (config$require_server){
-                url <- paste0("http://localhost:", port, "/", file_structure$names$output_file)
-            } else {
-                url <- file_structure$paths$output_file
+            if (interactive()){
+                browseURL(url)
             }
-
-            browseURL(url)
+            .self
         }
 
    )

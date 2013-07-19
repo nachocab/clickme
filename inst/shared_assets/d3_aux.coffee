@@ -6,7 +6,7 @@ my_light_red = "#b90000"
     opts.background ?= "#fff"
     opts.width ?= 200
     opts.height ?= 200
-    opts.margin ?= 10
+    opts.padding ?= 10
 
     main = d3.select(opts.selector)
         .append(opts.element)
@@ -20,7 +20,7 @@ my_light_red = "#b90000"
             "height": opts.height
         }).style({
             'background': opts.background
-            'margin': opts.margin
+            'padding': opts.padding
         })
 
     if (opts.id)
@@ -61,7 +61,7 @@ my_light_red = "#b90000"
             width: opts.total_width
             height: opts.total_height
             background: opts.background
-            margin: 20
+            padding: 0
         ).append("svg:g")
             # .attr("transform", "translate(#{opts.padding.left},#{opts.padding.top})")
 

@@ -56,10 +56,6 @@ get_template_contents <- function() {
       var data = {{ data }};
 
     </script>
-
-    <div class = \"code\">
-      {{{ params$code }}}
-    </div>
   </body>
 </html>
 "

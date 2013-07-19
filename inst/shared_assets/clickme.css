@@ -5,6 +5,10 @@
     stroke-width: 2;
 }
 
+body{
+    margin: 0;
+}
+
 .axis text{
     font-size: 18px;
 }
@@ -31,14 +35,6 @@ text {
 
 .hide {
     display: none;
-}
-
-.code {
-    float:left;
-    width: 1024px;
-    padding: 20px;
-    font-family: Monaco, Courier, monospace;
-    /*background: #eeeeee;*/
 }
 
 iframe {

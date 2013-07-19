@@ -41,37 +41,6 @@ is.valid <- function(x){
     !is.na(x) & !is.nan(x) & !is.infinite(x)
 }
 
-#' Make an HTML link
-#' @param url URL
-#' @param name name of the link ("link" by default)
-#'
-#' @export
-make_link <- function(url, name) {
-    if (is.null(url)) {
-        stop ("Please provide a valid output_file")
-    }
-    link <- gettextf("<a href=\"%s\" class=\"clickme\">%s</a>", url, name)
-    link
-}
-
-#' Make an HTML iframe
-#' @param url URL
-#' @param width
-#'
-#' @export
-make_iframe <- function(url, width, height, src_name = "src") {
-    if (is.null(url)) {
-        stop ("Please provide a valid output_file")
-    }
-
-    iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" %s=\"%s\"> </iframe>",
-                       width,
-                       height,
-                       src_name,
-                       url)
-    iframe
-}
-
 separator <- function(n = 70){
     paste0(rep("=", n, collapse = ""))
 }

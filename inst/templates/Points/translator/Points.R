@@ -203,5 +203,6 @@ Points <- setRefClass("Points",
 clickme_helper$points <- function(x, y = NULL, ...){
     params <- list(x = x, y = y, ...)
     points <- Points$new(params)
-    points
+
+    points$display()
 }

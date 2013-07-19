@@ -207,8 +207,5 @@
 
     ```
     </script>
-    <div class = "code">
-        {{{ code }}}
-    </div>
   </body>
 </html>

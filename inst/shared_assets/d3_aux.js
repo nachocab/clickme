@@ -24,15 +24,15 @@
     if ((_ref4 = opts.height) == null) {
       opts.height = 200;
     }
-    if ((_ref5 = opts.margin) == null) {
-      opts.margin = 10;
+    if ((_ref5 = opts.padding) == null) {
+      opts.padding = 10;
     }
     main = d3.select(opts.selector).append(opts.element).attr({
       "width": opts.width,
       "height": opts.height
     }).style({
       'background': opts.background,
-      'margin': opts.margin
+      'padding': opts.padding
     });
     if (opts.id) {
       main.attr("id", opts.id);
@@ -88,7 +88,7 @@
       width: opts.total_width,
       height: opts.total_height,
       background: opts.background,
-      margin: 20
+      padding: 0
     }).append("svg:g");
     for (key in opts) {
       value = opts[key];
