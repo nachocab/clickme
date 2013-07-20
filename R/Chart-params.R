@@ -6,11 +6,11 @@ Chart$methods(
 
         params$width <<- params$width %or% 500
         params$height <<- params$height %or% 500
-        params$title <<- params$title %or% params$main %or% name
+        params$title <<- params$title %or% params$main %or% name # alias (main)
 
         params$padding <<- validate_padding(params$padding)
 
-        params$palette <<- params$palette %or% params[["col"]]
+        params$palette <<- params$palette %or% params[["col"]] # alias (col)
         params$rotate_label_y <<- params$rotate_label_y %or% TRUE
         params$sidebar <<- params$sidebar %or% TRUE
 
