@@ -20,6 +20,7 @@ scripts:
 styles:
     - $shared/bootstrap-tooltip.css
     - $shared/clickme.css
+    - points.css
 
 require_packages:
 

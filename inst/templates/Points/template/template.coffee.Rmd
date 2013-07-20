@@ -11,6 +11,10 @@
   </head>
 
   <body>
+    <div class="g-search">
+        <input type="text" placeholder="Search…">
+        <button style="display:none;" class="g-search-clear">X</button>
+    </div>
     <script type="text/javascript">
     ```{r engine="coffee", results="asis", echo = FALSE }
 
@@ -25,6 +29,8 @@
     color_title = {{ params$color_title }}
 
     color_legend_counts = {{ get_color_legend_counts() }}
+
+    distance_between_show_names_and_color_groups = 80
 
     plot = new_plot(
         width: {{ params$width }}
@@ -97,13 +103,12 @@
 
     points = g_points.append("svg:circle")
         .attr(
-            "class": "point_tooltip"
             "r": radius
             "fill": (d) -> color_scale(d.group)
             "opacity": (d,i) -> opacity
             "title": (d) -> plot.tooltip_text(d) )
 
-    $(".point_tooltip").tooltip
+    $(".point circle").tooltip
         html: true
         container: "body"
         placement: "top"
@@ -154,7 +159,7 @@
                 .attr(
                       "class": "color_title"
                       "x": -radius
-                      "y": 45
+                      "y": distance_between_show_names_and_color_groups
                       "dy": ".35em")
                 .style(
                       "font-size": "16px"
@@ -165,7 +170,7 @@
                 .data(color_scale.domain().reverse())
               .enter().append("g")
                 .attr(
-                      "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 70})"
+                      "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + distance_between_show_names_and_color_groups + 30})"
                       "class": "color_group_key")
                 .style("cursor", "pointer")
 
@@ -200,7 +205,6 @@
             g_color_group_keys.classed("hide", false)
             g_points.classed("hide", false)
 
-
     # d3.select(window).on("keydown", () ->
     #     # switch (d3.event.keyCode) {
     #       # case : year = Math.max(year0, year - 10); break;
@@ -210,6 +214,59 @@
     #     if (d3.event.keyCode in [78, 32]) # 'n' or 'space bar'
     #         change()
     # )
+
+    d3.select(".g-search")
+        .style(
+           "top": "#{g_toggle_names.node().getBoundingClientRect().top + distance_between_show_names_and_color_groups/2 }px"
+           "left": "#{g_toggle_names.node().getBoundingClientRect().left}px")
+
+    keyuped = () ->
+        if (d3.event.keyCode == 27)
+            this.value = ""
+
+        search(this.value.trim())
+
+    search = (value) ->
+        if (value)
+            re = new RegExp("\\b#{d3.requote(value)}", "i")
+
+            clip.classed("g-searching", true)
+
+            g_points.classed("g-match", (d)->
+                re.test(d.point_name)
+            )
+
+            matches = d3.selectAll(".g-match")
+
+            if (matches[0].length == 1)
+                mouseover(matches.datum())
+            else
+                mouseout()
+
+            search_clear.style("display", null)
+
+        else
+            mouseout()
+            clip.classed("g-searching", false)
+            g_points.classed("g-match", false)
+            search_clear.style("display", "none")
+
+    mouseover = (d) ->
+        points.filter((c) -> c == d).classed("g-active", true);
+        $(".g-active").tooltip("show")
+
+    mouseout = () ->
+        $(".g-active").tooltip("hide")
+        points.filter(".g-active").classed("g-active", false);
+
+    search_input = d3.select(".g-search input")
+        .on("keyup", keyuped);
+
+    search_clear = d3.select(".g-search .g-search-clear")
+        .on("click", () ->
+            search_input.property("value", "")
+            search()
+        )
 
     ```
     </script>

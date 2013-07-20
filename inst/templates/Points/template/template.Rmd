@@ -11,9 +11,13 @@
   </head>
 
   <body>
+    <div class="g-search">
+        <input type="text" placeholder="Search…">
+        <button style="display:none;" class="g-search-clear">X</button>
+    </div>
     <script type="text/javascript">
 (function() {
-  var clip, color_legend_counts, color_scale, color_title, data, g_color_group_keys, g_points, g_toggle_names, opacity, plot, point_names, points, radius, redraw, sidebar, toggle_names, toggle_points, transform;
+  var clip, color_legend_counts, color_scale, color_title, data, distance_between_show_names_and_color_groups, g_color_group_keys, g_points, g_toggle_names, keyuped, mouseout, mouseover, opacity, plot, point_names, points, radius, redraw, search, search_clear, search_input, sidebar, toggle_names, toggle_points, transform;
 
   data = {{ data }};
 
@@ -26,6 +30,8 @@
   color_title = {{ params$color_title }};
 
   color_legend_counts = {{ get_color_legend_counts() }};
+
+  distance_between_show_names_and_color_groups = 80;
 
   plot = new_plot({
     width: {{ params$width }},
@@ -89,7 +95,6 @@
   });
 
   points = g_points.append("svg:circle").attr({
-    "class": "point_tooltip",
     "r": radius,
     "fill": function(d) {
       return color_scale(d.group);
@@ -102,7 +107,7 @@
     }
   });
 
-  $(".point_tooltip").tooltip({
+  $(".point circle").tooltip({
     html: true,
     container: "body",
     placement: "top"
@@ -157,7 +162,7 @@
       sidebar.append("text").attr({
         "class": "color_title",
         "x": -radius,
-        "y": 45,
+        "y": distance_between_show_names_and_color_groups,
         "dy": ".35em"
       }).style({
         "font-size": "16px",
@@ -165,7 +170,7 @@
       }).text(color_title);
       g_color_group_keys = sidebar.selectAll(".color_group_key").data(color_scale.domain().reverse()).enter().append("g").attr({
         "transform": function(d, i) {
-          return "translate(0, " + (i * (radius * 2 + 15) + 70) + ")";
+          return "translate(0, " + (i * (radius * 2 + 15) + distance_between_show_names_and_color_groups + 30) + ")";
         },
         "class": "color_group_key"
       }).style("cursor", "pointer");
@@ -203,6 +208,60 @@
       return g_points.classed("hide", false);
     }
   };
+
+  d3.select(".g-search").style({
+    "top": "" + (g_toggle_names.node().getBoundingClientRect().top + distance_between_show_names_and_color_groups / 2) + "px",
+    "left": "" + (g_toggle_names.node().getBoundingClientRect().left) + "px"
+  });
+
+  keyuped = function() {
+    if (d3.event.keyCode === 27) {
+      this.value = "";
+    }
+    return search(this.value.trim());
+  };
+
+  search = function(value) {
+    var matches, re;
+    if (value) {
+      re = new RegExp("\\b" + (d3.requote(value)), "i");
+      clip.classed("g-searching", true);
+      g_points.classed("g-match", function(d) {
+        return re.test(d.point_name);
+      });
+      matches = d3.selectAll(".g-match");
+      if (matches[0].length === 1) {
+        mouseover(matches.datum());
+      } else {
+        mouseout();
+      }
+      return search_clear.style("display", null);
+    } else {
+      mouseout();
+      clip.classed("g-searching", false);
+      g_points.classed("g-match", false);
+      return search_clear.style("display", "none");
+    }
+  };
+
+  mouseover = function(d) {
+    points.filter(function(c) {
+      return c === d;
+    }).classed("g-active", true);
+    return $(".g-active").tooltip("show");
+  };
+
+  mouseout = function() {
+    $(".g-active").tooltip("hide");
+    return points.filter(".g-active").classed("g-active", false);
+  };
+
+  search_input = d3.select(".g-search input").on("keyup", keyuped);
+
+  search_clear = d3.select(".g-search .g-search-clear").on("click", function() {
+    search_input.property("value", "");
+    return search();
+  });
 
 }).call(this);
 
