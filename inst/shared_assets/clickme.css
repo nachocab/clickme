@@ -37,6 +37,13 @@ text {
     display: none;
 }
 
+.hide.color_group_key {
+    display: inline;
+}
+.hide.color_group_key text{
+    opacity: 0.5;
+}
+
 iframe {
      border: 0;
 }

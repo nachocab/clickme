@@ -161,22 +161,22 @@
                       "font-weight": "bold")
                 .text(color_title)
 
-            g_color_legend = sidebar.selectAll(".key")
+            g_color_group_keys = sidebar.selectAll(".color_group_key")
                 .data(color_scale.domain().reverse())
               .enter().append("g")
                 .attr(
                       "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + 70})"
-                      "class": "key")
+                      "class": "color_group_key")
                 .style("cursor", "pointer")
 
-            g_color_legend.append("circle")
+            g_color_group_keys.append("circle")
                 .attr(
                     "r": radius
                     "fill": color_scale)
                 .on("click", (d)-> toggle_points(d))
 
             # legend_point_names = get_legend_names_param()
-            g_color_legend.append("text")
+            g_color_group_keys.append("text")
                 .attr(
                     "x": radius + 10
                     "y": 0
@@ -186,13 +186,19 @@
                 # ).text((d,i) -> legend_names[i])
 
     toggle_points = (category)->
+        # if the elements with the category were hidden, then show; if not hidden, hide.
         g_points.filter((d)-> d.group == category).classed("hide", ()->
             !d3.select(this).classed("hide")
         )
-        # TODO: change the interaction so you can subselect categories one by one, but when you get to the last, they all show up (so there's no empty space)
-        # TODO: give feedback as to which colors are selected/unselected
-        g_points.filter((d)-> d.group != category).classed("hide", false)
-            # .attr("display", (d)-> if d.attr())
+
+        g_color_group_keys.filter((d)-> d == category).classed("hide", ()->
+            !d3.select(this).classed("hide")
+        )
+
+        # show all categories if they are all hidden
+        if g_points.filter(":not(.hide)")[0].length == 0
+            g_color_group_keys.classed("hide", false)
+            g_points.classed("hide", false)
 
 
     # d3.select(window).on("keydown", () ->
