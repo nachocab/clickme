@@ -139,7 +139,7 @@ demo: |-
     clickme(\"", snake_case(template_name), "\", 1:10)
 
 scripts:
-    - $shared/d3.v3.js
+    - $shared/d3.v3.2.7.js
 
 styles:
     - $shared/clickme.css

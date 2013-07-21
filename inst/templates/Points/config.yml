@@ -4,6 +4,7 @@ info: |-
     Based on ideas from:
     http://bl.ocks.org/mbostock/3680957
     http://bl.ocks.org/stepheneb/1182434
+    http://www.nytimes.com/interactive/2013/05/25/sunday-review/corporate-taxes.html
 
 original_url:
 
@@ -12,14 +13,14 @@ demo: |-
     clickme_points(rnorm(50),rnorm(50), color_groups = sample(letters[1:3], 50, replace = TRUE), palette = c(a="green", c = "red", b = "blue"))
 
 scripts:
-    - $shared/d3.v3.js
+    - $shared/d3.v3.2.7.js
+    - $shared/jquery.v1.8.3.min.js
+    - $shared/bootstrap-tooltip.v2.3.0.js
     - $shared/d3_aux.js
-    - $shared/jquery.min.js
-    - $shared/bootstrap-tooltip.v2_3.js
 
 styles:
-    - $shared/bootstrap-tooltip.css
     - $shared/clickme.css
+    - $shared/tooltip.css
     - points.css
 
 require_packages:
