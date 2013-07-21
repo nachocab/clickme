@@ -1,4 +1,3 @@
-
 #' Extract function names from a list of placeholder expressions
 #' @export
 #' @keywords internal

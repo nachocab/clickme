@@ -26,30 +26,54 @@ Points <- setRefClass("Points",
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
 
-            get_color_params()
-        },
-
-        # Responsible for getting ordered_color_group_names, palette and color_domain
-        get_color_params = function(){
-            if (!is.null(params$color_groups)){
-                params$ordered_color_group_names <<- get_ordered_color_group_names()
-                params$palette <<- validate_palette(params$palette)
-            } else {
-                if (!is.null(params$palette)){
-                    message("\n\tNo color_groups provided. Ignoring palette.\n")
-                }
-                params$palette <<- "#000"
-            }
+            params$palette <<- validate_palette(params$palette)
 
             params$color_domain <<- validate_color_domain(params$color_domain)
+        },
 
+        # Ensure that the palette has as at least one color ("#000")
+        # If there are color group names, ensure that each has a valid color
+        # Ensure that if palette has color group names:
+        #   any color group name assigned with an NA must get replaced with a default color (useful to determine color group order without specifying the actual color)
+        #   any color group name without a color must get assigned a default color
+        # set default values, replace invalid values, order with params$ordered_color_group_names
+        validate_palette = function(palette){
+            if (!is.null(params$color_groups)){
+
+                params$ordered_color_group_names <<- get_ordered_color_group_names()
+
+                if (is.null(palette)){
+                    if (scale_type(params$color_groups) == "quantitative"){
+                        palette <- c("#278DD6", "#d62728")
+                    } else {
+                        palette <- setNames(default_colors(length(params$ordered_color_group_names)), params$ordered_color_group_names)
+                    }
+                } else {
+                    if (scale_type(params$color_groups) == "categorical"){
+                        palette <- setNames(palette[params$ordered_color_group_names], params$ordered_color_group_names)
+
+                        # If any color is NA or NULL, replace it with a default color
+                        if (any(is.na(palette) | is.null(palette))) {
+                            categories_without_color <- params$ordered_color_group_names[is.na(palette)]
+                            default_palette <- setNames(default_colors(length(categories_without_color)), categories_without_color)
+                            palette <- c(na.omit(palette), default_palette)
+                        }
+                    }
+                }
+            } else {
+                if (!is.null(palette)){
+                    message("\n\tNo color_groups provided. Ignoring palette.\n")
+                }
+                palette <- "#000"
+            }
+
+            palette
         },
 
         # ordered_color_group_names is used:
         # 1) to know which elements get plotted on top
         # 2) to know the color group names when these are missing from the palette
         get_ordered_color_group_names = function() {
-
             # The default order is extracted from color_groups
             if (is.factor(params$color_groups)) {
                 ordered_color_group_names <- levels(params$color_groups) # factor
@@ -96,37 +120,6 @@ Points <- setRefClass("Points",
             ordered_color_group_names
         },
 
-        # set default values, replace invalid values, order with ordered_color_group_names
-        validate_palette = function(palette) {
-            if (is.null(palette)){
-                if (scale_type(params$color_groups) == "quantitative"){
-                    palette <- c("#278DD6", "#d62728")
-                } else {
-                    palette <- setNames(default_colors(length(params$ordered_color_group_names)), params$ordered_color_group_names)
-                }
-            } else {
-                if (scale_type(params$color_groups) == "categorical"){
-                    palette <- setNames(palette[params$ordered_color_group_names], params$ordered_color_group_names)
-
-                    # If any color is NA or NULL, replace it with a default color
-                    if (any(is.na(palette) | is.null(palette))) {
-                        categories_without_color <- params$ordered_color_group_names[is.na(palette)]
-                        default_palette <- setNames(default_colors(length(categories_without_color)), categories_without_color)
-                        palette <- c(na.omit(palette), default_palette)
-                    }
-                }
-            }
-
-            palette
-        },
-
-        # Ensure that the palette has as at least one color ("#000")
-        # If there are color group names, ensure that each has a valid color
-        # Ensure that if palette has color group names:
-        #   any color group name assigned with an NA must get replaced with a default color (useful to determine color group order without specifying the actual color)
-        #   any color group name without a color must get assigned a default color
-
-
         # Ensure that the domain used with a D3 color scale is only specified when the scale is quantitative
         validate_color_domain = function(color_domain){
             if (!is.null(color_domain) && scale_type(params$color_groups) == "categorical") {
@@ -147,41 +140,6 @@ Points <- setRefClass("Points",
             }
 
             color_domain
-        },
-
-        get_data = function(){
-            if (is.null(params$x)) {
-                # used for testing
-                return(NULL)
-            }
-
-            data <<- xy_to_data(params$x, params$y)
-            data$point_name <<- as.character(params$names %or% rownames(data))
-            rownames(data) <<- NULL
-
-            add_extra_data_fields()
-            group_data_rows()
-
-            apply_axes_limits()
-        },
-
-        group_data_rows = function(){
-            callSuper(params$color_groups, params$ordered_color_group_names)
-
-            # We reverse it so the last color group gets the last color
-            params$palette <<- rev(params$palette)
-        },
-
-        apply_axes_limits = function() {
-            if (!is.null(params$xlim)){
-                data <<- data[data$x >= params$xlim[1],]
-                data <<- data[data$x <= params$xlim[2],]
-            }
-
-            if (!is.null(params$ylim)){
-                data <<- data[data$y >= params$ylim[1],]
-                data <<- data[data$y <= params$ylim[2],]
-            }
         }
 
     )

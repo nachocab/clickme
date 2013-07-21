@@ -37,26 +37,6 @@ Chart$methods(
         }
 
         padding
-    },
-
-    # Ensure the action is any of the valid actions ("open", "link", "iframe") or FALSE (no action)
-    validate_actions = function(action){
-        if (is.null(action)){
-            action <- if (interactive()) "open" else "iframe"
-        } else {
-            if (FALSE %notin% action){
-                action <- as.character(action)
-                valid_actions <- c("open", "link", "iframe")
-                action_descriptions <- c("open a new browser tab", "return an HTML link", "return an HTML iframe")
-                if (any(action %notin% valid_actions)) {
-                    bad_action <- action[action %notin% valid_actions]
-                    alternatives <- c(paste(gettextf("\"%s\"",valid_actions), action_descriptions, sep = " => "), "FALSE => Don't do anything")
-                    stop(gettextf("\n\nInvalid action \"%s\". Please choose one or several among:\n\n%s\n\n", bad_action, enumerate(alternatives)))
-                }
-            }
-        }
-
-        action
     }
 
 )
