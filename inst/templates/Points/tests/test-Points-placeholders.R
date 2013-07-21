@@ -30,22 +30,65 @@ test_that("get_d3_color_scale", {
 
 
 test_that("get_tooltip_content", {
-    params <- list(x = data.frame(x = c("a", "b", "c"), y = 5:7, row.names = LETTERS[1:3]),
-                   xlab = "x", ylab = "y",
-                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200,300)))
+    params <- list(x = data.frame(x = c("a", "b", "c"), y = c(5.5,6,6.7), row.names = LETTERS[1:3]),
+                   xlab = "x", ylab = "This is the y axis",
+                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200.3,300)))
     points <- Points$new(params)
     points$get_data()
     tooltip_contents <- points$get_tooltip_content()
-    expect_equal(tooltip_contents, "\"<strong>\" + d.point_name + \"</strong>\" + \"<br>\" + \"y: \" + format_property(d.y) + \"<br>\" + \"x: \" + format_property(d.x) + \"<br>\" + \"extra1: \" + format_property(d[\"extra1\"]) + \"<br>\" + \"extra2: \" + format_property(d[\"extra2\"])")
 
-    params <- list(x = data.frame(x = c("a", "b", "c"), y = 5:7, row.names = LETTERS[1:3]),
-                   xlab = "x", ylab = "y",
-                   color_groups = c("a","a","b"),
-                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200,300)))
+    expect_equal(no_whitespace(tooltip_contents), no_whitespace("
+ \"<table>
+    <tr>
+        <td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td>
+    </tr>
+    <tr class='tooltip-metric'>
+        <td class='tooltip-metric-name'>x</td><td class='tooltip-metric-value'>\" + d.x + \"</td>
+    </tr>
+    <tr class='tooltip-metric'>
+        <td class='tooltip-metric-name'>This is the y axis</td>
+        <td class='tooltip-metric-value'>\" + d3.format('.2f')(d.y) + \"</td>
+    </tr>
+    <tr class='tooltip-metric'>
+        <td class='tooltip-metric-name'>extra1</td>
+        <td class='tooltip-metric-value'>\" + d['extra1'] + \"</td>
+    </tr>
+    <tr class='tooltip-metric'>
+        <td class='tooltip-metric-name'>extra2</td>
+        <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra2']) + \"</td>
+    </tr>
+</table>\""))
+
+    params <- list(x = data.frame(x = c("a", "b", "c"), y = c(5.5,6,6.7), row.names = LETTERS[1:3]),
+                   xlab = "x", ylab = "This is the y axis",
+                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200.3,300)),
+                   formats = list(y = "s", extra1 = ".2f", extra2 = ".3f"))
     points <- Points$new(params)
     points$get_data()
     tooltip_contents <- points$get_tooltip_content()
-    expect_equal(tooltip_contents, "\"<strong>\" + d.point_name + \"</strong>\" + \"<br>\" + \"y: \" + format_property(d.y) + \"<br>\" + \"x: \" + format_property(d.x) + \"<br>\" + \"extra1: \" + format_property(d[\"extra1\"]) + \"<br>\" + \"extra2: \" + format_property(d[\"extra2\"]) + \"<br>\" + \"group: \" + format_property(d[\"group\"])")
+
+    expect_equal(no_whitespace(tooltip_contents), no_whitespace("
+ \"<table>
+    <tr>
+        <td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td>
+    </tr>
+    <tr class='tooltip-metric'>
+        <td class='tooltip-metric-name'>x</td><td class='tooltip-metric-value'>\" + d.x + \"</td>
+    </tr>
+    <tr class='tooltip-metric'>
+        <td class='tooltip-metric-name'>This is the y axis</td>
+        <td class='tooltip-metric-value'>\" + d.y + \"</td>
+    </tr>
+    <tr class='tooltip-metric'>
+        <td class='tooltip-metric-name'>extra1</td>
+        <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra1']) + \"</td>
+    </tr>
+    <tr class='tooltip-metric'>
+        <td class='tooltip-metric-name'>extra2</td>
+        <td class='tooltip-metric-value'>\" + d3.format('.3f')(d['extra2']) + \"</td>
+    </tr>
+</table>\""))
+
 })
 
 

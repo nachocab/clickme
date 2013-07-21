@@ -24,14 +24,55 @@ Points$methods(
         color_scale
     },
 
+    # Generate tooltip JS code
     get_tooltip_content = function(){
-        names <- colnames(data)
-        tooltip_contents <- c("\"<strong>\" + d.point_name + \"</strong>\"", paste0("\"", params$ylab, ": \" + format_property(d.y)"), paste0("\"", params$xlab, ": \" + format_property(d.x)"))
-        names <- setdiff(names, c("x", "y", "point_name", "color_groups"))
 
-        tooltip_contents <- c(tooltip_contents, sapply(names, function(name) paste0("\"", name, ": \" + format_property(d[\"", name, "\"])")))
-        tooltip_contents <- paste(tooltip_contents, collapse = " + \"<br>\" + ")
+        tooltip_names <- setdiff(colnames(data), c("point_name"))
+        title_row <- "<tr><td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td></tr>"
+
+        tooltip_formats <- get_formats(data[, tooltip_names], params$formats)
+
+        # we do x and y separately because they are the only columns that can have a different name (xlab and ylab)
+        tooltip_names[c(1,2)] <- c(params$xlab, params$ylab)
+        tooltip_values <- setNames(c("d.x", "d.y"), tooltip_names[c(1,2)])
+        tooltip_values <- c(tooltip_values, sapply(tooltip_names[-c(1,2)], function(name) gettextf("d['%s']", name)))
+
+        tooltip_formatted_values <- sapply(1:length(tooltip_values), function(i){
+            if (tooltip_formats[i] == "s"){
+                tooltip_values[i]
+            } else {
+                gettextf("d3.format('%s')(%s)", tooltip_formats[i], tooltip_values[i])
+            }
+        })
+        tooltip_formatted_values <- setNames(tooltip_formatted_values, tooltip_names)
+
+        rows <- c(title_row, sapply(tooltip_names, function(name) {
+            gettextf("<tr class='tooltip-metric'><td class='tooltip-metric-name'>%s</td><td class='tooltip-metric-value'>\" + %s + \"</td></tr>", name, tooltip_formatted_values[name])
+        }))
+        rows <- paste(rows, collapse = "")
+
+        tooltip_contents <- gettextf("\"<table>%s</table>\"", rows)
+
         tooltip_contents
+    },
+
+    # returns a gettextf format
+    get_formats = function(data, custom_formats){
+        custom_format_names <- names(custom_formats)
+        formats <- sapply(colnames(data), function(name) {
+            if (name %in% custom_format_names){
+                custom_formats[name]
+            } else {
+                x <- data[, name]
+                if (is.numeric(x) && any(x %% 1 != 0)) {
+                    ".2f"
+                } else {
+                    "s"
+                }
+            }
+        })
+
+        formats
     },
 
     # When one of the axes is categorical, we need its domain

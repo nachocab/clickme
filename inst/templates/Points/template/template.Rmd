@@ -55,10 +55,6 @@
     linear_scale_padding: 40
   });
 
-  plot.tooltip_text = function(d) {
-    return {{{ get_tooltip_content() }}};
-  };
-
   plot.center.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
     "width": plot.width,
     "height": plot.height
@@ -97,13 +93,13 @@
   points = g_points.append("svg:circle").attr({
     "r": radius,
     "fill": function(d) {
-      return color_scale(d.group);
+      return color_scale(d.color_group);
     },
     "opacity": function(d, i) {
       return opacity;
     },
     "title": function(d) {
-      return plot.tooltip_text(d);
+      return {{{ get_tooltip_content() }}};
     }
   });
 
@@ -122,7 +118,7 @@
     "display": "none"
   }).style({
     "fill": function(d) {
-      return color_scale(d.group);
+      return color_scale(d.color_group);
     },
     "font-size": "22px"
   });
@@ -194,7 +190,7 @@
 
   toggle_points = function(category) {
     g_points.filter(function(d) {
-      return d.group === category;
+      return d.color_group === category;
     }).classed("hide", function() {
       return !d3.select(this).classed("hide");
     });
@@ -224,8 +220,13 @@
   search = function(value) {
     var matches, re;
     if (value) {
-      re = new RegExp("\\b" + (d3.requote(value)), "i");
+      console.log(d3.requote(value));
+      re = new RegExp("" + (d3.requote(value)), "i");
       clip.classed("g-searching", true);
+      if (sidebar.selectAll(".color_group_key").size() > 0) {
+        g_color_group_keys.classed("hide", false);
+        g_points.classed("hide", false);
+      }
       g_points.classed("g-match", function(d) {
         return re.test(d.point_name);
       });

@@ -12,6 +12,13 @@ test_that("point names", {
     expect_equal(points$data, data.frame(x = 1:10, y = 1:10, point_name = letters[1:10]))
 })
 
+test_that("validate_formats", {
+    params <- list(x = 1:10, extra = list(a = 1:10), formats = list(paco = "d"))
+    points <- Points$new(params)
+    points$get_params()
+    expect_error(points$get_data(), "\n\n\tThe following format names are not x, y, or any of the extra names:\n\tpaco\n\n")
+})
+
 test_that("color_domain", {
     params <- list(color_groups = c(.5,.4,.3,.2,.1))
     points <- Points$new(params)
