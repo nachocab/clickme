@@ -13,7 +13,7 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
         unlink(file.path(getOption("clickme_templates_path"), template_name), recursive = TRUE)
     } else {
         if (file.exists(template$file_structure$paths$Template)) {
-            stop(gettextf("\n\n\tThe %s template already exists\n\t(use replace = TRUE if you want to replace it):\n\n%s",
+            stop(gettextf("\n\n\tThe %s template already exists\n\t(use replace = TRUE if you want to replace it):\n\t%s",
                           template$file_structure$names$template,
                           template$file_structure$paths$Template))
         }
@@ -34,7 +34,7 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
     writeLines(get_translator_contents(template$name), template$file_structure$paths$translator_file)
     writeLines(get_translator_test_contents(template$name), template$file_structure$paths$translator_test_file)
 
-    message("Template created at: ", template$file_structure$paths$Template, "\n")
+    message("Template created at: ", template$file_structure$paths$Template)
 
     invisible(template)
 }
@@ -42,21 +42,22 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
 get_template_contents <- function() {
     "<!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+    <head>
+        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+        <base target=\"_blank\"> <!-- open all links on a new tab -->
 
-    <title>{{{ params$title }}}</title>
+        <title>{{{ params$title }}}</title>
 
-    {{{ get_assets() }}}
-  </head>
+        {{{ get_assets() }}}
+    </head>
 
-  <body>
-    <script type=\"text/javascript\">
+    <body>
+        <script type=\"text/javascript\">
 
-      var data = {{ data }};
+            var data = {{ data }};
 
-    </script>
-  </body>
+        </script>
+    </body>
 </html>
 "
 }
@@ -64,27 +65,24 @@ get_template_contents <- function() {
 get_template_contents_coffee <- function() {
     "<!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+    <head>
+        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+        <base target=\"_blank\"> <!-- open all links on a new tab -->
 
-    <title>{{{ params$title }}}</title>
+        <title>{{{ params$title }}}</title>
 
-    {{{ get_assets() }}}
-  </head>
+        {{{ get_assets() }}}
+    </head>
 
-  <body>
-    <script type=\"text/javascript\">
-      ```{r engine=\"coffee\", results=\"asis\", echo = FALSE }
+    <body>
+        <script type=\"text/javascript\">
+        ```{r engine=\"coffee\", results=\"asis\", echo = FALSE}
 
-          data = {{ data }}
+            data = {{ data }}
 
-      ```
-    </script>
-
-    <div class = \"code\">
-      {{{ params$code }}}
-    </div>
-  </body>
+        ```
+        </script>
+    </body>
 </html>
 "
 }
@@ -120,7 +118,7 @@ get_translator_helper_contents <- function(template_name) {
 }
 
 get_translator_test_contents <- function(template_name) {
-    paste0("context(\" ", template_name, "\")
+    paste0("context(\"", template_name, "\")
 
 test_that(\"get_data works\", {
     params <- list(data = 1:10)
@@ -136,7 +134,8 @@ get_config_contents <- function(template_name) {
     Describe what this template does
 
 demo: |-
-    clickme(\"", snake_case(template_name), "\", 1:10)
+    data <- 1:10
+    clickme(", snake_case(template_name), ", data)
 
 scripts:
     - $shared/d3.v3.2.7.js

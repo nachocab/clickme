@@ -1,6 +1,6 @@
 context("Points")
 
-test_that("point names", {
+test_that("points have names", {
     params <- list(x = 1:10)
     points <- Points$new(params)
     points$get_data()
@@ -37,8 +37,7 @@ test_that("color_domain", {
 
 context("Points clickme")
 
+# sanity test
 test_that("clickme", {
-    # expect_that(clickme("points", 1:10, action = FALSE), not(throws_error()))
-    # capture.output(expect_that(clickme("points", 1:10, action = "iframe"), not(throws_error())))
     capture.output(expect_that(clickme("points", 1:10), not(throws_error())))
 })

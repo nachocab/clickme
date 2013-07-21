@@ -40,7 +40,7 @@
     xlab: {{ params$xlab }},
     ylab: {{ params$ylab }},
     rotate_label: {
-      y: {{ params$rotate_label_y }}
+      y: {{ params$rotate_ylab }}
     },
     title: {{ params$title }},
     subtitle: {{ params$subtitle }},

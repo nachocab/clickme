@@ -11,7 +11,7 @@ Chart$methods(
         params$padding <<- validate_padding(params$padding)
 
         params$palette <<- params$palette %or% params[["col"]] # alias (col)
-        params$rotate_label_y <<- params$rotate_label_y %or% TRUE
+        params$rotate_ylab <<- params$rotate_ylab %or% TRUE
         params$sidebar <<- params$sidebar %or% TRUE
 
         params$hide_x_tick_labels <<- params$hide_x_tick_labels %or% FALSE # should probably be xaxt = "n"?

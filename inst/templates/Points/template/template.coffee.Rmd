@@ -7,7 +7,6 @@
     <title>{{{ params$title }}}</title>
 
     {{{ get_assets() }}}
-
   </head>
 
   <body>
@@ -16,7 +15,7 @@
         <button style="display:none;" class="g-search-clear">X</button>
     </div>
     <script type="text/javascript">
-    ```{r engine="coffee", results="asis", echo = FALSE }
+    ```{r engine="coffee", results="asis", echo = FALSE}
 
     data = {{ data }}
 
@@ -37,13 +36,15 @@
         height: {{ params$height }}
         padding: {{ params$padding }}
 
+        title: {{ params$title }}
+        subtitle: {{ params$subtitle }}
+
         # TODO: refactor into a labels object
         xlab: {{ params$xlab }}
         ylab: {{ params$ylab }}
+
         rotate_label:
-            y : {{ params$rotate_label_y }}
-        title: {{ params$title }}
-        subtitle: {{ params$subtitle }}
+            y : {{ params$rotate_ylab }}
         box: {{ params$box }}
 
         # TODO: refactor these into a get_scales function
