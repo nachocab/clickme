@@ -18,7 +18,6 @@ Chart$methods(
 
         params$frameborder <<- params$frameborder %or% 0
         params$box <<- params$box %or% FALSE
-        params$action <<- validate_actions(params$action)
     },
 
     # Ensure there are four padding values named top, right, left and bottom
