@@ -21,11 +21,19 @@ Let's take it out for a spin.
 
 ```S
 library(clickme)
-clickme("points", rnorm(1:100)) # try zooming in and out, click the Show names button, hover over points
+clickme("points", rnorm(100)) # try zooming in and out, click the Show names button, hover over points
 ```
-Here is the [interactive version](http://)
 
-You can put
+A more interesting example
+```S
+data(microarray)
+clickme(points, x = microarray$significance, y = microarray$logFC,
+        color_groups = ifelse(microarray$adj.P.Val < 1e-4, "Significant", "Noise"),
+        names = microarray$gene_name,
+        xlab = "Significance (-log10)", ylab = "Fold-change (log2)",
+        extra = list(Probe = microarray$probe_name))
+```
+
 
 ## Resources
 
