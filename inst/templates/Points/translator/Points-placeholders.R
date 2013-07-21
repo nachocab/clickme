@@ -32,10 +32,14 @@ Points$methods(
 
         tooltip_formats <- get_formats(data[, tooltip_names], params$formats)
 
-        # we do x and y separately because they are the only columns that can have a different name (xlab and ylab)
-        tooltip_names[c(1,2)] <- c(params$xlab, params$ylab)
-        tooltip_values <- setNames(c("d.x", "d.y"), tooltip_names[c(1,2)])
-        tooltip_values <- c(tooltip_values, sapply(tooltip_names[-c(1,2)], function(name) gettextf("d['%s']", name)))
+        # x and y are always present, but they can have different names (xlab and ylab)
+        # color_groups is sometimes present, and it can have a different name (color_title)
+        rename_columns_index <- which(tooltip_names %in% c("x", "y", "color_group"))
+        new_names <- c(params$xlab, params$ylab, params$color_title)
+        new_js_objects <- c("d.x", "d.y", "d.color_group")
+        tooltip_names[rename_columns_index] <- new_names[seq_along(rename_columns_index)]
+        tooltip_values <- setNames(new_js_objects[seq_along(rename_columns_index)], tooltip_names[rename_columns_index])
+        tooltip_values <- c(tooltip_values, sapply(tooltip_names[-rename_columns_index], function(name) gettextf("d['%s']", name)))
 
         tooltip_formatted_values <- sapply(1:length(tooltip_values), function(i){
             if (tooltip_formats[i] == "s"){
