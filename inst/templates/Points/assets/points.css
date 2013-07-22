@@ -5,6 +5,7 @@
 
 .g-search {
     position: relative;
+    float: left;
 }
 
 .g-search input {

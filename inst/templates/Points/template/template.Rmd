@@ -15,256 +15,255 @@
         <button style="display:none;" class="g-search-clear">X</button>
     </div>
     <script type="text/javascript">
-(function() {
-  var clip, color_legend_counts, color_scale, color_title, data, distance_between_show_names_and_color_groups, g_color_group_keys, g_points, g_toggle_names, keyuped, mouseout, mouseover, opacity, plot, point_names, points, radius, redraw, search, search_clear, search_input, sidebar, toggle_names, toggle_points, transform;
-
-  data = {{ data }};
-
-  radius = {{ params$radius }};
-
-  color_scale = {{{ get_d3_color_scale() }}};
-
-  opacity = {{ params$opacity }};
-
-  color_title = {{ params$color_title }};
-
-  color_legend_counts = {{ get_color_legend_counts() }};
-
-  distance_between_show_names_and_color_groups = 80;
-
-  plot = new_plot({
-    width: {{ params$width }},
-    height: {{ params$height }},
-    padding: {{ params$padding }},
-    title: {{ params$title }},
-    subtitle: {{ params$subtitle }},
-    xlab: {{ params$xlab }},
-    ylab: {{ params$ylab }},
-    rotate_label: {
-      y: {{ params$rotate_ylab }}
-    },
-    box: {{ params$box }},
-    xlim: {{ params$xlim }},
-    ylim: {{ params$ylim }},
-    data_ranges: {{{ get_data_ranges() }}},
-    categorical_domains: {{{ get_categorical_domains() }}},
-    jitter: {{ params$jitter }},
-    hide_x_tick_labels: {{ params$hide_x_tick_labels }},
-    ordinal_scale_padding: 1,
-    linear_scale_padding: 40
-  });
-
-  plot.center.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
-    "width": plot.width,
-    "height": plot.height
-  });
-
-  clip = plot.center.append("g").attr("clip-path", "url(#clip)");
-
-  if (plot.zoom) {
-    clip.append("rect").style({
-      "cursor": "move"
-    }).attr({
-      "class": "overlay",
-      "width": plot.width,
-      "height": plot.height,
-      "fill": "none",
-      "pointer-events": "all"
-    }).call(d3.behavior.zoom().x(plot.scales.x).y(plot.scales.y).scaleExtent([1, Infinity]).on("zoom", function() {
-      return redraw();
-    }));
-    redraw = function() {
-      plot.select(".x.axis").call(plot.axes.x);
-      plot.select(".y.axis").call(plot.axes.y);
-      return g_points.attr("transform", transform);
-    };
-  }
-
-  transform = function(d) {
-    return "translate(" + (plot.scales.x(d.x) + plot.jitters.x()) + ", " + (plot.scales.y(d.y) + plot.jitters.y()) + ")";
-  };
-
-  g_points = clip.selectAll(".point").data(data).enter().append("g").attr({
-    "class": "point",
-    "transform": transform
-  });
-
-  points = g_points.append("svg:circle").attr({
-    "r": radius,
-    "fill": function(d) {
-      return color_scale(d.color_group);
-    },
-    "opacity": function(d, i) {
-      return opacity;
-    },
-    "title": function(d) {
-      return {{{ get_tooltip_content() }}};
-    }
-  });
-
-  $(".point circle").tooltip({
-    html: true,
-    container: "body",
-    placement: "top"
-  });
-
-  point_names = g_points.append("text").text(function(d) {
-    return d.point_name;
-  }).attr({
-    "dy": ".32em",
-    "dx": 8,
-    "text-anchor": "left",
-    "display": "none"
-  }).style({
-    "fill": function(d) {
-      return color_scale(d.color_group);
-    },
-    "font-size": "22px"
-  });
-
-  if ({{ params$sidebar }}) {
-    sidebar = plot.right_margin.append("g").attr("transform", "translate(60,0)");
-    g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
-      return toggle_names();
-    });
-    g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
-    g_toggle_names.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12').text("Show names (" + data.length + ")");
-    toggle_names = function() {
-      var showing_point_names;
-      showing_point_names = g_toggle_names.classed("show_names");
-      point_names.attr("display", function() {
-        if (showing_point_names) {
-          return "none";
-        } else {
-          return "inline";
-        }
-      });
-      return g_toggle_names.attr("class", function() {
-        if (showing_point_names) {
-          return "";
-        } else {
-          return "show_names";
-        }
-      }).select("circle").attr("fill", function() {
-        if (showing_point_names) {
-          return "white";
-        } else {
-          return "black";
-        }
-      });
-    };
-    if (color_scale.range().length > 1) {
-      sidebar.append("text").attr({
-        "class": "color_title",
-        "x": -radius,
-        "y": distance_between_show_names_and_color_groups,
-        "dy": ".35em"
-      }).style({
-        "font-size": "16px",
-        "font-weight": "bold"
-      }).text(color_title);
-      g_color_group_keys = sidebar.selectAll(".color_group_key").data(color_scale.domain().reverse()).enter().append("g").attr({
-        "transform": function(d, i) {
-          return "translate(0, " + (i * (radius * 2 + 15) + distance_between_show_names_and_color_groups + 30) + ")";
+    (function() {
+      var clip, color_legend_counts, color_scale, color_title, data, distance_between_show_names_and_color_groups, g_color_group_keys, g_points, g_toggle_names, keyuped, mouseout, mouseover, opacity, plot, point_names, points, radius, redraw, search, search_clear, search_input, sidebar, toggle_names, toggle_points, transform;
+    
+      data = {{ data }};
+    
+      radius = {{ params$radius }};
+    
+      color_scale = {{{ get_d3_color_scale() }}};
+    
+      opacity = {{ params$opacity }};
+    
+      color_title = {{ params$color_title }};
+    
+      color_legend_counts = {{ get_color_legend_counts() }};
+    
+      distance_between_show_names_and_color_groups = 80;
+    
+      plot = new_plot({
+        width: {{ params$width }},
+        height: {{ params$height }},
+        padding: {{ params$padding }},
+        title: {{ params$title }},
+        subtitle: {{ params$subtitle }},
+        xlab: {{ params$xlab }},
+        ylab: {{ params$ylab }},
+        rotate_label: {
+          y: {{ params$rotate_ylab }}
         },
-        "class": "color_group_key"
-      }).style("cursor", "pointer");
-      g_color_group_keys.append("circle").attr({
+        box: {{ params$box }},
+        xlim: {{ params$xlim }},
+        ylim: {{ params$ylim }},
+        data_ranges: {{{ get_data_ranges() }}},
+        categorical_domains: {{{ get_categorical_domains() }}},
+        jitter: {{ params$jitter }},
+        hide_x_tick_labels: {{ params$hide_x_tick_labels }},
+        ordinal_scale_padding: 1,
+        linear_scale_padding: 40
+      });
+    
+      plot.center.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
+        "width": plot.width,
+        "height": plot.height
+      });
+    
+      clip = plot.center.append("g").attr("clip-path", "url(#clip)");
+    
+      if (plot.zoom) {
+        clip.append("rect").style({
+          "cursor": "move"
+        }).attr({
+          "class": "overlay",
+          "width": plot.width,
+          "height": plot.height,
+          "fill": "none",
+          "pointer-events": "all"
+        }).call(d3.behavior.zoom().x(plot.scales.x).y(plot.scales.y).scaleExtent([1, Infinity]).on("zoom", function() {
+          return redraw();
+        }));
+        redraw = function() {
+          plot.select(".x.axis").call(plot.axes.x);
+          plot.select(".y.axis").call(plot.axes.y);
+          return g_points.attr("transform", transform);
+        };
+      }
+    
+      transform = function(d) {
+        return "translate(" + (plot.scales.x(d.x) + plot.jitters.x()) + ", " + (plot.scales.y(d.y) + plot.jitters.y()) + ")";
+      };
+    
+      g_points = clip.selectAll(".point").data(data).enter().append("g").attr({
+        "class": "point",
+        "transform": transform
+      });
+    
+      points = g_points.append("svg:circle").attr({
         "r": radius,
-        "fill": color_scale
-      }).on("click", function(d) {
-        return toggle_points(d);
+        "fill": function(d) {
+          return color_scale(d.color_group);
+        },
+        "opacity": function(d, i) {
+          return opacity;
+        },
+        "title": function(d) {
+          return {{{ get_tooltip_content() }}};
+        }
       });
-      g_color_group_keys.append("text").attr({
-        "x": radius + 10,
-        "y": 0,
-        "dy": ".35em"
-      }).text(function(d) {
-        return "" + d + " (" + color_legend_counts[d] + ")";
-      }).on("click", function(d) {
-        return toggle_points(d);
+    
+      $(".point circle").tooltip({
+        html: true,
+        container: "body",
+        placement: "top"
       });
-    }
-  }
-
-  toggle_points = function(category) {
-    g_points.filter(function(d) {
-      return d.color_group === category;
-    }).classed("hide", function() {
-      return !d3.select(this).classed("hide");
-    });
-    g_color_group_keys.filter(function(d) {
-      return d === category;
-    }).classed("hide", function() {
-      return !d3.select(this).classed("hide");
-    });
-    if (g_points.filter(":not(.hide)")[0].length === 0) {
-      g_color_group_keys.classed("hide", false);
-      return g_points.classed("hide", false);
-    }
-  };
-
-  d3.select(".g-search").style({
-    "top": "" + (g_toggle_names.node().getBoundingClientRect().top + distance_between_show_names_and_color_groups / 2) + "px",
-    "left": "" + (g_toggle_names.node().getBoundingClientRect().left) + "px"
-  });
-
-  keyuped = function() {
-    if (d3.event.keyCode === 27) {
-      this.value = "";
-    }
-    return search(this.value.trim());
-  };
-
-  search = function(value) {
-    var matches, re;
-    if (value) {
-      console.log(d3.requote(value));
-      re = new RegExp("" + (d3.requote(value)), "i");
-      clip.classed("g-searching", true);
-      if (sidebar.selectAll(".color_group_key").size() > 0) {
-        g_color_group_keys.classed("hide", false);
-        g_points.classed("hide", false);
+    
+      point_names = g_points.append("text").text(function(d) {
+        return d.point_name;
+      }).attr({
+        "dy": ".32em",
+        "dx": 8,
+        "text-anchor": "left",
+        "display": "none"
+      }).style({
+        "fill": function(d) {
+          return color_scale(d.color_group);
+        },
+        "font-size": "22px"
+      });
+    
+      if ({{ params$sidebar }}) {
+        sidebar = plot.right_margin.append("g").attr("transform", "translate(60,0)");
+        g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
+          return toggle_names();
+        });
+        g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
+        g_toggle_names.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12').text("Show names (" + data.length + ")");
+        toggle_names = function() {
+          var showing_point_names;
+          showing_point_names = g_toggle_names.classed("show_names");
+          point_names.attr("display", function() {
+            if (showing_point_names) {
+              return "none";
+            } else {
+              return "inline";
+            }
+          });
+          return g_toggle_names.attr("class", function() {
+            if (showing_point_names) {
+              return "";
+            } else {
+              return "show_names";
+            }
+          }).select("circle").attr("fill", function() {
+            if (showing_point_names) {
+              return "white";
+            } else {
+              return "black";
+            }
+          });
+        };
+        if (color_scale.range().length > 1) {
+          sidebar.append("text").attr({
+            "class": "color_title",
+            "x": -radius,
+            "y": distance_between_show_names_and_color_groups,
+            "dy": ".35em"
+          }).style({
+            "font-size": "16px",
+            "font-weight": "bold"
+          }).text(color_title);
+          g_color_group_keys = sidebar.selectAll(".color_group_key").data(color_scale.domain().reverse()).enter().append("g").attr({
+            "transform": function(d, i) {
+              return "translate(0, " + (i * (radius * 2 + 15) + distance_between_show_names_and_color_groups + 30) + ")";
+            },
+            "class": "color_group_key"
+          }).style("cursor", "pointer");
+          g_color_group_keys.append("circle").attr({
+            "r": radius,
+            "fill": color_scale
+          }).on("click", function(d) {
+            return toggle_points(d);
+          });
+          g_color_group_keys.append("text").attr({
+            "x": radius + 10,
+            "y": 0,
+            "dy": ".35em"
+          }).text(function(d) {
+            return "" + d + " (" + color_legend_counts[d] + ")";
+          }).on("click", function(d) {
+            return toggle_points(d);
+          });
+        }
       }
-      g_points.classed("g-match", function(d) {
-        return re.test(d.point_name);
+    
+      toggle_points = function(category) {
+        g_points.filter(function(d) {
+          return d.color_group === category;
+        }).classed("hide", function() {
+          return !d3.select(this).classed("hide");
+        });
+        g_color_group_keys.filter(function(d) {
+          return d === category;
+        }).classed("hide", function() {
+          return !d3.select(this).classed("hide");
+        });
+        if (g_points.filter(":not(.hide)")[0].length === 0) {
+          g_color_group_keys.classed("hide", false);
+          return g_points.classed("hide", false);
+        }
+      };
+    
+      d3.select(".g-search").style({
+        "top": "" + (g_toggle_names.node().getBoundingClientRect().top + distance_between_show_names_and_color_groups / 2) + "px",
+        "left": "" + (g_toggle_names.node().getBoundingClientRect().left) + "px"
       });
-      matches = d3.selectAll(".g-match");
-      if (matches[0].length === 1) {
-        mouseover(matches.datum());
-      } else {
-        mouseout();
-      }
-      return search_clear.style("display", null);
-    } else {
-      mouseout();
-      clip.classed("g-searching", false);
-      g_points.classed("g-match", false);
-      return search_clear.style("display", "none");
-    }
-  };
-
-  mouseover = function(d) {
-    points.filter(function(c) {
-      return c === d;
-    }).classed("g-active", true);
-    return $(".g-active").tooltip("show");
-  };
-
-  mouseout = function() {
-    $(".g-active").tooltip("hide");
-    return points.filter(".g-active").classed("g-active", false);
-  };
-
-  search_input = d3.select(".g-search input").on("keyup", keyuped);
-
-  search_clear = d3.select(".g-search .g-search-clear").on("click", function() {
-    search_input.property("value", "");
-    return search();
-  });
-
-}).call(this);
-
+    
+      keyuped = function() {
+        if (d3.event.keyCode === 27) {
+          this.value = "";
+        }
+        return search(this.value.trim());
+      };
+    
+      search = function(value) {
+        var matches, re;
+        if (value) {
+          console.log(d3.requote(value));
+          re = new RegExp("" + (d3.requote(value)), "i");
+          clip.classed("g-searching", true);
+          if (sidebar.selectAll(".color_group_key").size() > 0) {
+            g_color_group_keys.classed("hide", false);
+            g_points.classed("hide", false);
+          }
+          g_points.classed("g-match", function(d) {
+            return re.test(d.point_name);
+          });
+          matches = d3.selectAll(".g-match");
+          if (matches[0].length === 1) {
+            mouseover(matches.datum());
+          } else {
+            mouseout();
+          }
+          return search_clear.style("display", null);
+        } else {
+          mouseout();
+          clip.classed("g-searching", false);
+          g_points.classed("g-match", false);
+          return search_clear.style("display", "none");
+        }
+      };
+    
+      mouseover = function(d) {
+        points.filter(function(c) {
+          return c === d;
+        }).classed("g-active", true);
+        return $(".g-active").tooltip("show");
+      };
+    
+      mouseout = function() {
+        $(".g-active").tooltip("hide");
+        return points.filter(".g-active").classed("g-active", false);
+      };
+    
+      search_input = d3.select(".g-search input").on("keyup", keyuped);
+    
+      search_clear = d3.select(".g-search .g-search-clear").on("click", function() {
+        search_input.property("value", "");
+        return search();
+      });
+    
+    }).call(this);
 
     </script>
   </body>
