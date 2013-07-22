@@ -21,7 +21,7 @@ Let's take it out for a spin.
 
 ```S
 library(clickme)
-clickme("points", rnorm(100)) # try zooming in and out, click the Show names button, hover over points
+clickme(points, rnorm(100)) # try zooming in and out, click the Show names button, hover over points
 ```
 
 A more interesting example

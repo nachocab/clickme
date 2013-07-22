@@ -7,7 +7,6 @@
     <title>{{{ params$title }}}</title>
 
     {{{ get_assets() }}}
-
   </head>
 
   <body>
@@ -37,13 +36,13 @@
     width: {{ params$width }},
     height: {{ params$height }},
     padding: {{ params$padding }},
+    title: {{ params$title }},
+    subtitle: {{ params$subtitle }},
     xlab: {{ params$xlab }},
     ylab: {{ params$ylab }},
     rotate_label: {
       y: {{ params$rotate_ylab }}
     },
-    title: {{ params$title }},
-    subtitle: {{ params$subtitle }},
     box: {{ params$box }},
     xlim: {{ params$xlim }},
     ylim: {{ params$ylim }},
