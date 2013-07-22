@@ -1,5 +1,19 @@
 context("utils")
 
+test_that("get_formats", {
+    formats <- get_formats(data.frame(x=c("a","b","c")))
+    expect_equal(formats, c(x = "s"))
+
+    formats <- get_formats(data.frame(x=c(1,2,3)))
+    expect_equal(formats, c(x = "s"))
+
+    formats <- get_formats(data.frame(x=c(1.1,2,3)))
+    expect_equal(formats, c(x = ".2f"))
+
+    formats <- get_formats(data.frame(x=c(1.1,2,3)), list(x = ".3f"))
+    expect_equal(formats, c(x = ".3f"))
+})
+
 test_that("scale_type", {
     expect_equal(scale_type(NULL), "categorical")
     expect_equal(scale_type(c(1)), "categorical")

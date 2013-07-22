@@ -1,3 +1,27 @@
+#' Return a C-style format given the type of data
+#'
+#' It also allows to set a custom format
+#'
+#' @export
+#' @keywords internal
+get_formats <- function(data, custom_formats = NULL){
+    custom_format_names <- names(custom_formats)
+    formats <- sapply(colnames(data), function(name) {
+        if (name %in% custom_format_names){
+            custom_formats[[name]]
+        } else {
+            x <- data[, name]
+            if (is.numeric(x) && any(x %% 1 != 0)) {
+                ".2f"
+            } else {
+                "s"
+            }
+        }
+    })
+
+    formats
+}
+
 #' Extract function names from a list of placeholder expressions
 #' @export
 #' @keywords internal

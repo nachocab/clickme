@@ -27,30 +27,27 @@ Points$methods(
     # Generate tooltip JS code
     get_tooltip_content = function(){
 
+        # Point names get special treatment because they are used as titles
         tooltip_names <- setdiff(colnames(data), c("point_name"))
-        title_row <- "<tr><td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td></tr>"
 
         tooltip_formats <- get_formats(data[, tooltip_names], params$formats)
 
         # x and y are always present, but they can have different names (xlab and ylab)
         # color_groups is sometimes present, and it can have a different name (color_title)
-        rename_columns_index <- which(tooltip_names %in% c("x", "y", "color_group"))
-        new_names <- c(params$xlab, params$ylab, params$color_title)
-        new_js_objects <- c("d.x", "d.y", "d.color_group")
-        tooltip_names[rename_columns_index] <- new_names[seq_along(rename_columns_index)]
-        tooltip_values <- setNames(new_js_objects[seq_along(rename_columns_index)], tooltip_names[rename_columns_index])
-        tooltip_values <- c(tooltip_values, sapply(tooltip_names[-rename_columns_index], function(name) gettextf("d['%s']", name)))
+        renamings <- c(x = params$xlab, y = params$ylab, color_group = params$color_title)
+        names(tooltip_formats)[names(tooltip_formats) %in% names(renamings)] <- renamings[names(renamings) %in% names(tooltip_formats)]
+        tooltip_values <- setNames(sapply(tooltip_names, function(name) gettextf("d['%s']", name)), names(tooltip_formats))
 
         tooltip_formatted_values <- sapply(1:length(tooltip_values), function(i){
             if (tooltip_formats[i] == "s"){
                 tooltip_values[i]
             } else {
-                gettextf("d3.format('%s')(%s)", tooltip_formats[i], tooltip_values[i])
+                setNames(gettextf("d3.format('%s')(%s)", tooltip_formats[i], tooltip_values[i]), names(tooltip_values[i]))
             }
         })
-        tooltip_formatted_values <- setNames(tooltip_formatted_values, tooltip_names)
 
-        rows <- c(title_row, sapply(tooltip_names, function(name) {
+        title_row <- "<tr><td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td></tr>"
+        rows <- c(title_row, sapply(names(tooltip_formatted_values), function(name) {
             gettextf("<tr class='tooltip-metric'><td class='tooltip-metric-name'>%s</td><td class='tooltip-metric-value'>\" + %s + \"</td></tr>", name, tooltip_formatted_values[name])
         }))
         rows <- paste(rows, collapse = "")
@@ -58,25 +55,6 @@ Points$methods(
         tooltip_contents <- gettextf("\"<table>%s</table>\"", rows)
 
         tooltip_contents
-    },
-
-    # returns a gettextf format
-    get_formats = function(data, custom_formats){
-        custom_format_names <- names(custom_formats)
-        formats <- sapply(colnames(data), function(name) {
-            if (name %in% custom_format_names){
-                custom_formats[name]
-            } else {
-                x <- data[, name]
-                if (is.numeric(x) && any(x %% 1 != 0)) {
-                    ".2f"
-                } else {
-                    "s"
-                }
-            }
-        })
-
-        formats
     },
 
     # When one of the axes is categorical, we need its domain
