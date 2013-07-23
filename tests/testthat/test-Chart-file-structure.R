@@ -30,61 +30,61 @@ test_that("default paths are valid", {
     expect_true(file.exists(dir_path))
 
     # folders
-    expect_equal(test_chart$file_structure$paths$Template, test_chart_path)
-    expect_equal(test_chart$file_structure$paths$template, file.path(test_chart_path, "template"))
-    expect_equal(test_chart$file_structure$paths$translator, file.path(test_chart_path, "translator"))
-    expect_equal(test_chart$file_structure$paths$tests, file.path(test_chart_path, "tests"))
-    expect_equal(test_chart$file_structure$paths$template_assets, file.path(test_chart_path, "assets"))
+    expect_equal(test_chart$internal$file$paths$Template, test_chart_path)
+    expect_equal(test_chart$internal$file$paths$template, file.path(test_chart_path, "template"))
+    expect_equal(test_chart$internal$file$paths$translator, file.path(test_chart_path, "translator"))
+    expect_equal(test_chart$internal$file$paths$tests, file.path(test_chart_path, "tests"))
+    expect_equal(test_chart$internal$file$paths$template_assets, file.path(test_chart_path, "assets"))
 
     # files
-    expect_equal(test_chart$file_structure$paths$template_file, file.path(test_chart$file_structure$paths$template, "template.Rmd"))
-    expect_equal(test_chart$file_structure$paths$config_file, file.path(test_chart$file_structure$paths$Template, "config.yml"))
-    expect_equal(test_chart$file_structure$paths$translator_file, file.path(test_chart$file_structure$paths$translator, "TestChart.R"))
-    expect_equal(test_chart$file_structure$paths$translator_test_file, file.path(test_chart$file_structure$paths$tests, "test-TestChart.R"))
+    expect_equal(test_chart$internal$file$paths$template_file, file.path(test_chart$internal$file$paths$template, "template.Rmd"))
+    expect_equal(test_chart$internal$file$paths$config_file, file.path(test_chart$internal$file$paths$Template, "config.yml"))
+    expect_equal(test_chart$internal$file$paths$translator_file, file.path(test_chart$internal$file$paths$translator, "TestChart.R"))
+    expect_equal(test_chart$internal$file$paths$translator_test_file, file.path(test_chart$internal$file$paths$tests, "test-TestChart.R"))
 
     test_chart <- TestChart$new(list(coffee = TRUE))
     test_chart$get_params()
     test_chart$get_unvalidated_file_structure()
     unlink(file.path(test_chart_path, "template", "template.Rmd"))
-    expect_error(test_chart$validate_file_structure(), gettextf("The TestChart template doesn't contain a template file in: %s", test_chart$file_structure$paths$Template))
+    expect_error(test_chart$validate_file_structure(), gettextf("The TestChart template doesn't contain a template file in: %s", test_chart$internal$file$paths$Template))
 
-    file.create(file.path(test_chart$file_structure$paths$template, "template.coffee.Rmd"))
+    file.create(file.path(test_chart$internal$file$paths$template, "template.coffee.Rmd"))
     expect_that(test_chart$validate_file_structure(), not(throws_error()))
-    expect_equal(test_chart$file_structure$paths$template_coffee_file, file.path(test_chart$file_structure$paths$template, "template.coffee.Rmd"))
+    expect_equal(test_chart$internal$file$paths$template_coffee_file, file.path(test_chart$internal$file$paths$template, "template.coffee.Rmd"))
 
-    file.create(file.path(test_chart$file_structure$paths$template, "template.Rmd"))
+    file.create(file.path(test_chart$internal$file$paths$template, "template.Rmd"))
 
     unlink(dir_path, recursive = TRUE)
 })
 
 
 test_that("output file name is added", {
-    expect_equal(test_chart$file_structure$names$output_file, "temp-TestChart.html")
+    expect_equal(test_chart$internal$file$names$output_file, "temp-TestChart.html")
 
     test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file.html")))
     test_chart$get_params()
     test_chart$get_file_structure()
-    expect_equal(test_chart$file_structure$names$output_file, "my_file.html")
+    expect_equal(test_chart$internal$file$names$output_file, "my_file.html")
 
     test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file")))
     test_chart$get_params()
     test_chart$get_file_structure()
-    expect_equal(test_chart$file_structure$names$output_file, "my_file.html")
+    expect_equal(test_chart$internal$file$names$output_file, "my_file.html")
 
     test_chart <- TestChart$new(list(file_path = "my_file.html"))
     test_chart$get_params()
     test_chart$get_file_structure()
-    expect_equal(test_chart$file_structure$names$output_file, "my_file.html")
+    expect_equal(test_chart$internal$file$names$output_file, "my_file.html")
 
     test_chart <- TestChart$new(list(file_path = "my_file"))
     test_chart$get_params()
     test_chart$get_file_structure()
-    expect_equal(test_chart$file_structure$names$output_file, "my_file.html")
+    expect_equal(test_chart$internal$file$names$output_file, "my_file.html")
 
     test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file1.html"), file = "my_file2.html"))
     test_chart$get_params()
     expect_message(test_chart$get_file_structure(), "The \"file\" argument was ignored because the \"file_path\" argument was present: ")
-    expect_equal(test_chart$file_structure$names$output_file, "my_file1.html")
+    expect_equal(test_chart$internal$file$names$output_file, "my_file1.html")
 })
 
 test_that("output paths are added", {
@@ -92,33 +92,33 @@ test_that("output paths are added", {
     test_chart$get_params()
     test_chart$get_file_structure()
 
-    expect_equal(test_chart$file_structure$paths$output, system.file("output", package = "clickme"))
-    expect_equal(test_chart$file_structure$paths$output_file, file.path(test_chart$file_structure$paths$output, test_chart$file_structure$names$output_file))
+    expect_equal(test_chart$internal$file$paths$output, system.file("output", package = "clickme"))
+    expect_equal(test_chart$internal$file$paths$output_file, file.path(test_chart$internal$file$paths$output, test_chart$internal$file$names$output_file))
 
-    expect_equal(test_chart$file_structure$paths$shared_assets, file.path(getOption("clickme_templates_path"), "..", "shared_assets"))
-    expect_equal(test_chart$file_structure$paths$output_template_assets, file.path(test_chart$file_structure$path$output, "clickme_assets", "TestChart"))
-    expect_equal(test_chart$file_structure$paths$output_shared_assets, file.path(test_chart$file_structure$path$output, "clickme_assets"))
+    expect_equal(test_chart$internal$file$paths$shared_assets, file.path(getOption("clickme_templates_path"), "..", "shared_assets"))
+    expect_equal(test_chart$internal$file$paths$output_template_assets, file.path(test_chart$internal$file$path$output, "clickme_assets", "TestChart"))
+    expect_equal(test_chart$internal$file$paths$output_shared_assets, file.path(test_chart$internal$file$path$output, "clickme_assets"))
 
-    expect_equal(test_chart$file_structure$relative_path$template_assets, file.path("clickme_assets", "TestChart"))
-    expect_equal(test_chart$file_structure$relative_path$shared_assets, "clickme_assets")
+    expect_equal(test_chart$internal$file$relative_path$template_assets, file.path("clickme_assets", "TestChart"))
+    expect_equal(test_chart$internal$file$relative_path$shared_assets, "clickme_assets")
 
     test_chart <- TestChart$new(list(dir = "my_folder"))
     test_chart$get_params()
     test_chart$get_file_structure()
-    expect_equal(test_chart$file_structure$paths$output, "my_folder")
-    expect_equal(test_chart$file_structure$paths$output_file, file.path(test_chart$file_structure$paths$output, test_chart$file_structure$names$output_file))
+    expect_equal(test_chart$internal$file$paths$output, "my_folder")
+    expect_equal(test_chart$internal$file$paths$output_file, file.path(test_chart$internal$file$paths$output, test_chart$internal$file$names$output_file))
 
     test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file1.html")))
     test_chart$get_params()
     test_chart$get_file_structure()
-    expect_equal(test_chart$file_structure$paths$output, "my_folder")
-    expect_equal(test_chart$file_structure$paths$output_file, file.path(test_chart$file_structure$paths$output, test_chart$file_structure$names$output_file))
+    expect_equal(test_chart$internal$file$paths$output, "my_folder")
+    expect_equal(test_chart$internal$file$paths$output_file, file.path(test_chart$internal$file$paths$output, test_chart$internal$file$names$output_file))
 
     test_chart <- TestChart$new(list(file_path = file.path("my_folder1", "my_file1.html"), dir = "my_folder2"))
     test_chart$get_params()
     expect_message(test_chart$get_file_structure(), "The \"dir\" argument was ignored because the \"file_path\" argument was present")
-    expect_equal(test_chart$file_structure$paths$output, "my_folder1")
-    expect_equal(test_chart$file_structure$paths$output_file, file.path(test_chart$file_structure$paths$output, test_chart$file_structure$names$output_file))
+    expect_equal(test_chart$internal$file$paths$output, "my_folder1")
+    expect_equal(test_chart$internal$file$paths$output_file, file.path(test_chart$internal$file$paths$output, test_chart$internal$file$names$output_file))
     unlink("my_folder", recursive = TRUE)
     unlink("my_folder1", recursive = TRUE)
 })

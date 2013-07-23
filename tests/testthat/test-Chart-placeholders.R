@@ -12,8 +12,8 @@ test_that("appends styles and scripts", {
     test_chart$get_file_structure()
     test_chart$get_config()
 
-    test_chart$config$styles <- c("abc.css", "$shared/def.css", "http://some_file.css")
-    test_chart$config$scripts <- c("abc.js", "$shared/def.js", "http://some_file.js")
+    test_chart$internal$config$styles <- c("abc.css", "$shared/def.css", "http://some_file.css")
+    test_chart$internal$config$scripts <- c("abc.js", "$shared/def.js", "http://some_file.js")
 
     expected_styles <- paste("<link href=\"clickme_assets/TestChart/abc.css\" rel=\"stylesheet\">",
                              "<link href=\"clickme_assets/def.css\" rel=\"stylesheet\">",

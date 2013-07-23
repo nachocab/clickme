@@ -124,7 +124,7 @@
 
 
     # Sidebar
-    if {{ params$sidebar }}
+    if {{ params$show_sidebar }}
         sidebar = plot.right_margin.append("g")
             .attr("transform","translate(60,0)")
 

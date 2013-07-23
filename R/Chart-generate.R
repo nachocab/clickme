@@ -2,35 +2,33 @@ Chart$methods(
     generate = function(){
         get_placeholders()
 
-        if ((!is.null(params$coffee) && params$coffee) || (is.null(params$coffee) && is_coffee_installed() && file.exists(file_structure$paths$template_coffee_file))) {
+        if ((!is.null(params$coffee) && params$coffee) || (is.null(params$coffee) && is_coffee_installed() && file.exists(internal$file$paths$template_coffee_file))) {
             translate_coffee_template_to_js()
         }
 
         html_code <- parse_placeholders()
 
-        writeLines(html_code, file_structure$paths$output_file)
+        writeLines(html_code, internal$file$paths$output_file)
 
         export_assets()
 
     },
 
     get_placeholders = function(){
-        placeholder <<- list()
+        internal$placeholder$spec$json <<- c("{", 2)
+        internal$placeholder$spec$plain <<- c("{", 3)
+        internal$placeholder$spec$coffee_json <<- c("[", 3)
+        internal$placeholder$spec$coffee_plain <<- c("[", 4)
 
-        placeholder$spec$json <<- c("{", 2)
-        placeholder$spec$plain <<- c("{", 3)
-        placeholder$spec$coffee_json <<- c("[", 3)
-        placeholder$spec$coffee_plain <<- c("[", 4)
+        internal$placeholder$delim$json <<- get_placeholder_delim(internal$placeholder$spec$json)
+        internal$placeholder$delim$plain <<- get_placeholder_delim(internal$placeholder$spec$plain)
+        internal$placeholder$delim$coffee_json <<- get_placeholder_delim(internal$placeholder$spec$coffee_json)
+        internal$placeholder$delim$coffee_plain <<- get_placeholder_delim(internal$placeholder$spec$coffee_plain)
 
-        placeholder$delim$json <<- get_placeholder_delim(placeholder$spec$json)
-        placeholder$delim$plain <<- get_placeholder_delim(placeholder$spec$plain)
-        placeholder$delim$coffee_json <<- get_placeholder_delim(placeholder$spec$coffee_json)
-        placeholder$delim$coffee_plain <<- get_placeholder_delim(placeholder$spec$coffee_plain)
-
-        placeholder$regex$json <<- get_placeholder_regex(placeholder$spec$json)
-        placeholder$regex$plain <<- get_placeholder_regex(placeholder$spec$plain)
-        placeholder$regex$coffee_json <<- get_placeholder_regex(placeholder$spec$coffee_json)
-        placeholder$regex$coffee_plain <<- get_placeholder_regex(placeholder$spec$coffee_plain)
+        internal$placeholder$regex$json <<- get_placeholder_regex(internal$placeholder$spec$json)
+        internal$placeholder$regex$plain <<- get_placeholder_regex(internal$placeholder$spec$plain)
+        internal$placeholder$regex$coffee_json <<- get_placeholder_regex(internal$placeholder$spec$coffee_json)
+        internal$placeholder$regex$coffee_plain <<- get_placeholder_regex(internal$placeholder$spec$coffee_plain)
     },
 
     # Translate the coffeescript template into a javascript template
@@ -41,35 +39,35 @@ Chart$methods(
             stop("\n\n\tCoffeeScript doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/\n\n")
         }
 
-        if (!file.exists(file_structure$paths$template_coffee_file)) {
-            stop(gettextf("\n\n\tNo coffeescript file found at:\n\t%s\n\n", file_structure$paths$template_coffee_file))
+        if (!file.exists(internal$file$paths$template_coffee_file)) {
+            stop(gettextf("\n\n\tNo coffeescript file found at:\n\t%s\n\n", internal$file$paths$template_coffee_file))
         }
 
-        coffee_template <- readLines(file_structure$paths$template_coffee_file, warn = FALSE)
+        coffee_template <- readLines(internal$file$paths$template_coffee_file, warn = FALSE)
         coffee_template <- paste(coffee_template, collapse = "\n")
 
-        replaced_coffee_template <- replace_delimiter(coffee_template, placeholder$regex$json, placeholder$delim$coffee_json, deparse = TRUE)
-        replaced_coffee_template <- replace_delimiter(replaced_coffee_template, placeholder$regex$plain, placeholder$delim$coffee_plain, deparse = TRUE)
+        replaced_coffee_template <- replace_delimiter(coffee_template, internal$placeholder$regex$json, internal$placeholder$delim$coffee_json, deparse = TRUE)
+        replaced_coffee_template <- replace_delimiter(replaced_coffee_template, internal$placeholder$regex$plain, internal$placeholder$delim$coffee_plain, deparse = TRUE)
 
         # output.dir needs to be set explicitly because knit_child expects to be called within knit
         opts_knit$set(output.dir = getwd())
-        suppressMessages(capture.output(knit_child(text = replaced_coffee_template, output = file_structure$paths$template_file, quiet = TRUE)))
+        suppressMessages(capture.output(knit_child(text = replaced_coffee_template, output = internal$file$paths$template_file, quiet = TRUE)))
 
-        js_template <- paste(readLines(file_structure$paths$template_file), collapse = "\n")
-        replaced_js_template <- replace_delimiter(js_template, placeholder$regex$coffee_json, placeholder$delim$json, deparse = FALSE)
-        replaced_js_template <- replace_delimiter(replaced_js_template, placeholder$regex$coffee_plain, placeholder$delim$plain, deparse = FALSE)
+        js_template <- paste(readLines(internal$file$paths$template_file), collapse = "\n")
+        replaced_js_template <- replace_delimiter(js_template, internal$placeholder$regex$coffee_json, internal$placeholder$delim$json, deparse = FALSE)
+        replaced_js_template <- replace_delimiter(replaced_js_template, internal$placeholder$regex$coffee_plain, internal$placeholder$delim$plain, deparse = FALSE)
 
-        writeLines(replaced_js_template, file_structure$paths$template_file)
+        writeLines(replaced_js_template, internal$file$paths$template_file)
     },
 
     parse_placeholders = function() {
 
-        template <- paste0(readLines(file_structure$paths$template_file, warn = FALSE), collapse = "\n")
+        template <- paste0(readLines(internal$file$paths$template_file, warn = FALSE), collapse = "\n")
 
-        locations <- str_locate_all(template, placeholder$regex$json)[[1]]
+        locations <- str_locate_all(template, internal$placeholder$regex$json)[[1]]
         if (nrow(locations) > 0){
-            expressions <- str_extract_all(template, placeholder$regex$json)[[1]]
-            expressions <- str_replace(expressions, placeholder$regex$json, "\\1")
+            expressions <- str_extract_all(template, internal$placeholder$regex$json)[[1]]
+            expressions <- str_replace(expressions, internal$placeholder$regex$json, "\\1")
 
             force_use_methods(expressions)
             expressions <- paste0("clickme::to_json(", expressions, ")")
@@ -77,10 +75,10 @@ Chart$methods(
             template <- evaluate_placeholders(expressions, template, locations)
         }
 
-        locations <- str_locate_all(template, placeholder$regex$plain)[[1]]
+        locations <- str_locate_all(template, internal$placeholder$regex$plain)[[1]]
         if (nrow(locations) > 0){
-            expressions <- str_extract_all(template, placeholder$regex$plain)[[1]]
-            expressions <- str_replace(expressions, placeholder$regex$plain, "\\1")
+            expressions <- str_extract_all(template, internal$placeholder$regex$plain)[[1]]
+            expressions <- str_replace(expressions, internal$placeholder$regex$plain, "\\1")
 
             force_use_methods(expressions)
 
@@ -117,18 +115,18 @@ Chart$methods(
         # and either the output shared assets folder
         # doesn't exist, or
         # it was modified before (or after!) the clickme shared assets folder, rewrite everything.
-        if (file.exists(file_structure$paths$shared_assets) &&
-                (!file.exists(file_structure$paths$output_shared_assets) ||
-                 file.info(file_structure$paths$shared_assets)$mtime != file.info(file_structure$paths$output_shared_assets)$mtime)){
-            dir.create(file_structure$paths$output_shared_assets, showWarnings = FALSE)
-            file.copy(from = list.files(file_structure$paths$shared_assets, full.names = TRUE), to = file_structure$paths$output_shared_assets, overwrite = TRUE)
+        if (file.exists(internal$file$paths$shared_assets) &&
+                (!file.exists(internal$file$paths$output_shared_assets) ||
+                 file.info(internal$file$paths$shared_assets)$mtime != file.info(internal$file$paths$output_shared_assets)$mtime)){
+            dir.create(internal$file$paths$output_shared_assets, showWarnings = FALSE)
+            file.copy(from = list.files(internal$file$paths$shared_assets, full.names = TRUE), to = internal$file$paths$output_shared_assets, overwrite = TRUE)
         }
 
-        if (file.exists(file_structure$paths$template_assets) &&
-                (!file.exists(file_structure$paths$output_template_assets) ||
-                 file.info(file_structure$paths$template_assets)$mtime != file.info(file_structure$paths$output_template_assets)$mtime)){
-            dir.create(file_structure$paths$output_template_assets, showWarnings = FALSE)
-            file.copy(from = list.files(file_structure$paths$template_assets, full.names = TRUE), to = file_structure$paths$output_template_assets, overwrite = TRUE)
+        if (file.exists(internal$file$paths$template_assets) &&
+                (!file.exists(internal$file$paths$output_template_assets) ||
+                 file.info(internal$file$paths$template_assets)$mtime != file.info(internal$file$paths$output_template_assets)$mtime)){
+            dir.create(internal$file$paths$output_template_assets, showWarnings = FALSE)
+            file.copy(from = list.files(internal$file$paths$template_assets, full.names = TRUE), to = internal$file$paths$output_template_assets, overwrite = TRUE)
         }
 
     }

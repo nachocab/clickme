@@ -122,7 +122,7 @@
     "font-size": "22px"
   });
 
-  if ({{ params$sidebar }}) {
+  if ({{ params$show_sidebar }}) {
     sidebar = plot.right_margin.append("g").attr("transform", "translate(60,0)");
     g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
       return toggle_names();

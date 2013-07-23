@@ -132,10 +132,10 @@ Points <- setRefClass("Points",
                 min <- min(params$color_groups, na.rm = TRUE)
                 max <- max(params$color_groups, na.rm = TRUE)
 
-                # If the scale crosses zero, make sure it is centered around zero (white)
+                # If the scale crosses zero, make sure the palette the center of the palette is white (#fff)
                 if (min < 0 && max > 0) {
                     color_domain <- c(min, 0, max)
-                    params$palette <<- c(params$palette[1], "#fff", params$palette[2])
+                    params$palette <<- c(params$palette[1], "white", params$palette[2])
                 } else {
                     color_domain <- c(min, max)
                 }

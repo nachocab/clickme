@@ -40,7 +40,7 @@ test_that("replace_delimiter", {
 
     test_chart <- TestChart$new()
     test_chart$get_placeholders()
-    placeholder <- test_chart$placeholder
+    placeholder <- test_chart$internal$placeholder
 
     text <- "a = {{ a }}"
     converted_text <- replace_delimiter(text,
@@ -113,11 +113,11 @@ test_that("regular templates are rendered", {
     var a = {{ params$a }};
     var b = {{ params$b }};
     var c = {{{ params$c }}};
-</script>", test_chart$file_structure$paths$template_file)
+</script>", test_chart$internal$file$paths$template_file)
 
     test_chart$generate()
 
-    rendered_contents <- readContents(test_chart$file_structure$paths$output_file)
+    rendered_contents <- readContents(test_chart$internal$file$paths$output_file)
     expected_contents <- "
 <script type=\"text/javascript\">
     var a = 3;
@@ -141,11 +141,11 @@ test_that("coffee templates are rendered", {
     b = {{ params$b }}
     c = {{{ params$c }}}
 ```
-</script>", test_chart$file_structure$paths$template_coffee_file)
+</script>", test_chart$internal$file$paths$template_coffee_file)
 
     test_chart$generate()
 
-    rendered_template <- readContents(test_chart$file_structure$paths$template_file)
+    rendered_template <- readContents(test_chart$internal$file$paths$template_file)
     expected_template <- "
 <script type=\"text/javascript\">
 (function() {
@@ -163,7 +163,7 @@ test_that("coffee templates are rendered", {
 </script>"
     expect_equal(rendered_template, expected_template)
 
-    rendered_output <- readContents(test_chart$file_structure$paths$output_file)
+    rendered_output <- readContents(test_chart$internal$file$paths$output_file)
     expected_output <- "
 <script type=\"text/javascript\">
 (function() {
@@ -190,12 +190,12 @@ test_that("coffee templates are rendered", {
 #     test_chart$get_file_structure()
 #     test_chart$get_config()
 
-#     test_chart$config$styles <- c("abc.css", "$shared/def.css", "http://somefile.css")
+#     test_chart$internal$config$styles <- c("abc.css", "$shared/def.css", "http://somefile.css")
 
-#     dir.create(test_chart$file_structure$paths$template_assets)
-#     template_asset_path <- file.path(test_chart$file_structure$paths$template_assets, "abc.css")
+#     dir.create(test_chart$internal$file$paths$template_assets)
+#     template_asset_path <- file.path(test_chart$internal$file$paths$template_assets, "abc.css")
 #     file.create(template_asset_path)
-#     shared_asset_path <- file.path(test_chart$file_structure$paths$shared_assets, "def.css")
+#     shared_asset_path <- file.path(test_chart$internal$file$paths$shared_assets, "def.css")
 #     file.create(shared_asset_path)
 
 #     test_chart$export_assets()

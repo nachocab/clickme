@@ -6,13 +6,13 @@ Chart$methods(
 
         params$width <<- params$width %or% 500
         params$height <<- params$height %or% 500
-        params$title <<- params$title %or% params$main %or% name # alias (main)
+        params$title <<- params$title %or% params$main %or% internal$file$names$template # alias (main)
 
         params$padding <<- validate_padding(params$padding)
 
         params$palette <<- params$palette %or% params[["col"]] # alias (col)
         params$rotate_ylab <<- params$rotate_ylab %or% TRUE
-        params$sidebar <<- params$sidebar %or% TRUE
+        params$show_sidebar <<- params$show_sidebar %or% TRUE
 
         params$hide_x_tick_labels <<- params$hide_x_tick_labels %or% FALSE # should probably be xaxt = "n"?
 

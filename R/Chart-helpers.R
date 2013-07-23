@@ -1,8 +1,8 @@
 Chart$methods(
 
     get_urls = function(){
-        urls$local <<- file_structure$paths$output_file
-        urls$server <<- paste0("http://localhost:", params$port, "/", file_structure$names$output_file)
+        internal$url$local <<- internal$file$paths$output_file
+        internal$url$server <<- paste0("http://localhost:", params$port, "/", internal$file$names$output_file)
     },
 
     # I can use Mike Bostock's lazy iframes trick by setting "data-src" instead of "src"
@@ -40,9 +40,9 @@ Chart$methods(
 
     get_relative_url = function(relative_path){
         if (is.null(relative_path)){
-            url <- file_structure$names$output_file
+            url <- internal$file$names$output_file
         } else {
-            url <- gettextf("%s/%s", relative_path, file_structure$names$output_file)
+            url <- gettextf("%s/%s", relative_path, internal$file$names$output_file)
         }
 
         url

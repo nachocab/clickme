@@ -5,36 +5,39 @@
 #' @param replace flag that indicates what to do when there is another template of the same name, default FALSE
 #' @export
 new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
+
+    # This is a bit of a hack, we'll have to change it when templates start inheriting from other Chart
     template <- Chart$new()
-    template$name <- camel_case(template_name)
+    template$internal$file$names$template <- camel_case(template_name)
     template$get_default_names_and_paths()
+    paths <- template$internal$file$paths
 
     if (replace){
         unlink(file.path(getOption("clickme_templates_path"), template_name), recursive = TRUE)
     } else {
-        if (file.exists(template$file_structure$paths$Template)) {
+        if (file.exists(paths$Template)) {
             stop(gettextf("\n\n\tThe %s template already exists\n\t(use replace = TRUE if you want to replace it):\n\t%s",
-                          template$file_structure$names$template,
-                          template$file_structure$paths$Template))
+                          template$internal$file$names$template,
+                          paths$Template))
         }
     }
 
-    dir.create(template$file_structure$paths$Template)
-    dir.create(template$file_structure$paths$template)
-    dir.create(template$file_structure$paths$template_assets)
-    dir.create(template$file_structure$paths$translator)
-    dir.create(template$file_structure$paths$tests)
+    dir.create(paths$Template)
+    dir.create(paths$template)
+    dir.create(paths$template_assets)
+    dir.create(paths$translator)
+    dir.create(paths$tests)
 
     if (coffee){
-        writeLines(get_template_contents_coffee(), template$file_structure$paths$template_coffee_file)
+        writeLines(get_template_contents_coffee(), paths$template_coffee_file)
     } else {
-        writeLines(get_template_contents(), template$file_structure$paths$template_file)
+        writeLines(get_template_contents(), paths$template_file)
     }
-    writeLines(get_config_contents(template_name), template$file_structure$paths$config_file)
-    writeLines(get_translator_contents(template$name), template$file_structure$paths$translator_file)
-    writeLines(get_translator_test_contents(template$name), template$file_structure$paths$translator_test_file)
+    writeLines(get_config_contents(template_name), paths$config_file)
+    writeLines(get_translator_contents(template_name), paths$translator_file)
+    writeLines(get_translator_test_contents(template_name), paths$translator_test_file)
 
-    message("Template created at: ", template$file_structure$paths$Template)
+    message("Template created at: ", paths$Template)
 
     invisible(template)
 }
@@ -95,7 +98,7 @@ get_translator_contents <- function(template_name){
     methods = list(
 
         get_data = function(){
-            data <<- params$data
+            data <<- params$x
         }
 
     )

@@ -23,22 +23,17 @@
 Chart <- setRefClass("Chart",
 
     fields = list(
-               name = "character",
-               data = "ANY",
-               params = "list",
-
-               # internal
-               file_structure = "list",
-               config = "list",
-               placeholder = "list",
-               urls = "list"
+        data = "ANY",
+        params = "list",
+        internal = "list"
     ),
 
     methods = list(
 
         initialize = function(params = list()) {
             initFields(params = params)
-            name <<- as.character(class(.self))
+
+            internal$file$names$template <<- as.character(class(.self))
 
             # When a subclass of Chart gets source'd it loses the packages loaded by the standard loading process (because it belongs to a different namespace), so they must be added manually
             library(yaml)
@@ -59,10 +54,10 @@ Chart <- setRefClass("Chart",
 
         show = function(){
             if (interactive()){
-                if (config$require_server){
-                    browseURL(urls$server)
+                if (internal$config$require_server){
+                    browseURL(internal$url$server)
                 } else {
-                    browseURL(urls$local)
+                    browseURL(internal$url$local)
                 }
             }
             .self

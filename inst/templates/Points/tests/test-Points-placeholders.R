@@ -20,7 +20,7 @@ test_that("get_d3_color_scale", {
     params <- list(color_groups = c(-2:2))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.linear().domain([-2,0,2]).range([\"#278DD6\",\"#fff\",\"#d62728\"]).interpolate(d3.interpolateLab);", info = "quantitative, color_groups")
+    expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.linear().domain([-2,0,2]).range([\"#278DD6\",\"white\",\"#d62728\"]).interpolate(d3.interpolateLab);", info = "quantitative, color_groups")
 
     params <- list(color_groups = c("a", "a", "b", "c", "b"))
     points <- Points$new(params)

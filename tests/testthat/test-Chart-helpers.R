@@ -13,8 +13,8 @@ test_that("get_urls", {
     test_chart$get_config()
     test_chart$get_urls()
 
-    expect_equal(test_chart$urls$local, file.path(test_chart$file_structure$paths$output, "temp-TestChart.html"))
-    expect_equal(test_chart$urls$server, "http://localhost:8000/temp-TestChart.html")
+    expect_equal(test_chart$internal$url$local, file.path(test_chart$internal$file$paths$output, "temp-TestChart.html"))
+    expect_equal(test_chart$internal$url$server, "http://localhost:8000/temp-TestChart.html")
 
 })
 

@@ -14,7 +14,7 @@ Chart$methods(
     #' @param opts the options of the current template
     #' @export
     get_scripts = function() {
-        scripts <- paste(sapply(config$scripts, function(script_path){
+        scripts <- paste(sapply(internal$config$scripts, function(script_path){
             script_path <- get_asset_path(script_path)
             gettextf("<script src=\"%s\"></script>", script_path)
         }), collapse="\n")
@@ -27,7 +27,7 @@ Chart$methods(
     #' @param opts the options of the current template
     #' @export
     get_styles = function() {
-        styles <- paste(sapply(config$styles, function(style_path){
+        styles <- paste(sapply(internal$config$styles, function(style_path){
             style_path <- get_asset_path(style_path)
             gettextf("<link href=\"%s\" rel=\"stylesheet\">", style_path)
         }), collapse="\n")
@@ -39,9 +39,9 @@ Chart$methods(
         if (!grepl("^http://", path)){
             if (grepl("\\$shared/", path)) {
                 path <- gsub("\\$shared/", "", path)
-                path <- file.path(file_structure$relative_path$shared_assets, path)
+                path <- file.path(internal$file$relative_path$shared_assets, path)
             } else {
-                path <- file.path(file_structure$relative_path$template_assets, path)
+                path <- file.path(internal$file$relative_path$template_assets, path)
             }
         }
 

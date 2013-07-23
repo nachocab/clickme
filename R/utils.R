@@ -315,17 +315,17 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 #' @export
 test_template <- function(template_name, filter = NULL){
     template <- Chart$new()
-    template$name <- camel_case(template_name)
+    template$internal$file$names$template <- camel_case(template_name)
     template$get_default_names_and_paths()
 
-    if (file.exists(template$file_structure$paths$translator_test_file)){
+    if (file.exists(template$internal$file$paths$translator_test_file)){
         library("testthat")
         reload_translators()
         env <- new.env()
-        with_envvar(r_env_vars(), test_dir(template$file_structure$paths$tests, filter = filter, env = env))
+        with_envvar(r_env_vars(), test_dir(template$internal$file$paths$tests, filter = filter, env = env))
     } else {
         stop(gettextf("\n\n\tThere is no test translator file at this location:\n\n%s",
-                       template$file_structure$paths$translator_test_file))
+                       template$internal$file$paths$translator_test_file))
     }
 }
 
@@ -401,36 +401,17 @@ open_all_demos <- function(){
 #' @param template name of template
 # demo_template <- function(template) {
 #     opts <- get_default_opts(template)
-#     opts$config <- yaml.load_file(file_structure$paths$config_file)
-#     if (is.null(opts$config$demo)){
+#     opts$config <- yaml.load_file(internal$file$paths$config_file)
+#     if (is.null(opts$internal$config$demo)){
 #         message("The ", template, " template didn't provide a demo example.")
 #     } else {
-#         message("Running demo for the ", template, " template:\n\n", opts$config$demo)
-#         eval(parse(text = opts$config$demo))
+#         message("Running demo for the ", template, " template:\n\n", opts$internal$config$demo)
+#         eval(parse(text = opts$internal$config$demo))
 #     }
 # }
 
 
-#' Test generated file
-#'
-#' Test that the path exists, and that the contents are as expected
-#'
-#' @param opts options
-#' @param extension extension of the file
-#' @param expected_data data that should be stored in the test file.
-#' @param test_data_prefix value used on the \code{get_opts(..., data_prefix = test_data_prefix)} call. It is "test_data" by default.
-#' @export
-expect_correct_file <- function(opts, extension, expected_data = NULL, test_data_prefix = "test_data") {
-    if (!grepl("^\\.", extension)) extension <- paste0(".", extension)
 
-    expected_relative_path <- paste("\"", file.path(opts$relative_path$data, paste0(test_data_prefix, extension)), "\"")
-    expected_path <- file.path(file_structure$paths$data, paste0(test_data_prefix, extension))
-    expect_true(file.exists(expected_path))
-    if (!is.null(expected_data)){
-        expect_equal(readContents(expected_path), expected_data)
-    }
-    unlink(expected_path)
-}
 
 #' @export
 is_character_or_factor <- function(x) {
