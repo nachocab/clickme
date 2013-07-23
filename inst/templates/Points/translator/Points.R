@@ -22,6 +22,7 @@ Points <- setRefClass("Points",
 
             params$radius <<- params$radius %or% 5
             params$jitter <<- params$jitter %or% 0
+            params$opacity <<- params$opacity %or% 1
 
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"

@@ -38,6 +38,7 @@
 }
 .g-searching .g-match > text{
     display: inline;
+    opacity: 1;
 }
 
 .g-searching :not(.g-match) > circle{
