@@ -11,12 +11,18 @@ original_url:
 demo: |-
     clickme(points, rnorm(100))
 
+    clickme(points, x = c(rbeta(100, 1, 10), y = rbeta(100, 1, 10)),
+            names = sample(letters, 100, r = T),
+            color_groups = sample(LETTERS[1:3], 100, r = T),
+            title = "Zoom Search Hover Click")
+
     data(microarray)
     clickme(points, x = microarray$significance, y = microarray$logFC,
             color_groups = ifelse(microarray$adj.P.Val < 1e-4, "Significant", "Noise"),
             names = microarray$gene_name,
             xlab = "Significance (-log10)", ylab = "Fold-change (log2)",
             extra = list(Probe = microarray$probe_name))
+
 
 
 scripts:

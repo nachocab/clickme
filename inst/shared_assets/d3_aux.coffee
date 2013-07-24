@@ -149,19 +149,6 @@ my_light_red = "#b90000"
 
         plot
 
-    plot.add_box = () ->
-        plot.append("path")
-            .attr(
-                "d": "M0,0L#{plot.width},0L#{plot.width},#{plot.height}"
-            ).style(
-                "stroke": "black"
-                "stroke-width": "2px"
-                "shape-rendering": "crispEdges"
-                "fill": "none"
-            )
-
-        plot
-
     plot.add_axes = () ->
         plot.axes = {}
         plot.add_x_axis()
@@ -253,9 +240,6 @@ my_light_red = "#b90000"
 
 
         plot
-
-    if plot.box is true
-        plot.add_box()
 
     plot.add_title()
     plot.add_subtitle()

@@ -151,17 +151,6 @@
       });
       return plot;
     };
-    plot.add_box = function() {
-      plot.append("path").attr({
-        "d": "M0,0L" + plot.width + ",0L" + plot.width + "," + plot.height
-      }).style({
-        "stroke": "black",
-        "stroke-width": "2px",
-        "shape-rendering": "crispEdges",
-        "fill": "none"
-      });
-      return plot;
-    };
     plot.add_axes = function() {
       plot.axes = {};
       plot.add_x_axis();
@@ -233,9 +222,6 @@
       }
       return plot;
     };
-    if (plot.box === true) {
-      plot.add_box();
-    }
     plot.add_title();
     plot.add_subtitle();
     plot.get_scales();

@@ -15,9 +15,6 @@ Chart$methods(
         params$show_sidebar <<- params$show_sidebar %or% TRUE
 
         params$hide_x_tick_labels <<- params$hide_x_tick_labels %or% FALSE # should probably be xaxt = "n"?
-
-        params$frameborder <<- params$frameborder %or% 0
-        params$box <<- params$box %or% FALSE
     },
 
     # Ensure there are four padding values named top, right, left and bottom

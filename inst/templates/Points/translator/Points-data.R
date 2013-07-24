@@ -7,7 +7,7 @@ Points$methods(
 
        data <<- add_extra_data_fields(data)
 
-       data <<- cluster_data_rows(data, params$color_groups, group_variable = "color_group", group_order = params$ordered_color_group_names)
+       data <<- cluster_data_rows(data, params$color_groups, group_variable = "color_group", group_order = internal$ordered_color_group_names)
        # Reverse so the last color group gets the last color
        params$palette <<- rev(params$palette)
 

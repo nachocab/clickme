@@ -43,7 +43,6 @@
     rotate_label: {
       y: {{ params$rotate_ylab }}
     },
-    box: {{ params$box }},
     xlim: {{ params$xlim }},
     ylim: {{ params$ylim }},
     data_ranges: {{{ get_data_ranges() }}},

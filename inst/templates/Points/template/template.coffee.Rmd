@@ -45,7 +45,6 @@
 
         rotate_label:
             y : {{ params$rotate_ylab }}
-        box: {{ params$box }}
 
         # TODO: refactor these into a get_scales function
         xlim: {{ params$xlim }}
