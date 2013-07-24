@@ -18,14 +18,31 @@ Chart$methods(
         .self
     },
 
-    link = function(name = params$title, class = "clickme", relative_path = NULL){
+    link = function(text = params$title, class = "clickme", relative_path = NULL){
 
         url <- get_relative_url(relative_path)
 
-        link <- gettextf("<a href=\"%s\" class=\"%s\">%s</a>\n", url, class, name)
+        link <- gettextf("<a href=\"%s\" class=\"%s\">%s</a>\n", url, class, text)
 
         cat(link)
         .self
+    },
+
+    # internal
+    get_urls = function(){
+        internal$url$local <<- internal$file$paths$output_file
+        internal$url$server <<- paste0("http://localhost:", params$port, "/", internal$file$names$output_file)
+    },
+
+    # internal
+    get_relative_url = function(relative_path){
+        if (is.null(relative_path)){
+            url <- internal$file$names$output_file
+        } else {
+            url <- gettextf("%s/%s", relative_path, internal$file$names$output_file)
+        }
+
+        url
     },
 
     # dummy function to not open the current chart

@@ -130,21 +130,6 @@ Chart$methods(
             dir.create(internal$file$paths$output)
         }
 
-    },
-
-    get_urls = function(){
-        internal$url$local <<- internal$file$paths$output_file
-        internal$url$server <<- paste0("http://localhost:", params$port, "/", internal$file$names$output_file)
-    },
-
-    get_relative_url = function(relative_path){
-        if (is.null(relative_path)){
-            url <- internal$file$names$output_file
-        } else {
-            url <- gettextf("%s/%s", relative_path, internal$file$names$output_file)
-        }
-
-        url
     }
 
 )
