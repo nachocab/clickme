@@ -65,7 +65,13 @@ test_that("title_case", {
 })
 
 test_that("camel_case", {
+    expect_equal(camel_case("paco_pepe"), "PacoPepe")
+    expect_equal(camel_case("PacoPepe"), "PacoPepe")
+
     strings <- c("paco_pepe", "paco.pepe", "paco.pepe_luis")
+    expect_equal(camel_case(strings), c("PacoPepe","PacoPepe", "PacoPepeLuis"))
+
+    strings <- c("PacoPepe","PacoPepe", "PacoPepeLuis")
     expect_equal(camel_case(strings), c("PacoPepe","PacoPepe", "PacoPepeLuis"))
 })
 

@@ -124,7 +124,7 @@ get_translator_test_contents <- function(template_name) {
     paste0("context(\"", template_name, "\")
 
 test_that(\"get_data works\", {
-    params <- list(data = 1:10)
+    params <- list(x = 1:10)
     ", tolower(template_name), " <- ", template_name, "$new(params)
     ", tolower(template_name), "$get_data()
     expect_equal(", tolower(template_name), "$data, 1:10)

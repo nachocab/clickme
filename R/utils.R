@@ -44,7 +44,7 @@ title_case <- function(strings){
 camel_case <- function(strings){
     strings <- gsub("_", ".", strings)
     strings <- strsplit(strings, "\\.")
-    strings <- sapply(strings, title_case)
+    strings <- sapply(strings, title_case, simplify = FALSE)
     camel_case <- sapply(strings, paste, collapse = "")
     camel_case
 }
