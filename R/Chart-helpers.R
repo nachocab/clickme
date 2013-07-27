@@ -2,17 +2,19 @@ Chart$methods(
 
     # I can use Mike Bostock's lazy iframes trick by setting "data-src" instead of "src"
     iframe = function(width = params$width + params$padding$right + params$padding$left,
-                      height = params$height + params$padding$top + params$padding$bottom + 4,
+                      height = params$height + params$padding$top + params$padding$bottom + 40,
                       data_src = "src",
+                      frameborder = 0,
                       relative_path = NULL){
 
         url <- get_relative_url(relative_path)
 
-        iframe <- gettextf("<iframe width = \"%d\" height = \"%d\" %s=\"%s\"> </iframe>\n",
+        iframe <- gettextf("<iframe width=\"%d\" height=\"%d\" %s=\"%s\" frameborder=%s> </iframe>\n",
                                width,
                                height,
                                data_src,
-                               url)
+                               url,
+                               frameborder)
 
         cat(iframe)
         .self

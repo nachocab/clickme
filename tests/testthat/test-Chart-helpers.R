@@ -1,4 +1,4 @@
-context("Chart-data")
+context("Chart-helpers")
 
 test_chart_path <- file.path(getOption("clickme_templates_path"), "TestChart")
 unlink(test_chart_path, recursive = TRUE)
@@ -27,10 +27,10 @@ test_that("iframe", {
     test_chart$get_urls()
 
     iframe <- capture.output(test_chart$iframe()$hide())
-    expect_equal(iframe, '<iframe width = "1000" height = "724" src="temp-TestChart.html"> </iframe>')
+    expect_equal(iframe, '<iframe width="1000" height="745" src="temp-TestChart.html" frameborder=0> </iframe>')
 
     iframe <- capture.output(test_chart$iframe(relative_path = "clickme")$hide())
-    expect_equal(iframe, '<iframe width = "1000" height = "724" src="clickme/temp-TestChart.html"> </iframe>')
+    expect_equal(iframe, '<iframe width="1000" height="745" src="clickme/temp-TestChart.html" frameborder=0> </iframe>')
 })
 
 test_that("link", {
