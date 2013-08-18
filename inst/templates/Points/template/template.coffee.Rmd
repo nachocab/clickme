@@ -19,9 +19,9 @@
 
     data = {{ data }}
 
-    radius = {{ params$radius }}
-
     color_scale = {{{ get_d3_color_scale() }}}
+
+    static_radius = 5
 
     opacity = {{ params$opacity }}
 
@@ -100,7 +100,7 @@
 
     points = g_points.append("svg:circle")
         .attr(
-            "r": radius
+            "r": (d) -> d.radius
             "fill": (d) -> color_scale(d.color_group)
             "opacity": (d,i) -> opacity
             "title": (d) -> {{{ get_tooltip_content() }}} )
@@ -155,7 +155,7 @@
             sidebar.append("text")
                 .attr(
                       "class": "color_title"
-                      "x": -radius
+                      "x": -static_radius
                       "y": distance_between_show_names_and_color_groups
                       "dy": ".35em")
                 .style(
@@ -167,19 +167,19 @@
                 .data(color_scale.domain().reverse())
               .enter().append("g")
                 .attr(
-                      "transform": (d, i) -> "translate(0, #{i * (radius * 2 + 15) + distance_between_show_names_and_color_groups + 30})"
+                      "transform": (d, i) -> "translate(0, #{i * (static_radius * 2 + 15) + distance_between_show_names_and_color_groups + 30})"
                       "class": "color_group_key")
                 .style("cursor", "pointer")
 
             g_color_group_keys.append("circle")
                 .attr(
-                    "r": radius
+                    "r": static_radius
                     "fill": color_scale)
                 .on("click", (d)-> toggle_points(d))
 
             g_color_group_keys.append("text")
                 .attr(
-                    "x": radius + 10
+                    "x": static_radius + 10
                     "y": 0
                     "dy": ".35em")
                 .text((d) -> "#{d} (#{color_legend_counts[d]})")

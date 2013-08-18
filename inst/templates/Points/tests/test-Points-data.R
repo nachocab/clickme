@@ -34,7 +34,7 @@ test_that("extra fields get added", {
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equivalent(points$data, data.frame(x = c("a", "b", "c"), y = 1:3, point_name = as.character(1:3), extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
+    expect_equivalent(points$data, data.frame(x = c("a", "b", "c"), y = 1:3, point_name = as.character(1:3), radius = 5, extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
 })
 
 test_that("limits reduce the size of the data", {
