@@ -8,8 +8,10 @@ test_that("get_color_legend_counts", {
 })
 
 test_that("get_d3_color_scale", {
-    points <- Points$new()
+    params <- list(x = 1:5)
+    points <- Points$new(params)
     points$get_params()
+    points$get_data()
     expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.ordinal().range([\"#000\"]);", info = "no color_groups")
 
     params <- list(color_groups = c(1:5))
@@ -22,10 +24,11 @@ test_that("get_d3_color_scale", {
     points$get_params()
     expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.linear().domain([-2,0,2]).range([\"#278DD6\",\"white\",\"#d62728\"]).interpolate(d3.interpolateLab);", info = "quantitative, color_groups")
 
-    params <- list(color_groups = c("a", "a", "b", "c", "b"))
+    params <- list(x = 1:5,color_groups = c("a", "a", "a", "b", "b"), palette = c(b = "black", c = "red", a = "blue"))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(no_whitespace(points$get_d3_color_scale()), gettextf("d3.scale.ordinal().range([\"%s\",\"%s\",\"%s\"]);", default_colors(3)[1], default_colors(3)[2], default_colors(3)[3]), info = "categorical, color_groups")
+    points$get_data()
+    expect_equal(no_whitespace(points$get_d3_color_scale()), gettextf("d3.scale.ordinal().range([\"%s\",\"%s\"]);", "blue", "black"), info = "categorical, color_groups")
 })
 
 test_that("get_tooltip_content", {

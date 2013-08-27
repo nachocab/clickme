@@ -9,8 +9,8 @@ Points$methods(
     # Quantitative scales also have a domain (the min and max values used to interpolate them into colors)
     get_d3_color_scale = function() {
         # we use as.list so c("#000") gets converted to ["#000"] and not "#000"
-        color_range <- as.list(unname(params$palette))
         if (scale_type(params$color_groups) == "quantitative") {
+            color_range <- as.list(unname(params$palette))
             color_scale <- gettextf("d3.scale.linear()
                    .domain(%s)
                    .range(%s)
@@ -18,6 +18,11 @@ Points$methods(
                    to_json(params$color_domain),
                    to_json(color_range))
         } else {
+            if (is.null(params$color_groups)){
+                color_range <- as.list(unname(params$palette))
+            } else {
+                color_range <- as.list(unname(params$palette[unique(data$color_group)]))
+            }
             color_scale <- gettextf("d3.scale.ordinal().range(%s);", to_json(color_range))
         }
 
@@ -28,7 +33,7 @@ Points$methods(
     get_tooltip_content = function(){
 
         # Point names get special treatment because they are used as titles
-        tooltip_names <- setdiff(colnames(data), c("point_name"))
+        tooltip_names <- setdiff(colnames(data), c("point_name", "radius"))
 
         tooltip_formats <- get_formats(data[, tooltip_names], params$formats)
 
@@ -49,7 +54,7 @@ Points$methods(
         title_row <- "<tr><td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td></tr>"
         rows <- c(title_row, sapply(names(tooltip_formatted_values), function(name) {
             gettextf("<tr class='tooltip-metric'><td class='tooltip-metric-name'>%s</td><td class='tooltip-metric-value'>\" + %s + \"</td></tr>", name, tooltip_formatted_values[name])
-        }))
+        }), title_row)
         rows <- paste(rows, collapse = "")
 
         tooltip_contents <- gettextf("\"<table>%s</table>\"", rows)

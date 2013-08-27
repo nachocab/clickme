@@ -21,6 +21,7 @@ Points$methods(
     # extra can be a list with as many elements as rows in data, or a data.frame or matrix with as many rows as data
     # This methods should be called before grouping rows
     add_extra_data_fields = function(x) {
+        x$radius <- params$radius
         if (!is.null(params$extra)){
             x <- cbind(x, params$extra)
         }
