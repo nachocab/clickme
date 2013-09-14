@@ -243,7 +243,7 @@ default_colors <- function(n = 9){
     } else if (n <= 19) {
         colors <- d3_category19
     } else {
-        colors <- rainbow(n)
+        colors <- gsub("..$", "", rainbow(n)) # d3 doesn't like the transparency bytes #000000FF, so we remove them
     }
     colors
 }
