@@ -366,4 +366,20 @@
     return div;
   };
 
+  Array.prototype.unique = function() {
+    var i, l, o, r;
+    o = {};
+    l = this.length;
+    r = [];
+    i = 0;
+    while (i < l) {
+      o[this[i]] = this[i];
+      i += 1;
+    }
+    for (i in o) {
+      r.push(o[i]);
+    }
+    return r;
+  };
+
 }).call(this);

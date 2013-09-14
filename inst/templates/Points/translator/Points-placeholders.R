@@ -14,7 +14,7 @@ Points$methods(
             color_scale <- gettextf("d3.scale.linear()
                    .domain(%s)
                    .range(%s)
-                   .interpolate(d3.interpolateLab);",
+                   .interpolate(d3.interpolateLab)",
                    to_json(params$color_domain),
                    to_json(color_range))
         } else {
@@ -23,7 +23,7 @@ Points$methods(
             } else {
                 color_range <- as.list(unname(params$palette[unique(data$color_group)]))
             }
-            color_scale <- gettextf("d3.scale.ordinal().range(%s);", to_json(color_range))
+            color_scale <- gettextf("d3.scale.ordinal().range(%s)", to_json(color_range))
         }
 
         color_scale
