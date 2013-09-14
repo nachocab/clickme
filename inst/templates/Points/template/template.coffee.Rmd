@@ -152,16 +152,28 @@
 
         # Draw color legend only when there is more than one color
         if color_scale.range().length > 1
-            sidebar.append("text")
+            g_color_title = sidebar.append("text")
                 .attr(
-                      "class": "color_title"
                       "x": -static_radius
                       "y": distance_between_show_names_and_color_groups
                       "dy": ".35em")
+
+            g_color_title.append("tspan")
                 .style(
                       "font-size": "16px"
                       "font-weight": "bold")
                 .text(color_title)
+
+            if color_scale.range().length > 2
+                single_group = g_color_title.append("tspan")
+                    .attr(
+                        "fill": "#949494"
+                        "dx": "20px")
+                    .style(
+                        "font-size": "16px"
+                        "font-weight": "bold")
+                    .text("Show one")
+                    .on("click", ()-> deselect_color_groups())
 
             g_color_group_keys = sidebar.selectAll(".color_group_key")
                 .data(color_scale.domain().reverse())
@@ -185,6 +197,11 @@
                 .text((d) -> "#{d} (#{color_legend_counts[d]})")
                 .on("click", (d)-> toggle_points(d))
 
+    show_all_colors = () ->
+        g_points.classed("hide", false)
+        g_color_group_keys.classed("hide", false)
+        single_group.text("Show one")
+
     toggle_points = (category)->
         # if the elements with the category were hidden, then show; if not hidden, hide.
         g_points.filter((d)-> d.color_group == category).classed("hide", ()->
@@ -195,10 +212,29 @@
             !d3.select(this).classed("hide")
         )
 
-        # show all categories if they are all hidden
-        if g_points.filter(":not(.hide)")[0].length == 0
-            g_color_group_keys.classed("hide", false)
-            g_points.classed("hide", false)
+        categories = g_points.filter(":not(.hide)").data().map((d)-> d.color_group).unique()
+
+
+        if categories.length == 0
+            show_all_colors()
+        else if categories.length == 1
+            single_group.text("Show all")
+        else
+            single_group.text("Show one")
+
+
+    deselect_color_groups = ()->
+        visible_points = g_points.filter(":not(.hide)")
+        categories = visible_points.data().map((d)-> d.color_group).unique()
+        if single_group.text() == "Show one"
+            visible_category = categories.reverse()[0]
+
+            g_points.filter((d)-> d.color_group != visible_category).classed("hide", true)
+            g_color_group_keys.filter((d)-> d != visible_category).classed("hide", true)
+            single_group.text("Show all")
+        else
+            show_all_colors()
+
 
     # d3.select(window).on("keydown", () ->
     #     # switch (d3.event.keyCode) {
