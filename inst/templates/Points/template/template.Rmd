@@ -7,6 +7,12 @@
     <title>{{{ params$title }}}</title>
 
     {{{ get_assets() }}}
+
+    <style>
+        text{
+            font-family: {{{ params$font }}};
+        }
+    </style>
   </head>
 
   <body>
