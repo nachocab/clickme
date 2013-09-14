@@ -3,6 +3,7 @@ Chart$methods(
     # Set the default parameters
     get_params = function(){
         params$port <<- params$port %or% 8000
+        params$font <<- params$font %or% "Rockwell, Helvetica, Arial, sans"
 
         params$title <<- params$title %or% params$main %or% internal$file$names$template # alias (main)
 

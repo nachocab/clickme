@@ -7,6 +7,12 @@
     <title>{{{ params$title }}}</title>
 
     {{{ get_assets() }}}
+
+    <style>
+        text{
+            font-family: {{{ params$font }}};
+        }
+    </style>
   </head>
 
   <body>
@@ -16,7 +22,7 @@
     </div>
     <script type="text/javascript">
 (function() {
-  var clip, color_legend_counts, color_scale, color_title, data, distance_between_show_names_and_color_groups, g_color_group_keys, g_points, g_toggle_names, keyuped, mouseout, mouseover, opacity, plot, point_names, points, redraw, search, search_clear, search_input, sidebar, static_radius, toggle_names, toggle_points, transform;
+  var clip, color_legend_counts, color_scale, color_title, data, deselect_color_groups, distance_between_show_names_and_color_groups, g_color_group_keys, g_color_title, g_points, g_toggle_names, keyuped, mouseout, mouseover, opacity, plot, point_names, points, redraw, search, search_clear, search_input, show_all_colors, sidebar, single_group, static_radius, toggle_names, toggle_points, transform;
 
   data = {{ data }};
 
@@ -155,15 +161,26 @@
       });
     };
     if (color_scale.range().length > 1) {
-      sidebar.append("text").attr({
-        "class": "color_title",
+      g_color_title = sidebar.append("text").attr({
         "x": -static_radius,
         "y": distance_between_show_names_and_color_groups,
         "dy": ".35em"
-      }).style({
+      });
+      g_color_title.append("tspan").style({
         "font-size": "16px",
         "font-weight": "bold"
       }).text(color_title);
+      if (color_scale.range().length > 2) {
+        single_group = g_color_title.append("tspan").attr({
+          "fill": "#949494",
+          "dx": "20px"
+        }).style({
+          "font-size": "16px",
+          "font-weight": "bold"
+        }).text("Show one").on("click", function() {
+          return deselect_color_groups();
+        });
+      }
       g_color_group_keys = sidebar.selectAll(".color_group_key").data(color_scale.domain().reverse()).enter().append("g").attr({
         "transform": function(d, i) {
           return "translate(0, " + (i * (static_radius * 2 + 15) + distance_between_show_names_and_color_groups + 30) + ")";
@@ -188,7 +205,14 @@
     }
   }
 
+  show_all_colors = function() {
+    g_points.classed("hide", false);
+    g_color_group_keys.classed("hide", false);
+    return single_group.text("Show one");
+  };
+
   toggle_points = function(category) {
+    var categories;
     g_points.filter(function(d) {
       return d.color_group === category;
     }).classed("hide", function() {
@@ -199,9 +223,35 @@
     }).classed("hide", function() {
       return !d3.select(this).classed("hide");
     });
-    if (g_points.filter(":not(.hide)")[0].length === 0) {
-      g_color_group_keys.classed("hide", false);
-      return g_points.classed("hide", false);
+    categories = g_points.filter(":not(.hide)").data().map(function(d) {
+      return d.color_group;
+    }).unique();
+    if (categories.length === 0) {
+      return show_all_colors();
+    } else if (categories.length === 1) {
+      return single_group.text("Show all");
+    } else {
+      return single_group.text("Show one");
+    }
+  };
+
+  deselect_color_groups = function() {
+    var categories, visible_category, visible_points;
+    visible_points = g_points.filter(":not(.hide)");
+    categories = visible_points.data().map(function(d) {
+      return d.color_group;
+    }).unique();
+    if (single_group.text() === "Show one") {
+      visible_category = categories.reverse()[0];
+      g_points.filter(function(d) {
+        return d.color_group !== visible_category;
+      }).classed("hide", true);
+      g_color_group_keys.filter(function(d) {
+        return d !== visible_category;
+      }).classed("hide", true);
+      return single_group.text("Show all");
+    } else {
+      return show_all_colors();
     }
   };
 

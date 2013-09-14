@@ -29,7 +29,7 @@ Points <- setRefClass("Points",
 
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
-            params$color_title <<- params$color_title %or% "Group"
+            params$color_title <<- params$color_title %or% "Groups"
 
             params$palette <<- validate_palette(params$palette)
 

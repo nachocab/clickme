@@ -362,3 +362,15 @@ my_light_red = "#b90000"
         div.attr("class", opts.class)
 
     div
+
+Array::unique = ->
+    o = {}
+    l = @length
+    r = []
+    i = 0
+    while i < l
+        o[this[i]] = this[i]
+        i += 1
+    for i of o
+        r.push o[i]
+    r

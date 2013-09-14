@@ -13,6 +13,8 @@ Points$methods(
 
        data <<- apply_axes_limits(data)
 
+       data <<- na.omit(data)
+
        params$formats <<- validate_formats(params$formats)
 
     },
