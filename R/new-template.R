@@ -1,12 +1,13 @@
 #' Creates a new template
 #'
-#' This creates the folder structure with the files that a template needs.
+#' This creates the folder structure with the files that make up a template.
 #' @param template_name name of the template
 #' @param replace flag that indicates what to do when there is another template of the same name, default FALSE
 #' @export
 new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
 
-    # This is a bit of a hack, we'll have to change it when templates start inheriting from other Chart
+    # This is a bit of a hack, we'll have to change it when templates start
+    # inheriting from other Chart
     template <- Chart$new()
     template$internal$file$names$template <- camel_case(template_name)
     template$get_default_names_and_paths()

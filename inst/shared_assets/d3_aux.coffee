@@ -1,72 +1,90 @@
 my_light_red = "#b90000"
 
-@append_main = (opts = {}) ->
-    opts.element ?= "svg:svg"
-    opts.selector ?= "body"
-    opts.background ?= "#fff"
-    opts.width ?= 200
-    opts.height ?= 200
-    opts.padding ?= 10
 
-    main = d3.select(opts.selector)
-        .append(opts.element)
+@append_outer_svg = (options = {}) ->
+    options.element ?= "svg:svg"
+    options.selector ?= "body"
+    options.background ?= "#fff"
+    options.width ?= 200
+    options.height ?= 200
+    options.padding ?= 10
+
+    main = d3.select(options.selector)
+        .append(options.element)
         # .attr({
         #     "width": "100%"
         #     "height": "100%"
-        #     "viewBox": "0 0 #{opts.width} #{opts.height}"
+        #     "viewBox": "0 0 #{options.width} #{options.height}"
         # })
         .attr({
-            "width": opts.width
-            "height": opts.height
+            "width": options.width
+            "height": options.height
         }).style({
-            'background': opts.background
-            'padding': opts.padding
+            'background': options.background
+            'padding': options.padding
         })
 
-    if (opts.id)
-        main.attr("id", opts.id)
+    if (options.id)
+        main.attr("id", options.id)
 
-    if (opts.class)
-        main.attr("class", opts.class)
+    if (options.class)
+        main.attr("class", options.class)
 
-    main.width = opts.width
-    main.height = opts.height
-    main.svg = opts.selector
+    main.width = options.width
+    main.height = options.height
+    main.svg = options.selector
 
     main
 
-# calculates padding, appends the svg + g, draws the title
-@new_plot = (opts = {}) ->
-    opts.padding ?=
+# Helper function that takes care of the many things that go into building a plot:
+# - dimensions of the outer svg + g
+# - padding
+# - regions
+#       - top (title)
+#       - bottom (bottom axis)
+#       - left (left axis)
+#       - center (the actual plot)
+#       - right (sidebar)
+# - scales
+#       - type (ordinal, linear, category)
+#       - domain (data_range)
+#       - range (xlim, ylim)
+#       - jitter
+# - axes (ticks)
+# - labels (title, subtitle, axes labels, rotation angles)
+# - background color
+# - zoom
+@new_plot = (options = {}) ->
+    options.padding ?=
         top: 20
         right: 150
         bottom: 30
         left: 50
-    opts.total_padding = d3.max([opts.padding.left + opts.padding.right, opts.padding.top + opts.padding.bottom])
+    options.total_padding = d3.max([options.padding.left + options.padding.right, options.padding.top + options.padding.bottom])
 
-    opts.width ?= 400
-    opts.height ?= 400
-    opts.total_height = opts.height + opts.padding.top + opts.padding.bottom
-    opts.total_width = opts.width + opts.padding.left + opts.padding.right
+    options.width ?= 400
+    options.height ?= 400
+    options.total_height = options.height + options.padding.top + options.padding.bottom
+    options.total_width = options.width + options.padding.left + options.padding.right
 
-    opts.background ?= "#fff"
-    opts.zoom ?= true
-    opts.ordinal_scale_padding ?= 1
-    opts.linear_scale_padding ?= 40
+    options.background ?= "#fff"
+    options.zoom ?= true
+    options.ordinal_scale_padding ?= 1
+    options.linear_scale_padding ?= 40
 
-    opts.rotate_label.y ?= true
+    options.rotate_label.y ?= true
 
-    plot = append_main(
-            id: opts.id
-            width: opts.total_width
-            height: opts.total_height
-            background: opts.background
+    plot = append_outer_svg(
+            id: options.id
+            width: options.total_width
+            height: options.total_height
+            background: options.background
             padding: 0
         ).append("svg:g")
-            # .attr("transform", "translate(#{opts.padding.left},#{opts.padding.top})")
+            # .attr("transform", "translate(#{options.padding.left},#{options.padding.top})")
 
-    # move all the opts elements to plot
-    for key, value of opts
+    # move all the options elements to plot
+    for key, value of options
         plot[key] = value
 
     plot.top_margin = plot.append("g")
@@ -334,32 +352,32 @@ my_light_red = "#b90000"
     return classToType[myClass]
   return "object"
 
-@append_container = (opts = {})->
-    opts.selector ?= "body"
-    opts.class ?= "container"
+@append_container = (options = {})->
+    options.selector ?= "body"
+    options.class ?= "container"
 
-    container = d3.select(opts.selector)
+    container = d3.select(options.selector)
         .append('div')
-        .attr("class", opts.class)
+        .attr("class", options.class)
         .style("overflow", "hidden")
 
     container
 
-@append_div = (container, opts = {})->
-    opts.background ?= my_light_red
-    opts.margin ?= 10
+@append_div = (container, options = {})->
+    options.background ?= my_light_red
+    options.margin ?= 10
 
     div = d3.select(container.node())
         .append('div')
-        .style('background', opts.background)
-        .style('margin', opts.margin)
+        .style('background', options.background)
+        .style('margin', options.margin)
         .style("float", "left")
 
-    if (opts.id)
-        div.attr("id", opts.id)
+    if (options.id)
+        div.attr("id", options.id)
 
-    if (opts.class)
-        div.attr("class", opts.class)
+    if (options.class)
+        div.attr("class", options.class)
 
     div
 

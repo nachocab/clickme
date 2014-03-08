@@ -24,16 +24,15 @@
     ```{r engine="coffee", results="asis", echo = FALSE}
 
     data = {{ data }}
-
-    color_scale = {{{ get_d3_color_scale() }}}
-
     static_radius = 5
 
-    opacity = {{ params$opacity }}
-
-    color_title = {{ params$color_title }}
-
+    color_scale = {{{ get_d3_color_scale() }}}
     color_legend_counts = {{ get_color_legend_counts() }}
+    tooltip_content = {{{ get_tooltip_content() }}}
+
+    opacity = {{ params$opacity }}
+    color_title = {{ params$color_title }}
+    show_sidebar = {{ params$show_sidebar }}
 
     distance_between_show_names_and_color_groups = 80
 
@@ -62,6 +61,8 @@
         hide_x_tick_labels: {{ params$hide_x_tick_labels }}
         ordinal_scale_padding: 1
         linear_scale_padding: 40 )
+
+    # No placeholders beyond this point -------------------------
 
     plot.center.append("defs").append("clipPath")
         .attr("id", "clip")
@@ -109,7 +110,7 @@
             "r": (d) -> d.radius
             "fill": (d) -> color_scale(d.color_group)
             "opacity": (d,i) -> opacity
-            "title": (d) -> {{{ get_tooltip_content() }}} )
+            "title": (d) -> tooltip_content )
 
     $(".point circle").tooltip
         html: true
@@ -129,7 +130,7 @@
 
 
     # Sidebar
-    if {{ params$show_sidebar }}
+    if show_sidebar
         sidebar = plot.right_margin.append("g")
             .attr("transform","translate(60,0)")
 
