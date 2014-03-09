@@ -23,44 +23,44 @@
     <script type="text/javascript">
     ```{r engine="coffee", results="asis", echo = FALSE}
 
-    data = {{ data }}
-    static_radius = 5
-
-    color_scale = {{{ get_d3_color_scale() }}}
-    color_legend_counts = {{ get_color_legend_counts() }}
-    tooltip_content = {{{ get_tooltip_content() }}}
-
-    opacity = {{ params$opacity }}
-    color_title = {{ params$color_title }}
-    show_sidebar = {{ params$show_sidebar }}
-
-    distance_between_show_names_and_color_groups = 80
-
     plot = new_plot(
+        data: {{ data }}
+        data_ranges: {{{ get_data_ranges() }}}
+        categorical_domains: {{{ get_categorical_domains() }}}
+
         width: {{ params$width }}
         height: {{ params$height }}
         padding: {{ params$padding }}
 
-        title: {{ params$title }}
         subtitle: {{ params$subtitle }}
 
-        # TODO: refactor into a labels object
-        xlab: {{ params$xlab }}
-        ylab: {{ params$ylab }}
+        labels:
+            title: {{ params$title }}
+            x: {{ params$xlab }}
+            y: {{ params$ylab }}
+            color_title: {{ params$color_title }}
 
         rotate_label:
             y : {{ params$rotate_ylab }}
 
-        # TODO: refactor these into a get_scales function
-        xlim: {{ params$xlim }}
-        ylim: {{ params$ylim }}
-        data_ranges: {{{ get_data_ranges() }}}
-        categorical_domains: {{{ get_categorical_domains() }}}
+        scale_limits:
+            x: {{ params$xlim }}
+            y: {{ params$ylim }}
 
         jitter: {{ params$jitter }}
         hide_x_tick_labels: {{ params$hide_x_tick_labels }}
         ordinal_scale_padding: 1
         linear_scale_padding: 40 )
+
+    static_radius = 5
+    opacity = {{ params$opacity }}
+    show_sidebar = {{ params$show_sidebar }}
+    distance_between_show_names_and_color_groups = 80
+
+    color_scale = {{{ get_d3_color_scale() }}}
+    color_legend_counts = {{ get_color_legend_counts() }}
+    tooltip_content = (d) ->
+         {{{ get_tooltip_content() }}}
 
     # No placeholders beyond this point -------------------------
 
@@ -98,7 +98,7 @@
         "translate(#{plot.scales.x(d.x) + plot.jitters.x()}, #{plot.scales.y(d.y) + plot.jitters.y()})"
 
     g_points = clip.selectAll(".point")
-        .data(data)
+        .data(plot.data)
       .enter().append("g")
         .attr(
               "class": "point"
@@ -110,7 +110,7 @@
             "r": (d) -> d.radius
             "fill": (d) -> color_scale(d.color_group)
             "opacity": (d,i) -> opacity
-            "title": (d) -> tooltip_content )
+            "title": tooltip_content )
 
     $(".point circle").tooltip
         html: true
@@ -131,7 +131,7 @@
 
     # Sidebar
     if show_sidebar
-        sidebar = plot.right_margin.append("g")
+        sidebar = plot.right_region.append("g")
             .attr("transform","translate(60,0)")
 
         g_toggle_names = sidebar.append("g")
@@ -149,7 +149,7 @@
             .attr('text-anchor', 'start')
             .attr('dy', '.32em')
             .attr('dx', '12')
-            .text("Show names (#{data.length})")
+            .text("Show names (#{plot.data.length})")
 
         toggle_names = ()->
             showing_point_names = g_toggle_names.classed("show_names")
@@ -169,7 +169,7 @@
                 .style(
                       "font-size": "16px"
                       "font-weight": "bold")
-                .text(color_title)
+                .text(plot.labels.color_title)
 
             if color_scale.range().length > 2
                 single_group = g_color_title.append("tspan")

@@ -22,42 +22,50 @@
     </div>
     <script type="text/javascript">
 (function() {
-  var clip, color_legend_counts, color_scale, color_title, data, deselect_color_groups, distance_between_show_names_and_color_groups, g_color_group_keys, g_color_title, g_points, g_toggle_names, keyuped, mouseout, mouseover, opacity, plot, point_names, points, redraw, search, search_clear, search_input, show_all_colors, sidebar, single_group, static_radius, toggle_names, toggle_points, transform;
-
-  data = {{ data }};
-
-  color_scale = {{{ get_d3_color_scale() }}};
-
-  static_radius = 5;
-
-  opacity = {{ params$opacity }};
-
-  color_title = {{ params$color_title }};
-
-  color_legend_counts = {{ get_color_legend_counts() }};
-
-  distance_between_show_names_and_color_groups = 80;
+  var clip, color_legend_counts, color_scale, deselect_color_groups, distance_between_show_names_and_color_groups, g_color_group_keys, g_color_title, g_points, g_toggle_names, keyuped, mouseout, mouseover, opacity, plot, point_names, points, redraw, search, search_clear, search_input, show_all_colors, show_sidebar, sidebar, single_group, static_radius, toggle_names, toggle_points, tooltip_content, transform;
 
   plot = new_plot({
+    data: {{ data }},
+    data_ranges: {{{ get_data_ranges() }}},
+    categorical_domains: {{{ get_categorical_domains() }}},
     width: {{ params$width }},
     height: {{ params$height }},
     padding: {{ params$padding }},
-    title: {{ params$title }},
     subtitle: {{ params$subtitle }},
-    xlab: {{ params$xlab }},
-    ylab: {{ params$ylab }},
+    labels: {
+      title: {{ params$title }},
+      x: {{ params$xlab }},
+      y: {{ params$ylab }},
+      color_title: {{ params$color_title }}
+    },
     rotate_label: {
       y: {{ params$rotate_ylab }}
     },
-    xlim: {{ params$xlim }},
-    ylim: {{ params$ylim }},
-    data_ranges: {{{ get_data_ranges() }}},
-    categorical_domains: {{{ get_categorical_domains() }}},
+    scale_limits: {
+      x: {{ params$xlim }},
+      y: {{ params$ylim }}
+    },
     jitter: {{ params$jitter }},
     hide_x_tick_labels: {{ params$hide_x_tick_labels }},
     ordinal_scale_padding: 1,
     linear_scale_padding: 40
   });
+
+  static_radius = 5;
+
+  opacity = {{ params$opacity }};
+
+  show_sidebar = {{ params$show_sidebar }};
+
+  distance_between_show_names_and_color_groups = 80;
+
+  color_scale = {{{ get_d3_color_scale() }}};
+
+  color_legend_counts = {{ get_color_legend_counts() }};
+
+  tooltip_content = function(d) {
+    return {{{ get_tooltip_content() }}};
+  };
 
   plot.center.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
     "width": plot.width,
@@ -89,7 +97,7 @@
     return "translate(" + (plot.scales.x(d.x) + plot.jitters.x()) + ", " + (plot.scales.y(d.y) + plot.jitters.y()) + ")";
   };
 
-  g_points = clip.selectAll(".point").data(data).enter().append("g").attr({
+  g_points = clip.selectAll(".point").data(plot.data).enter().append("g").attr({
     "class": "point",
     "transform": transform
   });
@@ -104,9 +112,7 @@
     "opacity": function(d, i) {
       return opacity;
     },
-    "title": function(d) {
-      return {{{ get_tooltip_content() }}};
-    }
+    "title": tooltip_content
   });
 
   $(".point circle").tooltip({
@@ -129,13 +135,13 @@
     "font-size": "22px"
   });
 
-  if ({{ params$show_sidebar }}) {
-    sidebar = plot.right_margin.append("g").attr("transform", "translate(60,0)");
+  if (show_sidebar) {
+    sidebar = plot.right_region.append("g").attr("transform", "translate(60,0)");
     g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
       return toggle_names();
     });
     g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
-    g_toggle_names.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12').text("Show names (" + data.length + ")");
+    g_toggle_names.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12').text("Show names (" + plot.data.length + ")");
     toggle_names = function() {
       var showing_point_names;
       showing_point_names = g_toggle_names.classed("show_names");
@@ -169,7 +175,7 @@
       g_color_title.append("tspan").style({
         "font-size": "16px",
         "font-weight": "bold"
-      }).text(color_title);
+      }).text(plot.labels.color_title);
       if (color_scale.range().length > 2) {
         single_group = g_color_title.append("tspan").attr({
           "fill": "#949494",
