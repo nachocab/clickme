@@ -131,16 +131,16 @@ test_that("get_tooltip_content", {
 })
 
 
-test_that("get_categorical_domains", {
+test_that("get_ordinal_domains", {
     params <- list(x = 1:10)
     points <- Points$new(params)
     points$get_data()
-    expect_equal(no_whitespace(points$get_categorical_domains()), "{x:null,y:null}")
+    expect_equal(no_whitespace(points$get_ordinal_domains()), "{x:null,y:null}")
 
     params <- list(x = letters[1:10], y = 1:10)
     points <- Points$new(params)
     points$get_data()
-    expect_equal(no_whitespace(points$get_categorical_domains()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:null}")
+    expect_equal(no_whitespace(points$get_ordinal_domains()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:null}")
 })
 
 test_that("get_data_ranges", {
