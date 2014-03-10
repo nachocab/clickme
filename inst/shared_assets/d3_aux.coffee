@@ -305,13 +305,11 @@ my_light_red = "#b90000"
 
 @get_scale = (plot, scale_name)->
     if plot.scale_types[scale_name] is "linear"
-        console.log "linear"
         scale = d3.scale.linear()
             .domain(plot.scale_domains[scale_name])
             .range(plot.scale_ranges[scale_name])
         scale = add_scale_padding(scale, plot.linear_scale_padding)
     else
-        console.log "ordinal"
         scale = d3.scale.ordinal()
             .domain(plot.scale_domains[scale_name])
             .rangePoints(plot.scale_ranges[scale_name], plot.ordinal_scale_padding)
