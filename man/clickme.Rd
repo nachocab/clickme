@@ -3,8 +3,15 @@
 \alias{clickme}
 \alias{clickme-package}
 \title{Clickme: use R to create interactive visualizations}
+\usage{
+clickme(template, ...)
+}
 \description{
 Clickme: use R to create interactive visualizations
+
+When called with only the template, it sets the current
+template used by \code{cm} When called with more than the
+template
 }
 \section{Package options}{
   Clickme uses the following \code{options} to configure
