@@ -49,7 +49,12 @@ Chart <- setRefClass("Chart",
             .self$get_urls()
             .self$get_data()
             .self$generate()
-            .self
+
+            if (is.null(getOption("clickme_hide")) || !getOption("clickme_hide")){
+                .self
+            } else {
+                invisible(.self)
+            }
         },
 
         show = function(){
