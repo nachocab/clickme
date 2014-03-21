@@ -1,3 +1,4 @@
+#' @include Chart.R
 Chart$methods(
 
     get_config = function() {
