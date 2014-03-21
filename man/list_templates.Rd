@@ -2,9 +2,9 @@
 \alias{list_templates}
 \title{Show which templates are available}
 \usage{
-  list_templates()
+list_templates()
 }
 \description{
-  Show which templates are available
+Show which templates are available
 }
 

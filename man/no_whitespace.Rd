@@ -2,9 +2,9 @@
 \alias{no_whitespace}
 \title{Remove whitespace from a string}
 \usage{
-  no_whitespace(str)
+no_whitespace(str)
 }
 \description{
-  Remove whitespace from a string
+Remove whitespace from a string
 }
 

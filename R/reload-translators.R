@@ -1,7 +1,8 @@
 
-#' Traverses a list of paths and determines what objects are defined in the source files that appear in the "translator" folder of each path
+#' Traverse a list of paths and determine what objects are defined in the
+#' source files that appear in the "translator" folder of each path
 #' It returns a list of sourced objects.
-#' This is done to make control what objects get added to the global namespace
+#' We do this to control what objects get added to the global namespace
 get_sourced_objects <- function(paths) {
     sourced_objects <- lapply(paths, function(path) {
         translator_files <- list.files(file.path(path, "translator"), full.names = TRUE)
@@ -30,7 +31,8 @@ get_sourced_objects <- function(paths) {
 
 #' Load the translator files in each template
 #'
-#' Translators are only allowed to create one object with the name of their template and a clickme helper function in the global namespace.
+#' Translators are only allowed to create one object with the name of their
+#' template and a clickme helper function in the global namespace.
 #'
 reload_translators <- function() {
     clickme_helper <<- list()

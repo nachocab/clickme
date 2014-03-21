@@ -2,9 +2,9 @@
 \alias{snake_case}
 \title{Convert to snake_case}
 \usage{
-  snake_case(strings)
+snake_case(strings)
 }
 \description{
-  Convert to snake_case
+Convert to snake_case
 }
 

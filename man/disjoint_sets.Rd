@@ -2,7 +2,7 @@
 \alias{disjoint_sets}
 \title{Split up two vectors into their intersecting sets}
 \usage{
-  disjoint_sets(a, b, names = c("a", "b", "both"))
+disjoint_sets(a, b, names = c("a", "b", "both"))
 }
 \arguments{
   \item{a}{first vector}
@@ -14,6 +14,6 @@
   b.}
 }
 \description{
-  Split up two vectors into their intersecting sets
+Split up two vectors into their intersecting sets
 }
 

@@ -2,9 +2,9 @@
 \alias{title_case}
 \title{Title Case}
 \usage{
-  title_case(strings)
+title_case(strings)
 }
 \description{
-  Title Case
+Title Case
 }
 

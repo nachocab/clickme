@@ -4,7 +4,7 @@
 \alias{clickme-package}
 \title{Clickme: use R to create interactive visualizations}
 \description{
-  Clickme: use R to create interactive visualizations
+Clickme: use R to create interactive visualizations
 }
 \section{Package options}{
   Clickme uses the following \code{options} to configure
@@ -22,10 +22,10 @@
   }
 }
 \author{
-  Nacho Caballero <\url{http://reasoniamhere.com}>
+Nacho Caballero <\url{http://reasoniamhere.com}>
 }
 \references{
-  Full documentation:
-  \url{https://github.com/nachocab/clickme/wiki};
+Full documentation:
+\url{https://github.com/nachocab/clickme/wiki};
 }
 

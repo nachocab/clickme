@@ -2,12 +2,12 @@
 \alias{to_json}
 \title{Convert a string to JSON}
 \usage{
-  to_json(x)
+to_json(x)
 }
 \arguments{
   \item{x}{input object}
 }
 \description{
-  Convert a string to JSON
+Convert a string to JSON
 }
 

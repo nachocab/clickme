@@ -2,7 +2,7 @@
 \alias{\%or\%}
 \title{Set default value}
 \usage{
-  a \%||\% b
+a \%||\% b
 }
 \arguments{
   \item{a}{an object}
@@ -10,7 +10,7 @@
   \item{b}{an object}
 }
 \description{
-  If a is not null, return a. Otherwise, return b.
+If a is not null, return a. Otherwise, return b.
 }
 \examples{
 a <- "a"

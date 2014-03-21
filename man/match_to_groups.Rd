@@ -2,8 +2,7 @@
 \alias{match_to_groups}
 \title{Match elements to groups}
 \usage{
-  match_to_groups(subset, groups, replace_nas = "Other",
-    strict_dups = FALSE)
+match_to_groups(subset, groups, replace_nas = "Other", strict_dups = FALSE)
 }
 \arguments{
   \item{subset}{vector of elements}
@@ -25,6 +24,6 @@
   "other" exists)}
 }
 \description{
-  Match elements to groups
+Match elements to groups
 }
 

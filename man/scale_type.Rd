@@ -2,7 +2,7 @@
 \alias{scale_type}
 \title{Type of scale}
 \usage{
-  scale_type(elements)
+scale_type(elements)
 }
 \arguments{
   \item{elements}{values
@@ -13,6 +13,6 @@
   "categorical".}
 }
 \description{
-  Type of scale
+Type of scale
 }
 
