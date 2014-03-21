@@ -298,7 +298,7 @@ my_light_red = "#b90000"
         else
             domain = plot.data_ranges[scale_name]
     else
-        domain = plot.ordinal_domain[scale_name]
+        domain = plot.ordinal_domains[scale_name]
 
     domain
 
