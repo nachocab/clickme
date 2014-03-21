@@ -64,6 +64,7 @@
 
     # No placeholders beyond this point -------------------------
 
+    # Create the blank plot
     plot.center.append("defs").append("clipPath")
         .attr("id", "clip")
       .append("rect")
@@ -97,13 +98,13 @@
     transform = (d) ->
         "translate(#{plot.scales.x(d.x) + plot.jitters.x()}, #{plot.scales.y(d.y) + plot.jitters.y()})"
 
+    # Create points
     g_points = clip.selectAll(".point")
         .data(plot.data)
       .enter().append("g")
         .attr(
               "class": "point"
               "transform": transform)
-
 
     points = g_points.append("svg:circle")
         .attr(
@@ -112,11 +113,7 @@
             "opacity": (d,i) -> opacity
             "title": tooltip_content )
 
-    $(".point circle").tooltip
-        html: true
-        container: "body"
-        placement: "top"
-
+    # Create point names
     point_names = g_points.append("text")
         .text((d) -> d.point_name)
         .attr(
@@ -128,6 +125,12 @@
             "fill": (d) -> color_scale(d.color_group)
             "font-size": "22px")
 
+    # Add mouseover behavior to g-points with bootstrap tooltip
+    # http://getbootstrap.com/javascript/#tooltips-usage
+    $(".point circle").tooltip
+        html: true
+        container: "body"
+        placement: "top"
 
     # Sidebar
     if show_sidebar
@@ -169,7 +172,7 @@
                 .style(
                       "font-size": "16px"
                       "font-weight": "bold")
-                .text(plot.labels.color_title)
+                .text(plot.color_title)
 
             if color_scale.range().length > 2
                 single_group = g_color_title.append("tspan")
@@ -204,6 +207,7 @@
                 .text((d) -> "#{d} (#{color_legend_counts[d]})")
                 .on("click", (d)-> toggle_points(d))
 
+    # Aux functions
     show_all_colors = () ->
         g_points.classed("hide", false)
         g_color_group_keys.classed("hide", false)
@@ -242,7 +246,7 @@
         else
             show_all_colors()
 
-
+    # TODO: add key shortcuts
     # d3.select(window).on("keydown", () ->
     #     # switch (d3.event.keyCode) {
     #       # case : year = Math.max(year0, year - 10); break;
@@ -253,6 +257,7 @@
     #         change()
     # )
 
+    # TODO: replace this with an svg input form
     d3.select(".g-search")
         .style(
            "top": "#{g_toggle_names.node().getBoundingClientRect().top + distance_between_show_names_and_color_groups/2 }px"

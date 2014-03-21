@@ -115,12 +115,6 @@
     "title": tooltip_content
   });
 
-  $(".point circle").tooltip({
-    html: true,
-    container: "body",
-    placement: "top"
-  });
-
   point_names = g_points.append("text").text(function(d) {
     return d.point_name;
   }).attr({
@@ -133,6 +127,12 @@
       return color_scale(d.color_group);
     },
     "font-size": "22px"
+  });
+
+  $(".point circle").tooltip({
+    html: true,
+    container: "body",
+    placement: "top"
   });
 
   if (show_sidebar) {
@@ -175,7 +175,7 @@
       g_color_title.append("tspan").style({
         "font-size": "16px",
         "font-weight": "bold"
-      }).text(plot.labels.color_title);
+      }).text(plot.color_title);
       if (color_scale.range().length > 2) {
         single_group = g_color_title.append("tspan").attr({
           "fill": "#949494",
