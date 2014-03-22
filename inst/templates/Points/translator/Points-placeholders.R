@@ -52,12 +52,17 @@ Points$methods(
         })
 
         title_row <- "<tr><td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td></tr>"
-        rows <- c(title_row, sapply(names(tooltip_formatted_values), function(name) {
-            gettextf("<tr class='tooltip-metric'><td class='tooltip-metric-name'>%s</td><td class='tooltip-metric-value'>\" + %s + \"</td></tr>", name, tooltip_formatted_values[name])
-        }), title_row)
+        rows <- c(
+                  title_row,
+                  sapply(names(tooltip_formatted_values), function(name) {
+                      gettextf("<tr class='tooltip-metric'><td class='tooltip-metric-name'>%s</td><td class='tooltip-metric-value'>\" + %s + \"</td></tr>", name, tooltip_formatted_values[name])
+                  })
+                )
         rows <- paste(rows, collapse = "")
 
         tooltip_contents <- gettextf("\"<table>%s</table>\"", rows)
+        browser()
+        tooltip_contents <- gettextf("function(d) {\nreturn %s\n};", tooltip_contents)
 
         tooltip_contents
     },

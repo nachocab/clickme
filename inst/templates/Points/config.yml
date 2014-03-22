@@ -28,14 +28,13 @@ demo: |-
 
 scripts:
     - $shared/d3.v3.4.3.js
-    - $shared/jquery.v1.8.3.min.js
-    - $shared/bootstrap-tooltip.v2.3.0.js
     - $shared/d3_aux.js
+    - $shared/d3_tip.js
 
 styles:
     - $shared/clickme.css
-    - $shared/tooltip.css
-    - points.css
+    - $shared/d3_tip.css
+    - $shared/chart.css
 
 require_packages:
 

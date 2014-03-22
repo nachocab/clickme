@@ -1,328 +1,62 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <base target="_blank"> <!-- open all links on a new tab -->
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <base target="_blank"> <!-- open all links on a new tab -->
 
-    <title>{{{ params$title }}}</title>
+        <title>{{{ params$title }}}</title>
 
-    {{{ get_assets() }}}
+        {{{ get_assets() }}}
 
-    <style>
-        text{
-            font-family: {{{ params$font }}};
-        }
-    </style>
-  </head>
+        <style>
+            text{
+                font-family: {{{ params$font }}};
+            }
+        </style>
+    </head>
 
-  <body>
-    <div class="g-search">
-        <input type="text" placeholder="Search…">
-        <button style="display:none;" class="g-search-clear">X</button>
-    </div>
-    <script type="text/javascript">
-(function() {
-  var clip, color_legend_counts, color_scale, deselect_color_groups, distance_between_show_names_and_color_groups, g_color_group_keys, g_color_title, g_points, g_toggle_names, keyuped, mouseout, mouseover, opacity, plot, point_names, points, redraw, search, search_clear, search_input, show_all_colors, show_sidebar, sidebar, single_group, static_radius, toggle_names, toggle_points, tooltip_content, transform;
+    <body>
+        <div class="g-search">
+                <input type="text" placeholder="Search…">
+                <button style="display:none;" class="g-search-clear">X</button>
+        </div>
+        <script type="text/javascript">
+            plot = new_plot({
+                data: {{ data }},
+                data_ranges: {{{ get_data_ranges() }}},
+                ordinal_domains: {{{ get_ordinal_domains() }}},
+                width: {{ params$width }},
+                height: {{ params$height }},
+                padding: {{ params$padding }},
+                subtitle: {{ params$subtitle }},
+                labels: {
+                    title: {{ params$title }},
+                    x: {{ params$xlab }},
+                    y: {{ params$ylab }},
+                    color_title: {{ params$color_title }}
+                },
+                rotate_label: {
+                    y: {{ params$rotate_ylab }}
+                },
+                scale_limits: {
+                    x: {{ params$xlim }},
+                    y: {{ params$ylim }}
+                },
+                jitter: {{ params$jitter }},
+                hide_x_tick_labels: {{ params$hide_x_tick_labels }},
+                ordinal_scale_padding: 1,
+                linear_scale_padding: 40
+            });
 
-  plot = new_plot({
-    data: {{ data }},
-    data_ranges: {{{ get_data_ranges() }}},
-    ordinal_domains: {{{ get_ordinal_domains() }}},
-    width: {{ params$width }},
-    height: {{ params$height }},
-    padding: {{ params$padding }},
-    subtitle: {{ params$subtitle }},
-    labels: {
-      title: {{ params$title }},
-      x: {{ params$xlab }},
-      y: {{ params$ylab }},
-      color_title: {{ params$color_title }}
-    },
-    rotate_label: {
-      y: {{ params$rotate_ylab }}
-    },
-    scale_limits: {
-      x: {{ params$xlim }},
-      y: {{ params$ylim }}
-    },
-    jitter: {{ params$jitter }},
-    hide_x_tick_labels: {{ params$hide_x_tick_labels }},
-    ordinal_scale_padding: 1,
-    linear_scale_padding: 40
-  });
+            static_radius = 5;
+            opacity = {{ params$opacity }};
+            show_sidebar = {{ params$show_sidebar }};
+            distance_between_show_names_and_color_groups = 80;
+            color_scale = {{{ get_d3_color_scale() }}};
+            color_legend_counts = {{ get_color_legend_counts() }};
+            tooltip_content = {{{ get_tooltip_content() }}};
+        </script>
 
-  static_radius = 5;
-
-  opacity = {{ params$opacity }};
-
-  show_sidebar = {{ params$show_sidebar }};
-
-  distance_between_show_names_and_color_groups = 80;
-
-  color_scale = {{{ get_d3_color_scale() }}};
-
-  color_legend_counts = {{ get_color_legend_counts() }};
-
-  tooltip_content = function(d) {
-    return {{{ get_tooltip_content() }}};
-  };
-
-  plot.center.append("defs").append("clipPath").attr("id", "clip").append("rect").attr({
-    "width": plot.width,
-    "height": plot.height
-  });
-
-  clip = plot.center.append("g").attr("clip-path", "url(#clip)");
-
-  if (plot.zoom) {
-    clip.append("rect").style({
-      "cursor": "move"
-    }).attr({
-      "class": "overlay",
-      "width": plot.width,
-      "height": plot.height,
-      "fill": "none",
-      "pointer-events": "all"
-    }).call(d3.behavior.zoom().x(plot.scales.x).y(plot.scales.y).scaleExtent([1, Infinity]).on("zoom", function() {
-      return redraw();
-    }));
-    redraw = function() {
-      plot.select(".x.axis").call(plot.axes.x);
-      plot.select(".y.axis").call(plot.axes.y);
-      return g_points.attr("transform", transform);
-    };
-  }
-
-  transform = function(d) {
-    return "translate(" + (plot.scales.x(d.x) + plot.jitters.x()) + ", " + (plot.scales.y(d.y) + plot.jitters.y()) + ")";
-  };
-
-  g_points = clip.selectAll(".point").data(plot.data).enter().append("g").attr({
-    "class": "point",
-    "transform": transform
-  });
-
-  points = g_points.append("svg:circle").attr({
-    "r": function(d) {
-      return d.radius;
-    },
-    "fill": function(d) {
-      return color_scale(d.color_group);
-    },
-    "opacity": function(d, i) {
-      return opacity;
-    },
-    "title": tooltip_content
-  });
-
-  point_names = g_points.append("text").text(function(d) {
-    return d.point_name;
-  }).attr({
-    "dy": ".32em",
-    "dx": 8,
-    "text-anchor": "left",
-    "display": "none"
-  }).style({
-    "fill": function(d) {
-      return color_scale(d.color_group);
-    },
-    "font-size": "22px"
-  });
-
-  $(".point circle").tooltip({
-    html: true,
-    container: "body",
-    placement: "top"
-  });
-
-  if (show_sidebar) {
-    sidebar = plot.right_region.append("g").attr("transform", "translate(60,0)");
-    g_toggle_names = sidebar.append("g").style("cursor", "pointer").style("font-size", "22px").on("click", function() {
-      return toggle_names();
-    });
-    g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
-    g_toggle_names.append("text").attr('text-anchor', 'start').attr('dy', '.32em').attr('dx', '12').text("Show names (" + plot.data.length + ")");
-    toggle_names = function() {
-      var showing_point_names;
-      showing_point_names = g_toggle_names.classed("show_names");
-      point_names.attr("display", function() {
-        if (showing_point_names) {
-          return "none";
-        } else {
-          return "inline";
-        }
-      });
-      return g_toggle_names.attr("class", function() {
-        if (showing_point_names) {
-          return "";
-        } else {
-          return "show_names";
-        }
-      }).select("circle").attr("fill", function() {
-        if (showing_point_names) {
-          return "white";
-        } else {
-          return "black";
-        }
-      });
-    };
-    if (color_scale.range().length > 1) {
-      g_color_title = sidebar.append("text").attr({
-        "x": -static_radius,
-        "y": distance_between_show_names_and_color_groups,
-        "dy": ".35em"
-      });
-      g_color_title.append("tspan").style({
-        "font-size": "16px",
-        "font-weight": "bold"
-      }).text(plot.color_title);
-      if (color_scale.range().length > 2) {
-        single_group = g_color_title.append("tspan").attr({
-          "fill": "#949494",
-          "dx": "20px"
-        }).style({
-          "font-size": "16px",
-          "font-weight": "bold"
-        }).text("Show one").on("click", function() {
-          return deselect_color_groups();
-        });
-      }
-      g_color_group_keys = sidebar.selectAll(".color_group_key").data(color_scale.domain().reverse()).enter().append("g").attr({
-        "transform": function(d, i) {
-          return "translate(0, " + (i * (static_radius * 2 + 15) + distance_between_show_names_and_color_groups + 30) + ")";
-        },
-        "class": "color_group_key"
-      }).style("cursor", "pointer");
-      g_color_group_keys.append("circle").attr({
-        "r": static_radius,
-        "fill": color_scale
-      }).on("click", function(d) {
-        return toggle_points(d);
-      });
-      g_color_group_keys.append("text").attr({
-        "x": static_radius + 10,
-        "y": 0,
-        "dy": ".35em"
-      }).text(function(d) {
-        return "" + d + " (" + color_legend_counts[d] + ")";
-      }).on("click", function(d) {
-        return toggle_points(d);
-      });
-    }
-  }
-
-  show_all_colors = function() {
-    g_points.classed("hide", false);
-    g_color_group_keys.classed("hide", false);
-    return single_group.text("Show one");
-  };
-
-  toggle_points = function(category) {
-    var categories;
-    g_points.filter(function(d) {
-      return d.color_group === category;
-    }).classed("hide", function() {
-      return !d3.select(this).classed("hide");
-    });
-    g_color_group_keys.filter(function(d) {
-      return d === category;
-    }).classed("hide", function() {
-      return !d3.select(this).classed("hide");
-    });
-    categories = g_points.filter(":not(.hide)").data().map(function(d) {
-      return d.color_group;
-    }).unique();
-    if (categories.length === 0) {
-      return show_all_colors();
-    } else if (categories.length === 1) {
-      return single_group.text("Show all");
-    } else {
-      return single_group.text("Show one");
-    }
-  };
-
-  deselect_color_groups = function() {
-    var categories, visible_category, visible_points;
-    visible_points = g_points.filter(":not(.hide)");
-    categories = visible_points.data().map(function(d) {
-      return d.color_group;
-    }).unique();
-    if (single_group.text() === "Show one") {
-      visible_category = categories.reverse()[0];
-      g_points.filter(function(d) {
-        return d.color_group !== visible_category;
-      }).classed("hide", true);
-      g_color_group_keys.filter(function(d) {
-        return d !== visible_category;
-      }).classed("hide", true);
-      return single_group.text("Show all");
-    } else {
-      return show_all_colors();
-    }
-  };
-
-  d3.select(".g-search").style({
-    "top": "" + (g_toggle_names.node().getBoundingClientRect().top + distance_between_show_names_and_color_groups / 2) + "px",
-    "left": "" + (g_toggle_names.node().getBoundingClientRect().left) + "px"
-  });
-
-  keyuped = function() {
-    if (d3.event.keyCode === 27) {
-      this.value = "";
-    }
-    return search(this.value.trim());
-  };
-
-  search = function(value) {
-    var matches, re;
-    if (value) {
-      console.log(d3.requote(value));
-      re = new RegExp("" + (d3.requote(value)), "i");
-      clip.classed("g-searching", true);
-      if (sidebar.selectAll(".color_group_key").size() > 0) {
-        g_color_group_keys.classed("hide", false);
-        g_points.classed("hide", false);
-      }
-      g_points.classed("g-match", function(d) {
-        return re.test(d.point_name);
-      });
-      matches = d3.selectAll(".g-match");
-      if (matches[0].length === 1) {
-        mouseover(matches.datum());
-      } else {
-        mouseout();
-      }
-      return search_clear.style("display", null);
-    } else {
-      mouseout();
-      clip.classed("g-searching", false);
-      g_points.classed("g-match", false);
-      return search_clear.style("display", "none");
-    }
-  };
-
-  mouseover = function(d) {
-    points.filter(function(c) {
-      return c === d;
-    }).classed("g-active", true);
-    return $(".g-active").tooltip("show");
-  };
-
-  mouseout = function() {
-    $(".g-active").tooltip("hide");
-    return points.filter(".g-active").classed("g-active", false);
-  };
-
-  search_input = d3.select(".g-search input").on("keyup", keyuped);
-
-  search_clear = d3.select(".g-search .g-search-clear").on("click", function() {
-    search_input.property("value", "");
-    return search();
-  });
-
-}).call(this);
-
-
-    </script>
-  </body>
+        <script src="clickme_assets/Points/plot.js"></script>
+    </body>
 </html>
