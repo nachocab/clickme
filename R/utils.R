@@ -314,6 +314,8 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 #' @param template name of template
 #' @export
 test_template <- function(template_name, filter = NULL){
+    template_name <- as.character(substitute(template_name))
+
     template <- Chart$new()
     template$internal$file$names$template <- camel_case(template_name)
     template$get_default_names_and_paths()
