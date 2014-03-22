@@ -144,10 +144,16 @@ test_that("get_ordinal_domains", {
 })
 
 test_that("get_data_ranges", {
+    # when there is no y, x == y
     params <- list(x = 1:10)
     points <- Points$new(params)
     points$get_data()
     expect_equal(no_whitespace(points$get_data_ranges()), "{x:[1,10],y:[1,10]}", info = "numeric x")
+
+    params <- list(x = 1)
+    points <- Points$new(params)
+    points$get_data()
+    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[0,2],y:[0,2]}", info = "numeric x, single number")
 
     params <- list(x = factor(1:10, levels = 10:1), y = 1:10)
     points <- Points$new(params)

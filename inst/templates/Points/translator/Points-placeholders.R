@@ -85,8 +85,25 @@ Points$methods(
 
     # I data is numeric, it returns the min/max. Otherwise, it returns unique elements.
     get_data_ranges = function(){
-        x_data_range <- if (is.numeric(data$x)) range(data$x, na.rm = TRUE) else get_unique_elements(data$x)
-        y_data_range <- if (is.numeric(data$y)) range(data$y, na.rm = TRUE) else get_unique_elements(data$y)
+        if (is.numeric(data$x)) {
+            x_data_range <- range(data$x, na.rm = TRUE)
+            # Ensure that min and max are different
+            if (x_data_range[1] == x_data_range[2]){
+                x_data_range <- x_data_range + c(-1, 1)
+            }
+        } else {
+            x_data_range <- get_unique_elements(data$x)
+        }
+
+        if (is.numeric(data$y)) {
+            y_data_range <- range(data$y, na.rm = TRUE)
+            # Ensure that min and max are different
+            if (y_data_range[1] == y_data_range[2]){
+                y_data_range <- y_data_range + c(-1, 1)
+            }
+        } else {
+            y_data_range <- get_unique_elements(data$y)
+        }
 
         data_ranges <- sprintf("{
           x: %s,
