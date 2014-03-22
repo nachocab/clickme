@@ -2,7 +2,8 @@
 #'
 #' This creates the folder structure with the files that make up a template.
 #' @param template_name name of the template
-#' @param replace flag that indicates what to do when there is another template of the same name, default FALSE
+#' @param replace flag that indicates what to do when there is another template
+#' of the same name, default FALSE
 #' @export
 new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
 
@@ -17,9 +18,9 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
         unlink(file.path(getOption("clickme_templates_path"), template_name), recursive = TRUE)
     } else {
         if (file.exists(paths$Template)) {
-            stop(gettextf("\n\n\tThe %s template already exists\n\t(use replace = TRUE if you want to replace it):\n\t%s",
-                          template$internal$file$names$template,
-                          paths$Template))
+            stop(gettextf("\n\nThe %s template already exists:%s\n%s\n",
+                          paths$Template,
+                          template$internal$file$names$template))
         }
     }
 
@@ -43,8 +44,8 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
     invisible(template)
 }
 
-get_template_contents <- function() {
-    "<!DOCTYPE html>
+get_template_contents <- function(template_name) {
+    gettextf("<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
@@ -53,17 +54,24 @@ get_template_contents <- function() {
         <title>{{{ params$title }}}</title>
 
         {{{ get_assets() }}}
+
+        <style>
+            text{
+                font-family: {{{ params$font }}};
+            }
+        </style>
     </head>
 
     <body>
         <script type=\"text/javascript\">
 
-            var data = {{ data }};
+            // write placeholders here. Ex:
+            // data = {{ data }};
 
         </script>
     </body>
 </html>
-"
+")
 }
 
 get_template_contents_coffee <- function() {
@@ -92,7 +100,7 @@ get_template_contents_coffee <- function() {
 }
 
 get_translator_contents <- function(template_name){
-    paste0(template_name, " <- setRefClass(\"", template_name, "\",
+    gettextf("%s <- setRefClass(\"%s\",
 
     contains = \"Chart\",
 
@@ -105,8 +113,8 @@ get_translator_contents <- function(template_name){
     )
 )
 
-", get_translator_helper_contents(template_name), "
-")
+%s",
+    template_name, template_name, get_translator_helper_contents(template_name))
 }
 
 get_translator_helper_contents <- function(template_name) {
