@@ -6,17 +6,14 @@ Points$methods(
        rownames(data) <<- NULL
 
        data <<- add_extra_data_fields(data)
-
        data <<- cluster_data_rows(data, params$color_groups, group_variable = "color_group", group_order = internal$ordered_color_group_names)
+
        # Reverse so the last color group gets the last color
        params$palette <<- rev(params$palette)
 
        data <<- apply_axes_limits(data)
-
        data <<- na.omit(data)
-
        params$formats <<- validate_formats(params$formats)
-
     },
 
     # Add any extra fields to the data object.
@@ -34,7 +31,8 @@ Points$methods(
     # It makes adjacent rows that belong to the same group
     # groups must have as many elements as data has rows
     # group_variable is the name of the varible that will be used to group the rows
-    # group_order must have as many elements as groups, by default the order is alphanumeric
+    # group_order must have as many elements as groups, by default the order is
+    # alphanumeric
     cluster_data_rows = function(x, groups, group_variable, group_order = NULL){
        if (!is.data.frame(x)){
            stop("\n\n\tdata must be a dataframe to group its rows")
@@ -51,7 +49,8 @@ Points$methods(
                order <- order(x[[group_variable]])
            }
 
-           # Reverse so the first element is plotted last (and therefore appears on top)
+           # Reverse so the first element is plotted last (and therefore
+           # appears on top)
            x <- x[rev(order),]
        }
 
@@ -75,7 +74,7 @@ Points$methods(
     validate_formats = function(formats){
         if (any(names(formats) %notin% colnames(data))){
             wrong_names <- names(formats)[names(formats) %notin% colnames(data)]
-            stop(gettextf("\n\n\tThe following format names are not x, y, or any of the extra names:\n%s\n\n", enumerate(wrong_names)))
+            stop(sprintf("\n\n\tThe following format names are not x, y, or any of the extra names:\n%s\n\n", enumerate(wrong_names)))
         }
 
         formats

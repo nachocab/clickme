@@ -8,14 +8,12 @@ Chart$methods(
                       relative_path = NULL){
 
         url <- get_relative_url(relative_path)
-
-        iframe <- gettextf("<iframe width=\"%d\" height=\"%d\" %s=\"%s\" frameborder=%s> </iframe>\n",
+        iframe <- sprintf("<iframe width=\"%d\" height=\"%d\" %s=\"%s\" frameborder=%s> </iframe>\n",
                                width,
                                height,
                                data_src,
                                url,
                                frameborder)
-
         cat(iframe)
         .self
     },
@@ -24,7 +22,7 @@ Chart$methods(
 
         url <- get_relative_url(relative_path)
 
-        link <- gettextf("<a href=\"%s\" class=\"%s\">%s</a>\n", url, class, text)
+        link <- sprintf("<a href=\"%s\" class=\"%s\">%s</a>\n", url, class, text)
 
         cat(link)
         .self
@@ -41,7 +39,7 @@ Chart$methods(
         if (is.null(relative_path)){
             url <- internal$file$names$output_file
         } else {
-            url <- gettextf("%s/%s", relative_path, internal$file$names$output_file)
+            url <- sprintf("%s/%s", relative_path, internal$file$names$output_file)
         }
 
         url

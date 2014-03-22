@@ -18,9 +18,10 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
         unlink(file.path(getOption("clickme_templates_path"), template_name), recursive = TRUE)
     } else {
         if (file.exists(paths$Template)) {
-            stop(gettextf("\n\nThe %s template already exists:%s\n%s\n",
+            stop(sprintf("\n\nThe %s template already exists:%s\n%s\n",
+                          template_name,
                           paths$Template,
-                          template$internal$file$names$template))
+                          camel_case_template_name))
         }
     }
 
@@ -45,7 +46,7 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
 }
 
 get_template_contents <- function(template_name) {
-    gettextf("<!DOCTYPE html>
+    sprintf("<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
@@ -100,7 +101,7 @@ get_template_contents_coffee <- function() {
 }
 
 get_translator_contents <- function(template_name){
-    gettextf("%s <- setRefClass(\"%s\",
+    sprintf("%s <- setRefClass(\"%s\",
 
     contains = \"Chart\",
 
@@ -114,19 +115,22 @@ get_translator_contents <- function(template_name){
 )
 
 %s",
-    template_name, template_name, get_translator_helper_contents(template_name))
+    template_name, camel_case(template_name),
+    get_translator_helper_contents(template_name))
 }
 
 get_translator_helper_contents <- function(template_name) {
     snake_template_name <- snake_case(template_name)
+    camel_template_name <- camel_case(template_name)
 
-    paste0("clickme_helper$", snake_template_name," <- function(x,...){
+    sprintf("clickme_helper$%s <- function(x,...){
     params <- list(x = x, ...)
-    ", snake_template_name, " <- ", template_name, "$new(params)
-
-    ", snake_template_name, "$display()
+    %s <- %s$new(params)
+    %s$display()
 }
-")
+", snake_template_name,
+   snake_template_name, camel_template_name,
+   snake_template_name)
 }
 
 get_translator_test_contents <- function(template_name) {
@@ -142,7 +146,7 @@ test_that(\"get_data works\", {
 }
 
 get_config_contents <- function(template_name) {
-    paste0("info: |-
+    sprintf("info: |-
     Describe what this template does
 
 demo: |-

@@ -76,14 +76,14 @@ xy_to_data <- function(x, y) {
         } else {
             if (is_data_frame_or_matrix(y)){
                 if (length(x) != ncol(y)) {
-                    stop(gettextf("x has %d elements, but y has %d columns", length(x), ncol(y)))
+                    stop(sprintf("x has %d elements, but y has %d columns", length(x), ncol(y)))
                 }
                 data_x <- rep(x, each = nrow(y))
                 data_y <- as.vector(as.matrix(y))
                 rownames <- get_xy_rownames(data_x)
             } else {
                 if (length(x) != length(y)){
-                    stop(gettextf("x has %d elements, but y has %d", length(x), length(y)))
+                    stop(sprintf("x has %d elements, but y has %d", length(x), length(y)))
                 }
 
                 data_x <- x

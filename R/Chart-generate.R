@@ -40,7 +40,7 @@ Chart$methods(
         }
 
         if (!file.exists(internal$file$paths$template_coffee_file)) {
-            stop(gettextf("\n\n\tNo coffeescript file found at:\n\t%s\n\n", internal$file$paths$template_coffee_file))
+            stop(sprintf("\n\n\tNo coffeescript file found at:\n\t%s\n\n", internal$file$paths$template_coffee_file))
         }
 
         coffee_template <- readLines(internal$file$paths$template_coffee_file, warn = FALSE)

@@ -9,17 +9,17 @@ test_chart$get_params()
 test_that("default paths are valid", {
 
     test_chart$get_unvalidated_file_structure()
-    expect_error(test_chart$validate_file_structure(), gettextf("There is no template TestChart located in: %s", test_chart_path) )
+    expect_error(test_chart$validate_file_structure(), sprintf("There is no template TestChart located in: %s", test_chart_path) )
     dir.create(test_chart_path)
 
-    expect_error(test_chart$validate_file_structure(), gettextf("The TestChart template doesn't contain a template file in: %s", file.path(test_chart_path, "template", "template.Rmd")))
+    expect_error(test_chart$validate_file_structure(), sprintf("The TestChart template doesn't contain a template file in: %s", file.path(test_chart_path, "template", "template.Rmd")))
     dir.create(file.path(test_chart_path, "template"))
     file.create(file.path(test_chart_path, "template", "template.Rmd"))
 
-    expect_error(test_chart$validate_file_structure(), gettextf("The TestChart template doesn't contain a configuration file in: %s", file.path(test_chart_path, "config.yml")))
+    expect_error(test_chart$validate_file_structure(), sprintf("The TestChart template doesn't contain a configuration file in: %s", file.path(test_chart_path, "config.yml")))
     file.create(file.path(test_chart_path, "config.yml"))
 
-    expect_error(test_chart$validate_file_structure(), gettextf("The TestChart template doesn't contain a translator file in: %s", file.path(test_chart_path, "translator", "TestChart.R")))
+    expect_error(test_chart$validate_file_structure(), sprintf("The TestChart template doesn't contain a translator file in: %s", file.path(test_chart_path, "translator", "TestChart.R")))
     dir.create(file.path(test_chart_path, "translator"))
     file.create(file.path(test_chart_path, "translator", "TestChart.R"))
 
@@ -46,7 +46,7 @@ test_that("default paths are valid", {
     test_chart$get_params()
     test_chart$get_unvalidated_file_structure()
     unlink(file.path(test_chart_path, "template", "template.Rmd"))
-    expect_error(test_chart$validate_file_structure(), gettextf("The TestChart template doesn't contain a template file in: %s", test_chart$internal$file$paths$Template))
+    expect_error(test_chart$validate_file_structure(), sprintf("The TestChart template doesn't contain a template file in: %s", test_chart$internal$file$paths$Template))
 
     file.create(file.path(test_chart$internal$file$paths$template, "template.coffee.Rmd"))
     expect_that(test_chart$validate_file_structure(), not(throws_error()))

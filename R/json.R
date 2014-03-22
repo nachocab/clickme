@@ -80,7 +80,7 @@ to_monovector <- function(x){
     } else if (is.character(x) || is.factor(x)){
         x <- deparse(as.character(x))
     }
-    monovector <- gettextf("[%s]", x)
+    monovector <- sprintf("[%s]", x)
     monovector
 }
 

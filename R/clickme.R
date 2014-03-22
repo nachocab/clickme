@@ -11,7 +11,7 @@ clickme <- function(template_name, ...){
         camel_case_template <- camel_case(template_name)
 
         if (snake_case_template %notin% names(clickme_helper)){
-            stop(gettextf("\n\n\tThe %s template is missing a helper function or is not installed in %s\n", camel_case_template, getOption("clickme_templates_path")))
+            stop(sprintf("\n\n\tThe %s template is missing a helper function or is not installed in %s\n", camel_case_template, getOption("clickme_templates_path")))
         }
         clickme_helper[[snake_case_template]](...)
     }

@@ -84,7 +84,7 @@ disjoint_sets <- function(a, b, names = c("a", "b", "both")) {
 # move elements to the front of an array
 move_in_front <- function(first_elements, all_elements) {
     if (any(first_elements %notin% all_elements)){
-        stop(gettextf("\n\n\tThe following elements don't appear in \"%s\":\n%s\n",
+        stop(sprintf("\n\n\tThe following elements don't appear in \"%s\":\n%s\n",
              deparse(substitute(all_elements)),
              enumerate(first_elements[any(first_elements %notin% all_elements)])))
     }
@@ -115,7 +115,7 @@ enumerate <- function(x) {
 match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups = FALSE) {
     if (any(duplicated(unlist(groups)))){
         duplicated_elements <- unname(unlist(groups)[duplicated(unlist(groups))])
-        message <- gettextf("\n\tThe following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"), "\n")
+        message <- sprintf("\n\tThe following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"), "\n")
         if (strict_dups){
             stop(message)
         } else {
@@ -324,7 +324,7 @@ test_template <- function(template_name, filter = NULL){
         env <- new.env()
         with_envvar(r_env_vars(), test_dir(template$internal$file$paths$tests, filter = filter, env = env))
     } else {
-        stop(gettextf("\n\n\tThere is no test translator file at this location:\n\n%s",
+        stop(sprintf("\n\n\tThere is no test translator file at this location:\n\n%s",
                        template$internal$file$paths$translator_test_file))
     }
 }

@@ -64,7 +64,7 @@ Chart$methods(
             }
         } else {
             if (!is.null(params[["file"]])) {
-                message(gettextf("\n\tThe \"file\" argument was ignored because the \"file_path\" argument was present: %s", params[["file_path"]]), "\n")
+                message(sprintf("\n\tThe \"file\" argument was ignored because the \"file_path\" argument was present: %s", params[["file_path"]]), "\n")
             }
 
             if (!grepl(".\\.html$", params[["file_path"]])) {
@@ -87,7 +87,7 @@ Chart$methods(
             internal$file$paths$output_file <<- file.path(internal$file$paths$output, internal$file$names$output_file)
         } else {
             if (!is.null(params$dir)) {
-                message(gettextf("\n\tThe \"dir\" argument was ignored because the \"file_path\" argument was present\n\t(use \"file\" if you just want to specify the file name):\n\t%s\n", params[["file_path"]]))
+                message(sprintf("\n\tThe \"dir\" argument was ignored because the \"file_path\" argument was present\n\t(use \"file\" if you just want to specify the file name):\n\t%s\n", params[["file_path"]]))
             }
 
             internal$file$paths$output <<- dirname(params[["file_path"]])
@@ -106,24 +106,24 @@ Chart$methods(
     validate_file_structure = function() {
 
         if (!file.exists(getOption("clickme_templates_path"))) {
-            stop(gettextf("getOption(\"clickme_templates_path\") doesn't contain a valid path: %s", getOption("clickme_templates_path")))
+            stop(sprintf("getOption(\"clickme_templates_path\") doesn't contain a valid path: %s", getOption("clickme_templates_path")))
         }
 
         if (!file.exists(internal$file$paths$Template)) {
-            stop(gettextf("There is no template %s located in: %s ", internal$file$names$template, internal$file$paths$Template))
+            stop(sprintf("There is no template %s located in: %s ", internal$file$names$template, internal$file$paths$Template))
         }
 
         # template.Rmd must exist, unless template.coffee.Rmd exists
         if (!file.exists(internal$file$paths$template_file) && !file.exists(internal$file$paths$template_coffee_file)){
-            stop(gettextf("The %s template doesn't contain a template file in: %s ", internal$file$names$template, internal$file$paths$template_file))
+            stop(sprintf("The %s template doesn't contain a template file in: %s ", internal$file$names$template, internal$file$paths$template_file))
         }
 
         if (!file.exists(internal$file$paths$config_file)) {
-            stop(gettextf("The %s template doesn't contain a configuration file in: %s ", internal$file$names$template, internal$file$paths$config_file))
+            stop(sprintf("The %s template doesn't contain a configuration file in: %s ", internal$file$names$template, internal$file$paths$config_file))
         }
 
         if (!file.exists(internal$file$paths$translator_file)) {
-            stop(gettextf("The %s template doesn't contain a translator file in: %s ", internal$file$names$template, internal$file$paths$translator_file))
+            stop(sprintf("The %s template doesn't contain a translator file in: %s ", internal$file$names$template, internal$file$paths$translator_file))
         }
 
         if (!file.exists(internal$file$paths$output)){

@@ -21,13 +21,13 @@ Chart$methods(
 
             if (length(missing_packages) != 0){
                 message(separator())
-                message(gettextf("The %s template requires the following packages:\n\n%s\nPress Enter to install them automatically or \"c\" to cancel.",
+                message(sprintf("The %s template requires the following packages:\n\n%s\nPress Enter to install them automatically or \"c\" to cancel.",
                         internal$file$names$template,
                         paste0(missing_packages, collapse="\n"))
                 )
                 response <- readline()
                 if (tolower(response) == "c"){
-                    message(gettextf("Try running: install.packages(%s)", paste0(missing_packages, collapse=",")))
+                    message(sprintf("Try running: install.packages(%s)", paste0(missing_packages, collapse=",")))
                     capture.output(return())
                 } else {
                     install.packages(missing_packages)

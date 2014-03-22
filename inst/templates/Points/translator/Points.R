@@ -39,9 +39,13 @@ Points <- setRefClass("Points",
         # Ensure that the palette has as at least one color ("#000")
         # If there are color group names, ensure that each has a valid color
         # Ensure that if palette has color group names:
-        #   any color group name assigned with an NA must get replaced with a default color (useful to determine color group order without specifying the actual color)
-        #   any color group name without a color must get assigned a default color
-        # set default values, replace invalid values, order with internal$ordered_color_group_names
+        #   - any color group name assigned with an NA must get replaced with a
+        #     default color (useful to determine color group order without
+        #     specifying the actual color)
+        #   - any color group name without a color must get assigned a default
+        #     color
+        # set default values, replace invalid values, order with
+        # internal$ordered_color_group_names
         validate_palette = function(palette){
             if (!is.null(params$color_groups)){
 
@@ -98,7 +102,7 @@ Points <- setRefClass("Points",
 
                 if (any(duplicated(names(params$palette)))) {
                     duplicated_names <- names(params$palette)[duplicated(names(params$palette))]
-                    stop(gettextf("\n\n\tDuplicated names in palette:\n%s\n\n", enumerate(duplicated_names)))
+                    stop(sprintf("\n\n\tDuplicated names in palette:\n%s\n\n", enumerate(duplicated_names)))
                 }
 
                 ordered_color_group_names_aux <- names(params$palette)
@@ -106,7 +110,8 @@ Points <- setRefClass("Points",
                 ordered_color_group_names <- c(ordered_color_group_names_aux, missing_color_group_names)
             }
 
-            # If color_group_order is specified, it overrides the default and palette name orders
+            # If color_group_order is specified, it overrides the default
+            # and palette name orders
             if (!is.null(params$color_group_order)) {
                 if (scale_type(params$color_groups) != "categorical"){
                     stop("\n\n\tcolor_group_order can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)")
@@ -114,7 +119,7 @@ Points <- setRefClass("Points",
 
                 if (any(duplicated(params$color_group_order))) {
                     duplicated_names <- params$color_group_order[duplicated(params$color_group_order)]
-                    stop(gettextf("\n\n\tDuplicated names in color_group_order:\n%s\n\n", enumerate(duplicated_names)))
+                    stop(sprintf("\n\n\tDuplicated names in color_group_order:\n%s\n\n", enumerate(duplicated_names)))
                 }
 
                 ordered_color_group_names_aux <- params$color_group_order
@@ -125,7 +130,8 @@ Points <- setRefClass("Points",
             ordered_color_group_names
         },
 
-        # Ensure that the domain used with a D3 color scale is only specified when the scale is quantitative
+        # Ensure that the domain used with a D3 color scale is only
+        # specified when the scale is quantitative
         validate_color_domain = function(color_domain){
             if (!is.null(color_domain) && scale_type(params$color_groups) == "categorical") {
                 stop("\n\ncolor_domain can only be used with numeric scales, but color_groups has categorical values.")
@@ -135,7 +141,8 @@ Points <- setRefClass("Points",
                 min <- min(params$color_groups, na.rm = TRUE)
                 max <- max(params$color_groups, na.rm = TRUE)
 
-                # If the scale crosses zero, make sure the palette the center of the palette is white (#fff)
+                # If the scale crosses zero, make sure the palette the
+                # center of the palette is white (#fff)
                 if (min < 0 && max > 0) {
                     color_domain <- c(min, 0, max)
                     params$palette <<- c(params$palette[1], "white", params$palette[2])
@@ -152,7 +159,8 @@ Points <- setRefClass("Points",
 
 # Generates an interactive scatterplot
 #
-# x x-values, but only if the "y" param is specified, otherwise it represents the y-values. It can be a dataframe,
+# x x-values, but only if the "y" param is specified, otherwise it represents
+# the y-values. It can be a dataframe,
 # a matrix, a vector, a list, or a factor (TODO test this).
 #
 # y y-values (optional)
@@ -165,24 +173,32 @@ Points <- setRefClass("Points",
 # radius the radius of the points
 # box draws a box around the plot
 #
-# palette color palette. Quantitative scales expect a vector with a start color, and an end color (optionally,
-# a middle color may be provided between both). Categorical scales expect a vector with a color for each category.
-# Use category names to change the default color assignment \code{c(category1="color1", category2="color2")}.
-# The order in which these colors are specified determines rendering order when points from different categories
+# palette color palette. Quantitative scales expect a vector with a start color,
+# and an end color (optionally,
+# a middle color may be provided between both). Categorical scales expect a vector
+ # with a color for each category.
+# Use category names to change the default color assignment
+# \code{c(category1="color1", category2="color2")}.
+# The order in which these colors are specified determines rendering order when
+# points from different categories
 # collide (colors specified first appear on top of later ones).
 #
 # col alias for palette
-# color_groups a vector whose values are used to determine the color of the points. If it is a numeric vector, it
-# will assume the scale is quantitative and it will generate a gradient using the start and end colors of the palette
-# (also with the middle color, if it is provided). If it is a character vector, a logical vector, or a factor, it will
-# generate a categorical scale with one color per unique value (or level).
+# color_groups a vector whose values are used to determine the color of the points.
+# If it is a numeric vector, it will assume the scale is quantitative and it will
+# generate a gradient using the start and end colors of the palette (also with the
+# middle color, if it is provided). If it is a character vector, a logical vector,
+# or a factor, it will generate a categorical scale with one color per unique value
+# (or level).
 #
-# color_domain a vector with a start and end value (an optionally a middle value between them). It is only used for
-# quantitative scales. Useful when the scale is continuous and, for example, we want to ensure it is symmetric in
-# negative and positive values.
+# color_domain a vector with a start and end value (an optionally a middle value
+# between them). It is only used for quantitative scales. Useful when the scale
+# is continuous and, for example, we want to ensure it is symmetric in negative
+# and positive values.
 #
 # color_title the title of the color legend
-# extra a data frame, list or matrix whose fields will appear in the tooltip on hover
+# extra a data frame, list or matrix whose fields will appear in the tooltip
+# on hover
 # padding padding around the top-level object
 # ... additional arguments for \code{clickme}
 #
