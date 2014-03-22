@@ -1,5 +1,10 @@
-# context("templates")
+context("Installed templates")
 
+for(template in plain_list_templates()){
+    test_template(template)
+}
+
+# context("templates")
 
 # test_that("the HTML example file for the force_directed template is generated", {
 #     template <- "force_directed"
@@ -27,8 +32,3 @@
 #     expect_true(file.exists(internal$file$paths$output_file))
 # })
 
-context("Installed templates")
-
-for(template in plain_list_templates()){
-    test_template(template)
-}

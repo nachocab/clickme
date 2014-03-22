@@ -1,8 +1,9 @@
 context("new template")
 
 test_that("doesn't replace an existing template, unless specified", {
-    new_template("TestChart")
-    expect_error(new_template("TestChart"), "template already exists")
+    # when you use new_template, remember to unlink
+    new_template("test_chart")
+    expect_error(new_template("test_chart"), "template already exists")
 
     new_template("TestChart", replace = TRUE)
     expect_true(file.exists(file.path(getOption("clickme_templates_path"), "TestChart")))
@@ -12,7 +13,7 @@ unlink(file.path(getOption("clickme_templates_path"), "TestChart"), recursive = 
 unlink(file.path(getOption("clickme_output_path"), "temp-TestChart.html"))
 
 test_that("creates a new template", {
-    test_chart <- new_template("TestChart")
+    test_chart <- new_template("test_chart")
 
     # folders
     expect_true(file.exists(file.path(test_chart$internal$file$paths$Template)))

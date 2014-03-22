@@ -3,6 +3,10 @@
 #' @export
 clickme <- function(template_name, ...){
     if (length(list(...)) == 0){
+        template_path <- file.path(getOption("clickme_templates_path"), camel_case(template_name))
+        if (!file.exists(template_path)){
+            stop(sprintf("\n\n\tThe %s template is not installed in path %s\n", template_name, template_path))
+        }
         options(clickme_current_template = template_name)
     } else {
         reload_translators()
