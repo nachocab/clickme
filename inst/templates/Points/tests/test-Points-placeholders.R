@@ -41,26 +41,29 @@ test_that("get_tooltip_content", {
     tooltip_contents <- points$get_tooltip_content()
 
     expect_equal(no_whitespace(tooltip_contents), no_whitespace("
- \"<table>
-    <tr>
-        <td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>x</td><td class='tooltip-metric-value'>\" + d['x'] + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>This is the y axis</td>
-        <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['y']) + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>extra1</td>
-        <td class='tooltip-metric-value'>\" + d['extra1'] + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>extra2</td>
-        <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra2']) + \"</td>
-    </tr>
-</table>\""), info = "ylab, extra")
+        function(d){
+            return \"<table>
+                <tr>
+                    <td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>x</td><td class='tooltip-metric-value'>\" + d['x'] + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>This is the y axis</td>
+                    <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['y']) + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>extra1</td>
+                    <td class='tooltip-metric-value'>\" + d['extra1'] + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>extra2</td>
+                    <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra2']) + \"</td>
+                </tr>
+            </table>\"
+        };
+    "), info = "ylab, extra")
 
     params <- list(x = data.frame(x = c("a", "b", "c"), y = c(5.5,6,6.7), row.names = LETTERS[1:3]),
                    ylab = "This is the y axis",
@@ -72,26 +75,29 @@ test_that("get_tooltip_content", {
     tooltip_contents <- points$get_tooltip_content()
 
     expect_equal(no_whitespace(tooltip_contents), no_whitespace("
- \"<table>
-    <tr>
-        <td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>x</td><td class='tooltip-metric-value'>\" + d['x'] + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>This is the y axis</td>
-        <td class='tooltip-metric-value'>\" + d['y'] + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>extra1</td>
-        <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra1']) + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>extra2</td>
-        <td class='tooltip-metric-value'>\" + d3.format('.3f')(d['extra2']) + \"</td>
-    </tr>
-</table>\""), info = "ylab, extra, formats")
+        function(d){
+            return \"<table>
+                <tr>
+                    <td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>x</td><td class='tooltip-metric-value'>\" + d['x'] + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>This is the y axis</td>
+                    <td class='tooltip-metric-value'>\" + d['y'] + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>extra1</td>
+                    <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra1']) + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>extra2</td>
+                    <td class='tooltip-metric-value'>\" + d3.format('.3f')(d['extra2']) + \"</td>
+                </tr>
+            </table>\"
+        };
+    "), info = "ylab, extra, formats")
 
     params <- list(x = data.frame(x = c("a", "b", "c"), y = c(5.5,6,6.7), row.names = LETTERS[1:3]),
                    ylab = "This is the y axis",
@@ -103,30 +109,33 @@ test_that("get_tooltip_content", {
     tooltip_contents <- points$get_tooltip_content()
 
     expect_equal(no_whitespace(tooltip_contents), no_whitespace("
- \"<table>
-    <tr>
-        <td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>x</td><td class='tooltip-metric-value'>\" + d['x'] + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>This is the y axis</td>
-        <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['y']) + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>extra1</td>
-        <td class='tooltip-metric-value'>\" + d['extra1'] + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>extra2</td>
-        <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra2']) + \"</td>
-    </tr>
-    <tr class='tooltip-metric'>
-        <td class='tooltip-metric-name'>My groups</td>
-        <td class='tooltip-metric-value'>\" + d['color_group'] + \"</td>
-    </tr>
-</table>\""), info = "ylab, extra, color_groups, color_title")
+        function(d){
+            return \"<table>
+                <tr>
+                    <td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>x</td><td class='tooltip-metric-value'>\" + d['x'] + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>This is the y axis</td>
+                    <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['y']) + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>extra1</td>
+                    <td class='tooltip-metric-value'>\" + d['extra1'] + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>extra2</td>
+                    <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra2']) + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>My groups</td>
+                    <td class='tooltip-metric-value'>\" + d['color_group'] + \"</td>
+                </tr>
+            </table>\"
+        };
+    "), info = "ylab, extra, color_groups, color_title")
 
 })
 
