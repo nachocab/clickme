@@ -10,7 +10,9 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
     # This is a bit of a hack, we'll have to change it when templates start
     # inheriting from other Chart
     template <- Chart$new()
-    template$internal$file$names$template <- camel_case(template_name)
+    camel_case_template_name <- camel_case(template_name)
+
+    template$internal$file$names$template <- camel_case_template_name
     template$get_default_names_and_paths()
     paths <- template$internal$file$paths
 
@@ -150,11 +152,12 @@ get_config_contents <- function(template_name) {
     Describe what this template does
 
 demo: |-
+    clickme(\"%s\")
     data <- 1:10
-    clickme(", snake_case(template_name), ", data)
+    cm(data)
 
 scripts:
-    - $shared/d3.v3.2.7.js
+    - $shared/d3.v3.4.3.js
 
 styles:
     - $shared/clickme.css
@@ -163,5 +166,5 @@ require_packages:
 
 require_server: no
 
-")
+", snake_case(template_name))
 }

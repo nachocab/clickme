@@ -9,6 +9,7 @@ test_that("doesn't replace an existing template, unless specified", {
 
 })
 unlink(file.path(getOption("clickme_templates_path"), "TestChart"), recursive = TRUE)
+unlink(file.path(getOption("clickme_output_path"), "temp-TestChart.html"))
 
 test_that("creates a new template", {
     test_chart <- new_template("TestChart")
@@ -26,3 +27,4 @@ test_that("creates a new template", {
     expect_that(clickme("test_chart", 1:10)$hide(), not(throws_error()))
 })
 unlink(file.path(getOption("clickme_templates_path"), "TestChart"), recursive = TRUE)
+unlink(file.path(getOption("clickme_output_path"), "temp-TestChart.html"))
