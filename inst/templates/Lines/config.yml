@@ -1,0 +1,19 @@
+info: |-
+    Describe what this template does
+
+demo: |-
+    clickme("lines")
+    data <- 1:10
+    cm(data)
+
+scripts:
+    - $shared/d3.v3.2.7.js
+
+styles:
+    - $shared/clickme.css
+
+require_packages:
+
+require_server: no
+
+
