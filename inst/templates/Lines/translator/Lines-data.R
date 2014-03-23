@@ -1,11 +1,58 @@
-Points$methods(
+Lines$methods(
 
     get_data = function(){
-       data <<- xy_to_data(params[["x"]], params[["y"]])
-       data$point_name <<- as.character(params$names %or% rownames(data))
-       rownames(data) <<- NULL
+        if (is.null(params[["y"]])){
+            if (is_data_frame_or_matrix(params[["x"]])){
+                data <<- params[["x"]]
+                if (ncol(data) %% 2 != 0){
+                    # skip the last column, so they're even
+                    warning(sprintf("\n\ndata doesn't have an even number of columns. Skipping column %s", ncol(data)))
+                    data <<- data[, 1:(ncol(data) - 1)]
+                }
 
-       data <<- add_extra_data_fields(data)
+                lines <- list()
+                line_number <- 1
+                for (column_number in seq(1, ncol(data), by = 2)){
+                    x <- column_number
+                    y <- column_number + 1
+                    line <- xy_to_data(params[["x"]][, c(x,y)], NULL)
+                    line$line_name <- as.character(line_number)
+                    line_number <- line_number + 1
+                    line <- unname(lapply(split(line, rownames(line)), as.list))
+                    lines[[length(lines) + 1]] <- line
+                }
+                data <<- lines
+            } else {
+                data <<- xy_to_data(params[["x"]], NULL)
+                data$line_name <<- "1"
+                data <<- list(unname(lapply(split(data, rownames(data)), as.list)))
+            }
+        } else {
+            if (is_data_frame_or_matrix(params[["y"]]) && !is_data_frame_or_matrix(params[["x"]])){
+                stop(sprintf("\n\nIf y is a dataframe, x must also be a dataframe, but it's a %s",
+                     class(params[["x"]])))
+            }
+
+            if (is_data_frame_or_matrix(params[["x"]])) {
+                if (nrow(params[["x"]]) == nrow(params[["y"]])) {
+                    lines <- list()
+                    for (row_number in 1:length(params[["x"]])) {
+                        line <- xy_to_data(params[["x"]][, row_number], params[["y"]][, row_number])
+                        line$line_name <- as.character(row_number)
+                        line <- unname(lapply(split(line, rownames(line)), as.list))
+                        lines[[length(lines) + 1]] <- line
+                    }
+                    data <<- lines
+                } else {
+                    stop(sprintf("\n\nx and y have different number of columns: %s vs. %s",
+                            nrow(params[["x"]]), nrow(params[["y"]])))
+                }
+            } else {
+                data <<- xy_to_data(params[["x"]], params[["y"]])
+                data$line_name <<- "1"
+                data <<- list(unname(lapply(split(data, rownames(data)), as.list)))
+            }
+        }
 
        data <<- cluster_data_rows(data, params$color_groups, group_variable = "color_group", group_order = internal$ordered_color_group_names)
        # Reverse so the last color group gets the last color
