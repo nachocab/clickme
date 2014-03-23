@@ -75,7 +75,8 @@ Chart$methods(
 
     },
 
-    # Absolute and relative paths to output folder, output file, and output template and shared assets
+    # Absolute and relative paths to output folder, output file, and output
+    # template and shared assets
     get_output_paths = function() {
 
         if (is.null(params[["file_path"]])){
@@ -106,24 +107,33 @@ Chart$methods(
     validate_file_structure = function() {
 
         if (!file.exists(getOption("clickme_templates_path"))) {
-            stop(sprintf("getOption(\"clickme_templates_path\") doesn't contain a valid path: %s", getOption("clickme_templates_path")))
+            stop(sprintf("getOption(\"clickme_templates_path\") doesn't contain a valid path: %s",
+                    getOption("clickme_templates_path")))
         }
 
         if (!file.exists(internal$file$paths$Template)) {
-            stop(sprintf("There is no template %s located in: %s ", internal$file$names$template, internal$file$paths$Template))
+            stop(sprintf("There is no template %s located in: %s ",
+                internal$file$names$template,
+                internal$file$paths$Template))
         }
 
         # template.Rmd must exist, unless template.coffee.Rmd exists
         if (!file.exists(internal$file$paths$template_file) && !file.exists(internal$file$paths$template_coffee_file)){
-            stop(sprintf("The %s template doesn't contain a template file in: %s ", internal$file$names$template, internal$file$paths$template_file))
+            stop(sprintf("The %s template doesn't contain a template file in: %s ",
+                 internal$file$names$template,
+                 internal$file$paths$template_file))
         }
 
         if (!file.exists(internal$file$paths$config_file)) {
-            stop(sprintf("The %s template doesn't contain a configuration file in: %s ", internal$file$names$template, internal$file$paths$config_file))
+            stop(sprintf("The %s template doesn't contain a configuration file in: %s ",
+                 internal$file$names$template,
+                 internal$file$paths$config_file))
         }
 
         if (!file.exists(internal$file$paths$translator_file)) {
-            stop(sprintf("The %s template doesn't contain a translator file in: %s ", internal$file$names$template, internal$file$paths$translator_file))
+            stop(sprintf("The %s template doesn't contain a translator file in: %s ",
+                 internal$file$names$template,
+                 internal$file$paths$translator_file))
         }
 
         if (!file.exists(internal$file$paths$output)){

@@ -151,10 +151,10 @@ test_that("x is a matrix with only one column", {
 })
 
 test_that("x is a matrix with at least two columns and y is null", {
-    data <- xy_to_data(x = matrix(1:20, nrow = 10), y = NULL)
+    data <- xy_to_data(x = matrix(1:20, nrow = 10, ncol = 2), y = NULL)
     expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = as.character(1:10)))
 
-    mat <- matrix(1:20, nrow = 10)
+    mat <- matrix(1:20, nrow = 10, ncol = 2)
     rownames(mat) <- letters[1:10]
     data <- xy_to_data(x = mat, y = NULL)
     expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = letters[1:10]))
@@ -168,6 +168,10 @@ test_that("x is a list with only one element", {
 test_that("x is a list with at least two elements and y is null", {
 
     data <- xy_to_data(x = list(a = 1:10, b = 11:20), y = NULL)
+    expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = as.character(1:10)))
+
+    # extra elements are ignored
+    data <- xy_to_data(x = list(a = 1:10, b = 11:20, c = 21:30), y = NULL)
     expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = as.character(1:10)))
 
     expect_error(xy_to_data(x = list(a = 1:10, b = list(1:5), y = NULL), "The first two elements of x have different lengths"))

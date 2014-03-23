@@ -27,7 +27,8 @@ Chart$methods(
                 )
                 response <- readline()
                 if (tolower(response) == "c"){
-                    message(sprintf("Try running: install.packages(%s)", paste0(missing_packages, collapse=",")))
+                    message(sprintf("Try running: install.packages(%s)",
+                        paste0(missing_packages, collapse=",")))
                     capture.output(return())
                 } else {
                     install.packages(missing_packages)

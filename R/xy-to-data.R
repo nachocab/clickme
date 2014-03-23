@@ -85,7 +85,6 @@ xy_to_data <- function(x, y) {
                 if (length(x) != length(y)){
                     stop(sprintf("x has %d elements, but y has %d", length(x), length(y)))
                 }
-
                 data_x <- x
                 data_y <- y
                 rownames <- get_xy_rownames(x)
@@ -94,6 +93,5 @@ xy_to_data <- function(x, y) {
     }
 
     data <- data.frame(x = data_x, y = data_y, row.names = rownames, stringsAsFactors = FALSE)
-
     data
 }
