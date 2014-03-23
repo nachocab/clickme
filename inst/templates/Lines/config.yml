@@ -1,5 +1,5 @@
 info: |-
-    Describe what this template does
+    Line plots
 
 demo: |-
     clickme("lines")
@@ -7,10 +7,15 @@ demo: |-
     cm(data)
 
 scripts:
-    - $shared/d3.v3.2.7.js
+    - $shared/d3.v3.4.3.js
+    - $shared/d3_aux.js
+    - $shared/d3_tip.js
 
 styles:
     - $shared/clickme.css
+    - $shared/d3_tip.css
+    - $shared/chart.css
+
 
 require_packages:
 
