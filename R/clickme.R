@@ -1,8 +1,10 @@
 #' When called with only the template, it sets the current template used by \code{cm}
 #' When called with more than the template
 #' @export
-clickme <- function(template_name, ...){
-    if (length(list(...)) == 0){
+clickme <- function(template_name = NULL, ...){
+    if (is.null(template_name)){
+        return(getOption("clickme_current_template"))
+    } else if (length(list(...)) == 0){
         template_path <- file.path(getOption("clickme_templates_path"), camel_case(template_name))
         if (!file.exists(template_path)){
             stop(sprintf("\n\n\tThe %s template is not installed in path %s\n", template_name, template_path))
