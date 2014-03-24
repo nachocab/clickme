@@ -1,20 +1,21 @@
-Points$methods(
+Lines$methods(
 
     get_color_legend_counts = function() {
         table(params$color_groups)
     },
 
-    # A D3 color scale may be quantitative or categorical, depending on params$color_groups
-    # Both types of scales have a range (the colors they use)
-    # Quantitative scales also have a domain (the min and max values used to interpolate them into colors)
+    # A D3 color scale may be quantitative or categorical, depending on
+    # params$color_groups. Both types of scales have a range (the colors they use)
+    # Quantitative scales also have a domain (the min and max values used
+    # to interpolate them into colors)
     get_d3_color_scale = function() {
-        # we use as.list so c("#000") gets converted to ["#000"] and not "#000"
+        # we use as.list() so c("#000") gets converted to ["#000"] and not "#000"
         if (scale_type(params$color_groups) == "quantitative") {
             color_range <- as.list(unname(params$palette))
             color_scale <- sprintf("d3.scale.linear()
                    .domain(%s)
                    .range(%s)
-                   .interpolate(d3.interpolateLab)",
+                   .interpolate(d3.interpolateLab);",
                    to_json(params$color_domain),
                    to_json(color_range))
         } else {
@@ -23,7 +24,7 @@ Points$methods(
             } else {
                 color_range <- as.list(unname(params$palette[unique(data$color_group)]))
             }
-            color_scale <- sprintf("d3.scale.ordinal().range(%s)", to_json(color_range))
+            color_scale <- sprintf("d3.scale.ordinal().range(%s);", to_json(color_range))
         }
 
         color_scale
@@ -32,14 +33,18 @@ Points$methods(
     # Generate tooltip JS code
     get_tooltip_content = function(){
 
-        # Point names get special treatment because they are used as titles
-        tooltip_names <- setdiff(colnames(data), c("point_name", "radius"))
+        # Line names get special treatment because they are used as titles
+        browser()
+        tooltip_names <- setdiff(colnames(data), c("line_name", "radius"))
 
         tooltip_formats <- get_formats(data[, tooltip_names], params$formats)
 
-        # x and y are always present, but they can have different names (xlab and ylab)
-        # color_groups is sometimes present, and it can have a different name (color_title)
-        renamings <- c(x = params$xlab, y = params$ylab, color_group = params$color_title)
+        # x and y are always present, but they can have different names (xlab
+        # and ylab). color_groups is sometimes present, and it can have a
+        # different name (color_title)
+        renamings <- c(x = params$xlab,
+                       y = params$ylab,
+                       color_group = params$color_title)
         names(tooltip_formats)[names(tooltip_formats) %in% names(renamings)] <- renamings[names(renamings) %in% names(tooltip_formats)]
         tooltip_values <- setNames(sapply(tooltip_names, function(name) sprintf("d['%s']", name)), names(tooltip_formats))
 
@@ -51,7 +56,7 @@ Points$methods(
             }
         })
 
-        title_row <- "<tr><td colspan='2' class='tooltip-title'>\" + d.point_name + \"</td></tr>"
+        title_row <- "<tr><td colspan='2' class='tooltip-title'>\" + d.line_name + \"</td></tr>"
         rows <- c(
                   title_row,
                   sapply(names(tooltip_formatted_values), function(name) {
@@ -59,15 +64,12 @@ Points$methods(
                   })
                 )
         rows <- paste(rows, collapse = "")
-
         tooltip_contents <- sprintf("\"<table>%s</table>\"", rows)
-        browser()
         tooltip_contents <- sprintf("function(d) {\nreturn %s\n};", tooltip_contents)
-
         tooltip_contents
     },
 
-    # When one of the axes is categorical, we need its domain
+    # When one of the axes is categorical, we need its domain.
     get_ordinal_domains = function(){
 
         # ifelse() can't return NULL
@@ -94,9 +96,5 @@ Points$methods(
 
         data_ranges
     }
-
 )
-
-
-
 

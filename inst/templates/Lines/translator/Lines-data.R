@@ -81,10 +81,11 @@ Lines$methods(
     # It makes adjacent rows that belong to the same group
     # groups must have as many elements as data has rows
     # group_variable is the name of the varible that will be used to group the rows
-    # group_order must have as many elements as groups, by default the order is alphanumeric
+    # group_order must have as many elements as groups, by default the order is
+    # alphanumeric
     cluster_data_rows = function(x, groups, group_variable, group_order = NULL){
        if (!is.data.frame(x)){
-           stop("\n\n\tdata must be a dataframe to group its rows")
+           stop("\nData must be a dataframe to group its rows")
        }
 
        if (length(groups) > 1){
@@ -98,7 +99,8 @@ Lines$methods(
                order <- order(x[[group_variable]])
            }
 
-           # Reverse so the first element is plotted last (and therefore appears on top)
+           # Reverse so the first element is plotted last (and therefore
+           # appears on top)
            x <- x[rev(order),]
        }
 
@@ -122,7 +124,7 @@ Lines$methods(
     validate_formats = function(formats){
         if (any(names(formats) %notin% colnames(data))){
             wrong_names <- names(formats)[names(formats) %notin% colnames(data)]
-            stop(sprintf("\n\n\tThe following format names are not x, y, or any of the extra names:\n%s\n\n", enumerate(wrong_names)))
+            stop(sprintf("\nThe following format names are not x, y, or any of the extra names:\n%s\n\n", enumerate(wrong_names)))
         }
 
         formats
