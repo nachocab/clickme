@@ -1,4 +1,4 @@
-#' When called with only the template, it sets the current template used by \code{cm}
+#' When called with only the template, it sets the current template used by \code{cme}
 #' When called with more than the template
 #' @export
 clickme <- function(template_name, ...){
@@ -26,7 +26,7 @@ clickme <- function(template_name, ...){
 
 
 #' @export
-cm <- function(...){
+cme <- function(...){
     current_template <- getOption("clickme_current_template") %or% "points"
     clickme(current_template, ...)
 }

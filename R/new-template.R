@@ -154,7 +154,7 @@ get_config_contents <- function(template_name) {
 demo: |-
     clickme(\"%s\")
     data <- 1:10
-    cm(data)
+    cme(data)
 
 scripts:
     - $shared/d3.v3.4.3.js

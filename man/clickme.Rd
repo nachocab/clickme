@@ -10,7 +10,7 @@ clickme(template_name, ...)
 Clickme: use R to create interactive visualizations
 
 When called with only the template, it sets the current
-template used by \code{cm} When called with more than the
+template used by \code{cme} When called with more than the
 template
 }
 \section{Package options}{
