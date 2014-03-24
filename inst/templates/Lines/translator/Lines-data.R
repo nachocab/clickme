@@ -108,7 +108,7 @@ Lines$methods(
 
        # data <<- apply_axes_limits(data)
        # data <<- na.omit(data)
-       # params$formats <<- validate_formats(params$formats)
+       # params$tooltip_formats <<- validate_tooltip_formats(params$tooltip_formats)
     },
 
     # Add any extra fields to the data object.
@@ -166,13 +166,13 @@ Lines$methods(
        x
     },
 
-    validate_formats = function(formats){
-        if (any(names(formats) %notin% colnames(data))){
-            wrong_names <- names(formats)[names(formats) %notin% colnames(data)]
+    validate_tooltip_formats = function(tooltip_formats){
+        if (any(names(tooltip_formats) %notin% colnames(data))){
+            wrong_names <- names(tooltip_formats)[names(tooltip_formats) %notin% colnames(data)]
             stop(sprintf("\nThe following format names are not x, y, or any of the extra names:\n%s\n\n", enumerate(wrong_names)))
         }
 
-        formats
+        tooltip_formats
     }
 
 )

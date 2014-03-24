@@ -4,9 +4,9 @@
 #'
 #' @export
 #' @keywords internal
-get_formats <- function(data, custom_formats = NULL){
+get_tooltip_formats <- function(data, custom_formats = NULL){
     custom_format_names <- names(custom_formats)
-    formats <- sapply(colnames(data), function(name) {
+    tooltip_formats <- sapply(colnames(data), function(name) {
         if (name %in% custom_format_names){
             custom_formats[[name]]
         } else {
@@ -19,7 +19,7 @@ get_formats <- function(data, custom_formats = NULL){
         }
     })
 
-    formats
+    tooltip_formats
 }
 
 #' Extract function names from a list of placeholder expressions
