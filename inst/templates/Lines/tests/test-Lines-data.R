@@ -214,6 +214,14 @@ test_that("get_data works with multiple lines", {
             )
         ),
         info = "x and y are lists with different number of elements that match")
+
+    params <- list(x = list(c(1, 2, 3),
+                            c(4, 5)),
+                   y = list(c(2, 3),
+                            c(3, 4, 6)))
+    lines <- Lines$new(params)
+    lines$get_params()
+    expect_error(lines$get_data(), "x and y have different lengths")
 })
 
 

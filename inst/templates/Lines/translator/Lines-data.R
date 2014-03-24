@@ -1,52 +1,98 @@
+# Aux functions
+vectors_to_line_data <- function(x, y, name){
+    if (is.null(name))
+        name <- "1"
+    data <- xy_to_data(x,y)
+    data$line_name <- name
+    data <- list(unname(lapply(split(data, rownames(data)), as.list)))
+    data
+}
+
+dataframes_to_line_data <- function(x, y, names){
+    if (is.null(names))
+        names <- as.character(1:nrow(x))
+    data <- lapply(1:nrow(x), function(line_number){
+        if (is.null(y)){
+            line <- xy_to_data(x = 1:ncol(x),
+                               y = unname(unlist(x[line_number, ])))
+        } else {
+            line <- xy_to_data(x = unname(unlist(x[line_number, ])),
+                               y = unname(unlist(y[line_number, ])))
+        }
+        line$line_name <- names[line_number]
+        line <- unname(lapply(split(line, rownames(line)), as.list))
+        line
+    })
+    data
+}
+
+lists_to_line_data <- function(x, y, names){
+    if (is.null(names))
+        names <- as.character(1:length(x))
+
+    data <- lapply(1:length(x), function(line_number){
+        line <- xy_to_data(x = x[[line_number]],
+                           y = y[[line_number]])
+        line$line_name <- names[line_number]
+        line <- unname(lapply(split(line, rownames(line)), as.list))
+        line
+    })
+    data
+}
+
+# If x is a vector, convert it to a dataframe
+ensure_dataframe <- function(x, num_rows){
+    if (!is.null(num_rows) && !is_data_frame_or_matrix(x)){
+        x <- matrix(rep(x, num_rows), nrow=num_rows, byrow=T)
+    }
+    x
+}
+
 Lines$methods(
     get_data = function(){
         if (is.null(params[["y"]])){
             if (is_data_frame_or_matrix(params[["x"]])){
-                if (ncol(params[["x"]]) < 2)
+                if (ncol(params[["x"]]) < 2) {
                     stop("When x is a dataframe or a matrix, it must contain at least two columns")
-
-                data <<- lapply(1:nrow(params[["x"]]), function(line_number){
-                    line <- xy_to_data(1:ncol(params[["x"]]),
-                                       unname(unlist(params[["x"]][line_number, ])))
-                    line$line_name <- as.character(line_number)
-                    line <- unname(lapply(split(line, rownames(line)), as.list))
-                    line
-                })
+                }
+                data <<- dataframes_to_line_data(x = params[["x"]],
+                                                 y = NULL,
+                                                 names = params$names)
             } else {
-                data <<- xy_to_data(1:length(params[["x"]]), params[["x"]])
-                data$line_name <<- "1"
-                data <<- list(unname(lapply(split(data, rownames(data)), as.list)))
+                data <<- vectors_to_line_data(x = 1:length(params[["x"]]),
+                                              y = params[["x"]],
+                                              name = params$names)
             }
         } else {
-            if (is_data_frame_or_matrix(params[["x"]]) && !is_data_frame_or_matrix(params[["y"]])) {
-                rows_in_x <- nrow(params[["x"]])
-                params[["y"]] <- matrix(rep(params[["y"]], rows_in_x), nrow=rows_in_x, byrow=T)
-            }
+            if (is_data_frame_or_matrix(params[["x"]]) || is_data_frame_or_matrix(params[["y"]])) {
+                # If params$x or params$y is a dataframe, the other must also be a dataframe.
+                x <- ensure_dataframe(params[["x"]], nrow(params[["y"]]))
+                y <- ensure_dataframe(params[["y"]], nrow(params[["x"]]))
 
-            if (is_data_frame_or_matrix(params[["y"]]) && !is_data_frame_or_matrix(params[["x"]])) {
-                rows_in_y <- nrow(params[["y"]])
-                params[["x"]] <- matrix(rep(params[["x"]], rows_in_y), nrow=rows_in_y, byrow=T)
-            }
-
-            if (is_data_frame_or_matrix(params[["x"]]) && is_data_frame_or_matrix(params[["y"]])) {
-                if (ncol(params[["x"]]) != ncol(params[["y"]]))
+                if (ncol(x) != ncol(y))
                     stop(sprintf("\nx and y have different number of columns: %s vs. %s",
-                            ncol(params[["x"]]), ncol(params[["y"]])))
+                            ncol(x), ncol(y)))
 
-                if (ncol(params[["x"]]) < 2)
+                if (ncol(x) < 2)
                     stop("When x is a dataframe or a matrix, it must contain at least two columns")
 
-                data <<- lapply(1:nrow(params[["x"]]), function(line_number){
-                    line <- xy_to_data(unname(unlist(params[["x"]][line_number, ])),
-                                       unname(unlist(params[["y"]][line_number, ])))
-                    line$line_name <- as.character(line_number)
-                    line <- unname(lapply(split(line, rownames(line)), as.list))
-                    line
-                })
+                data <<- dataframes_to_line_data(x = x,
+                                                 y = y,
+                                                 names = params$names)
             } else {
-                data <<- xy_to_data(params[["x"]], params[["y"]])
-                data$line_name <<- "1"
-                data <<- list(unname(lapply(split(data, rownames(data)), as.list)))
+                if (is.list(params[["x"]]) && is.list(params[["y"]])){
+                    if (all(sapply(params[["x"]], length) != sapply(params[["y"]], length)))
+                        stop(sprintf("\nx and y have different lengths: %s vs. %s",
+                             paste(sapply(params[["x"]], length), collapse = " "),
+                             paste(sapply(params[["x"]], length), collapse = " ")))
+                    data <<- lists_to_line_data(x = params[["x"]],
+                                                y = params[["y"]],
+                                                names = params$names)
+                } else {
+                    data <<- vectors_to_line_data(x = params[["x"]],
+                                                  y = params[["y"]],
+                                                  name = params$names)
+                }
             }
         }
 
