@@ -424,5 +424,3 @@ is_character_or_factor <- function(x) {
 is_data_frame_or_matrix <- function(x) {
     is.data.frame(x) || is.matrix(x)
 }
-
-

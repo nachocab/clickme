@@ -4,7 +4,7 @@
 \alias{clickme-package}
 \title{Clickme: use R to create interactive visualizations}
 \usage{
-clickme(template_name = NULL, ...)
+clickme(template_name, ...)
 }
 \description{
 Clickme: use R to create interactive visualizations
