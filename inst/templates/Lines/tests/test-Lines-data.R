@@ -16,8 +16,68 @@ test_that("get_data works with one line", {
         ),
         info = "x is a numeric vector, y is NULL")
 
-    params <- list(x = c(2, 3, 4),
-                   y = c(5, 6, 7))
+    params <- list(x = data.frame(x1 = 2, x2 = 3, x3 = 4),
+                   y = NULL)
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 1, y = 2, line_name = "1"),
+                list(x = 2, y = 3, line_name = "1"),
+                list(x = 3, y = 4, line_name = "1")
+            )
+        ),
+        info = "x is a one-row dataframe, y is NULL")
+
+    params <- list(x = data.frame(x1 = 3, x2 = 4, x3 = 5),
+                   y = data.frame(x1 = 2, x2 = 3, x3 = 4))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 3, y = 2, line_name = "1"),
+                list(x = 4, y = 3, line_name = "1"),
+                list(x = 5, y = 4, line_name = "1")
+            )
+        ),
+        info = "x and y are one-row data.frames")
+
+    params <- list(x = rbind(c(2, 3, 4)),
+                   y = NULL)
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 1, y = 2, line_name = "1"),
+                list(x = 2, y = 3, line_name = "1"),
+                list(x = 3, y = 4, line_name = "1")
+            )
+        ),
+        info = "x is a one-row matrix, y is NULL")
+
+    params <- list(x = rbind(c(3, 4, 5)),
+                   y = rbind(c(2, 3, 4)))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 3, y = 2, line_name = "1"),
+                list(x = 4, y = 3, line_name = "1"),
+                list(x = 5, y = 4, line_name = "1")
+            )
+        ),
+        info = "x and y are one-row matrices")
+
+
+    params <- list(x = c(2, 3, 4), y = c(5, 6, 7))
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
@@ -31,30 +91,17 @@ test_that("get_data works with one line", {
         ),
         info = "x is a numeric vector, y is a numeric vector")
 
-    params <- list(x = data.frame(x1 = c(2, 3, 4),
-                                  y1 = c(5, 6, 7)),
-                   y = NULL)
+    params <- list(x = cbind(c(2, 3, 4)), y = NULL)
     lines <- Lines$new(params)
     lines$get_params()
-    lines$get_data()
-    expect_equal(lines$data,
-        list(
-            list(
-                list(x = 2, y = 5, line_name = "1"),
-                list(x = 3, y = 6, line_name = "1"),
-                list(x = 4, y = 7, line_name = "1")
-            )
-        ),
-        info = "x is a two-column dataframe, y is NULL")
+    expect_error(lines$get_data(), "When x is a dataframe or a matrix, it must contain at least two columns")
+
 })
 
 test_that("get_data works with multiple lines", {
-    params <- list(x = data.frame(
-                        x1 = c(2, 3, 4),
-                        y1 = c(5, 6, 7),
-                        x2 = c(0, 1, 2),
-                        y2 = c(7, 8, 9)
-                   ),
+
+    params <- list(x = as.data.frame(rbind(c(2, 3, 4),
+                                           c(3, 4, 5))),
                    y = NULL)
     lines <- Lines$new(params)
     lines$get_params()
@@ -62,92 +109,116 @@ test_that("get_data works with multiple lines", {
     expect_equal(lines$data,
         list(
             list(
-                list(x = 2, y = 5, line_name = "1"),
-                list(x = 3, y = 6, line_name = "1"),
-                list(x = 4, y = 7, line_name = "1")
+                list(x = 1, y = 2, line_name = "1"),
+                list(x = 2, y = 3, line_name = "1"),
+                list(x = 3, y = 4, line_name = "1")
             ),
             list(
-                list(x = 0, y = 7, line_name = "2"),
-                list(x = 1, y = 8, line_name = "2"),
-                list(x = 2, y = 9, line_name = "2")
+                list(x = 1, y = 3, line_name = "2"),
+                list(x = 2, y = 4, line_name = "2"),
+                list(x = 3, y = 5, line_name = "2")
             )
         ),
-        info = "x is a data.frame with an even number of columns, y is NULL")
+        info = "x is a data.frame with two or more column, y is NULL")
 
-    params <- list(x = data.frame(
-                        x1 = c(2, 3, 4),
-                        y1 = c(5, 6, 7),
-                        x2 = c(0, 1, 2),
-                        y2 = c(7, 8, 9),
-                        x3 = c(1, 2, 3)
-                   ),
-                   y = NULL)
-    lines <- Lines$new(params)
-    lines$get_params()
-    expect_warning(lines$get_data(), "data doesn't have an even number of columns. Skipping column 5")
-    expect_equal(lines$data,
-        list(
-            list(
-                list(x = 2, y = 5, line_name = "1"),
-                list(x = 3, y = 6, line_name = "1"),
-                list(x = 4, y = 7, line_name = "1")
-            ),
-            list(
-                list(x = 0, y = 7, line_name = "2"),
-                list(x = 1, y = 8, line_name = "2"),
-                list(x = 2, y = 9, line_name = "2")
-            )
-        ),
-        info = "x is a data.frame with an odd number of columns, y is NULL")
-
-    params <- list(x = data.frame(
-                        x1 = c(2, 3, 4),
-                        x2 = c(0, 1, 2)
-                   ),
-                   y = data.frame(
-                        y1 = c(5, 6, 7),
-                        y2 = c(7, 8, 9)
-                   ))
+    params <- list(x = rbind(c(1, 2, 3),
+                             c(4, 5, 6)),
+                   y = rbind(c(2, 3, 4),
+                             c(3, 4, 5)))
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
     expect_equal(lines$data,
         list(
             list(
-                list(x = 2, y = 5, line_name = "1"),
-                list(x = 3, y = 6, line_name = "1"),
-                list(x = 4, y = 7, line_name = "1")
+                list(x = 1, y = 2, line_name = "1"),
+                list(x = 2, y = 3, line_name = "1"),
+                list(x = 3, y = 4, line_name = "1")
             ),
             list(
-                list(x = 0, y = 7, line_name = "2"),
-                list(x = 1, y = 8, line_name = "2"),
-                list(x = 2, y = 9, line_name = "2")
+                list(x = 4, y = 3, line_name = "2"),
+                list(x = 5, y = 4, line_name = "2"),
+                list(x = 6, y = 5, line_name = "2")
             )
         ),
-        info = "x and y are data.frames with the same number of columns")
+        info = "x and y are dataframes with the same number of columns")
 
-    params <- list(x = data.frame(
-                        x1 = c(2, 3, 4),
-                        x2 = c(0, 1, 2)
-                   ),
-                   y = data.frame(
-                        y1 = c(5, 6, 7, 5),
-                        y2 = c(7, 8, 9, 5)
-                   ))
+    params <- list(x = rbind(c(1, 2, 3),
+                             c(4, 5, 6)),
+                   y = rbind(c(2, 3),
+                             c(3, 4)))
     lines <- Lines$new(params)
     lines$get_params()
-    expect_error(lines$get_data(), "x and y have different number of columns: 3 vs. 4")
+    expect_error(lines$get_data(), "x and y have different number of columns: 3 vs. 2")
+
 
     params <- list(x = c(1,2,3),
-                   y = data.frame(
-                        y1 = c(5, 6, 7),
-                        y2 = c(7, 8, 9)
-                   ))
+                   y = rbind(c(2, 3, 4),
+                             c(3, 4, 5)))
     lines <- Lines$new(params)
     lines$get_params()
-    expect_error(lines$get_data(), "If y is a dataframe, x must also be a dataframe, but it's a")
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 1, y = 2, line_name = "1"),
+                list(x = 2, y = 3, line_name = "1"),
+                list(x = 3, y = 4, line_name = "1")
+            ),
+            list(
+                list(x = 1, y = 3, line_name = "2"),
+                list(x = 2, y = 4, line_name = "2"),
+                list(x = 3, y = 5, line_name = "2")
+            )
+        ),
+        info = "x is a numeric vector and y is a dataframe with two or more columns")
 
+    params <- list(x = rbind(c(2, 3, 4),
+                             c(3, 4, 5)),
+                   y = c(1,2,3))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 2, y = 1, line_name = "1"),
+                list(x = 3, y = 2, line_name = "1"),
+                list(x = 4, y = 3, line_name = "1")
+            ),
+            list(
+                list(x = 3, y = 1, line_name = "2"),
+                list(x = 4, y = 2, line_name = "2"),
+                list(x = 5, y = 3, line_name = "2")
+            )
+        ),
+        info = "y is a numeric vector and x is a dataframe with two or more columns")
+
+    params <- list(x = list(c(1, 2, 3),
+                            c(4, 5)),
+                   y = list(c(2, 3, 4),
+                            c(3, 4)))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 1, y = 2, line_name = "1"),
+                list(x = 2, y = 3, line_name = "1"),
+                list(x = 3, y = 4, line_name = "1")
+            ),
+            list(
+                list(x = 4, y = 3, line_name = "2"),
+                list(x = 5, y = 4, line_name = "2")
+            )
+        ),
+        info = "x and y are lists with different number of elements that match")
 })
+
+
+
+
 
 # test_that("cluster_data_rows", {
 

@@ -1,52 +1,48 @@
 Lines$methods(
-
     get_data = function(){
         if (is.null(params[["y"]])){
             if (is_data_frame_or_matrix(params[["x"]])){
-                data <<- params[["x"]]
-                if (ncol(data) %% 2 != 0){
-                    # skip the last column, so they're even
-                    warning(sprintf("\n\ndata doesn't have an even number of columns. Skipping column %s", ncol(data)))
-                    data <<- data[, 1:(ncol(data) - 1)]
-                }
+                if (ncol(params[["x"]]) < 2)
+                    stop("When x is a dataframe or a matrix, it must contain at least two columns")
 
-                lines <- list()
-                line_number <- 1
-                for (column_number in seq(1, ncol(data), by = 2)){
-                    x <- column_number
-                    y <- column_number + 1
-                    line <- xy_to_data(params[["x"]][, c(x,y)], NULL)
+                data <<- lapply(1:nrow(params[["x"]]), function(line_number){
+                    line <- xy_to_data(1:ncol(params[["x"]]),
+                                       unname(unlist(params[["x"]][line_number, ])))
                     line$line_name <- as.character(line_number)
-                    line_number <- line_number + 1
                     line <- unname(lapply(split(line, rownames(line)), as.list))
-                    lines[[length(lines) + 1]] <- line
-                }
-                data <<- lines
+                    line
+                })
             } else {
-                data <<- xy_to_data(params[["x"]], NULL)
+                data <<- xy_to_data(1:length(params[["x"]]), params[["x"]])
                 data$line_name <<- "1"
                 data <<- list(unname(lapply(split(data, rownames(data)), as.list)))
             }
         } else {
-            if (is_data_frame_or_matrix(params[["y"]]) && !is_data_frame_or_matrix(params[["x"]])){
-                stop(sprintf("\n\nIf y is a dataframe, x must also be a dataframe, but it's a %s",
-                     class(params[["x"]])))
+            if (is_data_frame_or_matrix(params[["x"]]) && !is_data_frame_or_matrix(params[["y"]])) {
+                rows_in_x <- nrow(params[["x"]])
+                params[["y"]] <- matrix(rep(params[["y"]], rows_in_x), nrow=rows_in_x, byrow=T)
             }
 
-            if (is_data_frame_or_matrix(params[["x"]])) {
-                if (nrow(params[["x"]]) == nrow(params[["y"]])) {
-                    lines <- list()
-                    for (row_number in 1:length(params[["x"]])) {
-                        line <- xy_to_data(params[["x"]][, row_number], params[["y"]][, row_number])
-                        line$line_name <- as.character(row_number)
-                        line <- unname(lapply(split(line, rownames(line)), as.list))
-                        lines[[length(lines) + 1]] <- line
-                    }
-                    data <<- lines
-                } else {
-                    stop(sprintf("\n\nx and y have different number of columns: %s vs. %s",
-                            nrow(params[["x"]]), nrow(params[["y"]])))
-                }
+            if (is_data_frame_or_matrix(params[["y"]]) && !is_data_frame_or_matrix(params[["x"]])) {
+                rows_in_y <- nrow(params[["y"]])
+                params[["x"]] <- matrix(rep(params[["x"]], rows_in_y), nrow=rows_in_y, byrow=T)
+            }
+
+            if (is_data_frame_or_matrix(params[["x"]]) && is_data_frame_or_matrix(params[["y"]])) {
+                if (ncol(params[["x"]]) != ncol(params[["y"]]))
+                    stop(sprintf("\nx and y have different number of columns: %s vs. %s",
+                            ncol(params[["x"]]), ncol(params[["y"]])))
+
+                if (ncol(params[["x"]]) < 2)
+                    stop("When x is a dataframe or a matrix, it must contain at least two columns")
+
+                data <<- lapply(1:nrow(params[["x"]]), function(line_number){
+                    line <- xy_to_data(unname(unlist(params[["x"]][line_number, ])),
+                                       unname(unlist(params[["y"]][line_number, ])))
+                    line$line_name <- as.character(line_number)
+                    line <- unname(lapply(split(line, rownames(line)), as.list))
+                    line
+                })
             } else {
                 data <<- xy_to_data(params[["x"]], params[["y"]])
                 data$line_name <<- "1"
@@ -54,16 +50,19 @@ Lines$methods(
             }
         }
 
-       data <<- cluster_data_rows(data, params$color_groups, group_variable = "color_group", group_order = internal$ordered_color_group_names)
+
+       # data$line_name <<- as.character(params$names %or% rownames(data))
+       # rownames(data) <<- NULL
+
+       # data <<- add_extra_data_fields(data)
+       # data <<- cluster_data_rows(data, params$color_groups, group_variable = "color_group", group_order = internal$ordered_color_group_names)
+
        # Reverse so the last color group gets the last color
-       params$palette <<- rev(params$palette)
+       # params$palette <<- rev(params$palette)
 
-       data <<- apply_axes_limits(data)
-
-       data <<- na.omit(data)
-
-       params$formats <<- validate_formats(params$formats)
-
+       # data <<- apply_axes_limits(data)
+       # data <<- na.omit(data)
+       # params$formats <<- validate_formats(params$formats)
     },
 
     # Add any extra fields to the data object.
