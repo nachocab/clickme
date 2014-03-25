@@ -412,13 +412,50 @@ open_all_demos <- function(){
 #     }
 # }
 
+#' Demo mode makes params$dir="./clickme_demo" (in the current directory)
+#' it calls clickme with cme(...)$iframe()$hide()
+#' and it adds a random string to the output file
+#' @export
+demo_mode <- function(on = NULL,
+                      iframe_src = "src",
+                      iframe_height = 800,
+                      demo_path = "./clickme_demo"){
+    if (is.null(on)){
+        getOption("clickme_demo_mode")
+    } else {
+        if (on){
+            options(clickme_demo_mode = TRUE)
+            options(clickme_demo_path = demo_path)
+            options(clickme_demo_iframe_src = iframe_src)
+            options(clickme_demo_iframe_src = iframe_height)
+            message("Demo mode on.\n")
+        } else {
+            options(clickme_demo_mode = FALSE)
+            options(clickme_demo_count = NULL)
+            message("Demo mode off.\n")
+        }
+    }
+}
 
+#' @export
+increase_demo_count <- function(){
+    if (!demo_mode())
+        demo_mode(TRUE)
 
+    if (is.null(getOption("clickme_demo_count"))){
+        new_count <- 1
+    } else {
+        new_count <- getOption("clickme_demo_count") + 1
+    }
+    options("clickme_demo_count" = new_count)
+    new_count
+}
 
 #' @export
 is_character_or_factor <- function(x) {
     is.character(x) || is.factor(x)
 }
+
 
 #' @export
 is_data_frame_or_matrix <- function(x) {

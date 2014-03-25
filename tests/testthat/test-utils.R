@@ -86,3 +86,12 @@ test_that("move_in_front", {
 
     expect_error(move_in_front("fake", files), "The following elements don't appear in \"files\":\n\tfake")
 })
+
+
+test_that("demo_mode", {
+    options(clickme_demo_mode = NULL)
+    expect_message(demo_mode(TRUE), "Demo mode on.")
+    expect_equal(demo_mode(), TRUE)
+    expect_message(demo_mode(FALSE), "Demo mode off.")
+    expect_equal(demo_mode(), FALSE)
+})

@@ -1,9 +1,13 @@
 #' When called with only the template, it sets the current template used by \code{cme}
 #' When called with more than the template
 #' @export
+#' @include utils.R
 clickme <- function(template_name, ...){
     if (missing(template_name))
         return(getOption("clickme_current_template"))
+
+    if (!is.character(template_name))
+        template_name <- deparse(substitute(template_name))
 
     if (length(list(...)) == 0){
         template_path <- file.path(getOption("clickme_templates_path"), camel_case(template_name))
@@ -20,7 +24,15 @@ clickme <- function(template_name, ...){
         if (snake_case_template %notin% names(clickme_helper)){
             stop(sprintf("\n\n\tThe %s template is missing a helper function or is not installed in %s\n", camel_case_template, getOption("clickme_templates_path")))
         }
-        clickme_helper[[snake_case_template]](...)
+        result <- clickme_helper[[snake_case_template]](...)
+
+        if (demo_mode()){
+            result$iframe(relative = getOption("clickme_demo_path"),
+                          data_src = getOption("clickme_demo_iframe_src"),
+                          height = getOption("clickme_demo_iframe_height"))$hide()
+        } else {
+            result
+        }
     }
 }
 

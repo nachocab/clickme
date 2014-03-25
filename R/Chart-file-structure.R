@@ -54,7 +54,11 @@ Chart$methods(
 
         if (is.null(params[["file_path"]])){
             if (is.null(params[["file"]])){
-                internal$file$names$output_file <<- paste0("temp-", internal$file$names$template, ".html")
+                if (demo_mode()){
+                    internal$file$names$output_file <<- sprintf("temp-%s.%s.html", internal$file$names$template, increase_demo_count())
+                } else {
+                    internal$file$names$output_file <<- paste0("temp-%s.html", internal$file$names$template)
+                }
             } else {
                 if (!grepl(".\\.html$", params[["file"]])) {
                     internal$file$names$output_file <<- paste0(params[["file"]], ".html")
@@ -81,7 +85,12 @@ Chart$methods(
 
         if (is.null(params[["file_path"]])){
             if (is.null(params$dir)){
-                internal$file$paths$output <<- getOption("clickme_output_path")
+                if (demo_mode()){
+                    internal$file$paths$output <<- getOption("clickme_demo_path")
+                } else {
+                    internal$file$paths$output <<- getOption("clickme_output_path")
+
+                }
             } else {
                 internal$file$paths$output <<- params$dir
             }
