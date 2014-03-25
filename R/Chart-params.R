@@ -6,6 +6,7 @@ Chart$methods(
         params$font <<- params$font %or% "Rockwell, Helvetica, Arial, sans"
 
         params$title <<- params$title %or% params$main %or% internal$file$names$template # alias (main)
+        params$subtitle <<- params$subtitle %or% ""
 
         params$padding <<- validate_padding(params$padding)
 

@@ -20,6 +20,7 @@ Suggests:
     testthat (>= 0.7.1.99),
     roxygen2
 Collate:
+    'utils.R'
     'Chart.R'
     'Chart-config.R'
     'Chart-data.R'
@@ -33,5 +34,4 @@ Collate:
     'json.R'
     'new-template.R'
     'reload-translators.R'
-    'utils.R'
     'xy-to-data.R'
