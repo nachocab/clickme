@@ -1,25 +1,21 @@
+is_integer <- function(x){
+    x %% 1 == 0
+}
+
 #' Return a C-style format given the type of data
 #'
+#' Ex: ".2f" for decimal values, "s" for everything else
 #' It also allows to set a custom format
 #'
 #' @export
 #' @keywords internal
-get_tooltip_formats <- function(data, custom_formats = NULL){
-    custom_format_names <- names(custom_formats)
-    tooltip_formats <- sapply(colnames(data), function(name) {
-        if (name %in% custom_format_names){
-            custom_formats[[name]]
-        } else {
-            x <- data[, name]
-            if (is.numeric(x) && any(x %% 1 != 0)) {
-                ".2f"
-            } else {
-                "s"
-            }
-        }
-    })
-
-    tooltip_formats
+get_tooltip_format <- function(variable_value){
+    if (is.numeric(variable_value) && any(!is_integer(variable_value))) {
+        format <- ".2f"
+    } else {
+        format <- "s"
+    }
+    format
 }
 
 #' Extract function names from a list of placeholder expressions

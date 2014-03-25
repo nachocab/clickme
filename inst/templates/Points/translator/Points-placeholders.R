@@ -30,13 +30,37 @@ Points$methods(
         color_scale
     },
 
+     # internal, template-specific
+    get_tooltip_variable_names = function(){
+        data_names <- colnames(data)
+        # line_name gets special treatment because it is used as title
+        ignore_names <- c("radius", "point_name")
+        variable_names <- setdiff(data_names, ignore_names)
+        variable_names
+    },
+
+    # internal, template-specific
+    get_tooltip_variable_value = function(variable_name){
+        data[, variable_name]
+    },
+
+    # internal
+    get_tooltip_formats = function(variable_names){
+        sapply(variable_names, function(variable_name) {
+            if (is.null(params$tooltip_formats[[variable_name]])) {
+                variable_value <- get_tooltip_variable_value(variable_name)
+                format <- get_tooltip_format(variable_value)
+            } else {
+                format <- params$tooltip_formats[[variable_name]]
+            }
+            format
+        })
+    },
+
     # Generate tooltip JS code
     get_tooltip_content = function(){
-
-        # Point names get special treatment because they are used as titles
-        tooltip_names <- setdiff(colnames(data), c("point_name", "radius"))
-
-        tooltip_formats <- get_tooltip_formats(data[, tooltip_names], params$tooltip_formats)
+        variable_names <- get_tooltip_variable_names()
+        tooltip_formats <- get_tooltip_formats(variable_names)
 
         # x and y are always present, but they can have different names (xlab
         # and ylab). color_groups is sometimes present, and it can have a
@@ -45,7 +69,7 @@ Points$methods(
                        y = params$ylab,
                        color_group = params$color_title)
         names(tooltip_formats)[names(tooltip_formats) %in% names(renamings)] <- renamings[names(renamings) %in% names(tooltip_formats)]
-        tooltip_values <- setNames(sapply(tooltip_names, function(name) sprintf("d['%s']", name)),
+        tooltip_values <- setNames(sapply(variable_names, function(name) sprintf("d['%s']", name)),
                                    names(tooltip_formats))
 
         tooltip_formatted_values <- sapply(1:length(tooltip_values), function(i){

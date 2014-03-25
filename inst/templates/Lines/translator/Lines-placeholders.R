@@ -22,7 +22,7 @@ Lines$methods(
             if (is.null(params$color_groups)){
                 color_range <- as.list(unname(params$palette))
             } else {
-                color_range <- as.list(unname(params$palette[unique(data$color_group)]))
+                color_range <- as.list(unname(params$palette[unique(params$color_groups)]))
             }
             color_scale <- sprintf("d3.scale.ordinal().range(%s);", to_json(color_range))
         }
@@ -30,14 +30,31 @@ Lines$methods(
         color_scale
     },
 
-    # Generate tooltip JS code
-    get_tooltip_content = function(){
+    # internal, template-specific
+    get_tooltip_variable_names = function(){
+        data_names <- names(data[[1]][[1]])
+        # line_name gets special treatment because it is used as title
+        ignore_names <- c("line_name")
+        variable_names <- setdiff(data_names, ignore_names)
+        variable_names
+    },
 
-        # Line names get special treatment because they are used as titles
-        browser()
-        tooltip_names <- setdiff(colnames(data), c("line_name", "radius"))
+    # internal, template-specific
+    get_tooltip_variable_value = function(variable_name){
+        unlist(lapply(data, function(x) lapply(x, function(y) y[[variable_name]])))
+    },
 
-        tooltip_formats <- get_formats(data[, tooltip_names], params$formats)
+    # internal
+    get_tooltip_formats = function(variable_names){
+        tooltip_formats <- sapply(variable_names, function(variable_name) {
+            if (is.null(params$tooltip_formats[[variable_name]])) {
+                variable_value <- get_tooltip_variable_value(variable_name)
+                format <- get_tooltip_format(variable_value)
+            } else {
+                format <- params$tooltip_formats[[variable_name]]
+            }
+            format
+        })
 
         # x and y are always present, but they can have different names (xlab
         # and ylab). color_groups is sometimes present, and it can have a
@@ -46,13 +63,26 @@ Lines$methods(
                        y = params$ylab,
                        color_group = params$color_title)
         names(tooltip_formats)[names(tooltip_formats) %in% names(renamings)] <- renamings[names(renamings) %in% names(tooltip_formats)]
-        tooltip_values <- setNames(sapply(tooltip_names, function(name) sprintf("d['%s']", name)), names(tooltip_formats))
 
-        tooltip_formatted_values <- sapply(1:length(tooltip_values), function(i){
+        tooltip_formats
+    },
+
+    # Generate tooltip JS code
+    get_tooltip_content = function(){
+        variable_names <- get_tooltip_variable_names()
+        tooltip_formats <- get_tooltip_formats(variable_names)
+
+        d3_tooltip_values <- setNames(sapply(variable_names, function(name) sprintf("d['%s']", name)),
+                                      names(tooltip_formats))
+
+        tooltip_formatted_values <- sapply(1:length(d3_tooltip_values), function(i){
             if (tooltip_formats[i] == "s"){
-                tooltip_values[i]
+                d3_tooltip_values[i]
             } else {
-                setNames(sprintf("d3.format('%s')(%s)", tooltip_formats[i], tooltip_values[i]), names(tooltip_values[i]))
+                setNames(sprintf("d3.format('%s')(%s)",
+                                 tooltip_formats[i],
+                                 d3_tooltip_values[i]),
+                         names(d3_tooltip_values[i]))
             }
         })
 
