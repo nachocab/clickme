@@ -34,7 +34,8 @@ clickme <- function(template_name, ...){
         if (demo_mode()){
             result$iframe(relative = getOption("clickme_demo_path"),
                           data_src = getOption("clickme_demo_iframe_src"),
-                          height = getOption("clickme_demo_iframe_height"))$hide()
+                          height = getOption("clickme_demo_iframe_height"),
+                          width = getOption("clickme_demo_iframe_width"))
         } else {
             result
         }

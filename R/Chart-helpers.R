@@ -1,12 +1,15 @@
 Chart$methods(
 
     # I can use Mike Bostock's lazy iframes trick by setting "data-src" instead of "src"
-    iframe = function(width = params$width + params$padding$right + params$padding$left,
-                      height = params$height + params$padding$top + params$padding$bottom + 40,
-                      data_src = "src",
-                      frameborder = 0,
-                      relative_path = NULL){
+    iframe = function(width = NULL,
+                      height = NULL,
+                      data_src = NULL,
+                      relative_path = NULL,
+                      frameborder = 0){
 
+        width <- width %or% params$width + params$padding$right + params$padding$left
+        height <- height %or% params$height + params$padding$top + params$padding$bottom + 40
+        data_src <- data_src %or% "src"
         url <- get_relative_url(relative_path)
         iframe <- sprintf("<iframe width=\"%d\" height=\"%d\" %s=\"%s\" frameborder=%s> </iframe>\n",
                                width,
@@ -19,7 +22,6 @@ Chart$methods(
     },
 
     link = function(text = params$title, class = "clickme", relative_path = NULL){
-
         url <- get_relative_url(relative_path)
 
         link <- sprintf("<a href=\"%s\" class=\"%s\">%s</a>\n", url, class, text)

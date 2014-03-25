@@ -416,7 +416,7 @@ open_all_demos <- function(){
 demo_mode <- function(on = NULL,
                       iframe_src = "src",
                       iframe_height = 800,
-                      demo_path = "./clickme_demo"){
+                      demo_path = "."){
     if (is.null(on)){
         getOption("clickme_demo_mode") %or% FALSE
     } else {
