@@ -36,7 +36,7 @@ Points$methods(
         # Point names get special treatment because they are used as titles
         tooltip_names <- setdiff(colnames(data), c("point_name", "radius"))
 
-        tooltip_formats <- get_formats(data[, tooltip_names], params$formats)
+        tooltip_formats <- get_tooltip_formats(data[, tooltip_names], params$tooltip_formats)
 
         # x and y are always present, but they can have different names (xlab
         # and ylab). color_groups is sometimes present, and it can have a
@@ -45,13 +45,17 @@ Points$methods(
                        y = params$ylab,
                        color_group = params$color_title)
         names(tooltip_formats)[names(tooltip_formats) %in% names(renamings)] <- renamings[names(renamings) %in% names(tooltip_formats)]
-        tooltip_values <- setNames(sapply(tooltip_names, function(name) sprintf("d['%s']", name)), names(tooltip_formats))
+        tooltip_values <- setNames(sapply(tooltip_names, function(name) sprintf("d['%s']", name)),
+                                   names(tooltip_formats))
 
         tooltip_formatted_values <- sapply(1:length(tooltip_values), function(i){
             if (tooltip_formats[i] == "s"){
                 tooltip_values[i]
             } else {
-                setNames(sprintf("d3.format('%s')(%s)", tooltip_formats[i], tooltip_values[i]), names(tooltip_values[i]))
+                setNames(sprintf("d3.format('%s')(%s)",
+                                 tooltip_formats[i],
+                                 tooltip_values[i]),
+                         names(tooltip_values[i]))
             }
         })
 
