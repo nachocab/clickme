@@ -6,8 +6,13 @@ clickme <- function(template_name, ...){
     if (missing(template_name))
         return(getOption("clickme_current_template"))
 
+    if (is.null(template_name)){
+        options(clickme_current_template = NULL)
+        return()
+    }
+
     if (!is.character(template_name))
-        template_name <- deparse(substitute(template_name))
+        template_name <- as.character(substitute(template_name))
 
     if (length(list(...)) == 0){
         template_path <- file.path(getOption("clickme_templates_path"), camel_case(template_name))

@@ -117,7 +117,8 @@ get_translator_contents <- function(template_name){
 )
 
 %s",
-    template_name, camel_case(template_name),
+    camel_case(template_name),
+    camel_case(template_name),
     get_translator_helper_contents(template_name))
 }
 
@@ -152,9 +153,8 @@ get_config_contents <- function(template_name) {
     Describe what this template does
 
 demo: |-
-    clickme(\"%s\")
     data <- 1:10
-    cme(data)
+    clickme(\"%s\", data)
 
 scripts:
     - $shared/d3.v3.4.3.js

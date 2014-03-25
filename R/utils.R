@@ -314,7 +314,8 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 #' @param template name of template
 #' @export
 test_template <- function(template_name, filter = NULL){
-    template_name <- as.character(substitute(template_name))
+    if (!is.character(template_name))
+        template_name <- as.character(substitute(template_name))
 
     template <- Chart$new()
     template$internal$file$names$template <- camel_case(template_name)
@@ -421,7 +422,7 @@ demo_mode <- function(on = NULL,
                       iframe_height = 800,
                       demo_path = "./clickme_demo"){
     if (is.null(on)){
-        getOption("clickme_demo_mode")
+        getOption("clickme_demo_mode") %or% FALSE
     } else {
         if (on){
             options(clickme_demo_mode = TRUE)

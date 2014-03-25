@@ -1,5 +1,6 @@
 context("clickme")
 
+old_template <- clickme()
 test_that("clickme sets current template", {
     expect_error(clickme("test_chart"), "template is not installed in path")
 
@@ -8,3 +9,4 @@ test_that("clickme sets current template", {
     expect_equal(getOption("clickme_current_template"), "test_chart")
 })
 unlink(file.path(getOption("clickme_templates_path"), "TestChart"), recursive = TRUE)
+clickme(old_template)

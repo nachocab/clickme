@@ -90,6 +90,7 @@ test_that("move_in_front", {
 
 test_that("demo_mode", {
     options(clickme_demo_mode = NULL)
+    expect_equal(demo_mode(), FALSE)
     expect_message(demo_mode(TRUE), "Demo mode on.")
     expect_equal(demo_mode(), TRUE)
     expect_message(demo_mode(FALSE), "Demo mode off.")
