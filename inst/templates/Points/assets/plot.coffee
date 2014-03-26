@@ -48,6 +48,11 @@ points = g_points.append("svg:circle")
         "fill": (d) -> color_scale(d.color_group)
         "opacity": (d,i) -> opacity
         "title": tooltip_content )
+    .on('mouseover', (d, i) ->
+        point = clip.select('circle#point-'+i)
+        tip.show(point.datum(), point.node()))
+    .on('mouseout',  (d, i) ->
+        tip.hide())
 
 # Create point names
 point_names = g_points.append("text")
@@ -62,21 +67,17 @@ point_names = g_points.append("text")
         "font-size": "22px")
 
 # define big circle overlays to make points easier to select
-overlay_radius = 20
-clip.selectAll("circle.overlay")
-    .data(plot.data)
-  .enter().append("svg:circle")
-    .attr(
-        "class": "overlay"
-        "cx": (d) -> plot.scales.x(d.x)
-        "cy": (d) -> plot.scales.y(d.y)
-        "fill-opacity": 0
-        "r": (d) -> d3.max([overlay_radius, d.radius]))
-        .on('mouseover', (d, i) ->
-            point = clip.select('circle#point-'+i)
-            tip.show(point.datum(), point.node()))
-        .on('mouseout',  (d, i) ->
-            tip.hide())
+# overlay_radius = 7
+# clip.selectAll("circle.overlay")
+#     .data(plot.data)
+#   .enter().append("svg:circle")
+#     .attr(
+#         "class": "overlay"
+#         "cx": (d) -> plot.scales.x(d.x)
+#         "cy": (d) -> plot.scales.y(d.y)
+#         "fill-opacity": 0
+#         "r": (d) -> d3.max([overlay_radius, d.radius]))
+
 
 
 # Create tip
