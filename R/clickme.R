@@ -34,7 +34,11 @@ clickme <- function(template_name, ...){
         if (demo_mode()){
             result$iframe()$hide()
         } else {
-            result
+            if (is.null(getOption("clickme_hide")) || !getOption("clickme_hide")){
+                result
+            } else {
+                invisible(result)
+            }
         }
     }
 }

@@ -3,6 +3,8 @@ library(testthat)
 old_clickme_template_path <- getOption("clickme_template_path")
 old_clickme_output_path <- getOption("clickme_output_path")
 
+demo_mode(FALSE)
+
 set_default_paths()
 test_check("clickme")
 
