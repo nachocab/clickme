@@ -265,6 +265,7 @@ readContents <- function(path) {
     !(a %in% b)
 }
 
+# this operator has low priority (use parentheses)
 #' Set default value
 #'
 #' If a is not null, return a. Otherwise, return b.
@@ -415,7 +416,7 @@ open_all_demos <- function(){
 #' @export
 demo_mode <- function(on = NULL,
                       iframe_src = "src",
-                      iframe_height = 760,
+                      iframe_height = 800,
                       iframe_width = 1000,
                       demo_path = "."){
     if (is.null(on)){

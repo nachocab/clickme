@@ -14,8 +14,8 @@ Chart$methods(
         }
 
         src <- src %or% "src"
-        height <- height %or% params$height + params$padding$top + params$padding$bottom + 40
-        width <- width %or% params$width + params$padding$right + params$padding$left
+        height <- height %or% (params$height + params$padding$top + params$padding$bottom + 40)
+        width <- width %or% (params$width + params$padding$right + params$padding$left)
         url <- get_relative_url(relative_path)
         iframe <- sprintf("<iframe width=\"%d\" height=\"%d\" %s=\"%s\" frameborder=%s> </iframe>\n",
                                width,
