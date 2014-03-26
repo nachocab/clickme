@@ -32,10 +32,7 @@ clickme <- function(template_name, ...){
         result <- clickme_helper[[snake_case_template]](...)
 
         if (demo_mode()){
-            result$iframe(relative = getOption("clickme_demo_path"),
-                          data_src = getOption("clickme_demo_iframe_src"),
-                          height = getOption("clickme_demo_iframe_height"),
-                          width = getOption("clickme_demo_iframe_width"))
+            result$iframe()$hide()
         } else {
             result
         }

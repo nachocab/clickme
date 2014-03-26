@@ -415,7 +415,8 @@ open_all_demos <- function(){
 #' @export
 demo_mode <- function(on = NULL,
                       iframe_src = "src",
-                      iframe_height = 800,
+                      iframe_height = 760,
+                      iframe_width = 1000,
                       demo_path = "."){
     if (is.null(on)){
         getOption("clickme_demo_mode") %or% FALSE
@@ -424,7 +425,8 @@ demo_mode <- function(on = NULL,
             options(clickme_demo_mode = TRUE)
             options(clickme_demo_path = demo_path)
             options(clickme_demo_iframe_src = iframe_src)
-            options(clickme_demo_iframe_src = iframe_height)
+            options(clickme_demo_iframe_height = iframe_height)
+            options(clickme_demo_iframe_width = iframe_width)
             message("Demo mode on.\n")
         } else {
             options(clickme_demo_mode = FALSE)

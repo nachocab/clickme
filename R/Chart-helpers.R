@@ -3,18 +3,24 @@ Chart$methods(
     # I can use Mike Bostock's lazy iframes trick by setting "data-src" instead of "src"
     iframe = function(width = NULL,
                       height = NULL,
-                      data_src = NULL,
+                      src = NULL,
                       relative_path = NULL,
                       frameborder = 0){
+        if (demo_mode()){
+            relative_path <- relative_path %or% getOption("clickme_demo_path")
+            src <- src %or% getOption("clickme_demo_iframe_src")
+            height <- height %or% getOption("clickme_demo_iframe_height")
+            width <- width %or% getOption("clickme_demo_iframe_width")
+        }
 
-        width <- width %or% params$width + params$padding$right + params$padding$left
+        src <- src %or% "src"
         height <- height %or% params$height + params$padding$top + params$padding$bottom + 40
-        data_src <- data_src %or% "src"
+        width <- width %or% params$width + params$padding$right + params$padding$left
         url <- get_relative_url(relative_path)
         iframe <- sprintf("<iframe width=\"%d\" height=\"%d\" %s=\"%s\" frameborder=%s> </iframe>\n",
                                width,
                                height,
-                               data_src,
+                               src,
                                url,
                                frameborder)
         cat(iframe)
