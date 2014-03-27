@@ -318,15 +318,10 @@ test_template <- function(template_name, filter = NULL){
     template$internal$file$names$template <- camel_case(template_name)
     template$get_default_names_and_paths()
 
-    if (file.exists(template$internal$file$paths$translator_test_file)){
-        library("testthat")
-        reload_translators()
-        env <- new.env()
-        with_envvar(r_env_vars(), test_dir(template$internal$file$paths$tests, filter = filter, env = env))
-    } else {
-        stop(sprintf("\n\n\tThere is no test translator file at this location:\n\n%s",
-                       template$internal$file$paths$translator_test_file))
-    }
+    library("testthat")
+    reload_translators()
+    env <- new.env()
+    with_envvar(r_env_vars(), test_dir(template$internal$file$paths$tests, filter = filter, env = env))
 }
 
 source_dir <- function(path){
