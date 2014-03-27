@@ -30,7 +30,9 @@ Points$methods(
         # Reverse so the last color group gets the last color
         # TODO: why isn't this in validate_palette?
         params$palette <<- rev(params$palette)
-        params$tooltip_formats <<- validate_tooltip_formats(params$tooltip_formats)
+
+        # we call validate_tooltip_formats here because it depends on data
+        validate_tooltip_formats()
     },
 
 
@@ -88,13 +90,13 @@ Points$methods(
     },
 
     # internal
-    validate_tooltip_formats = function(tooltip_formats){
-        if (any(names(tooltip_formats) %notin% colnames(data))){
-            wrong_names <- names(tooltip_formats)[names(tooltip_formats) %notin% colnames(data)]
-            stop(sprintf("\nThe following format names are not x, y, or any of the extra names:\n%s\n\n", enumerate(wrong_names)))
+    validate_tooltip_formats = function(){
+        if (any(names(params$tooltip_formats) %notin% colnames(data))){
+            wrong_names <- names(params$tooltip_formats)[names(params$tooltip_formats) %notin% colnames(data)]
+            stop(sprintf("\nThe following format names are not x, y, or any of the extra names:\n%s\n\n",
+                 enumerate(wrong_names)))
         }
-
-        tooltip_formats
+        return()
     }
 
 )
