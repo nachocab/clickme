@@ -1,86 +1,84 @@
 Points$methods(
-
     get_data = function(){
-        data <<- unify_format(params[["x"]], params[["y"]])
-        add_names()
-        add_extra_fields()
-        cluster_data_by_color_group(params$color_groups, group_variable = "color_group", group_order = internal$ordered_color_group_names)
+        extra <- list(radius = params$radius)
+        if (!is.null(params$extra)){
+            if (is.matrix(params$extra)){
+                extra <- c(extra, as.data.frame(params$extra))
+            } else {
+                extra <- c(extra, params$extra)
+            }
+        }
 
-        # Reverse so the last color group gets the last color
-        params$palette <<- rev(params$palette)
+        data <<- unify_format(x = params[["x"]],
+                              y = params[["y"]],
+                              names = params$names,
+                              extra = extra)
 
+        if (!is.null(params$color_groups) && length(params$color_groups) > 1){
+            point_names <- rownames(data)
+            ordered_color_group_names <- get_ordered_color_group_names()
+            data[["color_group"]] <<- as.character(params$color_groups)
+
+            data <<- order_data_by_color_group(data,
+                                               point_names,
+                                               params$color_groups,
+                                               ordered_color_group_names)
+        }
         apply_axes_limits()
         remove_invalid()
+
+        # Reverse so the last color group gets the last color
+        # TODO: why isn't this in validate_palette?
+        params$palette <<- rev(params$palette)
         params$tooltip_formats <<- validate_tooltip_formats(params$tooltip_formats)
     },
 
 
     # internal, template-specific
-    unify_format = function(x, y){
+    unify_format = function(x, y, names, extra){
         data <- xy_to_data(x, y)
+
+        data$point_name <- as.character(names %or% rownames(data))
+        rownames(data) <- NULL
+
+        if (!is.null(extra)){
+            data <- cbind(data, extra)
+        }
         data
     },
 
-    # internal
-    add_names = function(){
-        data$point_name <<- as.character(params$names %or% rownames(data))
-        rownames(data) <<- NULL
-        return()
-    },
-
-    # internal
-    # Add any extra fields to the data object.
-    # extra can be a list with as many elements as rows in data, or a data.frame or matrix with as many rows as data
-    # This methods should be called before grouping rows
-    add_extra_fields = function() {
-        data$radius <<- params$radius
-        if (!is.null(params$extra)){
-            data <<- cbind(data, params$extra)
-        }
-        return()
-    },
-
-    # internal
+    # internal, template-specific
     # It makes adjacent rows that belong to the same group
     # groups must have as many elements as data has rows
     # group_variable is the name of the varible that will be used to group the rows
     # group_order must have as many elements as groups, by default the order is
     # alphanumeric
-    cluster_data_by_color_group = function(groups, group_variable, group_order = NULL){
-       if (!is.data.frame(data)){
-           stop("\nData must be a dataframe to group its rows")
-       }
+    order_data_by_color_group = function(data, data_names, color_groups, ordered_color_group_names){
+        names_groups <- data.frame(names = data_names, groups = color_groups)
+        data_order <- unlist(sapply(ordered_color_group_names, function(group_name) {
+            which(names_groups$group == group_name)
+        }))
 
-       if (length(groups) > 1){
-           data[[group_variable]] <<- as.character(groups)
-
-           if (!is.null(group_order)){
-               order <- unlist(sapply(group_order, function(group_name) {
-                   which(data[[group_variable]] == group_name)
-               }))
-           } else {
-               order <- order(data[[group_variable]])
-           }
-
-           # Reverse so the first element is plotted last (and therefore
-           # appears on top)
-           data <<- data[rev(order),]
-       }
-       return()
+        # Reverse so the first element is plotted last (and therefore
+        # appears on top)
+        data_order <- rev(data_order)
+        data <- data[data_order,]
+        data
     },
 
     # internal
+    # TODO: maybe this should change the viewport but plot all the points
     apply_axes_limits = function() {
-       if (!is.null(params$xlim)){
-           data <<- data[data$x >= params$xlim[1],]
-           data <<- data[data$x <= params$xlim[2],]
-       }
+        if (!is.null(params$xlim)){
+            data <<- data[data$x >= params$xlim[1],]
+            data <<- data[data$x <= params$xlim[2],]
+        }
 
-       if (!is.null(params$ylim)){
-           data <<- data[data$y >= params$ylim[1],]
-           data <<- data[data$y <= params$ylim[2],]
-       }
-       return()
+        if (!is.null(params$ylim)){
+            data <<- data[data$y >= params$ylim[1],]
+            data <<- data[data$y <= params$ylim[2],]
+        }
+        return()
     },
 
     # internal

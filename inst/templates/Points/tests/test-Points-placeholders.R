@@ -24,7 +24,9 @@ test_that("get_d3_color_scale", {
     points$get_params()
     expect_equal(no_whitespace(points$get_d3_color_scale()), "d3.scale.linear().domain([-2,0,2]).range([\"#278DD6\",\"white\",\"#d62728\"]).interpolate(d3.interpolateLab);", info = "quantitative, color_groups")
 
-    params <- list(x = 1:5,color_groups = c("a", "a", "a", "b", "b"), palette = c(b = "black", c = "red", a = "blue"))
+    params <- list(x = 1:5,
+                   color_groups = c("a", "a", "a", "b", "b"),
+                   palette = c(b = "black", c = "red", a = "blue"))
     points <- Points$new(params)
     points$get_params()
     points$get_data()
@@ -32,9 +34,12 @@ test_that("get_d3_color_scale", {
 })
 
 test_that("get_tooltip_content", {
-    params <- list(x = data.frame(x = c("a", "b", "c"), y = c(5.5,6,6.7), row.names = LETTERS[1:3]),
+    params <- list(x = data.frame(x = c("a", "b", "c"),
+                                  y = c(5.5,6,6.7),
+                                  row.names = LETTERS[1:3]),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200.3,300)))
+                   extra = cbind(extra1=c(10,20,30),
+                                 extra2=c(100,200.3,300)))
     points <- Points$new(params)
     points$get_params()
     points$get_data()
@@ -143,11 +148,14 @@ test_that("get_tooltip_content", {
 test_that("get_ordinal_domains", {
     params <- list(x = 1:10)
     points <- Points$new(params)
+    points$get_params()
     points$get_data()
     expect_equal(no_whitespace(points$get_ordinal_domains()), "{x:null,y:null}")
 
-    params <- list(x = letters[1:10], y = 1:10)
+    params <- list(x = letters[1:10],
+                   y = 1:10)
     points <- Points$new(params)
+    points$get_params()
     points$get_data()
     expect_equal(no_whitespace(points$get_ordinal_domains()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:null}")
 })
@@ -156,21 +164,27 @@ test_that("get_data_ranges", {
     # when there is no y, x == y
     params <- list(x = 1:10)
     points <- Points$new(params)
+    points$get_params()
     points$get_data()
     expect_equal(no_whitespace(points$get_data_ranges()), "{x:[1,10],y:[1,10]}", info = "numeric x")
 
     params <- list(x = 1)
     points <- Points$new(params)
+    points$get_params()
     points$get_data()
     expect_equal(no_whitespace(points$get_data_ranges()), "{x:[0,2],y:[0,2]}", info = "numeric x, single number")
 
-    params <- list(x = factor(1:10, levels = 10:1), y = 1:10)
+    params <- list(x = factor(1:10, levels = 10:1),
+                   y = 1:10)
     points <- Points$new(params)
+    points$get_params()
     points$get_data()
     expect_equal(no_whitespace(points$get_data_ranges()), "{x:[\"10\",\"9\",\"8\",\"7\",\"6\",\"5\",\"4\",\"3\",\"2\",\"1\"],y:[1,10]}")
 
-    params <- list(x = letters[1:10], y = 1:10)
+    params <- list(x = letters[1:10],
+                   y = 1:10)
     points <- Points$new(params)
+    points$get_params()
     points$get_data()
     expect_equal(no_whitespace(points$get_data_ranges()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:[1,10]}")
 })
