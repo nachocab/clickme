@@ -30,6 +30,60 @@ Lines$methods(
         color_scale
     },
 
+    get_d3_stroke_color = function(){
+        if (is.null(params$color_groups)){
+            stroke_color <- to_json(params$palette)
+        } else {
+            stroke_color <- "color_scale(d.color_group)"
+        }
+
+        stroke_color <- sprintf("function(d) {\nreturn %s\n};",
+                                stroke_color)
+        stroke_color
+    },
+
+    get_d3_fill_color = function(){
+        if (is.null(params$color_groups)){
+            fill_color <- to_json(params$palette)
+        } else {
+            fill_color <- "color_scale(d.color_group)"
+        }
+
+        fill_color <- sprintf("function(d) {\nreturn %s\n};",
+                                fill_color)
+        fill_color
+    },
+
+    get_d3_fill_color = function(){
+        if (is.null(params$color_groups)){
+            fill_color <- to_json(params$palette)
+        } else {
+            fill_color <- "color_scale(d.color_group)"
+        }
+
+        fill_color <- sprintf("function(d) {\nreturn %s\n};",
+                                fill_color)
+        fill_color
+    },
+
+    get_d3_stroke_width = function(){
+        stroke_width <- params$width
+        # TODO: stroke_width <- "d.width"
+
+        stroke_width <- sprintf("function(d) {\nreturn %s\n};",
+                                stroke_width)
+        stroke_width
+    },
+
+    get_d3_opacity = function(){
+        opacity <- params$opacity
+        # TODO: opacity <- "d.opacity"
+
+        opacity <- sprintf("function(d) {\nreturn %s\n};",
+                                opacity)
+        opacity
+    },
+
     # internal, template-specific
     get_tooltip_variable_names = function(){
         data_names <- names(data[[1]][[1]])
@@ -154,5 +208,6 @@ Lines$methods(
 
         data_ranges
     }
+
 )
 

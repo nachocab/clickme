@@ -20,9 +20,11 @@ Lines <- setRefClass("Lines",
         get_params = function(){
             callSuper()
 
-            params$width <<- params$width %or% 500
-            params$height <<- params$height %or% 500
+            params$out_width <<- params$out_width %or% 500
+            params$out_height <<- params$out_height %or% 500
 
+            params$interpolation <<- params$interpolation %or% "linear"
+            params$width <<- params$width %or% 4
             params$radius <<- params$radius %or% 5
             params$jitter <<- params$jitter %or% 0
             params$opacity <<- params$opacity %or% 1
@@ -71,9 +73,10 @@ Lines <- setRefClass("Lines",
                 }
             } else {
                 if (!is.null(palette)){
-                    message("\n\tNo color_groups provided. Ignoring palette.\n")
+                    palette <- palette[1]
+                } else {
+                    palette <- "#000"
                 }
-                palette <- "#000"
             }
 
             palette

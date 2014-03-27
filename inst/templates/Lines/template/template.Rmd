@@ -27,8 +27,8 @@
                 data: {{ data }},
                 data_ranges: {{{ get_data_ranges() }}},
                 categorical_domains: {{{ get_categorical_domains() }}},
-                width: {{ params$width }},
-                height: {{ params$height }},
+                width: {{ params$out_width }},
+                height: {{ params$out_height }},
                 padding: {{ params$padding }},
                 subtitle: {{ params$subtitle }},
                 labels: {
@@ -50,13 +50,22 @@
                 linear_scale_padding: 40
             });
 
+            // sidebar
             static_line_width = 5;
+            distance_between_show_names_and_color_groups = 80;
+
+            interpolation = {{ params$interpolation }};
             opacity = {{ params$opacity }};
             show_sidebar = {{ params$show_sidebar }};
-            distance_between_show_names_and_color_groups = 80;
-            color_scale = {{{ get_d3_color_scale() }}};
+
+            color_scale = {{{ get_d3_color_scale() }}}
+            stroke_width = {{{ get_d3_stroke_width() }}}
+            stroke_color = {{{ get_d3_stroke_color() }}}
+            fill_color = {{{ get_d3_fill_color() }}}
+            opacity = {{{ get_d3_opacity() }}}
+
             color_legend_counts = {{ get_color_legend_counts() }};
-            tooltip_content = {{{ get_tooltip_content() }}};
+            tooltip_content = {{{ get_tooltip_content() }}}
         </script>
 
         <script src="clickme_assets/Lines/plot.js"></script>

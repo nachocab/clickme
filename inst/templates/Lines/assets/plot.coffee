@@ -19,7 +19,7 @@ g_lines = clip.selectAll(".line")
     .attr("class": "line")
 
 line = d3.svg.line()
-    .interpolate("linear")
+    .interpolate(interpolation)
     .x((d) -> plot.scales.x(d.x))
     .y((d) -> plot.scales.y(d.y))
 
@@ -27,9 +27,9 @@ lines = g_lines.append("path")
     .attr(
         "d": line
         "fill": "none"
-        "stroke-width": static_line_width
-        "stroke": (d) -> color_scale(d[0].color_group)
-        "opacity": (d,i) -> opacity)
+        "stroke-width": (d) -> stroke_width(d[0])
+        "stroke": (d) -> stroke_color(d[0])
+        "opacity": (d) -> opacity(d[0]))
 
 # Create tip
 tip = d3.tip()
@@ -50,7 +50,7 @@ line_names = g_lines.append("text")
         "text-anchor": "left"
         "display": "none")
     .style(
-        "fill": (d) -> color_scale(d[0].color_group)
+        "fill": (d) -> fill_color(d[0])
         "font-size": "22px")
 
 # create points
@@ -69,39 +69,15 @@ points = g_points.append("svg:circle")
     .attr(
         "r": (d) -> d.radius
         "id": (d,i) -> "point-#{i}"
-        "fill": (d) -> color_scale(d.color_group)
-        "opacity": (d,i) -> opacity
+        "fill": (d) -> fill_color(d)
+        "opacity": (d) -> opacity(d)
         "title": tooltip_content )
+    .on('mouseover', (d, i) ->
+        point = clip.select('circle#point-'+i)
+        tip.show(point.datum(), point.node()))
+    .on('mouseout',  (d, i) ->
+        tip.hide())
 
-# Create point names
-point_names = g_points.append("text")
-    .text((d) -> d.point_name)
-    .attr(
-        "dy": ".32em"
-        "dx": 8
-        "text-anchor": "left"
-        "display": "none")
-    .style(
-        "fill": (d) -> color_scale(d.color_group)
-        "font-size": "22px")
-
-
-# define big circle overlays to make points easier to select
-overlay_radius = 25
-clip.selectAll("circle.overlay")
-    .data(point_data)
-  .enter().append("svg:circle")
-    .attr(
-        "class": "overlay"
-        "cx": (d) -> plot.scales.x(d.x)
-        "cy": (d) -> plot.scales.y(d.y)
-        "fill-opacity": 0
-        "r": (d) -> d3.max([overlay_radius, d.radius]))
-        .on('mouseover', (d, i) ->
-            point = clip.select('circle#point-'+i)
-            tip.show(point.datum(), point.node()))
-        .on('mouseout',  (d, i) ->
-            tip.hide())
 
 
 # Sidebar

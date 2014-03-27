@@ -25,8 +25,8 @@
                 data: {{ data }},
                 data_ranges: {{{ get_data_ranges() }}},
                 categorical_domains: {{{ get_categorical_domains() }}},
-                width: {{ params$width }},
-                height: {{ params$height }},
+                width: {{ params$out_width }},
+                height: {{ params$out_height }},
                 padding: {{ params$padding }},
                 subtitle: {{ params$subtitle }},
                 labels: {

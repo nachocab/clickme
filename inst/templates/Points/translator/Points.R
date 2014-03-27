@@ -21,8 +21,8 @@ Points <- setRefClass("Points",
         get_params = function(){
             callSuper()
 
-            params$width <<- params$width %or% 500
-            params$height <<- params$height %or% 500
+            params$out_width <<- params$out_width %or% 500
+            params$out_height <<- params$out_height %or% 500
 
             params$radius <<- params$radius %or% 5
             params$jitter <<- params$jitter %or% 0
