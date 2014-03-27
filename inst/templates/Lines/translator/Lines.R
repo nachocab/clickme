@@ -45,25 +45,25 @@ Lines <- setRefClass("Lines",
         #   - any color group name without a color must get assigned a default
         #     color
         # set default values, replace invalid values, order with
-        # internal$ordered_color_group_names
+        # ordered_color_group_names
         validate_palette = function(palette){
             if (!is.null(params$color_groups)){
 
-                internal$ordered_color_group_names <<- get_ordered_color_group_names()
+                ordered_color_group_names <<- get_ordered_color_group_names()
 
                 if (is.null(palette)){
                     if (scale_type(params$color_groups) == "quantitative"){
                         palette <- c("#278DD6", "#d62728")
                     } else {
-                        palette <- setNames(default_colors(length(internal$ordered_color_group_names)), internal$ordered_color_group_names)
+                        palette <- setNames(default_colors(length(ordered_color_group_names)), ordered_color_group_names)
                     }
                 } else {
                     if (scale_type(params$color_groups) == "categorical"){
-                        palette <- setNames(palette[internal$ordered_color_group_names], internal$ordered_color_group_names)
+                        palette <- setNames(palette[ordered_color_group_names], ordered_color_group_names)
 
                         # If any color is NA or NULL, replace it with a default color
                         if (any(is.na(palette) | is.null(palette))) {
-                            categories_without_color <- internal$ordered_color_group_names[is.na(palette)]
+                            categories_without_color <- ordered_color_group_names[is.na(palette)]
                             default_palette <- setNames(default_colors(length(categories_without_color)), categories_without_color)
                             palette <- c(na.omit(palette), default_palette)
                         }

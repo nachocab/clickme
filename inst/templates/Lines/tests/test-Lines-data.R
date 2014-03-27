@@ -1,7 +1,9 @@
 context("Lines data")
 
 test_that("get_data works with one line", {
-    params <- list(x = c(2, 3, 4),
+    # when x has more then 10 elements, the order gets messed up
+    # this checks that it works
+    params <- list(x = 1:10,
                    y = NULL)
     lines <- Lines$new(params)
     lines$get_params()
@@ -9,9 +11,16 @@ test_that("get_data works with one line", {
     expect_equal(lines$data,
         list(
             list(
-                list(x = 1, y = 2, line_name = "1"),
-                list(x = 2, y = 3, line_name = "1"),
-                list(x = 3, y = 4, line_name = "1")
+                list(x = 1, y = 1, line_name = "1"),
+                list(x = 2, y = 2, line_name = "1"),
+                list(x = 3, y = 3, line_name = "1"),
+                list(x = 4, y = 4, line_name = "1"),
+                list(x = 5, y = 5, line_name = "1"),
+                list(x = 6, y = 6, line_name = "1"),
+                list(x = 7, y = 7, line_name = "1"),
+                list(x = 8, y = 8, line_name = "1"),
+                list(x = 9, y = 9, line_name = "1"),
+                list(x = 10, y = 10, line_name = "1")
             )
         ),
         info = "x is a numeric vector, y is NULL")
@@ -31,7 +40,7 @@ test_that("get_data works with one line", {
         ),
         info = "x is a one-row dataframe, y is NULL")
 
-    params <- list(x = data.frame(x1 = 3, x2 = 4, x3 = 5),
+    params <- list(x = data.frame(x1 = 1, x2 = 2, x3 = 10),
                    y = data.frame(x1 = 2, x2 = 3, x3 = 4))
     lines <- Lines$new(params)
     lines$get_params()
@@ -39,9 +48,9 @@ test_that("get_data works with one line", {
     expect_equal(lines$data,
         list(
             list(
-                list(x = 3, y = 2, line_name = "1"),
-                list(x = 4, y = 3, line_name = "1"),
-                list(x = 5, y = 4, line_name = "1")
+                list(x = 1, y = 2, line_name = "1"),
+                list(x = 2, y = 3, line_name = "1"),
+                list(x = 10, y = 4, line_name = "1")
             )
         ),
         info = "x and y are one-row data.frames")
@@ -61,7 +70,7 @@ test_that("get_data works with one line", {
         ),
         info = "x is a one-row matrix, y is NULL")
 
-    params <- list(x = rbind(c(3, 4, 5)),
+    params <- list(x = rbind(c(1, 2, 10)),
                    y = rbind(c(2, 3, 4)))
     lines <- Lines$new(params)
     lines$get_params()
@@ -69,15 +78,15 @@ test_that("get_data works with one line", {
     expect_equal(lines$data,
         list(
             list(
-                list(x = 3, y = 2, line_name = "1"),
-                list(x = 4, y = 3, line_name = "1"),
-                list(x = 5, y = 4, line_name = "1")
+                list(x = 1, y = 2, line_name = "1"),
+                list(x = 2, y = 3, line_name = "1"),
+                list(x = 10, y = 4, line_name = "1")
             )
         ),
         info = "x and y are one-row matrices")
 
 
-    params <- list(x = c(2, 3, 4), y = c(5, 6, 7))
+    params <- list(x = c(2,3,4), y = c(5,6,7))
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
@@ -90,6 +99,23 @@ test_that("get_data works with one line", {
             )
         ),
         info = "x is a numeric vector, y is a numeric vector")
+
+    # TODO
+    # params <- list(x = data.frame(x = c("a", "b", "c"),
+    #                               y = c(5, 6, 7)),
+    #                y = NULL)
+    # lines <- Lines$new(params)
+    # lines$get_params()
+    # lines$get_data()
+    # expect_equal(lines$data,
+    #     list(
+    #         list(
+    #             list(x = "a", y = 5, line_name = "1"),
+    #             list(x = "b", y = 6, line_name = "1"),
+    #             list(x = "c", y = 7, line_name = "1")
+    #         )
+    #     ),
+    #     info = "x is an Nx2 dataframe or matrix")
 
     params <- list(x = cbind(c(2, 3, 4)), y = NULL)
     lines <- Lines$new(params)
@@ -225,51 +251,149 @@ test_that("get_data works with multiple lines", {
 })
 
 
+test_that("extra fields get added", {
+    params <- list(x = c(2, 3, 4),
+                   y = NULL,
+                   extra = cbind(extra1 = c(10, 20, 30),
+                                 extra2 = c(100, 200, 300)))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 1, y = 2, line_name = "1", extra1 = 10, extra2 = 100),
+                list(x = 2, y = 3, line_name = "1", extra1 = 20, extra2 = 200),
+                list(x = 3, y = 4, line_name = "1", extra1 = 30, extra2 = 300)
+            )
+        ),
+        info = "using vectors_to_line_data, extra is a list/dataframe/matrix of values"
+    )
+
+    params <- list(x = as.data.frame(rbind(c(2, 3, 4),
+                                           c(3, 4, 5))),
+                   y = NULL,
+                   extra = list(data.frame(extra1 = c(10,20,30),
+                                           extra2 = c(100,200,300)),
+                                data.frame(extra1 = c(40,50,60),
+                                           extra2 = c(400,500,600)))
+                   )
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 1, y = 2, line_name = "1", extra1 = 10, extra2 = 100),
+                list(x = 2, y = 3, line_name = "1", extra1 = 20, extra2 = 200),
+                list(x = 3, y = 4, line_name = "1", extra1 = 30, extra2 = 300)
+            ),
+            list(
+                list(x = 1, y = 3, line_name = "2", extra1 = 40, extra2 = 400),
+                list(x = 2, y = 4, line_name = "2", extra1 = 50, extra2 = 500),
+                list(x = 3, y = 5, line_name = "2", extra1 = 60, extra2 = 600)
+            )
+        ),
+        info = "using dataframes_to_line_data, extra is a list of dataframes"
+    )
+
+    params <- list(x = list(c(1, 2, 3),
+                            c(4, 5)),
+                   y = list(c(2, 3, 4),
+                            c(3, 4)),
+                   extra = list(data.frame(extra1 = c(10,20,30),
+                                           extra2 = c(100,200,300)),
+                                data.frame(extra1 = c(40,50),
+                                           extra2 = c(400,500)))
+                   )
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(lines$data,
+        list(
+            list(
+                list(x = 1, y = 2, line_name = "1", extra1 = 10, extra2 = 100),
+                list(x = 2, y = 3, line_name = "1", extra1 = 20, extra2 = 200),
+                list(x = 3, y = 4, line_name = "1", extra1 = 30, extra2 = 300)
+            ),
+            list(
+                list(x = 4, y = 3, line_name = "2", extra1 = 40, extra2 = 400),
+                list(x = 5, y = 4, line_name = "2", extra1 = 50, extra2 = 500)
+            )
+        ),
+        info = "using lists_to_line_data, extra is a list of dataframes"
+    )
+
+})
 
 
+test_that("order data by color_groups", {
 
-# test_that("cluster_data_rows", {
+    # TODO: Fix this
+    # params <- list(x = c(1, 2, 3, 4, 5),
+    #                y = NULL,
+    #                color_groups = c(.1, .2, .3, .4, .5),
+    #                palette = c("#000", "#fff"))
+    # lines <- Lines$new(params)
+    # lines$get_params()
+    # lines$get_data()
+    # expect_equal(lines$data$x,
+    #              c(5, 4, 3, 2, 1),
+    #              info = "quantitative color_groups, unnamed palette") # .5 .4 .3 .2 .1 (smallest on top)
 
-#     params <- list(x = c(1, 2, 3, 4, 5), y = NULL, color_groups = c(.1, .2, .3, .4, .5),  palette = c("#000", "#fff"))
-#     lines <- Lines$new(params)
-#     lines$get_params()
-#     lines$get_data()
-#     expect_equal(lines$data$x, c(5, 4, 3, 2, 1), info = "quantitative color_groups, unnamed palette") # .5 .4 .3 .2 .1 (smallest on top)
+    params <- list(x = as.data.frame(rbind(c(2, 3),
+                                           c(3, 4),
+                                           c(4, 5),
+                                           c(5, 6),
+                                           c(6, 7))
+                                           ),
+                   y = NULL,
+                   color_groups = c("c", "a", "b", "c", "b"))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    line_names <- sapply(lines$data, function(line) line[[1]]$line_name)
+    expect_equal(line_names,
+                 c("4", "1", "5", "3", "2"),
+                 info = "categorical color_groups, no palette") # c c b b a ("a" on top)
 
-#     params <- list(x = c(1, 2, 3, 4, 5), y = NULL, color_groups = c("c", "a", "b", "c", "b"))
-#     lines <- Lines$new(params)
-#     lines$get_params()
-#     lines$get_data()
-#     expect_equal(lines$data$x, c(4, 1, 5, 3, 2), info = "categorical color_groups, no palette") # c c b b a ("a" on top)
+    params <- list(x = as.data.frame(rbind(c(2, 3),
+                                           c(3, 4),
+                                           c(4, 5),
+                                           c(5, 6),
+                                           c(6, 7))
+                                           ),
+                   y = NULL,
+                   color_groups = c("c", "a", "b", "c", "b"),
+                   palette = c("blue", "red", "green"))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    line_names <- sapply(lines$data, function(line) line[[1]]$line_name)
+    expect_equal(line_names,
+                 c("4", "1", "5", "3", "2"),
+                 info = "categorical color_groups, unnamed palette") # c c b b a ("a" on top)
 
-#     params <- list(x = c(1, 2, 3, 4, 5), y = NULL, color_groups = c("c", "a", "b", "c", "b"), palette = c("blue", "red", "green"))
-#     lines <- Lines$new(params)
-#     lines$get_params()
-#     lines$get_data()
-#     expect_equal(lines$data$x, c(4, 1, 5, 3, 2), info = "categorical color_groups, unnamed palette") # c c b b a ("a" on top)
+    params <- list(x = as.data.frame(rbind(c(2, 3),
+                                           c(3, 4),
+                                           c(4, 5),
+                                           c(5, 6),
+                                           c(6, 7))
+                                           ),
+                   y = NULL,
+                   color_groups = c("c", "a", "b", "c", "b"),
+                   palette = c(a = "blue", c = "green", b = "red"))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    line_names <- sapply(lines$data, function(line) line[[1]]$line_name)
+    expect_equal(line_names,
+                 c("5", "3", "4", "1", "2"),
+                 info = "categorical color_groups, named palette") # b b c c a ("a" on top)
 
-#     params <- list(x = c(1, 2, 3, 4, 5), y = NULL, color_groups = c("c", "a", "b", "c", "b"), palette = c(a = "blue", c = "green", b = "red"))
-#     lines <- Lines$new(params)
-#     lines$get_params()
-#     lines$get_data()
-#     expect_equal(lines$data$x, c(5, 3, 4, 1 ,2), info = "categorical color_groups, named palette") # b b c c a ("a" on top)
+})
 
-# })
 
-# test_that("extra fields get added", {
-#     # extra can be a data frame, a list or a matrix
-#     params <- list(x = c("a", "b", "c"), y = 1:3, extra = data.frame(extra1 = c(10,20,30), extra2 = c(100,200,300)))
-#     lines <- Lines$new(params)
-#     lines$get_params()
-#     lines$get_data()
-#     expect_equivalent(lines$data, data.frame(x = c("a", "b", "c"), y = 1:3, line_name = as.character(1:3), radius = 5, extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
-
-#     params <- list(x = c("a", "b", "c", "d"), y = c(1:3, NA), extra = data.frame(extra1 = c(10,20,30,40), extra2 = c(100,200,300,400)))
-#     lines <- Lines$new(params)
-#     lines$get_params()
-#     lines$get_data()
-#     expect_equivalent(lines$data, data.frame(x = c("a", "b", "c"), y = 1:3, line_name = as.character(1:3), radius = 5, extra1 = c(10,20,30), extra2 = c(100, 200, 300)))
-# })
 
 # test_that("limits reduce the size of the data", {
 #     params <- list(x = 1:10, y = 1:10, xlim = c(2,8))

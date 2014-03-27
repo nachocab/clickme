@@ -87,12 +87,13 @@ Lines$methods(
         })
 
         title_row <- "<tr><td colspan='2' class='tooltip-title'>\" + d.line_name + \"</td></tr>"
-        rows <- c(
-                  title_row,
+        rows <- c(title_row,
                   sapply(names(tooltip_formatted_values), function(name) {
-                      sprintf("<tr class='tooltip-metric'><td class='tooltip-metric-name'>%s</td><td class='tooltip-metric-value'>\" + %s + \"</td></tr>", name, tooltip_formatted_values[name])
+                      sprintf("<tr class='tooltip-metric'><td class='tooltip-metric-name'>%s</td><td class='tooltip-metric-value'>\" + %s + \"</td></tr>",
+                              name,
+                              tooltip_formatted_values[name])
                   })
-                )
+        )
         rows <- paste(rows, collapse = "")
         tooltip_contents <- sprintf("\"<table>%s</table>\"", rows)
         tooltip_contents <- sprintf("function(d) {\nreturn %s\n};", tooltip_contents)
@@ -100,40 +101,50 @@ Lines$methods(
     },
 
     # When one of the axes is categorical, we need its domain.
-    get_ordinal_domains = function(){
+    # categorical_domains must exist, even if it's {x:null,y:null}
+    get_categorical_domains = function(){
+        x_categorical_domain <- y_categorical_domain <- NULL
+        data_x <- get_point_value(data, "x")
+        data_y <- get_point_value(data, "y")
 
-        # ifelse() can't return NULL
-        x_categorical_domain <- if(scale_type(data$x) == "categorical") get_unique_elements(data$x) else NULL
-        y_categorical_domain <- if(scale_type(data$y) == "categorical") get_unique_elements(data$y) else NULL
+        if(scale_type(data_x) == "categorical")
+            x_categorical_domain <- get_unique_elements(data_x)
 
-        ordinal_domains <- sprintf("{
+        if(scale_type(data_y) == "categorical")
+            y_categorical_domain <- get_unique_elements(data_y)
+
+        categorical_domains <- sprintf("{
           x: %s,
           y: %s
         }", to_json(x_categorical_domain), to_json(y_categorical_domain))
 
-        ordinal_domains
+        categorical_domains
     },
 
-    # I data is numeric, it returns the min/max. Otherwise, it returns unique elements.
+    # If data is numeric, it returns the min/max.
+    # Otherwise, it returns unique elements.
     get_data_ranges = function(){
-        if (is.numeric(data$x)) {
-            x_data_range <- range(data$x, na.rm = TRUE)
+        data_x <- get_point_value(data, "x")
+        data_y <- get_point_value(data, "y")
+
+        if (is.numeric(data_x)) {
+            x_data_range <- range(data_x, na.rm = TRUE)
             # Ensure that min and max are different
             if (x_data_range[1] == x_data_range[2]){
                 x_data_range <- x_data_range + c(-1, 1)
             }
         } else {
-            x_data_range <- get_unique_elements(data$x)
+            x_data_range <- get_unique_elements(data_x)
         }
 
-        if (is.numeric(data$y)) {
-            y_data_range <- range(data$y, na.rm = TRUE)
+        if (is.numeric(data_y)) {
+            y_data_range <- range(data_y, na.rm = TRUE)
             # Ensure that min and max are different
             if (y_data_range[1] == y_data_range[2]){
                 y_data_range <- y_data_range + c(-1, 1)
             }
         } else {
-            y_data_range <- get_unique_elements(data$y)
+            y_data_range <- get_unique_elements(data_y)
         }
 
         data_ranges <- sprintf("{

@@ -24,7 +24,13 @@ test_that("get_d3_color_scale", {
     lines$get_params()
     expect_equal(no_whitespace(lines$get_d3_color_scale()), "d3.scale.linear().domain([-2,0,2]).range([\"#278DD6\",\"white\",\"#d62728\"]).interpolate(d3.interpolateLab);", info = "quantitative, color_groups")
 
-    params <- list(x = 1:5,color_groups = c("a", "a", "a", "b", "b"), palette = c(b = "black", c = "red", a = "blue"))
+    params <- list(x = as.data.frame(rbind(c(2, 3),
+                                           c(3, 4),
+                                           c(4, 5),
+                                           c(5, 6),
+                                           c(6, 7))),
+                   color_groups = c("a", "a", "a", "b", "b"),
+                   palette = c(b = "black", c = "red", a = "blue"))
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
@@ -32,9 +38,11 @@ test_that("get_d3_color_scale", {
 })
 
 test_that("get_tooltip_content", {
-    params <- list(x = c("a", "b", "c"), y = c(5.5,6,6.7),
+    params <- list(x = c("a", "b", "c"),
+                   y = c(5.5,6,6.7),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200.3,300)))
+                   extra = cbind(extra1=c(10,20,30),
+                                 extra2=c(100,200.3,300)))
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
@@ -65,10 +73,14 @@ test_that("get_tooltip_content", {
         };
     "), info = "ylab, extra")
 
-    params <- list(x = c("a", "b", "c"), y = c(5.5,6,6.7),
+    params <- list(x = c("a", "b", "c"),
+                   y = c(5.5,6,6.7),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200.3,300)),
-                   tooltip_formats = list(y = "s", extra1 = ".2f", extra2 = ".3f"))
+                   extra = cbind(extra1=c(10,20,30),
+                                 extra2=c(100,200.3,300)),
+                   tooltip_formats = list(y = "s",
+                                          extra1 = ".2f",
+                                          extra2 = ".3f"))
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
@@ -99,10 +111,31 @@ test_that("get_tooltip_content", {
         };
     "), info = "ylab, extra, tooltip_formats")
 
-    params <- list(x = c("a", "b", "c"), y = c(5.5,6,6.7),
+    params <- list(x = c("a", "b", "c"),
+                   y = c(5.5, 6, 6.7),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200.3,300)),
-                   color_groups = c("A","A","B"), color_title = "My groups")
+                   extra = cbind(extra1=c(10,20,30),
+                                 extra2=c(100,200.3,300)),
+                   color_groups = c("A","A","B"),
+                   color_title = "My groups")
+    lines <- Lines$new(params)
+    lines$get_params()
+    expect_error(lines$get_data(), "The number of color_groups is 3, but the number of lines is 1")
+
+    params <- list(x = c("a", "b", "c"),
+                   y = as.data.frame(rbind(c(5.5, 4, 3),
+                                           c(6, 2, 1.3),
+                                           c(6.7, 1, 6.2)
+                                           )),
+                   ylab = "This is the y axis",
+                   extra = list(data.frame(extra1 = c(10,20,30),
+                                           extra2 = c(100,200,300)),
+                                data.frame(extra1 = c(40,50,60),
+                                           extra2 = c(400,500.3,600)),
+                                data.frame(extra1 = c(70,80,90),
+                                           extra2 = c(700,800.2,900))),
+                   color_groups = c("A","A","B"),
+                   color_title = "My groups")
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
@@ -122,16 +155,16 @@ test_that("get_tooltip_content", {
                     <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['y']) + \"</td>
                 </tr>
                 <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>My groups</td>
+                    <td class='tooltip-metric-value'>\" + d['color_group'] + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
                     <td class='tooltip-metric-name'>extra1</td>
                     <td class='tooltip-metric-value'>\" + d['extra1'] + \"</td>
                 </tr>
                 <tr class='tooltip-metric'>
                     <td class='tooltip-metric-name'>extra2</td>
                     <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra2']) + \"</td>
-                </tr>
-                <tr class='tooltip-metric'>
-                    <td class='tooltip-metric-name'>My groups</td>
-                    <td class='tooltip-metric-value'>\" + d['color_group'] + \"</td>
                 </tr>
             </table>\"
         };
@@ -140,20 +173,22 @@ test_that("get_tooltip_content", {
 })
 
 
-test_that("get_ordinal_domains", {
+test_that("get_categorical_domains", {
     params <- list(x = 1:10)
     lines <- Lines$new(params)
+    lines$get_params()
     lines$get_data()
-    expect_equal(no_whitespace(lines$get_ordinal_domains()), "{x:null,y:null}")
+    expect_equal(no_whitespace(lines$get_categorical_domains()), "{x:null,y:null}")
 
     params <- list(x = letters[1:10], y = 1:10)
     lines <- Lines$new(params)
+    lines$get_params()
     lines$get_data()
-    expect_equal(no_whitespace(lines$get_ordinal_domains()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:null}")
+    expect_equal(no_whitespace(lines$get_categorical_domains()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:null}")
 })
 
 test_that("get_data_ranges", {
-    # when there is no y, x == y
+    # when there is no y, x => y
     params <- list(x = 1:10)
     lines <- Lines$new(params)
     lines$get_data()
@@ -164,10 +199,11 @@ test_that("get_data_ranges", {
     lines$get_data()
     expect_equal(no_whitespace(lines$get_data_ranges()), "{x:[0,2],y:[0,2]}", info = "numeric x, single number")
 
-    params <- list(x = factor(1:10, levels = 10:1), y = 1:10)
-    lines <- Lines$new(params)
-    lines$get_data()
-    expect_equal(no_whitespace(lines$get_data_ranges()), "{x:[\"10\",\"9\",\"8\",\"7\",\"6\",\"5\",\"4\",\"3\",\"2\",\"1\"],y:[1,10]}")
+    # I don't think this is useful for lines
+    # params <- list(x = factor(1:10, levels = 10:1), y = 1:10)
+    # lines <- Lines$new(params)
+    # lines$get_data()
+    # expect_equal(no_whitespace(lines$get_data_ranges()), "{x:[\"10\",\"9\",\"8\",\"7\",\"6\",\"5\",\"4\",\"3\",\"2\",\"1\"],y:[1,10]}")
 
     params <- list(x = letters[1:10], y = 1:10)
     lines <- Lines$new(params)
