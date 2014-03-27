@@ -97,18 +97,18 @@ Points$methods(
     },
 
     # When one of the axes is categorical, we need its domain.
-    get_ordinal_domains = function(){
+    get_categorical_domains = function(){
 
         # ifelse() can't return NULL
         x_categorical_domain <- if(scale_type(data$x) == "categorical") get_unique_elements(data$x) else NULL
         y_categorical_domain <- if(scale_type(data$y) == "categorical") get_unique_elements(data$y) else NULL
 
-        ordinal_domains <- sprintf("{
+        categorical_domains <- sprintf("{
           x: %s,
           y: %s
         }", to_json(x_categorical_domain), to_json(y_categorical_domain))
 
-        ordinal_domains
+        categorical_domains
     },
 
     # I data is numeric, it returns the min/max. Otherwise, it returns unique elements.

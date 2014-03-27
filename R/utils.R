@@ -179,7 +179,9 @@ sample_r <- function(input, n){
 #'
 #' @param elements values
 #'
-#' If elements is numeric and has a length greater than one, it returns "quantitative". If elements is NULL, or not numeric, or has a length of one, it returns "categorical".
+#' Quantitative scales are treated differently than categorical scales by D3.
+#' If elements is numeric and has a length greater than one, it returns "quantitative".
+#' If elements is NULL, or not numeric, or has a length of one, it returns "categorical".
 #'
 #' @export
 scale_type <- function(elements) {

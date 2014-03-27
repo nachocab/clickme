@@ -24,7 +24,7 @@
             plot = new_plot({
                 data: {{ data }},
                 data_ranges: {{{ get_data_ranges() }}},
-                ordinal_domains: {{{ get_ordinal_domains() }}},
+                categorical_domains: {{{ get_categorical_domains() }}},
                 width: {{ params$width }},
                 height: {{ params$height }},
                 padding: {{ params$padding }},

@@ -3,7 +3,7 @@
 \title{Run a template demo}
 \usage{
 demo_mode(on = NULL, iframe_src = "src", iframe_height = 800,
-  demo_path = ".")
+  iframe_width = 1000, demo_path = ".")
 }
 \arguments{
   \item{template}{name of template Demo mode makes

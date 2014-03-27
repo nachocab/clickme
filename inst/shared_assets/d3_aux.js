@@ -97,8 +97,8 @@
     if (options.zoom == null) {
       options.zoom = true;
     }
-    if (options.ordinal_scale_padding == null) {
-      options.ordinal_scale_padding = 1;
+    if (options.categorical_scale_padding == null) {
+      options.categorical_scale_padding = 1;
     }
     if (options.linear_scale_padding == null) {
       options.linear_scale_padding = 40;
@@ -294,7 +294,7 @@
         domain = plot.data_ranges[scale_name];
       }
     } else {
-      domain = plot.ordinal_domains[scale_name];
+      domain = plot.categorical_domains[scale_name];
     }
     return domain;
   };
@@ -305,7 +305,7 @@
       scale = d3.scale.linear().domain(plot.scale_domains[scale_name]).range(plot.scale_ranges[scale_name]);
       scale = add_scale_padding(scale, plot.linear_scale_padding);
     } else {
-      scale = d3.scale.ordinal().domain(plot.scale_domains[scale_name]).rangePoints(plot.scale_ranges[scale_name], plot.ordinal_scale_padding);
+      scale = d3.scale.ordinal().domain(plot.scale_domains[scale_name]).rangePoints(plot.scale_ranges[scale_name], plot.categorical_scale_padding);
     }
     return scale;
   };

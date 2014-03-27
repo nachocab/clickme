@@ -42,7 +42,7 @@ my_light_red = "#b90000"
 #       - right (sidebar)
 # - scales
 #       - type (linear, ordinal)
-#       - domain (data_range)
+#       - domain (quantitative, categorical)
 #       - range (xlim, ylim)
 #       - jitter
 # - axes (ticks)
@@ -73,7 +73,7 @@ my_light_red = "#b90000"
 
     options.background ?= "#fff"
     options.zoom ?= true
-    options.ordinal_scale_padding ?= 1
+    options.categorical_scale_padding ?= 1
     options.linear_scale_padding ?= 40
 
     options.labels ?= {}
@@ -298,7 +298,7 @@ my_light_red = "#b90000"
         else
             domain = plot.data_ranges[scale_name]
     else
-        domain = plot.ordinal_domains[scale_name]
+        domain = plot.categorical_domains[scale_name]
 
     domain
 
@@ -312,7 +312,7 @@ my_light_red = "#b90000"
     else
         scale = d3.scale.ordinal()
             .domain(plot.scale_domains[scale_name])
-            .rangePoints(plot.scale_ranges[scale_name], plot.ordinal_scale_padding)
+            .rangePoints(plot.scale_ranges[scale_name], plot.categorical_scale_padding)
 
     scale
 
