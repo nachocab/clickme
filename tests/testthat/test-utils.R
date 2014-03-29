@@ -17,6 +17,10 @@ test_that("get_tooltip_format", {
     expect_equal(tooltip_format, ".2f")
 })
 
+test_that("default_colors", {
+    expect_equal(length(default_colors(15)), 15)
+})
+
 test_that("scale_type", {
     expect_equal(scale_type(NULL), "categorical")
     expect_equal(scale_type(c(1)), "categorical")

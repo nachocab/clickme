@@ -217,7 +217,7 @@ scale_type <- function(elements) {
 #' @param n number of colors
 #'
 #' @export
-default_colors <- function(n = 9){
+default_colors <- function(n){
     # too similar purples: "#9467bd", "#8c564b"
     retro_tulips <- c(
       "#0F808C", # blue
@@ -255,7 +255,7 @@ default_colors <- function(n = 9){
     if (n <= 9){
         colors <- d3_category9[1:n]
     } else if (n <= 19) {
-        colors <- d3_category19
+        colors <- d3_category19[1:n]
     } else {
         colors <- gsub("..$", "", rainbow(n)) # d3 doesn't like the transparency bytes #000000FF, so we remove them
     }
