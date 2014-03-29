@@ -41,8 +41,8 @@ test_that("get_tooltip_content", {
     params <- list(x = c("a", "b", "c"),
                    y = c(5.5,6,6.7),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30),
-                                 extra2=c(100,200.3,300)))
+                   extra = list(extra1=10,
+                                extra2=100.1))
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
@@ -76,8 +76,8 @@ test_that("get_tooltip_content", {
     params <- list(x = c("a", "b", "c"),
                    y = c(5.5,6,6.7),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30),
-                                 extra2=c(100,200.3,300)),
+                   extra = list(extra1=10,
+                                extra2=100.2),
                    tooltip_formats = list(y = "s",
                                           extra1 = ".2f",
                                           extra2 = ".3f"))
@@ -114,13 +114,13 @@ test_that("get_tooltip_content", {
     params <- list(x = c("a", "b", "c"),
                    y = c(5.5, 6, 6.7),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30),
-                                 extra2=c(100,200.3,300)),
+                   extra = list(extra1=10,
+                                extra2=100.2),
                    color_groups = c("A","A","B"),
                    color_title = "My groups")
     lines <- Lines$new(params)
     lines$get_params()
-    expect_error(lines$get_data(), "The number of color_groups is 3, but the number of lines is 1")
+    expect_error(lines$get_data(), "Number of lines is 1, but the following parameters have more values than lines: \n\tcolor_group")
 
     params <- list(x = c("a", "b", "c"),
                    y = as.data.frame(rbind(c(5.5, 4, 3),
@@ -128,12 +128,8 @@ test_that("get_tooltip_content", {
                                            c(6.7, 1, 6.2)
                                            )),
                    ylab = "This is the y axis",
-                   extra = list(data.frame(extra1 = c(10,20,30),
-                                           extra2 = c(100,200,300)),
-                                data.frame(extra1 = c(40,50,60),
-                                           extra2 = c(400,500.3,600)),
-                                data.frame(extra1 = c(70,80,90),
-                                           extra2 = c(700,800.2,900))),
+                   extra = list(extra1 = c(10,20,30),
+                                extra2 = c(100.1,200,300)),
                    color_groups = c("A","A","B"),
                    color_title = "My groups")
     lines <- Lines$new(params)
@@ -155,16 +151,16 @@ test_that("get_tooltip_content", {
                     <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['y']) + \"</td>
                 </tr>
                 <tr class='tooltip-metric'>
-                    <td class='tooltip-metric-name'>My groups</td>
-                    <td class='tooltip-metric-value'>\" + d['color_group'] + \"</td>
-                </tr>
-                <tr class='tooltip-metric'>
                     <td class='tooltip-metric-name'>extra1</td>
                     <td class='tooltip-metric-value'>\" + d['extra1'] + \"</td>
                 </tr>
                 <tr class='tooltip-metric'>
                     <td class='tooltip-metric-name'>extra2</td>
                     <td class='tooltip-metric-value'>\" + d3.format('.2f')(d['extra2']) + \"</td>
+                </tr>
+                <tr class='tooltip-metric'>
+                    <td class='tooltip-metric-name'>My groups</td>
+                    <td class='tooltip-metric-value'>\" + d['color_group'] + \"</td>
                 </tr>
             </table>\"
         };

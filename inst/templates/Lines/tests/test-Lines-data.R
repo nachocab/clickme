@@ -8,7 +8,7 @@ test_that("get_data works with one line", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 1, line_name = "1"),
@@ -30,7 +30,7 @@ test_that("get_data works with one line", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1"),
@@ -45,7 +45,7 @@ test_that("get_data works with one line", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1"),
@@ -60,7 +60,7 @@ test_that("get_data works with one line", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1"),
@@ -75,7 +75,7 @@ test_that("get_data works with one line", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1"),
@@ -90,7 +90,7 @@ test_that("get_data works with one line", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 2, y = 5, line_name = "1"),
@@ -107,7 +107,7 @@ test_that("get_data works with one line", {
     # lines <- Lines$new(params)
     # lines$get_params()
     # lines$get_data()
-    # expect_equal(lines$data,
+    # expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
     #     list(
     #         list(
     #             list(x = "a", y = 5, line_name = "1"),
@@ -132,7 +132,7 @@ test_that("get_data works with multiple lines", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1"),
@@ -154,7 +154,7 @@ test_that("get_data works with multiple lines", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1"),
@@ -184,7 +184,7 @@ test_that("get_data works with multiple lines", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1"),
@@ -205,7 +205,7 @@ test_that("get_data works with multiple lines", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 2, y = 1, line_name = "1"),
@@ -227,7 +227,7 @@ test_that("get_data works with multiple lines", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1"),
@@ -254,17 +254,17 @@ test_that("get_data works with multiple lines", {
 test_that("extra fields get added", {
     params <- list(x = c(2, 3, 4),
                    y = NULL,
-                   extra = cbind(extra1 = c(10, 20, 30),
-                                 extra2 = c(100, 200, 300)))
+                   extra = list(extra1 = 10,
+                                extra2 = 100))
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name", "extra1", "extra2")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1", extra1 = 10, extra2 = 100),
-                list(x = 2, y = 3, line_name = "1", extra1 = 20, extra2 = 200),
-                list(x = 3, y = 4, line_name = "1", extra1 = 30, extra2 = 300)
+                list(x = 2, y = 3, line_name = "1", extra1 = 10, extra2 = 100),
+                list(x = 3, y = 4, line_name = "1", extra1 = 10, extra2 = 100)
             )
         ),
         info = "using vectors_to_line_data, extra is a list/dataframe/matrix of values"
@@ -273,25 +273,23 @@ test_that("extra fields get added", {
     params <- list(x = as.data.frame(rbind(c(2, 3, 4),
                                            c(3, 4, 5))),
                    y = NULL,
-                   extra = list(data.frame(extra1 = c(10,20,30),
-                                           extra2 = c(100,200,300)),
-                                data.frame(extra1 = c(40,50,60),
-                                           extra2 = c(400,500,600)))
+                   extra = list(extra1 = c(10, 20),
+                                extra2 = c(100,200))
                    )
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name", "extra1", "extra2")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1", extra1 = 10, extra2 = 100),
-                list(x = 2, y = 3, line_name = "1", extra1 = 20, extra2 = 200),
-                list(x = 3, y = 4, line_name = "1", extra1 = 30, extra2 = 300)
+                list(x = 2, y = 3, line_name = "1", extra1 = 10, extra2 = 100),
+                list(x = 3, y = 4, line_name = "1", extra1 = 10, extra2 = 100)
             ),
             list(
-                list(x = 1, y = 3, line_name = "2", extra1 = 40, extra2 = 400),
-                list(x = 2, y = 4, line_name = "2", extra1 = 50, extra2 = 500),
-                list(x = 3, y = 5, line_name = "2", extra1 = 60, extra2 = 600)
+                list(x = 1, y = 3, line_name = "2", extra1 = 20, extra2 = 200),
+                list(x = 2, y = 4, line_name = "2", extra1 = 20, extra2 = 200),
+                list(x = 3, y = 5, line_name = "2", extra1 = 20, extra2 = 200)
             )
         ),
         info = "using dataframes_to_line_data, extra is a list of dataframes"
@@ -301,24 +299,22 @@ test_that("extra fields get added", {
                             c(4, 5)),
                    y = list(c(2, 3, 4),
                             c(3, 4)),
-                   extra = list(data.frame(extra1 = c(10,20,30),
-                                           extra2 = c(100,200,300)),
-                                data.frame(extra1 = c(40,50),
-                                           extra2 = c(400,500)))
+                   extra = list(extra1 = c(10, 20),
+                                extra2 = c(100,200))
                    )
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name", "extra1", "extra2")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "1", extra1 = 10, extra2 = 100),
-                list(x = 2, y = 3, line_name = "1", extra1 = 20, extra2 = 200),
-                list(x = 3, y = 4, line_name = "1", extra1 = 30, extra2 = 300)
+                list(x = 2, y = 3, line_name = "1", extra1 = 10, extra2 = 100),
+                list(x = 3, y = 4, line_name = "1", extra1 = 10, extra2 = 100)
             ),
             list(
-                list(x = 4, y = 3, line_name = "2", extra1 = 40, extra2 = 400),
-                list(x = 5, y = 4, line_name = "2", extra1 = 50, extra2 = 500)
+                list(x = 4, y = 3, line_name = "2", extra1 = 20, extra2 = 200),
+                list(x = 5, y = 4, line_name = "2", extra1 = 20, extra2 = 200)
             )
         ),
         info = "using lists_to_line_data, extra is a list of dataframes"

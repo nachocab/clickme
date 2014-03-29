@@ -19,7 +19,7 @@ g_lines = clip.selectAll(".line")
     .attr("class": "line")
 
 line = d3.svg.line()
-    .interpolate(interpolation)
+    .interpolate(interpolate)
     .x((d) -> plot.scales.x(d.x))
     .y((d) -> plot.scales.y(d.y))
 
@@ -27,9 +27,9 @@ lines = g_lines.append("path")
     .attr(
         "d": line
         "fill": "none"
-        "stroke-width": (d) -> stroke_width(d[0])
-        "stroke": (d) -> stroke_color(d[0])
-        "opacity": (d) -> opacity(d[0]))
+        "stroke": (d) -> r_color_group(d[0])
+        "stroke-width": (d) -> d[0].line_stroke_width
+        "opacity": (d) -> d[0].line_opacity)
 
 # Create tip
 tip = d3.tip()
@@ -50,7 +50,7 @@ line_names = g_lines.append("text")
         "text-anchor": "left"
         "display": "none")
     .style(
-        "fill": (d) -> fill_color(d[0])
+        "fill": (d) -> r_color_group(d[0])
         "font-size": "22px")
 
 # create points
@@ -69,8 +69,8 @@ points = g_points.append("svg:circle")
     .attr(
         "r": (d) -> d.radius
         "id": (d,i) -> "point-#{i}"
-        "fill": (d) -> fill_color(d)
-        "opacity": (d) -> opacity(d)
+        "fill": (d) -> r_color_group(d)
+        "opacity": (d) -> d.point_opacity
         "title": tooltip_content )
     .on('mouseover', (d, i) ->
         point = clip.select('circle#point-'+i)

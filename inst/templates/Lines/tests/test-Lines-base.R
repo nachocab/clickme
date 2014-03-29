@@ -5,7 +5,7 @@ test_that("lines have names", {
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
-    expect_equal(lines$data,
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
         list(
             list(
                 list(x = 1, y = 2, line_name = "my_line"),
@@ -22,7 +22,7 @@ test_that("lines have names", {
         lines <- Lines$new(params)
         lines$get_params()
         lines$get_data()
-        expect_equal(lines$data,
+        expect_equal(get_attrs(lines$data, c("x", "y", "line_name")),
             list(
                 list(
                     list(x = 1, y = 2, line_name = "A"),
@@ -54,10 +54,12 @@ test_that("lines have names", {
 })
 
 test_that("validate_tooltip_formats", {
-    params <- list(x = 1:10, extra = list(a = 1:10), tooltip_formats = list(paco = "d"))
+    params <- list(x = 1:10,
+                   extra = list(a = 1),
+                   tooltip_formats = list(paco = "d"))
     lines <- Lines$new(params)
     lines$get_params()
-    expect_error(lines$get_data(), "\n\n\tThe following format names are not x, y, or any of the extra names:\n\tpaco\n\n")
+    expect_error(lines$get_data(), "The following format names are not x, y, or any of the extra names:\n\tpaco")
 })
 
 test_that("color_domain", {

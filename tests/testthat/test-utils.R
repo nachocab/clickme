@@ -1,5 +1,11 @@
 context("utils")
 
+test_that("get_attrs", {
+    my_list <- list(list(list(a = 1, b = 2, c = 3, d = 4), list(a = 5, b = 6, c = 7, d = 8)))
+    my_attrs <- get_attrs(my_list, c("a", "d", "c"))
+    expect_equal(my_attrs, list(list(list(a = 1, d = 4, c = 3), list(a = 5, d = 8, c = 7))))
+})
+
 test_that("get_tooltip_format", {
     tooltip_format <- get_tooltip_format(c("a", "b", "c"))
     expect_equal(tooltip_format, "s")
@@ -21,7 +27,7 @@ test_that("scale_type", {
 
 test_that("match_to_groups", {
     subset  <- c("w","b","p","e","j")
-    groups <- list(a=letters[1:10], b = letters[11:20], c = letters[21:26])
+    groups <- list(a = letters[1:10], b = letters[11:20], c = letters[21:26])
     expect_equal(match_to_groups(subset, groups), c("c","a","b","a","a"))
 
     subset  <- c("w","b","A","B","j")

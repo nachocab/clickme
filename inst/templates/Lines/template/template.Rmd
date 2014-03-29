@@ -54,15 +54,12 @@
             static_line_width = 5;
             distance_between_show_names_and_color_groups = 80;
 
-            interpolation = {{ params$interpolation }};
+            interpolate = {{ params$interpolate }};
             opacity = {{ params$opacity }};
             show_sidebar = {{ params$show_sidebar }};
 
             color_scale = {{{ get_d3_color_scale() }}}
-            stroke_width = {{{ get_d3_stroke_width() }}}
-            stroke_color = {{{ get_d3_stroke_color() }}}
-            fill_color = {{{ get_d3_fill_color() }}}
-            opacity = {{{ get_d3_opacity() }}}
+            r_color_group = {{{ get_d3_color_group() }}}
 
             color_legend_counts = {{ get_color_legend_counts() }};
             tooltip_content = {{{ get_tooltip_content() }}}

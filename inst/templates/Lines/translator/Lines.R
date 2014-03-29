@@ -22,20 +22,45 @@ Lines <- setRefClass("Lines",
 
             params$out_width <<- params$out_width %or% 500
             params$out_height <<- params$out_height %or% 500
-
-            params$interpolation <<- params$interpolation %or% "linear"
+            params$interpolate <<- params$interpolate %or% "linear"
             params$width <<- params$width %or% 4
-            params$radius <<- params$radius %or% 5
             params$jitter <<- params$jitter %or% 0
             params$opacity <<- params$opacity %or% 1
-
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
-            params$color_title <<- params$color_title %or% "Groups"
+            params$color_title <<- params$color_title %or% "Group"
 
             params$palette <<- validate_palette(params$palette)
-
             params$color_domain <<- validate_color_domain(params$color_domain)
+
+            internal$extra <<- get_extra()
+        },
+
+        get_extra = function() {
+            extra <- params$extra %or% list()
+            extra$line_name <- params$names
+            extra$line_stroke_width <- params$width
+            extra$line_opacity <- params$opacity
+
+            at_least_two_color_groups <- !is.null(params$color_groups) && length(unique(params$color_groups)) > 1
+            if (at_least_two_color_groups)
+                extra$color_group <- params$color_groups
+
+            if (is.null(params$radius)){
+                # Points should always have a radius to ensure
+                # the tooltip is always visible
+                extra$radius <- 5
+                extra$point_opacity <- 0
+            } else {
+                extra$radius <- params$radius
+                extra$point_opacity <- params$opacity
+            }
+
+            # line_stroke_color and point_fill_color don't need to be set
+            # because they are computed by get_d3_color_group as
+            # color_scale(d.color_group)
+
+            null_if_empty(extra)
         },
 
         # Ensure that the palette has as at least one color ("#000")
@@ -72,11 +97,8 @@ Lines <- setRefClass("Lines",
                     }
                 }
             } else {
-                if (!is.null(palette)){
-                    palette <- palette[1]
-                } else {
-                    palette <- "#000"
-                }
+                # If no color_groups, use the first palette color or default to black
+                palette <- palette[1] %or% "#000"
             }
 
             palette

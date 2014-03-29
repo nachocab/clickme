@@ -1,54 +1,32 @@
 Lines$methods(
     get_data = function() {
-        # TODO: eventually, you should put names and color_groups inside extra
-        data <<- unify_format(x = params[["x"]],
-                              y = params[["y"]],
-                              names = params$names,
-                              color_groups = params$color_groups,
-                              extra = params$extra)
+        tmp_data <- unify_format()
 
-        if (!is.null(params$color_groups) && length(params$color_groups) > 1) {
-            if (length(params$color_groups) != length(data))
-                stop(sprintf("\nThe number of color_groups is %s, but the number of lines is %s",
-                    length(params$color_groups),
-                    length(data)))
+        if (!is.null(internal$extra$color_group))
+            tmp_data <- order_by_color_group(tmp_data)
 
-            line_names <- sapply(data, function(line) line[[1]]$line_name)
-            ordered_color_group_names <- get_ordered_color_group_names()
-            data <<- order_data_by_color_group(data,
-                                               line_names,
-                                               params$color_groups,
-                                               ordered_color_group_names)
-        }
+        data_names <- names(tmp_data[[1]][[1]])
+        validate_tooltip_formats(data_names)
 
-        # apply_axes_limits() # TODO: not a priority, maybe we should just change viewport
-        # remove_invalid() # TODO
-
-        # Reverse so the last color group gets the last color
-        # TODO: move this to get_params()
-        # params$palette <<- rev(params$palette)
-
-        # we call validate_tooltip_formats here because it depends on data
-        # validate_tooltip_formats()
+        data <<- tmp_data
     },
 
     # internal, template-specific
-    unify_format = function(x, y, names, color_groups, extra) {
+    unify_format = function() {
+        x <- params[["x"]]
+        y <- params[["y"]]
         if (is.null(y)){
             if (is_data_frame_or_matrix(x)){
                 if (ncol(x) < 2) {
                     stop("When x is a dataframe or a matrix, it must contain at least two columns")
                 }
                 data <- dataframes_to_line_data(x = x,
-                                                 y = NULL,
-                                                 names = names,
-                                                 color_groups = color_groups,
-                                                 extra = extra)
+                                                y = NULL,
+                                                extra = internal$extra)
             } else {
                 data <- vectors_to_line_data(x = 1:length(x),
-                                              y = x,
-                                              names = names,
-                                              extra = extra)
+                                             y = x,
+                                             extra = internal$extra)
             }
         } else {
             if (is_data_frame_or_matrix(x) || is_data_frame_or_matrix(y)) {
@@ -64,10 +42,8 @@ Lines$methods(
                     stop("When x is a dataframe or a matrix, it must contain at least two columns")
 
                 data <- dataframes_to_line_data(x = x,
-                                                 y = y,
-                                                 names = names,
-                                                 color_groups = color_groups,
-                                                 extra = extra)
+                                                y = y,
+                                                extra = internal$extra)
             } else {
                 if (is.list(x) && is.list(y)){
                     if (all(sapply(x, length) != sapply(y, length)))
@@ -75,15 +51,12 @@ Lines$methods(
                              paste(sapply(x, length), collapse = " "),
                              paste(sapply(x, length), collapse = " ")))
                     data <- lists_to_line_data(x = x,
-                                                y = y,
-                                                names = names,
-                                                color_groups = color_groups,
-                                                extra = extra)
+                                               y = y,
+                                               extra = internal$extra)
                 } else {
                     data <- vectors_to_line_data(x = x,
-                                                  y = y,
-                                                  names = names,
-                                                  extra = extra)
+                                                 y = y,
+                                                 extra = internal$extra)
                 }
             }
         }
@@ -91,35 +64,44 @@ Lines$methods(
     },
 
     # internal
-    add_extra = function(data, extra){
-        if (!is.null(extra)) {
-            data <- cbind(data, extra)
-        }
-        data
+    add_extra = function(line_data, extra, line_number){
+        # some extra parameters are the same value for all lines
+        # others are specific to each line
+        extra <- lapply(extra, function(x) {
+            if (is.na(x[line_number])){
+                x
+            } else {
+                x[line_number]
+            }
+        })
+
+        line_data <- cbind(line_data, extra)
+        line_data
     },
 
     # internal
-    to_line_data = function(data, names){
-        unname(lapply(split(data, names)[names], as.list))
+    to_line_data = function(data){
+        names <- rownames(data)
+        line_data <- unname(lapply(split(data, names)[names], as.list))
+        line_data
     },
 
     # internal
-    vectors_to_line_data = function(x, y, names, extra){
-        if (is.null(names))
-            names <- "1"
+    vectors_to_line_data = function(x, y, extra){
+        num_lines <- 1
+        extra <- validate_extra(extra, num_lines)
+
         data <- xy_to_data(x,y)
-
-        data$line_name <- names
-        data <- add_extra(data, extra)
-
-        data <- list(to_line_data(data, rownames(data)))
+        data <- add_extra(data, extra, 1)
+        data <- list(to_line_data(data))
         data
     },
 
     # internal
-    dataframes_to_line_data = function(x, y, names, color_groups, extra){
-        if (is.null(names))
-            names <- as.character(1:nrow(x))
+    dataframes_to_line_data = function(x, y, extra){
+        num_lines <- nrow(x)
+        extra <- validate_extra(extra, num_lines)
+
         data <- lapply(1:nrow(x), function(line_number){
             if (is.null(y)){
                 line <- xy_to_data(x = 1:ncol(x),
@@ -128,31 +110,23 @@ Lines$methods(
                 line <- xy_to_data(x = unname(unlist(x[line_number, ])),
                                    y = unname(unlist(y[line_number, ])))
             }
-
-            line$line_name <- names[line_number]
-            line$color_group <- color_groups[line_number]
-            line <- add_extra(line, extra[[line_number]])
-
-            line <- to_line_data(line, rownames(line))
+            line <- add_extra(line, extra, line_number)
+            line <- to_line_data(line)
             line
         })
         data
     },
 
     # internal
-    lists_to_line_data = function(x, y, names, color_groups, extra){
-        if (is.null(names))
-            names <- as.character(1:length(x))
+    lists_to_line_data = function(x, y, extra){
+        num_lines <- length(x)
+        extra <- validate_extra(extra, num_lines)
 
         data <- lapply(1:length(x), function(line_number){
             line <- xy_to_data(x = x[[line_number]],
                                y = y[[line_number]])
-
-            line$line_name <- names[line_number]
-            line$color_group <- color_groups[line_number]
-            line <- add_extra(line, extra[[line_number]])
-
-            line <- to_line_data(line, rownames(line))
+            line <- add_extra(line, extra, line_number)
+            line <- to_line_data(line)
             line
         })
         data
@@ -168,8 +142,28 @@ Lines$methods(
     },
 
     # internal
-    order_data_by_color_group = function(data, data_names, color_groups, ordered_color_group_names){
-        names_groups <- data.frame(names = data_names, groups = color_groups)
+    validate_extra = function(extra, num_lines){
+        param_lengths <- sapply(extra, length)
+        if (any(param_lengths > num_lines))
+            stop(sprintf("\nNumber of lines is %s, but the following parameters have more values than lines: \n%s",
+                    num_lines,
+                    enumerate(names(extra)[param_lengths > num_lines])))
+
+        extra$line_name <- extra$line_name %or% as.character(1:num_lines)
+        extra
+    },
+
+    # internal
+    order_by_color_group = function(data){
+        if (length(internal$extra$color_group) != length(data)) {
+            stop(sprintf("\nThe number of color_groups is %s, but the number of lines is %s",
+                length(internal$extra$color_group),
+                length(data)))
+        }
+
+        line_names <- sapply(data, function(line) line[[1]]$line_name)
+        ordered_color_group_names <- get_ordered_color_group_names()
+        names_groups <- data.frame(names = line_names, groups = internal$extra$color_group)
         data_order <- unlist(sapply(ordered_color_group_names, function(group_name) {
             which(names_groups$group == group_name)
         }))
@@ -184,7 +178,7 @@ Lines$methods(
     # internal
     get_point_value = function(lines_data, variable_name){
         as.vector(sapply(lines_data, function(line) sapply(line, function(point) point[[variable_name]])))
-    },
+    }
 
     # internal
     # apply_axes_limits = function() {
@@ -206,14 +200,5 @@ Lines$methods(
     #     return()
     # },
 
-    # internal
-    validate_tooltip_formats = function(){
-        if (any(names(params$tooltip_formats) %notin% colnames(data))){
-            wrong_names <- names(params$tooltip_formats)[names(params$tooltip_formats) %notin% colnames(data)]
-            stop(sprintf("\nThe following format names are not x, y, or any of the extra names:\n%s\n\n",
-                 enumerate(wrong_names)))
-        }
-        return()
-    }
 
 )

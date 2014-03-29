@@ -15,7 +15,7 @@
     "class": "line"
   });
 
-  line = d3.svg.line().interpolate(interpolation).x(function(d) {
+  line = d3.svg.line().interpolate(interpolate).x(function(d) {
     return plot.scales.x(d.x);
   }).y(function(d) {
     return plot.scales.y(d.y);
@@ -24,14 +24,14 @@
   lines = g_lines.append("path").attr({
     "d": line,
     "fill": "none",
-    "stroke-width": function(d) {
-      return stroke_width(d[0]);
-    },
     "stroke": function(d) {
-      return stroke_color(d[0]);
+      return r_color_group(d[0]);
+    },
+    "stroke-width": function(d) {
+      return d[0].line_stroke_width;
     },
     "opacity": function(d) {
-      return opacity(d[0]);
+      return d[0].line_opacity;
     }
   });
 
@@ -54,7 +54,7 @@
     "display": "none"
   }).style({
     "fill": function(d) {
-      return fill_color(d[0]);
+      return r_color_group(d[0]);
     },
     "font-size": "22px"
   });
@@ -78,10 +78,10 @@
       return "point-" + i;
     },
     "fill": function(d) {
-      return fill_color(d);
+      return r_color_group(d);
     },
     "opacity": function(d) {
-      return opacity(d);
+      return d.point_opacity;
     },
     "title": tooltip_content
   }).on('mouseover', function(d, i) {

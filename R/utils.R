@@ -18,6 +18,22 @@ get_tooltip_format <- function(variable_value){
     format
 }
 
+#' Returns NULL if the list is empty
+#'
+#' @export
+null_if_empty <- function(input_list){
+    if (length(input_list))
+        input_list
+    else
+        NULL
+}
+
+get_attrs <- function(my_list, names){
+    lapply(my_list, function(line) {
+        lapply(line, function(x) x[names])
+    })
+}
+
 #' Extract function names from a list of placeholder expressions
 #' @export
 #' @keywords internal
