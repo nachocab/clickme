@@ -32,7 +32,8 @@ Points$methods(
         params$palette <<- rev(params$palette)
 
         # we call validate_tooltip_formats here because it depends on data
-        validate_tooltip_formats()
+        data_names <- colnames(data)
+        validate_tooltip_formats(data_names)
     },
 
 
@@ -86,16 +87,6 @@ Points$methods(
     # internal
     remove_invalid = function(){
         data <<- na.omit(data)
-        return()
-    },
-
-    # internal
-    validate_tooltip_formats = function(){
-        if (any(names(params$tooltip_formats) %notin% colnames(data))){
-            wrong_names <- names(params$tooltip_formats)[names(params$tooltip_formats) %notin% colnames(data)]
-            stop(sprintf("\nThe following format names are not x, y, or any of the extra names:\n%s\n\n",
-                 enumerate(wrong_names)))
-        }
         return()
     }
 
