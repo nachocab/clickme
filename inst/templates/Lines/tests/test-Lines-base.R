@@ -15,8 +15,8 @@ test_that("lines have names", {
         ),
         info = "one line")
 
-    params <- list(x = as.data.frame(rbind(c(2, 3, 4),
-                                           c(3, 4, 5))),
+    params <- list(x = data.frame.by.rows(c(2, 3, 4),
+                                          c(3, 4, 5)),
                    y = NULL,
                    names = c("A", "B"))
         lines <- Lines$new(params)
@@ -37,12 +37,11 @@ test_that("lines have names", {
             ),
             info = "multiple lines")
 
-    params <- list(x = as.data.frame(rbind(c(2, 3),
-                                           c(3, 4),
-                                           c(4, 5),
-                                           c(5, 6),
-                                           c(6, 7))
-                                           ),
+    params <- list(x = data.frame.by.rows(c(2, 3),
+                                          c(3, 4),
+                                          c(4, 5),
+                                          c(5, 6),
+                                          c(6, 7)),
                    y = NULL,
                    names = c("z", "a", "e", "b", "c"))
     lines <- Lines$new(params)
@@ -51,6 +50,17 @@ test_that("lines have names", {
     expect_equal(sapply(lines$data, function(line) line[[1]]$line_name),
                  c("z", "a", "e", "b", "c"),
                  info = "names, order is preserved")
+
+#     params <- list(x = data.frame.by.rows(c(2, 3),
+#                                           c(3, 4),
+#                                           row.names = c("A", "B")),
+#                    y = NULL)
+#     lines <- Lines$new(params)
+#     lines$get_params()
+#     lines$get_data()
+#     expect_equal(sapply(lines$data, function(line) line[[1]]$line_name),
+#                  c("A", "B"),
+#                  info = "names are implied")
 })
 
 test_that("validate_tooltip_formats", {

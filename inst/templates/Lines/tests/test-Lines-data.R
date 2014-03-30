@@ -126,8 +126,8 @@ test_that("get_data works with one line", {
 
 test_that("get_data works with multiple lines", {
 
-    params <- list(x = as.data.frame(rbind(c(2, 3, 4),
-                                           c(3, 4, 5))),
+    params <- list(x = data.frame.by.rows(c(2, 3, 4),
+                                          c(3, 4, 5)),
                    y = NULL)
     lines <- Lines$new(params)
     lines$get_params()
@@ -270,8 +270,8 @@ test_that("extra fields get added", {
         info = "using vectors_to_line_data, extra is a list/dataframe/matrix of values"
     )
 
-    params <- list(x = as.data.frame(rbind(c(2, 3, 4),
-                                           c(3, 4, 5))),
+    params <- list(x = data.frame.by.rows(c(2, 3, 4),
+                                          c(3, 4, 5)),
                    y = NULL,
                    extra = list(extra1 = c(10, 20),
                                 extra2 = c(100,200))
@@ -337,12 +337,11 @@ test_that("order data by color_groups", {
     #              c(5, 4, 3, 2, 1),
     #              info = "quantitative color_groups, unnamed palette") # .5 .4 .3 .2 .1 (smallest on top)
 
-    params <- list(x = as.data.frame(rbind(c(2, 3),
-                                           c(3, 4),
-                                           c(4, 5),
-                                           c(5, 6),
-                                           c(6, 7))
-                                           ),
+    params <- list(x = data.frame.by.rows(c(2, 3),
+                                          c(3, 4),
+                                          c(4, 5),
+                                          c(5, 6),
+                                          c(6, 7)),
                    y = NULL,
                    color_groups = c("c", "a", "b", "c", "b"))
     lines <- Lines$new(params)
@@ -353,12 +352,11 @@ test_that("order data by color_groups", {
                  c("4", "1", "5", "3", "2"),
                  info = "categorical color_groups, no palette") # c c b b a ("a" on top)
 
-    params <- list(x = as.data.frame(rbind(c(2, 3),
-                                           c(3, 4),
-                                           c(4, 5),
-                                           c(5, 6),
-                                           c(6, 7))
-                                           ),
+    params <- list(x = data.frame.by.rows(c(2, 3),
+                                          c(3, 4),
+                                          c(4, 5),
+                                          c(5, 6),
+                                          c(6, 7)),
                    y = NULL,
                    color_groups = c("c", "a", "b", "c", "b"),
                    palette = c("blue", "red", "green"))
@@ -370,12 +368,11 @@ test_that("order data by color_groups", {
                  c("4", "1", "5", "3", "2"),
                  info = "categorical color_groups, unnamed palette") # c c b b a ("a" on top)
 
-    params <- list(x = as.data.frame(rbind(c(2, 3),
-                                           c(3, 4),
-                                           c(4, 5),
-                                           c(5, 6),
-                                           c(6, 7))
-                                           ),
+    params <- list(x = data.frame.by.rows(c(2, 3),
+                                          c(3, 4),
+                                          c(4, 5),
+                                          c(5, 6),
+                                          c(6, 7)),
                    y = NULL,
                    color_groups = c("c", "a", "b", "c", "b"),
                    palette = c(a = "blue", c = "green", b = "red"))

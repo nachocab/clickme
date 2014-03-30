@@ -24,11 +24,11 @@ test_that("get_d3_color_scale", {
     lines$get_params()
     expect_equal(no_whitespace(lines$get_d3_color_scale()), "d3.scale.linear().domain([-2,0,2]).range([\"#278DD6\",\"white\",\"#d62728\"]).interpolate(d3.interpolateLab);", info = "quantitative, color_groups")
 
-    params <- list(x = as.data.frame(rbind(c(2, 3),
-                                           c(3, 4),
-                                           c(4, 5),
-                                           c(5, 6),
-                                           c(6, 7))),
+    params <- list(x = data.frame.by.rows(c(2, 3),
+                                          c(3, 4),
+                                          c(4, 5),
+                                          c(5, 6),
+                                          c(6, 7)),
                    color_groups = c("a", "a", "a", "b", "b"),
                    palette = c(b = "black", c = "red", a = "blue"))
     lines <- Lines$new(params)
@@ -123,10 +123,9 @@ test_that("get_tooltip_content", {
     expect_error(lines$get_data(), "Number of lines is 1, but the following parameters have more values than lines: \n\tcolor_group")
 
     params <- list(x = c("a", "b", "c"),
-                   y = as.data.frame(rbind(c(5.5, 4, 3),
-                                           c(6, 2, 1.3),
-                                           c(6.7, 1, 6.2)
-                                           )),
+                   y = data.frame.by.rows(c(5.5, 4, 3),
+                                          c(6, 2, 1.3),
+                                          c(6.7, 1, 6.2)),
                    ylab = "This is the y axis",
                    extra = list(extra1 = c(10,20,30),
                                 extra2 = c(100.1,200,300)),
