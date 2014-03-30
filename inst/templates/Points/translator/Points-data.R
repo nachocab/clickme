@@ -1,49 +1,31 @@
 Points$methods(
     get_data = function(){
-        extra <- list(radius = params$radius)
-        if (!is.null(params$extra)){
-            if (is.matrix(params$extra)){
-                extra <- c(extra, as.data.frame(params$extra))
-            } else {
-                extra <- c(extra, params$extra)
-            }
-        }
+        tmp_data <- unify_format()
+        rownames(tmp_data) <- NULL
 
-        data <<- unify_format(x = params[["x"]],
-                              y = params[["y"]],
-                              names = params$names,
-                              extra = extra)
+        if (!is.null(internal$extra$color_group))
+            tmp_data <- order_by_color_group(tmp_data)
 
-        if (!is.null(params$color_groups) && length(params$color_groups) > 1){
-            point_names <- rownames(data)
-            ordered_color_group_names <- get_ordered_color_group_names()
-            data[["color_group"]] <<- as.character(params$color_groups)
-
-            data <<- order_data_by_color_group(data,
-                                               point_names,
-                                               params$color_groups,
-                                               ordered_color_group_names)
-        }
-        apply_axes_limits()
-        remove_invalid()
-
-        # Reverse so the last color group gets the last color
-        # TODO: why isn't this in validate_palette?
-        params$palette <<- rev(params$palette)
+        tmp_data <- apply_axes_limits(tmp_data)
+        tmp_data <- remove_invalid(tmp_data)
 
         # we call validate_tooltip_formats here because it depends on data
-        data_names <- colnames(data)
+        data_names <- colnames(tmp_data)
         validate_tooltip_formats(data_names)
+
+        data <<- tmp_data
     },
 
-
     # internal, template-specific
-    unify_format = function(x, y, names, extra){
-        data <- xy_to_data(x, y)
+    unify_format = function(){
+        data <- xy_to_data(params[["x"]], params[["y"]])
+        num_points <- nrow(data)
+        extra <- validate_extra(internal$extra, num_points)
+        data <- add_extra(data, extra)
+        data
+    },
 
-        data$point_name <- as.character(names %or% rownames(data))
-        rownames(data) <- NULL
-
+    add_extra = function(data, extra){
         if (!is.null(extra)){
             data <- cbind(data, extra)
         }
@@ -56,8 +38,16 @@ Points$methods(
     # group_variable is the name of the varible that will be used to group the rows
     # group_order must have as many elements as groups, by default the order is
     # alphanumeric
-    order_data_by_color_group = function(data, data_names, color_groups, ordered_color_group_names){
-        names_groups <- data.frame(names = data_names, groups = color_groups)
+    order_by_color_group = function(data){
+        if (length(internal$extra$color_group) != nrow(data)) {
+            stop(sprintf("\nThe number of color_groups is %s, but the number of points is %s",
+                length(internal$extra$color_group),
+                length(data)))
+        }
+
+        ordered_color_group_names <- get_ordered_color_group_names()
+        data_names <- rownames(data)
+        names_groups <- data.frame(names = data_names, groups = internal$extra$color_group)
         data_order <- unlist(sapply(ordered_color_group_names, function(group_name) {
             which(names_groups$group == group_name)
         }))
@@ -71,23 +61,35 @@ Points$methods(
 
     # internal
     # TODO: maybe this should change the viewport but plot all the points
-    apply_axes_limits = function() {
+    apply_axes_limits = function(data) {
         if (!is.null(params$xlim)){
-            data <<- data[data$x >= params$xlim[1],]
-            data <<- data[data$x <= params$xlim[2],]
+            data <- data[data$x >= params$xlim[1],]
+            data <- data[data$x <= params$xlim[2],]
         }
 
         if (!is.null(params$ylim)){
-            data <<- data[data$y >= params$ylim[1],]
-            data <<- data[data$y <= params$ylim[2],]
+            data <- data[data$y >= params$ylim[1],]
+            data <- data[data$y <= params$ylim[2],]
         }
-        return()
+        data
     },
 
     # internal
-    remove_invalid = function(){
-        data <<- na.omit(data)
-        return()
+    remove_invalid = function(data){
+        data <- na.omit(data)
+        data
+    },
+
+    # internal
+    validate_extra = function(extra, num_points){
+        param_lengths <- sapply(extra, length)
+        if (any(param_lengths > num_points))
+            stop(sprintf("\nNumber of points is %s, but the following parameters have more values than points: \n%s",
+                    num_points,
+                    enumerate(names(extra)[param_lengths > num_points])))
+
+        extra$point_name <- extra$point_name %or% as.character(1:num_points)
+        extra
     }
 
 )

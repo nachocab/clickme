@@ -71,10 +71,10 @@ test_that("validate_palette", {
     points$get_params()
     expect_equal(points$params$palette, "#000", info = "no color groups, no palette")
 
-    params <- list(data = data.frame(a = 1:5), palette = c("a","b"))
+    params <- list(data = data.frame(a = 1:5), palette = c("#fff","#bbb"))
     points <- Points$new(params)
-    expect_message(points$get_params(), "No color_groups provided. Ignoring palette.")
-    expect_equal(points$params$palette, "#000", info = "no color groups, palette")
+    points$get_params()
+    expect_equal(points$params$palette, "#fff", info = "no color groups, palette")
 
     params <- list(data = data.frame(a = 1:5), color_groups = "a")
     points <- Points$new(params)

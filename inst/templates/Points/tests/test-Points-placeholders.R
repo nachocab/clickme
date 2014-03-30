@@ -38,8 +38,8 @@ test_that("get_tooltip_content", {
                                   y = c(5.5,6,6.7),
                                   row.names = LETTERS[1:3]),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30),
-                                 extra2=c(100,200.3,300)))
+                   extra = list(extra1=c(10,20,30),
+                                extra2=c(100,200.3,300)))
     points <- Points$new(params)
     points$get_params()
     points$get_data()
@@ -72,7 +72,7 @@ test_that("get_tooltip_content", {
 
     params <- list(x = data.frame(x = c("a", "b", "c"), y = c(5.5,6,6.7), row.names = LETTERS[1:3]),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200.3,300)),
+                   extra = list(extra1=c(10,20,30), extra2=c(100,200.3,300)),
                    tooltip_formats = list(y = "s", extra1 = ".2f", extra2 = ".3f"))
     points <- Points$new(params)
     points$get_params()
@@ -104,10 +104,14 @@ test_that("get_tooltip_content", {
         };
     "), info = "ylab, extra, tooltip_formats")
 
-    params <- list(x = data.frame(x = c("a", "b", "c"), y = c(5.5,6,6.7), row.names = LETTERS[1:3]),
+    params <- list(x = data.frame(x = c("a", "b", "c"),
+                                  y = c(5.5,6,6.7),
+                                  row.names = LETTERS[1:3]),
                    ylab = "This is the y axis",
-                   extra = cbind(extra1=c(10,20,30), extra2=c(100,200.3,300)),
-                   color_groups = c("A","A","B"), color_title = "My groups")
+                   extra = list(extra1=c(10,20,30),
+                                extra2=c(100,200.3,300)),
+                   color_groups = c("A","A","B"),
+                   color_title = "My groups")
     points <- Points$new(params)
     points$get_params()
     points$get_data()

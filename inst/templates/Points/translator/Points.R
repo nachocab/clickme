@@ -23,18 +23,28 @@ Points <- setRefClass("Points",
 
             params$out_width <<- params$out_width %or% 500
             params$out_height <<- params$out_height %or% 500
-
-            params$radius <<- params$radius %or% 5
             params$jitter <<- params$jitter %or% 0
             params$opacity <<- params$opacity %or% 1
-
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
-            params$color_title <<- params$color_title %or% "Groups"
+            params$color_title <<- params$color_title %or% "Group"
 
             params$palette <<- validate_palette(params$palette)
-
             params$color_domain <<- validate_color_domain(params$color_domain)
+
+            internal$extra <<- get_extra()
+        },
+
+        get_extra = function() {
+            extra <- params$extra %or% list()
+            extra$point_name <- params$names
+            extra$radius <- params$radius %or% 5
+
+            at_least_two_color_groups <- !is.null(params$color_groups) && length(unique(params$color_groups)) > 1
+            if (at_least_two_color_groups)
+                extra$color_group <- params$color_groups
+
+            null_if_empty(extra)
         },
 
         # Ensure that the palette has as at least one color ("#000")
@@ -71,11 +81,12 @@ Points <- setRefClass("Points",
                     }
                 }
             } else {
-                if (!is.null(palette)){
-                    message("\n\tNo color_groups provided. Ignoring palette.\n")
-                }
-                palette <- "#000"
+                # If no color_groups, use the first palette color or default to black
+                palette <- palette[1] %or% "#000"
             }
+
+            # Reverse so the last color group gets the last color
+            params$palette <<- rev(params$palette)
 
             palette
         },
