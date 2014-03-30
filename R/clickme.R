@@ -46,6 +46,18 @@ clickme <- function(template_name, ...){
 
 #' @export
 cme <- function(...){
-    current_template <- getOption("clickme_current_template") %or% "points"
-    clickme(current_template, ...)
+    dots <- list(...)
+    if ("template" %in% names(dots)) {
+        options(clickme_current_template = dots$template)
+        # dots$template <- NULL
+    }
+    current_template <- getOption("clickme_current_template") %or%
+                        getOption("clickme_default_template") %or%
+                        "points"
+
+    # hack to get rid of template = "whatever"
+    clickme_remove_template <- function(template_name, ..., template){
+        clickme(template_name, ...)
+    }
+    clickme_remove_template(template_name = current_template, ...)
 }
