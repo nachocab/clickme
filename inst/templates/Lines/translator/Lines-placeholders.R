@@ -48,6 +48,7 @@ Lines$methods(
         # line_name gets special treatment because it is used as title
         ignore_names <- c("line_name",
                           "line_stroke_width",
+                          "line_stroke_dasharray",
                           "line_opacity",
                           "point_opacity",
                           "radius"

@@ -29,7 +29,8 @@ lines = g_lines.append("path")
         "fill": "none"
         "stroke": (d) -> r_color_group(d[0])
         "stroke-width": (d) -> d[0].line_stroke_width
-        "opacity": (d) -> d[0].line_opacity)
+        "opacity": (d) -> d[0].line_opacity
+        "stroke-dasharray" : (d) -> d[0].line_stroke_dasharray)
 
 # Create tip
 tip = d3.tip()

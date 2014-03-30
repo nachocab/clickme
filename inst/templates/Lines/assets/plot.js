@@ -32,6 +32,9 @@
     },
     "opacity": function(d) {
       return d[0].line_opacity;
+    },
+    "stroke-dasharray": function(d) {
+      return d[0].line_stroke_dasharray;
     }
   });
 

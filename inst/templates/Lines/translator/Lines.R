@@ -23,9 +23,7 @@ Lines <- setRefClass("Lines",
             params$out_width <<- params$out_width %or% 500
             params$out_height <<- params$out_height %or% 500
             params$interpolate <<- params$interpolate %or% "linear"
-            params$width <<- params$width %or% 4
             params$jitter <<- params$jitter %or% 0
-            params$opacity <<- params$opacity %or% 1
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
             params$color_title <<- params$color_title %or% "Group"
@@ -38,14 +36,17 @@ Lines <- setRefClass("Lines",
 
         get_extra = function() {
             extra <- params$extra %or% list()
+            # line-specific options
             extra$line_name <- params$names
-            extra$line_stroke_width <- params$width
-            extra$line_opacity <- params$opacity
+            extra$line_stroke_width <- params$width %or% 3
+            extra$line_stroke_dasharray <- params$dash %or% "0"
+            extra$line_opacity <- params$opacity %or% 1
 
             at_least_two_color_groups <- !is.null(params$color_groups) && length(unique(params$color_groups)) > 1
             if (at_least_two_color_groups)
                 extra$color_group <- params$color_groups
 
+            # point-specific options
             if (is.null(params$radius)){
                 # Points should always have a radius to ensure
                 # the tooltip is always visible
@@ -76,7 +77,7 @@ Lines <- setRefClass("Lines",
         validate_palette = function(palette){
             if (!is.null(params$color_groups)){
 
-                ordered_color_group_names <<- get_ordered_color_group_names()
+                ordered_color_group_names <- get_ordered_color_group_names()
 
                 if (is.null(palette)){
                     if (scale_type(params$color_groups) == "quantitative"){
@@ -100,6 +101,9 @@ Lines <- setRefClass("Lines",
                 # If no color_groups, use the first palette color or default to black
                 palette <- palette[1] %or% "#000"
             }
+
+            # Reverse so the last color group gets the last color
+            params$palette <<- rev(params$palette)
 
             palette
         },
