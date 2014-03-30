@@ -17,6 +17,15 @@ test_that("get_tooltip_format", {
     expect_equal(tooltip_format, ".2f")
 })
 
+
+test_that("data.frame.by.rows", {
+    data <- data.frame.by.rows(1:3,4:6, row.names = c("A", "B"))
+    expect_equal(data, data.frame(V1=c(1,4), V2=c(2,5), V3=c(3,6), row.names = c("A", "B")))
+    data <- data.frame.by.rows(1:3,4:6, row.names = c("A", "B"))
+    colnames(data) <- c("a", "b", "c")
+    expect_equal(data, data.frame(a=c(1,4), b=c(2,5), c=c(3,6), row.names = c("A", "B")))
+})
+
 test_that("default_colors", {
     expect_equal(length(default_colors(15)), 15)
 })

@@ -18,6 +18,20 @@ get_tooltip_format <- function(variable_value){
     format
 }
 
+# Create a dataframe by rows instead of by column
+#' @export
+data.frame.by.rows <- function(...){
+    dots <- list(...)
+    row.names <- dots$row.names; dots$row.names <- NULL
+    check.rows <- dots$check.rows; dots$check.rows <- NULL
+    check.names <- dots$check.names; dots$check.names <- NULL
+    stringsAsFactors <- dots$stringsAsFactors; dots$stringsAsFactors <- NULL
+    as.data.frame(do.call(rbind, dots), row.names = row.names,
+                                        check.rows = check.rows,
+                                        check.names = check.names,
+                                        stringsAsFactors = stringsAsFactors)
+}
+
 #' Returns NULL if the list is empty
 #'
 #' @export
