@@ -2,6 +2,7 @@
 #'
 #' @param x data object
 #'
+#' @export
 get_xy_rownames <- function(x) {
     UseMethod("get_xy_rownames", x)
 }
