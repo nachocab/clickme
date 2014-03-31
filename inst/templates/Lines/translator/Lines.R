@@ -24,6 +24,7 @@ Lines <- setRefClass("Lines",
             params$out_height <<- params$out_height %or% 500
             params$interpolate <<- params$interpolate %or% "linear"
             params$jitter <<- params$jitter %or% 0
+            params$stroke_width <<- params$stroke_width %or% 0
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
             params$color_title <<- params$color_title %or% "Group"

@@ -56,6 +56,7 @@
 
             interpolate = {{ params$interpolate }};
             opacity = {{ params$opacity }};
+            stroke_width = {{ params$stroke_width }};
             show_sidebar = {{ params$show_sidebar }};
 
             color_scale = {{{ get_d3_color_scale() }}}

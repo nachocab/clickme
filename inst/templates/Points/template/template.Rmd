@@ -48,10 +48,13 @@
                 linear_scale_padding: 40
             });
 
-            static_radius = 5;
-            opacity = {{ params$opacity }};
-            show_sidebar = {{ params$show_sidebar }};
             distance_between_show_names_and_color_groups = 80;
+            static_radius = 5;
+
+            opacity = {{ params$opacity }};
+            stroke_width = {{ params$stroke_width }};
+            show_sidebar = {{ params$show_sidebar }};
+
             color_scale = {{{ get_d3_color_scale() }}};
             color_legend_counts = {{ get_color_legend_counts() }};
             tooltip_content = {{{ get_tooltip_content() }}};

@@ -25,6 +25,7 @@ Points <- setRefClass("Points",
             params$out_height <<- params$out_height %or% 500
             params$jitter <<- params$jitter %or% 0
             params$opacity <<- params$opacity %or% 1
+            params$stroke_width <<- params$stroke_width %or% 0
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
             params$color_title <<- params$color_title %or% "Group"

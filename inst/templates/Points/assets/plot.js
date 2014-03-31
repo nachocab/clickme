@@ -47,6 +47,8 @@
     "fill": function(d) {
       return color_scale(d.color_group);
     },
+    "stroke": "black",
+    "stroke-width": stroke_width,
     "opacity": function(d, i) {
       return opacity;
     },

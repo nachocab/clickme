@@ -71,6 +71,8 @@ points = g_points.append("svg:circle")
         "r": (d) -> d.radius
         "id": (d,i) -> "point-#{i}"
         "fill": (d) -> r_color_group(d)
+        "stroke": "black"
+        "stroke-width": stroke_width
         "opacity": (d) -> d.point_opacity
         "title": tooltip_content )
     .on('mouseover', (d, i) ->

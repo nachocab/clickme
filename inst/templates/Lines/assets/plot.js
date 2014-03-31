@@ -83,6 +83,8 @@
     "fill": function(d) {
       return r_color_group(d);
     },
+    "stroke": "black",
+    "stroke-width": stroke_width,
     "opacity": function(d) {
       return d.point_opacity;
     },
