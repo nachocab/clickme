@@ -30,9 +30,9 @@
                 width: {{ params$out_width }},
                 height: {{ params$out_height }},
                 padding: {{ params$padding }},
-                subtitle: {{ params$subtitle }},
                 labels: {
                     title: {{ params$title }},
+                    subtitle: {{ params$subtitle }},
                     x: {{ params$xlab }},
                     y: {{ params$ylab }},
                     color_title: {{ params$color_title }}
