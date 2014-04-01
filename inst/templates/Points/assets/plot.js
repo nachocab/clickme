@@ -161,24 +161,23 @@
     return single_group.text("Show one");
   };
 
-  toggle_points = function(category) {
-    var categories;
+  toggle_points = function(color_groups) {
     g_points.filter(function(d) {
-      return d.color_group === category;
+      return d.color_group === color_groups;
     }).classed("hide", function() {
       return !d3.select(this).classed("hide");
     });
     g_color_group_keys.filter(function(d) {
-      return d === category;
+      return d === color_groups;
     }).classed("hide", function() {
       return !d3.select(this).classed("hide");
     });
-    categories = g_points.filter(":not(.hide)").data().map(function(d) {
+    color_groups = g_points.filter(":not(.hide)").data().map(function(d) {
       return d.color_group;
     }).unique();
-    if (categories.length === 0) {
+    if (color_groups.length === 0) {
       return show_all_colors();
-    } else if (categories.length === 1) {
+    } else if (color_groups.length === 1) {
       return single_group.text("Show all");
     } else {
       return single_group.text("Show one");
@@ -186,18 +185,18 @@
   };
 
   deselect_color_groups = function() {
-    var categories, visible_category, visible_points;
+    var color_groups, visible_color_groups, visible_points;
     visible_points = g_points.filter(":not(.hide)");
-    categories = visible_points.data().map(function(d) {
+    color_groups = visible_points.data().map(function(d) {
       return d.color_group;
     }).unique();
     if (single_group.text() === "Show one") {
-      visible_category = categories.reverse()[0];
+      visible_color_groups = color_groups.reverse()[0];
       g_points.filter(function(d) {
-        return d.color_group !== visible_category;
+        return d.color_group !== visible_color_groups;
       }).classed("hide", true);
       g_color_group_keys.filter(function(d) {
-        return d !== visible_category;
+        return d !== visible_color_groups;
       }).classed("hide", true);
       return single_group.text("Show all");
     } else {

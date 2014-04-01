@@ -171,22 +171,22 @@ show_all_colors = () ->
     g_color_group_keys.classed("hide", false)
     single_group.text("Show one")
 
-toggle_points = (category)->
-    # if the elements with the category were hidden, then show; if not hidden, hide.
-    g_points.filter((d)-> d.color_group == category).classed("hide", ()->
+toggle_points = (color_groups)->
+    # if the elements with the color_groups were hidden, then show; if not hidden, hide.
+    g_points.filter((d)-> d.color_group == color_groups).classed("hide", ()->
         !d3.select(this).classed("hide")
     )
 
-    g_color_group_keys.filter((d)-> d == category).classed("hide", ()->
+    g_color_group_keys.filter((d)-> d == color_groups).classed("hide", ()->
         !d3.select(this).classed("hide")
     )
 
-    categories = g_points.filter(":not(.hide)").data().map((d)-> d.color_group).unique()
+    color_groups = g_points.filter(":not(.hide)").data().map((d)-> d.color_group).unique()
 
 
-    if categories.length == 0
+    if color_groups.length == 0
         show_all_colors()
-    else if categories.length == 1
+    else if color_groups.length == 1
         single_group.text("Show all")
     else
         single_group.text("Show one")
@@ -194,12 +194,12 @@ toggle_points = (category)->
 
 deselect_color_groups = ()->
     visible_points = g_points.filter(":not(.hide)")
-    categories = visible_points.data().map((d)-> d.color_group).unique()
+    color_groups = visible_points.data().map((d)-> d.color_group).unique()
     if single_group.text() == "Show one"
-        visible_category = categories.reverse()[0]
+        visible_color_groups = color_groups.reverse()[0]
 
-        g_points.filter((d)-> d.color_group != visible_category).classed("hide", true)
-        g_color_group_keys.filter((d)-> d != visible_category).classed("hide", true)
+        g_points.filter((d)-> d.color_group != visible_color_groups).classed("hide", true)
+        g_color_group_keys.filter((d)-> d != visible_color_groups).classed("hide", true)
         single_group.text("Show all")
     else
         show_all_colors()
