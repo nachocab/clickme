@@ -1,3 +1,7 @@
+g.hover circle, g.hover path, g.hover text {
+  opacity: 1;
+}
+
 .color_group_key {
     font-size: 20px;
 }
