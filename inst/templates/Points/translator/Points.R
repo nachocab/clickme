@@ -123,8 +123,8 @@ Points <- setRefClass("Points",
                 ordered_color_group_names <- c(ordered_color_group_names_aux, missing_color_group_names)
             }
 
-            # If color_group_order is specified, it overrides the default
-            # and palette name orders
+            # If color_group_order is specified, it overrides the
+            # default order (alphabetical) and the palette name order
             if (!is.null(params$color_group_order)) {
                 if (scale_type(params$color_groups) != "categorical"){
                     stop("\n\n\tcolor_group_order can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)")
