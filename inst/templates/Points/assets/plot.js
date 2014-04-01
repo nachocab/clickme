@@ -65,7 +65,9 @@
     return d.point_name;
   }).attr({
     "dy": ".32em",
-    "dx": 8,
+    "dx": function(d) {
+      return 8 + d.radius;
+    },
     "text-anchor": "left",
     "display": "none"
   }).style({

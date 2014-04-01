@@ -61,7 +61,7 @@ point_names = g_points.append("text")
     .text((d) -> d.point_name)
     .attr(
         "dy": ".32em"
-        "dx": 8
+        "dx": (d) -> 8 + d.radius
         "text-anchor": "left"
         "display": "none")
     .style(
