@@ -51,9 +51,11 @@ points = g_points.append("svg:circle")
         "opacity": (d,i) -> opacity
         "title": tooltip_content )
     .on('mouseover', (d, i) ->
-        point = clip.select('circle#point-'+i)
+        d3.select(this.parentNode).classed("hover", true)
+        point = d3.select('circle#point-'+i)
         tip.show(point.datum(), point.node()))
     .on('mouseout',  (d, i) ->
+        d3.select(this.parentNode).classed("hover", false)
         tip.hide())
 
 # Create point names
@@ -63,10 +65,18 @@ point_names = g_points.append("text")
         "dy": ".32em"
         "dx": (d) -> 8 + d.radius
         "text-anchor": "left"
+        "opacity": (d,i) -> opacity
         "display": "none")
     .style(
         "fill": (d) -> color_scale(d.color_group)
         "font-size": "22px")
+    .on('mouseover', (d, i) ->
+        d3.select(this.parentNode).classed("hover", true)
+        point = d3.select('circle#point-'+i)
+        tip.show(point.datum(), point.node()))
+    .on('mouseout',  (d, i) ->
+        d3.select(this.parentNode).classed("hover", false)
+        tip.hide())
 
 # define big circle overlays to make points easier to select
 # overlay_radius = 7

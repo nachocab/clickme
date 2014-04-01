@@ -16,7 +16,9 @@ clip = plot.center.append("g")
 g_lines = clip.selectAll(".line")
     .data(plot.data)
   .enter().append("g")
-    .attr("class": "line")
+    .attr(
+          "class": "line"
+          "id": (d,i) -> "line-#{i}")
 
 line = d3.svg.line()
     .interpolate(interpolate)
@@ -31,6 +33,10 @@ lines = g_lines.append("path")
         "stroke-width": (d) -> d[0].line_stroke_width
         "opacity": (d) -> d[0].line_opacity
         "stroke-dasharray" : (d) -> d[0].line_stroke_dasharray)
+    .on('mouseover', (d, i) ->
+        d3.select(this.parentNode).classed("hover", true))
+    .on('mouseout',  (d, i) ->
+        d3.select(this.parentNode).classed("hover", false))
 
 # Create tip
 tip = d3.tip()
@@ -47,12 +53,17 @@ line_names = g_lines.append("text")
         "y": (d) -> plot.scales.y(d[d.length-1].y)
         "x": (d) -> plot.scales.x(d[d.length-1].x)
         "dy": ".32em"
+        "opacity": (d,i) -> d[0].line_opacity
         "dx": 8
         "text-anchor": "left"
         "display": "none")
     .style(
         "fill": (d) -> r_color_group(d[0])
         "font-size": "22px")
+    .on('mouseover', (d, i) ->
+        d3.select(this.parentNode).classed("hover", true))
+    .on('mouseout',  (d, i) ->
+        d3.select(this.parentNode).classed("hover", false))
 
 # create points
 transform_points = (d) ->
@@ -77,8 +88,10 @@ points = g_points.append("svg:circle")
         "title": tooltip_content )
     .on('mouseover', (d, i) ->
         point = clip.select('circle#point-'+i)
+        d3.select(this.parentNode).classed("hover", true)
         tip.show(point.datum(), point.node()))
     .on('mouseout',  (d, i) ->
+        d3.select(this.parentNode).classed("hover", false)
         tip.hide())
 
 

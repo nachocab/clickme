@@ -12,7 +12,10 @@
   clip = plot.center.append("g").attr("clip-path", "url(#clip-plot)");
 
   g_lines = clip.selectAll(".line").data(plot.data).enter().append("g").attr({
-    "class": "line"
+    "class": "line",
+    "id": function(d, i) {
+      return "line-" + i;
+    }
   });
 
   line = d3.svg.line().interpolate(interpolate).x(function(d) {
@@ -36,6 +39,10 @@
     "stroke-dasharray": function(d) {
       return d[0].line_stroke_dasharray;
     }
+  }).on('mouseover', function(d, i) {
+    return d3.select(this.parentNode).classed("hover", true);
+  }).on('mouseout', function(d, i) {
+    return d3.select(this.parentNode).classed("hover", false);
   });
 
   tip = d3.tip().attr('class', 'd3-tip').offset([-15, 0]).html(tooltip_content);
@@ -52,6 +59,9 @@
       return plot.scales.x(d[d.length - 1].x);
     },
     "dy": ".32em",
+    "opacity": function(d, i) {
+      return d[0].line_opacity;
+    },
     "dx": 8,
     "text-anchor": "left",
     "display": "none"
@@ -60,6 +70,10 @@
       return r_color_group(d[0]);
     },
     "font-size": "22px"
+  }).on('mouseover', function(d, i) {
+    return d3.select(this.parentNode).classed("hover", true);
+  }).on('mouseout', function(d, i) {
+    return d3.select(this.parentNode).classed("hover", false);
   });
 
   transform_points = function(d) {
@@ -92,8 +106,10 @@
   }).on('mouseover', function(d, i) {
     var point;
     point = clip.select('circle#point-' + i);
+    d3.select(this.parentNode).classed("hover", true);
     return tip.show(point.datum(), point.node());
   }).on('mouseout', function(d, i) {
+    d3.select(this.parentNode).classed("hover", false);
     return tip.hide();
   });
 

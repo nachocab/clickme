@@ -55,9 +55,11 @@
     "title": tooltip_content
   }).on('mouseover', function(d, i) {
     var point;
-    point = clip.select('circle#point-' + i);
+    d3.select(this.parentNode).classed("hover", true);
+    point = d3.select('circle#point-' + i);
     return tip.show(point.datum(), point.node());
   }).on('mouseout', function(d, i) {
+    d3.select(this.parentNode).classed("hover", false);
     return tip.hide();
   });
 
@@ -69,12 +71,23 @@
       return 8 + d.radius;
     },
     "text-anchor": "left",
+    "opacity": function(d, i) {
+      return opacity;
+    },
     "display": "none"
   }).style({
     "fill": function(d) {
       return color_scale(d.color_group);
     },
     "font-size": "22px"
+  }).on('mouseover', function(d, i) {
+    var point;
+    d3.select(this.parentNode).classed("hover", true);
+    point = d3.select('circle#point-' + i);
+    return tip.show(point.datum(), point.node());
+  }).on('mouseout', function(d, i) {
+    d3.select(this.parentNode).classed("hover", false);
+    return tip.hide();
   });
 
   tip = d3.tip().attr('class', 'd3-tip').offset([-15, 0]).html(tooltip_content);
