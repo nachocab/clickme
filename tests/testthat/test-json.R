@@ -82,9 +82,31 @@ test_that("logical", {
 test_that("data frame", {
     data <- data.frame(x = c(1, 2, 3), y = c("a", "b", "c"))
     expect_equal(to_json(data), "[{\"x\":1,\"y\":\"a\"},\n{\"x\":2,\"y\":\"b\"},\n{\"x\":3,\"y\":\"c\"}]")
+
+    data <- data.frame(x = c(1, 2, 3), y = factor(c("a", "b", "c")))
+    expect_equal(to_json(data), "[{\"x\":1,\"y\":\"a\"},\n{\"x\":2,\"y\":\"b\"},\n{\"x\":3,\"y\":\"c\"}]")
+})
+
+test_that("list", {
+    data <- list(x = c(1, 2, 3), y = c("a", "b", "c"))
+    expect_equal(to_json(data), "{\"x\":[1,2,3],\"y\":[\"a\",\"b\",\"c\"]}")
+
+    data <- list(x = c(1, 2, 3), y = factor(c("a", "b", "c")))
+    expect_equal(to_json(data), "{\"x\":[1,2,3],\"y\":[\"a\",\"b\",\"c\"]}")
+})
+
+test_that("vectors", {
+    data <- c("a", "b", "c")
+    expect_equal(to_json(data), "[\"a\",\"b\",\"c\"]")
+})
+
+test_that("factor", {
+    data <- factor(c("a", "b", "c"))
+    expect_equal(to_json(data), "[\"a\",\"b\",\"c\"]")
 })
 
 test_that("matrix", {
     data <- matrix(1:9, nrow = 3, byrow = TRUE)
     expect_equal(to_json(data), "[[1,2,3],[4,5,6],[7,8,9]]")
 })
+

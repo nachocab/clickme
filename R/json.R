@@ -43,6 +43,7 @@ to_json.factor <- function(x){
     } else {
         json <- to_monovector(x)
     }
+    json
 }
 
 #' @S3method to_json data.frame
@@ -50,8 +51,8 @@ to_json.data.frame <- function(x){
     if (length(x)){
         x <- prepare_for_json(x)
         json <- apply(x, 1, function(row) {paste(row, collapse = ',')})
-        json <- paste0('{', json, '}')
-        json <- paste0('[', paste(json, collapse = ',\n'), ']')
+        json <- sprintf('{%s}', json)
+        json <- sprintf('[%s]', paste(json, collapse = ',\n'))
     } else {
         json <- "[]"
     }
@@ -85,12 +86,17 @@ to_monovector <- function(x){
 }
 
 
+# Convert each value in the dataframe to character
+# and prepend the "\"key\":"
+# prepend the key name to each value in the dataframe "key":value
 prepare_for_json <- function(x){
     x <- lapply(colnames(x), function(key){
         sapply(x[, key], function(value){
             key <- deparse(key)
+            if (is.factor(value))
+                value <- as.character(value)
             value <- to_json(value)
-            paste0(key, ':', value)
+            sprintf("%s:%s", key, value)
         })
     })
     as.data.frame(x, stringsAsFactors = FALSE)
