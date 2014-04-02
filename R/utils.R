@@ -488,3 +488,8 @@ is_character_or_factor <- function(x) {
 is_data_frame_or_matrix <- function(x) {
     is.data.frame(x) || is.matrix(x)
 }
+
+#' @export
+is_list_of_2xn_data_frames <- function(x) {
+    is.list(x) && all(sapply(x, class) == "data.frame") && all(sapply(x, ncol) == 2)
+}

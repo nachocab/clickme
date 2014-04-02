@@ -320,6 +320,30 @@ test_that("extra fields get added", {
         info = "using lists_to_line_data, extra is a list of dataframes"
     )
 
+    params <- list(x = list(line1 = data.frame(x = 1:3, y = 2:4),
+                             line2 = data.frame(x = 4:5, y = 3:4)),
+                   y = NULL,
+                   extra = list(extra1 = c(10, 20),
+                                extra2 = c(100,200))
+                   )
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(get_attrs(lines$data, c("x", "y", "line_name", "extra1", "extra2")),
+        list(
+            list(
+                list(x = 1, y = 2, line_name = "1", extra1 = 10, extra2 = 100),
+                list(x = 2, y = 3, line_name = "1", extra1 = 10, extra2 = 100),
+                list(x = 3, y = 4, line_name = "1", extra1 = 10, extra2 = 100)
+            ),
+            list(
+                list(x = 4, y = 3, line_name = "2", extra1 = 20, extra2 = 200),
+                list(x = 5, y = 4, line_name = "2", extra1 = 20, extra2 = 200)
+            )
+        ),
+        info = "using lists_to_line_data, extra is a list of dataframes"
+    )
+
 })
 
 

@@ -23,6 +23,10 @@ Lines$methods(
                 data <- dataframes_to_line_data(x = x,
                                                 y = NULL,
                                                 extra = internal$extra)
+            } else if (is_list_of_2xn_data_frames(x)) {
+                data <- lists_to_line_data(x = lapply(x,function(x) x[,1]),
+                                           y = lapply(x,function(x) x[,2]),
+                                           extra = internal$extra)
             } else {
                 data <- vectors_to_line_data(x = 1:length(x),
                                              y = x,
