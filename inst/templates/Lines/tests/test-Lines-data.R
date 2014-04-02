@@ -321,7 +321,7 @@ test_that("extra fields get added", {
     )
 
     params <- list(x = list(line1 = data.frame(x = 1:3, y = 2:4),
-                             line2 = data.frame(x = 4:5, y = 3:4)),
+                            line2 = data.frame(x = 4:5, y = 3:4)),
                    y = NULL,
                    extra = list(extra1 = c(10, 20),
                                 extra2 = c(100,200))
@@ -332,17 +332,27 @@ test_that("extra fields get added", {
     expect_equal(get_attrs(lines$data, c("x", "y", "line_name", "extra1", "extra2")),
         list(
             list(
-                list(x = 1, y = 2, line_name = "1", extra1 = 10, extra2 = 100),
-                list(x = 2, y = 3, line_name = "1", extra1 = 10, extra2 = 100),
-                list(x = 3, y = 4, line_name = "1", extra1 = 10, extra2 = 100)
+                list(x = 1, y = 2, line_name = "line1", extra1 = 10, extra2 = 100),
+                list(x = 2, y = 3, line_name = "line1", extra1 = 10, extra2 = 100),
+                list(x = 3, y = 4, line_name = "line1", extra1 = 10, extra2 = 100)
             ),
             list(
-                list(x = 4, y = 3, line_name = "2", extra1 = 20, extra2 = 200),
-                list(x = 5, y = 4, line_name = "2", extra1 = 20, extra2 = 200)
+                list(x = 4, y = 3, line_name = "line2", extra1 = 20, extra2 = 200),
+                list(x = 5, y = 4, line_name = "line2", extra1 = 20, extra2 = 200)
             )
         ),
         info = "using lists_to_line_data, extra is a list of dataframes"
     )
+
+    params <- list(x = list(line1 = data.frame(x = 1:3, y = 2:4, z = 1:3),
+                            line2 = data.frame(x = 4:5, y = 3:4, z = 1:2)),
+                   y = NULL,
+                   extra = list(extra1 = c(10, 20),
+                                extra2 = c(100,200))
+                   )
+    lines <- Lines$new(params)
+    lines$get_params()
+    expect_error(lines$get_data(), "When input is a list of dataframes, they must only have two columns")
 
 })
 
@@ -407,6 +417,7 @@ test_that("order data by color_groups", {
     expect_equal(line_names,
                  c("5", "3", "4", "1", "2"),
                  info = "categorical color_groups, named palette") # b b c c a ("a" on top)
+
 
 })
 

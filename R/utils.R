@@ -490,6 +490,7 @@ is_data_frame_or_matrix <- function(x) {
 }
 
 #' @export
-is_list_of_2xn_data_frames <- function(x) {
-    is.list(x) && all(sapply(x, class) == "data.frame") && all(sapply(x, ncol) == 2)
+is_list_of_data_frames <- function(x) {
+    is.list(x) && all(sapply(x, class) == "data.frame")
 }
+
