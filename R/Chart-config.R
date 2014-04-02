@@ -45,12 +45,12 @@ Chart$methods(
 
         sapply(assets$template, function(asset){
             path <- file.path(internal$file$paths$template_assets, asset)
-            if (!file.exists(path)) stop(asset, " not found at: ", path)
+            if (!file.exists(path)) stop(asset, " not found at: ", path, call. = FALSE)
         })
 
         sapply(assets$shared, function(asset){
             path <- file.path(internal$file$paths$shared_assets, asset)
-            if (!file.exists(path)) stop(asset, " not found at: ", path)
+            if (!file.exists(path)) stop(asset, " not found at: ", path, call. = FALSE)
         })
     },
 

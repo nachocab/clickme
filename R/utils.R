@@ -110,9 +110,9 @@ disjoint_sets <- function(a, b, names = c("a", "b", "both")) {
 # move elements to the front of an array
 move_in_front <- function(first_elements, all_elements) {
     if (any(first_elements %notin% all_elements)){
-        stop(sprintf("\n\n\tThe following elements don't appear in \"%s\":\n%s\n",
+        stop(sprintf("\n\tThe following elements don't appear in \"%s\":\n%s\n",
              deparse(substitute(all_elements)),
-             enumerate(first_elements[any(first_elements %notin% all_elements)])))
+             enumerate(first_elements[any(first_elements %notin% all_elements)])), call. = FALSE)
     }
     all_elements <- all_elements[c(which(all_elements %in% first_elements), which(all_elements %notin% first_elements))]
     all_elements
@@ -141,9 +141,9 @@ enumerate <- function(x) {
 match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups = FALSE) {
     if (any(duplicated(unlist(groups)))){
         duplicated_elements <- unname(unlist(groups)[duplicated(unlist(groups))])
-        message <- sprintf("\n\tThe following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"), "\n")
+        message <- sprintf("\tThe following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"), "\n")
         if (strict_dups){
-            stop(message)
+            stop(message, call. = FALSE)
         } else {
             message(message)
         }

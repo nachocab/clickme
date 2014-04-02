@@ -110,12 +110,12 @@ Points <- setRefClass("Points",
             # If palette has names, they override the default order
             if (!is.null(names(params$palette))) {
                 if (scale_type(params$color_groups) != "categorical"){
-                    stop("\n\n\tA named palette can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)")
+                    stop("A named palette can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)", call. = FALSE)
                 }
 
                 if (any(duplicated(names(params$palette)))) {
                     duplicated_names <- names(params$palette)[duplicated(names(params$palette))]
-                    stop(sprintf("\n\n\tDuplicated names in palette:\n%s\n\n", enumerate(duplicated_names)))
+                    stop(sprintf("Duplicated names in palette:\n%s\n\n", enumerate(duplicated_names)), call. = FALSE)
                 }
 
                 ordered_color_group_names_aux <- names(params$palette)
@@ -127,12 +127,12 @@ Points <- setRefClass("Points",
             # default order (alphabetical) and the palette name order
             if (!is.null(params$color_group_order)) {
                 if (scale_type(params$color_groups) != "categorical"){
-                    stop("\n\n\tcolor_group_order can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)")
+                    stop("color_group_order can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)", call. = FALSE)
                 }
 
                 if (any(duplicated(params$color_group_order))) {
                     duplicated_names <- params$color_group_order[duplicated(params$color_group_order)]
-                    stop(sprintf("\n\n\tDuplicated names in color_group_order:\n%s\n\n", enumerate(duplicated_names)))
+                    stop(sprintf("Duplicated names in color_group_order:\n%s\n\n", enumerate(duplicated_names)), call. = FALSE)
                 }
 
                 ordered_color_group_names_aux <- params$color_group_order
@@ -147,7 +147,7 @@ Points <- setRefClass("Points",
         # specified when the scale is quantitative
         validate_color_domain = function(color_domain){
             if (!is.null(color_domain) && scale_type(params$color_groups) == "categorical") {
-                stop("\n\ncolor_domain can only be used with numeric scales, but color_groups has categorical values.")
+                stop("\n\ncolor_domain can only be used with numeric scales, but color_groups has categorical values.", call. = FALSE)
             }
 
             if (is.null(color_domain) && scale_type(params$color_groups) == "quantitative") {

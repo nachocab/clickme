@@ -55,7 +55,7 @@ reload_translators <- function() {
         if (length(invalid_global_names) > 0) {
             stop(sprintf("The %s template is defining the following names in the global namespace:\n%s\n\nYou should define these as reference class methods or fields",
                  basename(template_paths[t]),
-                 enumerate(invalid_global_names))
+                 enumerate(invalid_global_names), call. = FALSE)
             )
         }
     })

@@ -24,7 +24,7 @@ Chart$methods(
 
         if (any(names(padding) %notin% valid_padding_names)){
             bad_padding_elements <- padding[names(padding) %notin% valid_padding_names]
-            stop(sprintf("\n\nWrong padding elements:\n%s", enumerate(bad_padding_elements)))
+            stop(sprintf("\nWrong padding elements:\n%s", enumerate(bad_padding_elements)), call. = FALSE)
         } else {
             padding$top <- padding$top       %or% 150
             padding$right <- padding$right   %or% 400

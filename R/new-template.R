@@ -20,10 +20,10 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
         unlink(file.path(getOption("clickme_templates_path"), template_name), recursive = TRUE)
     } else {
         if (file.exists(paths$Template)) {
-            stop(sprintf("\n\nThe %s template already exists:%s\n%s\n",
+            stop(sprintf("\nThe %s template already exists:%s\n%s\n",
                           template_name,
                           paths$Template,
-                          camel_case_template_name))
+                          camel_case_template_name), call. = FALSE)
         }
     }
 

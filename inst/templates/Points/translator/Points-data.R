@@ -40,9 +40,9 @@ Points$methods(
     # alphanumeric
     order_by_color_group = function(data){
         if (length(internal$extra$color_group) != nrow(data)) {
-            stop(sprintf("\nThe number of color_groups is %s, but the number of points is %s",
+            stop(sprintf("The number of color_groups is %s, but the number of points is %s",
                 length(internal$extra$color_group),
-                length(data)))
+                length(data)), call. = FALSE)
         }
 
         ordered_color_group_names <- get_ordered_color_group_names()
@@ -84,9 +84,9 @@ Points$methods(
     validate_extra = function(extra, num_points){
         param_lengths <- sapply(extra, length)
         if (any(param_lengths > num_points))
-            stop(sprintf("\nNumber of points is %s, but the following parameters have more values than points: \n%s",
+            stop(sprintf("Number of points is %s, but the following parameters have more values than points: \n%s",
                     num_points,
-                    enumerate(names(extra)[param_lengths > num_points])))
+                    enumerate(names(extra)[param_lengths > num_points])), call. = FALSE)
 
         extra$point_name <- extra$point_name %or% as.character(1:num_points)
         extra

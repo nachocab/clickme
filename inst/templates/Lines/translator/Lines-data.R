@@ -18,12 +18,16 @@ Lines$methods(
         if (is.null(y)){
             if (is_data_frame_or_matrix(x)){
                 if (ncol(x) < 2) {
-                    stop("When x is a dataframe or a matrix, it must contain at least two columns")
+                    stop("When x is a dataframe or a matrix, it must contain at least two columns", call. = FALSE)
                 }
                 data <- dataframes_to_line_data(x = x,
                                                 y = NULL,
                                                 extra = internal$extra)
-            } else if (is_list_of_2xn_data_frames(x)) {
+            } else if (is_list_of_data_frames(x)) {
+                if (any(sapply(x, ncol) != 2))
+                    stop("When input is a list of dataframes, they must only have two columns", call. = FALSE)
+
+                internal$extra$line_name <- names(x)
                 data <- lists_to_line_data(x = lapply(x,function(x) x[,1]),
                                            y = lapply(x,function(x) x[,2]),
                                            extra = internal$extra)
@@ -39,11 +43,11 @@ Lines$methods(
                 y <- ensure_is_dataframe(y, nrow(x))
 
                 if (ncol(x) != ncol(y))
-                    stop(sprintf("\nx and y have different number of columns: %s vs. %s",
-                            ncol(x), ncol(y)))
+                    stop(sprintf("x and y have different number of columns: %s vs. %s",
+                            ncol(x), ncol(y)), call. = FALSE)
 
                 if (ncol(x) < 2)
-                    stop("When x is a dataframe or a matrix, it must contain at least two columns")
+                    stop("When x is a dataframe or a matrix, it must contain at least two columns", call. = FALSE)
 
                 data <- dataframes_to_line_data(x = x,
                                                 y = y,
@@ -51,9 +55,9 @@ Lines$methods(
             } else {
                 if (is.list(x) && is.list(y)){
                     if (any(sapply(x, length) != sapply(y, length)))
-                        stop(sprintf("\nx and y have different lengths: %s vs. %s",
+                        stop(sprintf("x and y have different lengths: %s vs. %s",
                              paste(sapply(x, length), collapse = " "),
-                             paste(sapply(x, length), collapse = " ")))
+                             paste(sapply(x, length), collapse = " ")), call. = FALSE)
                     data <- lists_to_line_data(x = x,
                                                y = y,
                                                extra = internal$extra)
@@ -149,9 +153,9 @@ Lines$methods(
     validate_extra = function(extra, num_lines){
         param_lengths <- sapply(extra, length)
         if (any(param_lengths > num_lines))
-            stop(sprintf("\nNumber of lines is %s, but the following parameters have more values than lines: \n%s",
+            stop(sprintf("Number of lines is %s, but the following parameters have more values than lines: \n%s",
                     num_lines,
-                    enumerate(names(extra)[param_lengths > num_lines])))
+                    enumerate(names(extra)[param_lengths > num_lines])), call. = FALSE)
 
         extra$line_name <- extra$line_name %or% as.character(1:num_lines)
         extra
@@ -160,9 +164,9 @@ Lines$methods(
     # internal
     order_by_color_group = function(data){
         if (length(internal$extra$color_group) != length(data)) {
-            stop(sprintf("\nThe number of color_groups is %s, but the number of lines is %s",
+            stop(sprintf("The number of color_groups is %s, but the number of lines is %s",
                 length(internal$extra$color_group),
-                length(data)))
+                length(data)), call. = FALSE)
         }
 
         line_names <- sapply(data, function(line) line[[1]]$line_name)

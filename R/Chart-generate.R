@@ -36,11 +36,11 @@ Chart$methods(
     # "{{ \"4\" }}" => "[[[\" \\\"4\\\" \"]]]" => knit => "{{ \"4\" }}"
     translate_coffee_template_to_js = function() {
         if (!is_coffee_installed()) {
-            stop("\n\n\tCoffeeScript doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/\n\n")
+            stop("CoffeeScript doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/\n\n", call. = FALSE)
         }
 
         if (!file.exists(internal$file$paths$template_coffee_file)) {
-            stop(sprintf("\n\n\tNo coffeescript file found at:\n\t%s\n\n", internal$file$paths$template_coffee_file))
+            stop(sprintf("No coffeescript file found at:\n\t%s\n\n", internal$file$paths$template_coffee_file), call. = FALSE)
         }
 
         coffee_template <- readLines(internal$file$paths$template_coffee_file, warn = FALSE)
