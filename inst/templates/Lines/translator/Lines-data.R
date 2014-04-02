@@ -46,7 +46,7 @@ Lines$methods(
                                                 extra = internal$extra)
             } else {
                 if (is.list(x) && is.list(y)){
-                    if (all(sapply(x, length) != sapply(y, length)))
+                    if (any(sapply(x, length) != sapply(y, length)))
                         stop(sprintf("\nx and y have different lengths: %s vs. %s",
                              paste(sapply(x, length), collapse = " "),
                              paste(sapply(x, length), collapse = " ")))
@@ -177,7 +177,7 @@ Lines$methods(
 
     # internal
     get_point_value = function(lines_data, variable_name){
-        as.vector(sapply(lines_data, function(line) sapply(line, function(point) point[[variable_name]])))
+        unlist(sapply(lines_data, function(line) sapply(line, function(point) point[[variable_name]])))
     }
 
     # internal

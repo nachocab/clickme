@@ -204,4 +204,16 @@ test_that("get_data_ranges", {
     lines <- Lines$new(params)
     lines$get_data()
     expect_equal(no_whitespace(lines$get_data_ranges()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:[1,10]}")
+
+    params <- list(x = list(c(1, 2, 3),
+                            c(4, 5)),
+                   y = list(c(2, 3, 4),
+                            c(3, 4)),
+                   extra = list(extra1 = c(10, 20),
+                                extra2 = c(100,200))
+                   )
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(no_whitespace(lines$get_data_ranges()), "{x:[1,5],y:[2,4]}")
 })
