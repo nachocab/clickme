@@ -1,3 +1,4 @@
+
 # params:
 # x
 # y [NULL]
@@ -20,57 +21,73 @@ Points <- setRefClass("Points",
         get_params = function(){
             callSuper()
 
-            params$width <<- params$width %or% 500
-            params$height <<- params$height %or% 500
-
-            params$radius <<- params$radius %or% 5
+            params$out_width <<- params$out_width %or% 500
+            params$out_height <<- params$out_height %or% 500
             params$jitter <<- params$jitter %or% 0
             params$opacity <<- params$opacity %or% 1
-
+            params$stroke_width <<- params$stroke_width %or% 0
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
-            params$color_title <<- params$color_title %or% "Groups"
+            params$color_title <<- params$color_title %or% "Group"
 
             params$palette <<- validate_palette(params$palette)
-
             params$color_domain <<- validate_color_domain(params$color_domain)
+
+            internal$extra <<- get_extra()
+        },
+
+        get_extra = function() {
+            extra <- params$extra %or% list()
+            extra$point_name <- params$names
+            extra$radius <- params$radius %or% 5
+
+            at_least_two_color_groups <- !is.null(params$color_groups) && length(unique(params$color_groups)) > 1
+            if (at_least_two_color_groups)
+                extra$color_group <- params$color_groups
+
+            null_if_empty(extra)
         },
 
         # Ensure that the palette has as at least one color ("#000")
         # If there are color group names, ensure that each has a valid color
         # Ensure that if palette has color group names:
-        #   any color group name assigned with an NA must get replaced with a default color (useful to determine color group order without specifying the actual color)
-        #   any color group name without a color must get assigned a default color
-        # set default values, replace invalid values, order with internal$ordered_color_group_names
+        #   - any color group name assigned with an NA must get replaced with a
+        #     default color (useful to determine color group order without
+        #     specifying the actual color)
+        #   - any color group name without a color must get assigned a default
+        #     color
+        # set default values, replace invalid values, order with
+        # ordered_color_group_names
         validate_palette = function(palette){
             if (!is.null(params$color_groups)){
 
-                internal$ordered_color_group_names <<- get_ordered_color_group_names()
+                ordered_color_group_names <- get_ordered_color_group_names()
 
                 if (is.null(palette)){
                     if (scale_type(params$color_groups) == "quantitative"){
                         palette <- c("#278DD6", "#d62728")
                     } else {
-                        palette <- setNames(default_colors(length(internal$ordered_color_group_names)), internal$ordered_color_group_names)
+                        palette <- setNames(default_colors(length(ordered_color_group_names)), ordered_color_group_names)
                     }
                 } else {
                     if (scale_type(params$color_groups) == "categorical"){
-                        palette <- setNames(palette[internal$ordered_color_group_names], internal$ordered_color_group_names)
+                        palette <- setNames(palette[ordered_color_group_names], ordered_color_group_names)
 
                         # If any color is NA or NULL, replace it with a default color
                         if (any(is.na(palette) | is.null(palette))) {
-                            categories_without_color <- internal$ordered_color_group_names[is.na(palette)]
+                            categories_without_color <- ordered_color_group_names[is.na(palette)]
                             default_palette <- setNames(default_colors(length(categories_without_color)), categories_without_color)
                             palette <- c(na.omit(palette), default_palette)
                         }
                     }
                 }
             } else {
-                if (!is.null(palette)){
-                    message("\n\tNo color_groups provided. Ignoring palette.\n")
-                }
-                palette <- "#000"
+                # If no color_groups, use the first palette color or default to black
+                palette <- palette[1] %or% "#000"
             }
+
+            # Reverse so the last color group gets the last color
+            params$palette <<- rev(params$palette)
 
             palette
         },
@@ -93,12 +110,12 @@ Points <- setRefClass("Points",
             # If palette has names, they override the default order
             if (!is.null(names(params$palette))) {
                 if (scale_type(params$color_groups) != "categorical"){
-                    stop("\n\n\tA named palette can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)")
+                    stop("A named palette can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)", call. = FALSE)
                 }
 
                 if (any(duplicated(names(params$palette)))) {
                     duplicated_names <- names(params$palette)[duplicated(names(params$palette))]
-                    stop(gettextf("\n\n\tDuplicated names in palette:\n%s\n\n", enumerate(duplicated_names)))
+                    stop(sprintf("Duplicated names in palette:\n%s\n\n", enumerate(duplicated_names)), call. = FALSE)
                 }
 
                 ordered_color_group_names_aux <- names(params$palette)
@@ -106,15 +123,16 @@ Points <- setRefClass("Points",
                 ordered_color_group_names <- c(ordered_color_group_names_aux, missing_color_group_names)
             }
 
-            # If color_group_order is specified, it overrides the default and palette name orders
+            # If color_group_order is specified, it overrides the
+            # default order (alphabetical) and the palette name order
             if (!is.null(params$color_group_order)) {
                 if (scale_type(params$color_groups) != "categorical"){
-                    stop("\n\n\tcolor_group_order can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)")
+                    stop("color_group_order can only be used with categorical color groups, but they appear to be continuous.\n\nChange palette to an unnamed vector, something like: c(start_color[, middle_color], end_color)", call. = FALSE)
                 }
 
                 if (any(duplicated(params$color_group_order))) {
                     duplicated_names <- params$color_group_order[duplicated(params$color_group_order)]
-                    stop(gettextf("\n\n\tDuplicated names in color_group_order:\n%s\n\n", enumerate(duplicated_names)))
+                    stop(sprintf("Duplicated names in color_group_order:\n%s\n\n", enumerate(duplicated_names)), call. = FALSE)
                 }
 
                 ordered_color_group_names_aux <- params$color_group_order
@@ -125,17 +143,19 @@ Points <- setRefClass("Points",
             ordered_color_group_names
         },
 
-        # Ensure that the domain used with a D3 color scale is only specified when the scale is quantitative
+        # Ensure that the domain used with a D3 color scale is only
+        # specified when the scale is quantitative
         validate_color_domain = function(color_domain){
             if (!is.null(color_domain) && scale_type(params$color_groups) == "categorical") {
-                stop("\n\ncolor_domain can only be used with numeric scales, but color_groups has categorical values.")
+                stop("\n\ncolor_domain can only be used with numeric scales, but color_groups has categorical values.", call. = FALSE)
             }
 
             if (is.null(color_domain) && scale_type(params$color_groups) == "quantitative") {
                 min <- min(params$color_groups, na.rm = TRUE)
                 max <- max(params$color_groups, na.rm = TRUE)
 
-                # If the scale crosses zero, make sure the palette the center of the palette is white (#fff)
+                # If the scale crosses zero, make sure the palette the
+                # center of the palette is white (#fff)
                 if (min < 0 && max > 0) {
                     color_domain <- c(min, 0, max)
                     params$palette <<- c(params$palette[1], "white", params$palette[2])
@@ -152,7 +172,8 @@ Points <- setRefClass("Points",
 
 # Generates an interactive scatterplot
 #
-# x x-values, but only if the "y" param is specified, otherwise it represents the y-values. It can be a dataframe,
+# x x-values, but only if the "y" param is specified, otherwise it represents
+# the y-values. It can be a dataframe,
 # a matrix, a vector, a list, or a factor (TODO test this).
 #
 # y y-values (optional)
@@ -165,24 +186,32 @@ Points <- setRefClass("Points",
 # radius the radius of the points
 # box draws a box around the plot
 #
-# palette color palette. Quantitative scales expect a vector with a start color, and an end color (optionally,
-# a middle color may be provided between both). Categorical scales expect a vector with a color for each category.
-# Use category names to change the default color assignment \code{c(category1="color1", category2="color2")}.
-# The order in which these colors are specified determines rendering order when points from different categories
+# palette color palette. Quantitative scales expect a vector with a start color,
+# and an end color (optionally,
+# a middle color may be provided between both). Categorical scales expect a vector
+ # with a color for each category.
+# Use category names to change the default color assignment
+# \code{c(category1="color1", category2="color2")}.
+# The order in which these colors are specified determines rendering order when
+# points from different categories
 # collide (colors specified first appear on top of later ones).
 #
 # col alias for palette
-# color_groups a vector whose values are used to determine the color of the points. If it is a numeric vector, it
-# will assume the scale is quantitative and it will generate a gradient using the start and end colors of the palette
-# (also with the middle color, if it is provided). If it is a character vector, a logical vector, or a factor, it will
-# generate a categorical scale with one color per unique value (or level).
+# color_groups a vector whose values are used to determine the color of the points.
+# If it is a numeric vector, it will assume the scale is quantitative and it will
+# generate a gradient using the start and end colors of the palette (also with the
+# middle color, if it is provided). If it is a character vector, a logical vector,
+# or a factor, it will generate a categorical scale with one color per unique value
+# (or level).
 #
-# color_domain a vector with a start and end value (an optionally a middle value between them). It is only used for
-# quantitative scales. Useful when the scale is continuous and, for example, we want to ensure it is symmetric in
-# negative and positive values.
+# color_domain a vector with a start and end value (an optionally a middle value
+# between them). It is only used for quantitative scales. Useful when the scale
+# is continuous and, for example, we want to ensure it is symmetric in negative
+# and positive values.
 #
 # color_title the title of the color legend
-# extra a data frame, list or matrix whose fields will appear in the tooltip on hover
+# extra a data frame, list or matrix whose fields will appear in the tooltip
+# on hover
 # padding padding around the top-level object
 # ... additional arguments for \code{clickme}
 #

@@ -2,9 +2,9 @@
 \alias{sample_r}
 \title{Sample with replacement}
 \usage{
-  sample_r(input, n)
+sample_r(input, n)
 }
 \description{
-  Sample with replacement
+Sample with replacement
 }
 

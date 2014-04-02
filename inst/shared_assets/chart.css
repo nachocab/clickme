@@ -1,7 +1,10 @@
+g.hover circle, g.hover path, g.hover text {
+  opacity: 1;
+}
+
 .color_group_key {
     font-size: 20px;
 }
-
 
 .g-search {
     position: relative;
@@ -36,12 +39,18 @@
 .g-searching .g-match > circle{
     opacity: 1;
 }
+.g-searching .g-match > path{
+    opacity: 1;
+}
 .g-searching .g-match > text{
     display: inline;
     opacity: 1;
 }
 
 .g-searching :not(.g-match) > circle{
+    opacity: 0.2;
+}
+.g-searching :not(.g-match) > path{
     opacity: 0.2;
 }
 .g-searching :not(.g-match) > text{

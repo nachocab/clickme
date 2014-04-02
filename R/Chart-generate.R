@@ -36,11 +36,11 @@ Chart$methods(
     # "{{ \"4\" }}" => "[[[\" \\\"4\\\" \"]]]" => knit => "{{ \"4\" }}"
     translate_coffee_template_to_js = function() {
         if (!is_coffee_installed()) {
-            stop("\n\n\tCoffeeScript doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/\n\n")
+            stop("CoffeeScript doesn't appear to be installed. Follow installation instructions at http://coffeescript.org/\n\n", call. = FALSE)
         }
 
         if (!file.exists(internal$file$paths$template_coffee_file)) {
-            stop(gettextf("\n\n\tNo coffeescript file found at:\n\t%s\n\n", internal$file$paths$template_coffee_file))
+            stop(sprintf("No coffeescript file found at:\n\t%s\n\n", internal$file$paths$template_coffee_file), call. = FALSE)
         }
 
         coffee_template <- readLines(internal$file$paths$template_coffee_file, warn = FALSE)
@@ -88,17 +88,22 @@ Chart$methods(
         template
     },
 
-    # Only actively used methods are loaded in the environment. To avoid having to append .self in the template, something like {{ .self$my_method() }} we to load them explicitely.
+    # Only actively used methods are loaded in the environment. To avoid having to
+    # append .self in the template (as in {{ .self$my_method() }}) we load
+    # them explicitely.
     force_use_methods = function(expressions){
         methods <- extract_functions(expressions)
 
-        # usingMethods(methods) doesn't work because it requires naming each method individually (it doesn't do anything at runtime), so we have to call .self$my_method to load it explicitly (without actually executing it).
+        # usingMethods(methods) doesn't work because it requires naming each
+        # method individually (it doesn't do anything at runtime), so we have
+        # to call .self$my_method to load it explicitly (without executing it).
         sapply(methods, function(method){
             tryCatch(eval(parse(text = paste0(".self$", method))), error = function(e) e)
         })
     },
 
-    # This function needs to be a method so it can eval the Chart's fields and methods.
+    # This function needs to be a method so it can eval the fields and
+    # methods of the Chart.
     evaluate_placeholders = function(expressions, template, locations) {
         placeholder_values <- sapply(expressions, function(expression) {
             eval(parse(text = expression))
@@ -108,13 +113,14 @@ Chart$methods(
         template
     },
 
-    # Ensures that all the assets used by the visualization are copied to the output_xxx_assets path
+    # Ensure that all the assets used by the visualization are copied to
+    # the output_xxx_assets path
     export_assets = function(){
 
-        # if the clickme shared assets folder exists,
-        # and either the output shared assets folder
-        # doesn't exist, or
-        # it was modified before (or after!) the clickme shared assets folder, rewrite everything.
+        # if the clickme shared assets folder exists, and either
+        # the output shared assets folder doesn't exist, or
+        # it was modified before (or after!) the clickme shared assets folder,
+        # rewrite everything.
         if (file.exists(internal$file$paths$shared_assets) &&
                 (!file.exists(internal$file$paths$output_shared_assets) ||
                  file.info(internal$file$paths$shared_assets)$mtime != file.info(internal$file$paths$output_shared_assets)$mtime)){
@@ -128,7 +134,6 @@ Chart$methods(
             dir.create(internal$file$paths$output_template_assets, showWarnings = FALSE)
             file.copy(from = list.files(internal$file$paths$template_assets, full.names = TRUE), to = internal$file$paths$output_template_assets, overwrite = TRUE)
         }
-
     }
 
 )

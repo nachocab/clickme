@@ -1,3 +1,4 @@
+#' @include Chart.R
 Chart$methods(
 
     get_config = function() {
@@ -20,13 +21,14 @@ Chart$methods(
 
             if (length(missing_packages) != 0){
                 message(separator())
-                message(gettextf("The %s template requires the following packages:\n\n%s\nPress Enter to install them automatically or \"c\" to cancel.",
+                message(sprintf("The %s template requires the following packages:\n\n%s\nPress Enter to install them automatically or \"c\" to cancel.",
                         internal$file$names$template,
                         paste0(missing_packages, collapse="\n"))
                 )
                 response <- readline()
                 if (tolower(response) == "c"){
-                    message(gettextf("Try running: install.packages(%s)", paste0(missing_packages, collapse=",")))
+                    message(sprintf("Try running: install.packages(%s)",
+                        paste0(missing_packages, collapse=",")))
                     capture.output(return())
                 } else {
                     install.packages(missing_packages)
@@ -43,12 +45,12 @@ Chart$methods(
 
         sapply(assets$template, function(asset){
             path <- file.path(internal$file$paths$template_assets, asset)
-            if (!file.exists(path)) stop(asset, " not found at: ", path)
+            if (!file.exists(path)) stop(asset, " not found at: ", path, call. = FALSE)
         })
 
         sapply(assets$shared, function(asset){
             path <- file.path(internal$file$paths$shared_assets, asset)
-            if (!file.exists(path)) stop(asset, " not found at: ", path)
+            if (!file.exists(path)) stop(asset, " not found at: ", path, call. = FALSE)
         })
     },
 

@@ -3,8 +3,15 @@
 \alias{clickme}
 \alias{clickme-package}
 \title{Clickme: use R to create interactive visualizations}
+\usage{
+clickme(template, ...)
+}
 \description{
-  Clickme: use R to create interactive visualizations
+Clickme: use R to create interactive visualizations
+
+When called with only the template, it sets the current
+template used by \code{cme} When called with more than the
+template
 }
 \section{Package options}{
   Clickme uses the following \code{options} to configure
@@ -22,10 +29,10 @@
   }
 }
 \author{
-  Nacho Caballero <\url{http://reasoniamhere.com}>
+Nacho Caballero <\url{http://reasoniamhere.com}>
 }
 \references{
-  Full documentation:
-  \url{https://github.com/nachocab/clickme/wiki};
+Full documentation:
+\url{https://github.com/nachocab/clickme/wiki};
 }
 

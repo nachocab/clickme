@@ -1,87 +1,121 @@
 my_light_red = "#b90000"
 
-@append_main = (opts = {}) ->
-    opts.element ?= "svg:svg"
-    opts.selector ?= "body"
-    opts.background ?= "#fff"
-    opts.width ?= 200
-    opts.height ?= 200
-    opts.padding ?= 10
+# Helper function to create the outer SVG
+@append_outer_svg = (options = {}) ->
+    options.element ?= "svg:svg"
+    options.selector ?= "body"
+    options.background ?= "#fff"
+    options.width ?= 200
+    options.height ?= 200
+    options.padding ?= 10
 
-    main = d3.select(opts.selector)
-        .append(opts.element)
-        # .attr({
-        #     "width": "100%"
-        #     "height": "100%"
-        #     "viewBox": "0 0 #{opts.width} #{opts.height}"
-        # })
+    main = d3.select(options.selector)
+        .append(options.element)
         .attr({
-            "width": opts.width
-            "height": opts.height
+            "width": options.width
+            "height": options.height
         }).style({
-            'background': opts.background
-            'padding': opts.padding
+            'background': options.background
+            'padding': options.padding
         })
 
-    if (opts.id)
-        main.attr("id", opts.id)
+    if (options.id)
+        main.attr("id", options.id)
 
-    if (opts.class)
-        main.attr("class", opts.class)
+    if (options.class)
+        main.attr("class", options.class)
 
-    main.width = opts.width
-    main.height = opts.height
-    main.svg = opts.selector
+    main.width = options.width
+    main.height = options.height
+    main.svg = options.selector
 
     main
 
-# calculates padding, appends the svg + g, draws the title
-@new_plot = (opts = {}) ->
-    opts.padding ?=
-        top: 20
-        right: 150
-        bottom: 30
-        left: 50
-    opts.total_padding = d3.max([opts.padding.left + opts.padding.right, opts.padding.top + opts.padding.bottom])
+# Helper function that builds the components of the plot. It handles:
+# - dimensions of the outer svg + g
+# - padding
+# - regions
+#       - top (title)
+#       - bottom (bottom axis)
+#       - left (left axis)
+#       - center (the actual plot)
+#       - right (sidebar)
+# - scales
+#       - type (linear, ordinal)
+#       - domain (quantitative, categorical)
+#       - range (xlim, ylim)
+#       - jitter
+# - axes (ticks)
+# - labels (title, subtitle, x, y, rotation angles)
+# - background color
+# - zoom
+@new_plot = (options = {}) ->
 
-    opts.width ?= 400
-    opts.height ?= 400
-    opts.total_height = opts.height + opts.padding.top + opts.padding.bottom
-    opts.total_width = opts.width + opts.padding.left + opts.padding.right
+    # data is an array that has at least one object with x and y fields
+    options.data ?= [x: 0, y: 0]
 
-    opts.background ?= "#fff"
-    opts.zoom ?= true
-    opts.ordinal_scale_padding ?= 1
-    opts.linear_scale_padding ?= 40
+    # This only works with if data.x is an array
+    # TODO: make an explicit check that data has x and y (otherwise fail)
+    options.data_ranges ?= {}
+    options.data_ranges.x ?= [d3.min(options.data.x), d3.max(options.data.x)]
+    options.data_ranges.y ?= [d3.min(options.data.y), d3.max(options.data.y)]
 
-    opts.rotate_label.y ?= true
+    options.padding ?= {}
+    options.padding.top ?= 20
+    options.padding.right ?=150
+    options.padding.bottom ?= 30
+    options.padding.left ?= 50
 
-    plot = append_main(
-            id: opts.id
-            width: opts.total_width
-            height: opts.total_height
-            background: opts.background
+    options.width ?= 400
+    options.height ?= 400
+    options.total_height = options.height + options.padding.top + options.padding.bottom
+    options.total_width = options.width + options.padding.left + options.padding.right
+
+    options.background ?= "#fff"
+    options.zoom ?= true
+    options.categorical_scale_padding ?= 1
+    options.linear_scale_padding ?= 40
+
+    options.labels ?= {}
+    options.labels.title ?= ""
+    options.labels.x ?= "x"
+    options.labels.y ?= "y"
+
+    options.rotate_label ?= {}
+    options.rotate_label.x ?= false
+    options.rotate_label.y ?= true
+
+    options.scale_limits ?= {}
+    options.scale_limits.x ?= null
+    options.scale_limits.y ?= null
+
+    plot = append_outer_svg(
+            id: options.id
+            width: options.total_width
+            height: options.total_height
+            background: options.background
             padding: 0
         ).append("svg:g")
-            # .attr("transform", "translate(#{opts.padding.left},#{opts.padding.top})")
+            # .attr("transform", "translate(#{options.padding.left},#{options.padding.top})")
 
-    # move all the opts elements to plot
-    for key, value of opts
+    # move all the options elements to plot
+    for key, value of options
         plot[key] = value
 
-    plot.top_margin = plot.append("g")
+    # append regions
+    plot.top_region = plot.append("g")
         .attr("transform", "translate(#{plot.padding.left}, 0)")
         .attr("class", "top")
 
-    plot.right_margin = plot.append("g")
+    plot.right_region = plot.append("g")
         .attr("transform", "translate(#{plot.padding.left + plot.width}, #{plot.padding.top})")
         .attr("class", "right")
 
-    plot.bottom_margin = plot.append("g")
+    plot.bottom_region = plot.append("g")
         .attr("transform", "translate(#{plot.padding.left}, #{plot.padding.top + plot.height})")
         .attr("class", "bottom")
 
-    plot.left_margin = plot.append("g")
+    plot.left_region = plot.append("g")
         .attr("transform", "translate(#{plot.padding.left}, #{plot.padding.top})")
         .attr("class", "left")
 
@@ -94,40 +128,39 @@ my_light_red = "#b90000"
         # TODO: check if plot.log == "x"
         plot.scale_types.x = get_scale_type(plot, "x")
         plot.scale_types.y = get_scale_type(plot, "y")
-
-    plot.get_scale_limits = () ->
-        plot.scale_limits = {}
-        plot.scale_limits.x = plot.xlim
-        plot.scale_limits.y = plot.ylim
+        plot
 
     plot.get_scale_domains = ()->
         plot.scale_domains = {}
         plot.scale_domains.x = get_scale_domain(plot, "x")
         plot.scale_domains.y = get_scale_domain(plot, "y")
+        plot
 
     plot.get_scale_ranges = () ->
         plot.scale_ranges = {}
         plot.scale_ranges.x = [0, plot.width]
         plot.scale_ranges.y = [plot.height, 0]
+        plot
 
     plot.get_scales = ()->
         plot.get_scale_types()
-        plot.get_scale_limits()
-        plot.get_scale_domains()
-        plot.get_scale_ranges()
+            .get_scale_domains()
+            .get_scale_ranges()
 
         plot.scales = {}
         plot.scales.x = get_scale(plot, "x")
         plot.scales.y = get_scale(plot, "y")
+        plot
 
     plot.get_jitters = ()->
         plot.jitters = {}
         plot.jitters.x = get_jitter(plot, "x")
         plot.jitters.y = get_jitter(plot, "y")
+        plot
 
     plot.add_title = () ->
-        plot.top_margin.append("text")
-            .text(plot.title)
+        plot.top_region.append("text")
+            .text(plot.labels.title)
             .attr(
                 "class": "title"
                 "text-anchor": "middle"
@@ -138,22 +171,20 @@ my_light_red = "#b90000"
         plot
 
     plot.add_subtitle = () ->
-        plot.top_margin.append("text")
-            .text(plot.subtitle)
+        plot.top_region.append("text")
+            .text(plot.labels.subtitle)
             .attr(
                 "class": "subtitle"
                 "text-anchor": "middle"
                 "x": plot.width / 2
                 "y": plot.padding.top / 2 + 30
             )
-
         plot
 
     plot.add_axes = () ->
         plot.axes = {}
         plot.add_x_axis()
         plot.add_y_axis()
-
         plot
 
     plot.add_x_axis = () ->
@@ -169,11 +200,11 @@ my_light_red = "#b90000"
         # if tick_values?
             # plot.axes.x.tickValues(tick_values)
 
-        plot.bottom_margin.append("g")
+        plot.bottom_region.append("g")
             .attr("class", "x axis")
             .call(plot.axes.x)
 
-        plot.bottom_margin.selectAll(".x.axis line, .x.axis path")
+        plot.bottom_region.selectAll(".x.axis line, .x.axis path")
             .style(
                 "fill": "none"
                 "stroke": "black"
@@ -181,8 +212,7 @@ my_light_red = "#b90000"
                 "stroke-width": 2
             )
 
-        plot.add_x_axis_label(plot.xlab)
-
+        plot.add_x_axis_label(plot.labels.x)
         plot
 
     plot.add_y_axis = () ->
@@ -192,11 +222,11 @@ my_light_red = "#b90000"
             .scale(plot.scales.y)
             .orient(plot.orientation_y)
 
-        plot.left_margin.append("g")
+        plot.left_region.append("g")
             .attr("class", "y axis")
             .call(plot.axes.y)
 
-        plot.left_margin.selectAll(".y.axis line, .y.axis path")
+        plot.left_region.selectAll(".y.axis line, .y.axis path")
             .style(
                 "fill": "none"
                 "stroke": "black"
@@ -204,12 +234,11 @@ my_light_red = "#b90000"
                 "stroke-width": 2
             )
 
-        plot.add_y_axis_label(plot.ylab)
-
+        plot.add_y_axis_label(plot.labels.y)
         plot
 
     plot.add_x_axis_label = (text) ->
-        plot.bottom_margin.append("text")
+        plot.bottom_region.append("text")
             .text(text)
             .attr(
                 "class": "x label"
@@ -217,11 +246,10 @@ my_light_red = "#b90000"
                 "x": plot.width/2
                 "y": plot.padding.bottom - 5
             )
-
         plot
 
     plot.add_y_axis_label = (text) ->
-        label = plot.left_margin.append("text")
+        label = plot.left_region.append("text")
             .text(text)
             .attr(
                 "class": "y label"
@@ -238,25 +266,24 @@ my_light_red = "#b90000"
                        "dx": "1em"
                        "y": plot.padding.left - 5)
 
-
         plot
 
     plot.add_title()
-    plot.add_subtitle()
+        .add_subtitle()
+        .get_scales()
 
-    plot.get_scales()
     if plot.scale_types.x is "ordinal" or plot.scale_types.y is "ordinal"
         plot.zoom = false
 
     plot.get_jitters()
-
-    plot.add_axes()
+        .add_axes()
 
     plot
 
-
+# aux functions
 @get_scale_type = (plot, scale_name) ->
-    if type(plot.data_ranges[scale_name][0]) is "number"
+    # we can't check plot.data because it doesn't always have a scale_name
+    if get_type(plot.data_ranges[scale_name][0]) is "number"
         # TODO: check if plot.log == scale_name and return scale_type = "log"
         scale_type = "linear"
     else
@@ -285,7 +312,7 @@ my_light_red = "#b90000"
     else
         scale = d3.scale.ordinal()
             .domain(plot.scale_domains[scale_name])
-            .rangePoints(plot.scale_ranges[scale_name], plot.ordinal_scale_padding)
+            .rangePoints(plot.scale_ranges[scale_name], plot.categorical_scale_padding)
 
     scale
 
@@ -323,7 +350,7 @@ my_light_red = "#b90000"
     else
         x
 
-@type = (obj) ->
+@get_type = (obj) ->
   if obj == undefined or obj == null
     return String obj
   classToType = new Object
@@ -334,32 +361,32 @@ my_light_red = "#b90000"
     return classToType[myClass]
   return "object"
 
-@append_container = (opts = {})->
-    opts.selector ?= "body"
-    opts.class ?= "container"
+@append_container = (options = {})->
+    options.selector ?= "body"
+    options.class ?= "container"
 
-    container = d3.select(opts.selector)
+    container = d3.select(options.selector)
         .append('div')
-        .attr("class", opts.class)
+        .attr("class", options.class)
         .style("overflow", "hidden")
 
     container
 
-@append_div = (container, opts = {})->
-    opts.background ?= my_light_red
-    opts.margin ?= 10
+@append_div = (container, options = {})->
+    options.background ?= my_light_red
+    options.margin ?= 10
 
     div = d3.select(container.node())
         .append('div')
-        .style('background', opts.background)
-        .style('margin', opts.margin)
+        .style('background', options.background)
+        .style('margin', options.margin)
         .style("float", "left")
 
-    if (opts.id)
-        div.attr("id", opts.id)
+    if (options.id)
+        div.attr("id", options.id)
 
-    if (opts.class)
-        div.attr("class", opts.class)
+    if (options.class)
+        div.attr("class", options.class)
 
     div
 

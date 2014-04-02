@@ -142,6 +142,7 @@ test_that("x is a data frame with three numeric columns or more and y is null", 
     data <- xy_to_data(x = data.frame(a = 1:10, b = 11:20, c = 21:30), y = NULL)
     expect_equal(data, data.frame(x = rep(c("a","b","c"), each = 10), y = 1:30, row.names = as.character(1:30)))
 
+    # ignore the extra columns
     expect_message(xy_to_data(x = data.frame(a = letters[1:10], b = 11:20, c = 21:30), y = NULL), "x is not numeric and it has more than two columns, using the first two: a, b")
 })
 
@@ -151,10 +152,10 @@ test_that("x is a matrix with only one column", {
 })
 
 test_that("x is a matrix with at least two columns and y is null", {
-    data <- xy_to_data(x = matrix(1:20, nrow = 10), y = NULL)
+    data <- xy_to_data(x = matrix(1:20, nrow = 10, ncol = 2), y = NULL)
     expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = as.character(1:10)))
 
-    mat <- matrix(1:20, nrow = 10)
+    mat <- matrix(1:20, nrow = 10, ncol = 2)
     rownames(mat) <- letters[1:10]
     data <- xy_to_data(x = mat, y = NULL)
     expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = letters[1:10]))
@@ -168,6 +169,10 @@ test_that("x is a list with only one element", {
 test_that("x is a list with at least two elements and y is null", {
 
     data <- xy_to_data(x = list(a = 1:10, b = 11:20), y = NULL)
+    expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = as.character(1:10)))
+
+    # extra elements are ignored
+    data <- xy_to_data(x = list(a = 1:10, b = 11:20, c = 21:30), y = NULL)
     expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = as.character(1:10)))
 
     expect_error(xy_to_data(x = list(a = 1:10, b = list(1:5), y = NULL), "The first two elements of x have different lengths"))

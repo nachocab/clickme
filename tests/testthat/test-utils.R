@@ -1,17 +1,33 @@
 context("utils")
 
-test_that("get_formats", {
-    formats <- get_formats(data.frame(x=c("a","b","c")))
-    expect_equal(formats, c(x = "s"))
+test_that("get_attrs", {
+    my_list <- list(list(list(a = 1, b = 2, c = 3, d = 4), list(a = 5, b = 6, c = 7, d = 8)))
+    my_attrs <- get_attrs(my_list, c("a", "d", "c"))
+    expect_equal(my_attrs, list(list(list(a = 1, d = 4, c = 3), list(a = 5, d = 8, c = 7))))
+})
 
-    formats <- get_formats(data.frame(x=c(1,2,3)))
-    expect_equal(formats, c(x = "s"))
+test_that("get_tooltip_format", {
+    tooltip_format <- get_tooltip_format(c("a", "b", "c"))
+    expect_equal(tooltip_format, "s")
 
-    formats <- get_formats(data.frame(x=c(1.1,2,3)))
-    expect_equal(formats, c(x = ".2f"))
+    tooltip_format <- get_tooltip_format(c(-1, 0, 1, 2, 3))
+    expect_equal(tooltip_format, "s")
 
-    formats <- get_formats(data.frame(x=c(1.1,2,3)), list(x = ".3f"))
-    expect_equal(formats, c(x = ".3f"))
+    tooltip_format <- get_tooltip_format(c(-2.3, 1.1, 2, 3))
+    expect_equal(tooltip_format, ".2f")
+})
+
+
+test_that("data.frame.by.rows", {
+    data <- data.frame.by.rows(1:3,4:6, row.names = c("A", "B"))
+    expect_equal(data, data.frame(V1=c(1,4), V2=c(2,5), V3=c(3,6), row.names = c("A", "B")))
+    data <- data.frame.by.rows(1:3,4:6, row.names = c("A", "B"))
+    colnames(data) <- c("a", "b", "c")
+    expect_equal(data, data.frame(a=c(1,4), b=c(2,5), c=c(3,6), row.names = c("A", "B")))
+})
+
+test_that("default_colors", {
+    expect_equal(length(default_colors(15)), 15)
 })
 
 test_that("scale_type", {
@@ -24,7 +40,7 @@ test_that("scale_type", {
 
 test_that("match_to_groups", {
     subset  <- c("w","b","p","e","j")
-    groups <- list(a=letters[1:10], b = letters[11:20], c = letters[21:26])
+    groups <- list(a = letters[1:10], b = letters[11:20], c = letters[21:26])
     expect_equal(match_to_groups(subset, groups), c("c","a","b","a","a"))
 
     subset  <- c("w","b","A","B","j")
@@ -85,4 +101,14 @@ test_that("move_in_front", {
     expect_equal(move_in_front("first", files), c("first", "second", "third"))
 
     expect_error(move_in_front("fake", files), "The following elements don't appear in \"files\":\n\tfake")
+})
+
+
+test_that("demo_mode", {
+    options(clickme_demo_mode = NULL)
+    expect_equal(demo_mode(), FALSE)
+    expect_message(demo_mode(TRUE), "Demo mode on.")
+    expect_equal(demo_mode(), TRUE)
+    expect_message(demo_mode(FALSE), "Demo mode off.")
+    expect_equal(demo_mode(), FALSE)
 })

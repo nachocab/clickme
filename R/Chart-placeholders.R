@@ -16,7 +16,7 @@ Chart$methods(
     get_scripts = function() {
         scripts <- paste(sapply(internal$config$scripts, function(script_path){
             script_path <- get_asset_path(script_path)
-            gettextf("<script src=\"%s\"></script>", script_path)
+            sprintf("<script src=\"%s\"></script>", script_path)
         }), collapse="\n")
 
         scripts
@@ -29,7 +29,7 @@ Chart$methods(
     get_styles = function() {
         styles <- paste(sapply(internal$config$styles, function(style_path){
             style_path <- get_asset_path(style_path)
-            gettextf("<link href=\"%s\" rel=\"stylesheet\">", style_path)
+            sprintf("<link href=\"%s\" rel=\"stylesheet\">", style_path)
         }), collapse="\n")
 
         styles

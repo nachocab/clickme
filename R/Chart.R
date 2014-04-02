@@ -20,6 +20,7 @@
 # iframe_width
 # iframe_height
 #' @exportClass Chart
+#' @include utils.R
 Chart <- setRefClass("Chart",
 
     fields = list(
@@ -49,6 +50,7 @@ Chart <- setRefClass("Chart",
             .self$get_urls()
             .self$get_data()
             .self$generate()
+
             .self
         },
 

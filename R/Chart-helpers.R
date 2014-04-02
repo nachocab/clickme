@@ -1,30 +1,36 @@
 Chart$methods(
 
     # I can use Mike Bostock's lazy iframes trick by setting "data-src" instead of "src"
-    iframe = function(width = params$width + params$padding$right + params$padding$left,
-                      height = params$height + params$padding$top + params$padding$bottom + 40,
-                      data_src = "src",
-                      frameborder = 0,
-                      relative_path = NULL){
+    iframe = function(width = NULL,
+                      height = NULL,
+                      src = NULL,
+                      relative_path = NULL,
+                      frameborder = 0){
+        if (demo_mode()){
+            relative_path <- relative_path %or% getOption("clickme_demo_path")
+            src <- src %or% getOption("clickme_demo_iframe_src")
+            height <- height %or% getOption("clickme_demo_iframe_height")
+            width <- width %or% getOption("clickme_demo_iframe_width")
+        }
 
+        src <- src %or% "src"
+        height <- height %or% (params$out_height + params$padding$top + params$padding$bottom + 40)
+        width <- width %or% (params$out_width + params$padding$right + params$padding$left)
         url <- get_relative_url(relative_path)
-
-        iframe <- gettextf("<iframe width=\"%d\" height=\"%d\" %s=\"%s\" frameborder=%s> </iframe>\n",
+        iframe <- sprintf("<iframe width=\"%d\" height=\"%d\" %s=\"%s\" frameborder=%s> </iframe>\n",
                                width,
                                height,
-                               data_src,
+                               src,
                                url,
                                frameborder)
-
         cat(iframe)
         .self
     },
 
     link = function(text = params$title, class = "clickme", relative_path = NULL){
-
         url <- get_relative_url(relative_path)
 
-        link <- gettextf("<a href=\"%s\" class=\"%s\">%s</a>\n", url, class, text)
+        link <- sprintf("<a href=\"%s\" class=\"%s\">%s</a>\n", url, class, text)
 
         cat(link)
         .self
@@ -41,7 +47,7 @@ Chart$methods(
         if (is.null(relative_path)){
             url <- internal$file$names$output_file
         } else {
-            url <- gettextf("%s/%s", relative_path, internal$file$names$output_file)
+            url <- sprintf("%s/%s", relative_path, internal$file$names$output_file)
         }
 
         url

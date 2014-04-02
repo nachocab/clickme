@@ -4,32 +4,32 @@ test_that("categorical ordered_color_group_names", {
     params <- list(data = 1:5, color_groups = factor(c("b", "b", "a", "a", "a"), levels = c("b", "a")))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(points$internal$ordered_color_group_names, c("b", "a"), info = "only color_groups, factor")
+    expect_equal(points$get_ordered_color_group_names(), c("b", "a"), info = "only color_groups, factor")
 
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "a"))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(points$internal$ordered_color_group_names, c("a", "b"), info = "only color_groups, character")
+    expect_equal(points$get_ordered_color_group_names(), c("a", "b"), info = "only color_groups, character")
 
     params <- list(data = 1:5, color_groups = c(5,4,2,3,1))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(points$internal$ordered_color_group_names, c(1,2,3,4,5), info = "only color_groups, numeric")
+    expect_equal(points$get_ordered_color_group_names(), c(1,2,3,4,5), info = "only color_groups, numeric")
 
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "a"), palette = c("red", "blue"))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(points$internal$ordered_color_group_names, c("a", "b"), info = "color groups, unnamed palette")
+    expect_equal(points$get_ordered_color_group_names(), c("a", "b"), info = "color groups, unnamed palette")
 
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "a"), palette = c(b = "red", a = "blue"))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(points$internal$ordered_color_group_names, c("b", "a"), info = "color groups, complete named palette")
+    expect_equal(points$get_ordered_color_group_names(), c("b", "a"), info = "color groups, complete named palette")
 
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "c"), palette = c(c = "red"))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(points$internal$ordered_color_group_names, c("c", "a", "b"), info = "color groups, incomplete named palette")
+    expect_equal(points$get_ordered_color_group_names(), c("c", "a", "b"), info = "color groups, incomplete named palette")
 
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "c"), palette = c(c = "red", c = "blue"))
     points <- Points$new(params)
@@ -38,12 +38,12 @@ test_that("categorical ordered_color_group_names", {
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "a", "c", "d"), palette = c("red", "blue"), color_group_order = c("b", "a", "d", "c"))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(points$internal$ordered_color_group_names, c("b", "a", "d", "c"), info = "color groups, unnamed palette, complete color group order")
+    expect_equal(points$get_ordered_color_group_names(), c("b", "a", "d", "c"), info = "color groups, unnamed palette, complete color group order")
 
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "c", "d"), palette = c(b = "red", c = "blue"), color_group_order = c("a", "d"))
     points <- Points$new(params)
     points$get_params()
-    expect_equal(points$internal$ordered_color_group_names, c("a", "d", "b", "c"), info = "color groups, incomplete named palette, incomplete color group order")
+    expect_equal(points$get_ordered_color_group_names(), c("a", "d", "b", "c"), info = "color groups, incomplete named palette, incomplete color group order")
 
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "c"), color_group_order = c("c", "c", "b"))
     points <- Points$new(params)
@@ -71,10 +71,10 @@ test_that("validate_palette", {
     points$get_params()
     expect_equal(points$params$palette, "#000", info = "no color groups, no palette")
 
-    params <- list(data = data.frame(a = 1:5), palette = c("a","b"))
+    params <- list(data = data.frame(a = 1:5), palette = c("#fff","#bbb"))
     points <- Points$new(params)
-    expect_message(points$get_params(), "No color_groups provided. Ignoring palette.")
-    expect_equal(points$params$palette, "#000", info = "no color groups, palette")
+    points$get_params()
+    expect_equal(points$params$palette, "#fff", info = "no color groups, palette")
 
     params <- list(data = data.frame(a = 1:5), color_groups = "a")
     points <- Points$new(params)

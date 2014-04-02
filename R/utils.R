@@ -1,25 +1,51 @@
+is_integer <- function(x){
+    x %% 1 == 0
+}
+
 #' Return a C-style format given the type of data
 #'
+#' Ex: ".2f" for decimal values, "s" for everything else
 #' It also allows to set a custom format
 #'
 #' @export
 #' @keywords internal
-get_formats <- function(data, custom_formats = NULL){
-    custom_format_names <- names(custom_formats)
-    formats <- sapply(colnames(data), function(name) {
-        if (name %in% custom_format_names){
-            custom_formats[[name]]
-        } else {
-            x <- data[, name]
-            if (is.numeric(x) && any(x %% 1 != 0)) {
-                ".2f"
-            } else {
-                "s"
-            }
-        }
-    })
+get_tooltip_format <- function(variable_value){
+    if (is.numeric(variable_value) && any(!is_integer(variable_value))) {
+        format <- ".2f"
+    } else {
+        format <- "s"
+    }
+    format
+}
 
-    formats
+# Create a dataframe by rows instead of by column
+#' @export
+data.frame.by.rows <- function(...){
+    dots <- list(...)
+    row.names <- dots$row.names; dots$row.names <- NULL
+    check.rows <- dots$check.rows; dots$check.rows <- NULL
+    check.names <- dots$check.names; dots$check.names <- NULL
+    stringsAsFactors <- dots$stringsAsFactors; dots$stringsAsFactors <- NULL
+    as.data.frame(do.call(rbind, dots), row.names = row.names,
+                                        check.rows = check.rows,
+                                        check.names = check.names,
+                                        stringsAsFactors = stringsAsFactors)
+}
+
+#' Returns NULL if the list is empty
+#'
+#' @export
+null_if_empty <- function(input_list){
+    if (length(input_list))
+        input_list
+    else
+        NULL
+}
+
+get_attrs <- function(my_list, names){
+    lapply(my_list, function(line) {
+        lapply(line, function(x) x[names])
+    })
 }
 
 #' Extract function names from a list of placeholder expressions
@@ -84,9 +110,9 @@ disjoint_sets <- function(a, b, names = c("a", "b", "both")) {
 # move elements to the front of an array
 move_in_front <- function(first_elements, all_elements) {
     if (any(first_elements %notin% all_elements)){
-        stop(gettextf("\n\n\tThe following elements don't appear in \"%s\":\n%s\n",
+        stop(sprintf("\n\tThe following elements don't appear in \"%s\":\n%s\n",
              deparse(substitute(all_elements)),
-             enumerate(first_elements[any(first_elements %notin% all_elements)])))
+             enumerate(first_elements[any(first_elements %notin% all_elements)])), call. = FALSE)
     }
     all_elements <- all_elements[c(which(all_elements %in% first_elements), which(all_elements %notin% first_elements))]
     all_elements
@@ -115,9 +141,9 @@ enumerate <- function(x) {
 match_to_groups <- function(subset, groups, replace_nas = "Other", strict_dups = FALSE) {
     if (any(duplicated(unlist(groups)))){
         duplicated_elements <- unname(unlist(groups)[duplicated(unlist(groups))])
-        message <- gettextf("\n\tThe following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"), "\n")
+        message <- sprintf("\tThe following elements appear in more than one group:\n%s", paste(duplicated_elements, collapse = "\n"), "\n")
         if (strict_dups){
-            stop(message)
+            stop(message, call. = FALSE)
         } else {
             message(message)
         }
@@ -183,7 +209,9 @@ sample_r <- function(input, n){
 #'
 #' @param elements values
 #'
-#' If elements is numeric and has a length greater than one, it returns "quantitative". If elements is NULL, or not numeric, or has a length of one, it returns "categorical".
+#' Quantitative scales are treated differently than categorical scales by D3.
+#' If elements is numeric and has a length greater than one, it returns "quantitative".
+#' If elements is NULL, or not numeric, or has a length of one, it returns "categorical".
 #'
 #' @export
 scale_type <- function(elements) {
@@ -203,7 +231,7 @@ scale_type <- function(elements) {
 #' @param n number of colors
 #'
 #' @export
-default_colors <- function(n = 9){
+default_colors <- function(n){
     # too similar purples: "#9467bd", "#8c564b"
     retro_tulips <- c(
       "#0F808C", # blue
@@ -241,7 +269,7 @@ default_colors <- function(n = 9){
     if (n <= 9){
         colors <- d3_category9[1:n]
     } else if (n <= 19) {
-        colors <- d3_category19
+        colors <- d3_category19[1:n]
     } else {
         colors <- gsub("..$", "", rainbow(n)) # d3 doesn't like the transparency bytes #000000FF, so we remove them
     }
@@ -269,6 +297,7 @@ readContents <- function(path) {
     !(a %in% b)
 }
 
+# this operator has low priority (use parentheses)
 #' Set default value
 #'
 #' If a is not null, return a. Otherwise, return b.
@@ -314,19 +343,17 @@ server <- function(path = getOption("clickme_templates_path"), port = 8000){
 #' @param template name of template
 #' @export
 test_template <- function(template_name, filter = NULL){
+    if (!is.character(template_name))
+        template_name <- as.character(substitute(template_name))
+
     template <- Chart$new()
     template$internal$file$names$template <- camel_case(template_name)
     template$get_default_names_and_paths()
 
-    if (file.exists(template$internal$file$paths$translator_test_file)){
-        library("testthat")
-        reload_translators()
-        env <- new.env()
-        with_envvar(r_env_vars(), test_dir(template$internal$file$paths$tests, filter = filter, env = env))
-    } else {
-        stop(gettextf("\n\n\tThere is no test translator file at this location:\n\n%s",
-                       template$internal$file$paths$translator_test_file))
-    }
+    library("testthat")
+    reload_translators()
+    env <- new.env()
+    with_envvar(r_env_vars(), test_dir(template$internal$file$paths$tests, filter = filter, env = env))
 }
 
 source_dir <- function(path){
@@ -410,17 +437,60 @@ open_all_demos <- function(){
 #     }
 # }
 
+#' Demo mode makes params$dir="./clickme_demo" (in the current directory)
+#' it calls clickme with cme(...)$iframe()$hide()
+#' and it adds a random string to the output file
+#' @export
+demo_mode <- function(on = NULL,
+                      iframe_src = "src",
+                      iframe_height = 800,
+                      iframe_width = 1000,
+                      demo_path = "."){
+    if (is.null(on)){
+        getOption("clickme_demo_mode") %or% FALSE
+    } else {
+        if (on){
+            options(clickme_demo_mode = TRUE)
+            options(clickme_demo_path = demo_path)
+            options(clickme_demo_iframe_src = iframe_src)
+            options(clickme_demo_iframe_height = iframe_height)
+            options(clickme_demo_iframe_width = iframe_width)
+            message("Demo mode on.\n")
+        } else {
+            options(clickme_demo_mode = FALSE)
+            options(clickme_demo_count = NULL)
+            message("Demo mode off.\n")
+        }
+    }
+}
 
+#' @export
+increase_demo_count <- function(){
+    if (!demo_mode())
+        demo_mode(TRUE)
 
+    if (is.null(getOption("clickme_demo_count"))){
+        new_count <- 1
+    } else {
+        new_count <- getOption("clickme_demo_count") + 1
+    }
+    options("clickme_demo_count" = new_count)
+    new_count
+}
 
 #' @export
 is_character_or_factor <- function(x) {
     is.character(x) || is.factor(x)
 }
 
+
 #' @export
 is_data_frame_or_matrix <- function(x) {
     is.data.frame(x) || is.matrix(x)
 }
 
+#' @export
+is_list_of_data_frames <- function(x) {
+    is.list(x) && all(sapply(x, class) == "data.frame")
+}
 

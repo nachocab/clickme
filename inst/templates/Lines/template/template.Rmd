@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <base target="_blank"> <!-- open all links on a new tab -->
+
+        <title>{{{ params$title }}}</title>
+
+        {{{ get_assets() }}}
+
+        <style>
+            text{
+                font-family: {{{ params$font }}};
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="g-search">
+                <input type="text" placeholder="Search…">
+                <button style="display:none;" class="g-search-clear">X</button>
+        </div>
+
+        <script type="text/javascript">
+            plot = new_plot({
+                data: {{ data }},
+                data_ranges: {{{ get_data_ranges() }}},
+                categorical_domains: {{{ get_categorical_domains() }}},
+                width: {{ params$out_width }},
+                height: {{ params$out_height }},
+                padding: {{ params$padding }},
+                labels: {
+                    title: {{ params$title }},
+                    subtitle: {{ params$subtitle }},
+                    x: {{ params$xlab }},
+                    y: {{ params$ylab }},
+                    color_title: {{ params$color_title }}
+                },
+                rotate_label: {
+                    y: {{ params$rotate_ylab }}
+                },
+                scale_limits: {
+                    x: {{ params$xlim }},
+                    y: {{ params$ylim }}
+                },
+                jitter: {{ params$jitter }},
+                hide_x_tick_labels: {{ params$hide_x_tick_labels }},
+                ordinal_scale_padding: 1,
+                linear_scale_padding: 40
+            });
+
+            // sidebar
+            static_line_width = 5;
+            distance_between_show_names_and_color_groups = 80;
+
+            interpolate = {{ params$interpolate }};
+            opacity = {{ params$opacity }};
+            stroke_width = {{ params$stroke_width }};
+            show_sidebar = {{ params$show_sidebar }};
+
+            color_scale = {{{ get_d3_color_scale() }}}
+            r_color_group = {{{ get_d3_color_group() }}}
+
+            color_legend_counts = {{ get_color_legend_counts() }};
+            tooltip_content = {{{ get_tooltip_content() }}}
+        </script>
+
+        <script src="clickme_assets/Lines/plot.js"></script>
+    </body>
+</html>
+

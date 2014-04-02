@@ -1,14 +1,18 @@
 #' Creates a new template
 #'
-#' This creates the folder structure with the files that a template needs.
+#' This creates the folder structure with the files that make up a template.
 #' @param template_name name of the template
-#' @param replace flag that indicates what to do when there is another template of the same name, default FALSE
+#' @param replace flag that indicates what to do when there is another template
+#' of the same name, default FALSE
 #' @export
 new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
 
-    # This is a bit of a hack, we'll have to change it when templates start inheriting from other Chart
+    # This is a bit of a hack, we'll have to change it when templates start
+    # inheriting from other Chart
     template <- Chart$new()
-    template$internal$file$names$template <- camel_case(template_name)
+    camel_case_template_name <- camel_case(template_name)
+
+    template$internal$file$names$template <- camel_case_template_name
     template$get_default_names_and_paths()
     paths <- template$internal$file$paths
 
@@ -16,9 +20,10 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
         unlink(file.path(getOption("clickme_templates_path"), template_name), recursive = TRUE)
     } else {
         if (file.exists(paths$Template)) {
-            stop(gettextf("\n\n\tThe %s template already exists\n\t(use replace = TRUE if you want to replace it):\n\t%s",
-                          template$internal$file$names$template,
-                          paths$Template))
+            stop(sprintf("\nThe %s template already exists:%s\n%s\n",
+                          template_name,
+                          paths$Template,
+                          camel_case_template_name), call. = FALSE)
         }
     }
 
@@ -42,8 +47,8 @@ new_template <- function(template_name, coffee = FALSE, replace = FALSE) {
     invisible(template)
 }
 
-get_template_contents <- function() {
-    "<!DOCTYPE html>
+get_template_contents <- function(template_name) {
+    sprintf("<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
@@ -52,17 +57,24 @@ get_template_contents <- function() {
         <title>{{{ params$title }}}</title>
 
         {{{ get_assets() }}}
+
+        <style>
+            text{
+                font-family: {{{ params$font }}};
+            }
+        </style>
     </head>
 
     <body>
         <script type=\"text/javascript\">
 
-            var data = {{ data }};
+            // write placeholders here. Ex:
+            // data = {{ data }};
 
         </script>
     </body>
 </html>
-"
+")
 }
 
 get_template_contents_coffee <- function() {
@@ -91,7 +103,7 @@ get_template_contents_coffee <- function() {
 }
 
 get_translator_contents <- function(template_name){
-    paste0(template_name, " <- setRefClass(\"", template_name, "\",
+    sprintf("%s <- setRefClass(\"%s\",
 
     contains = \"Chart\",
 
@@ -104,20 +116,24 @@ get_translator_contents <- function(template_name){
     )
 )
 
-", get_translator_helper_contents(template_name), "
-")
+%s",
+    camel_case(template_name),
+    camel_case(template_name),
+    get_translator_helper_contents(template_name))
 }
 
 get_translator_helper_contents <- function(template_name) {
     snake_template_name <- snake_case(template_name)
+    camel_template_name <- camel_case(template_name)
 
-    paste0("clickme_helper$", snake_template_name," <- function(x,...){
+    sprintf("clickme_helper$%s <- function(x,...){
     params <- list(x = x, ...)
-    ", snake_template_name, " <- ", template_name, "$new(params)
-
-    ", snake_template_name, "$display()
+    %s <- %s$new(params)
+    %s$display()
 }
-")
+", snake_template_name,
+   snake_template_name, camel_template_name,
+   snake_template_name)
 }
 
 get_translator_test_contents <- function(template_name) {
@@ -133,15 +149,15 @@ test_that(\"get_data works\", {
 }
 
 get_config_contents <- function(template_name) {
-    paste0("info: |-
+    sprintf("info: |-
     Describe what this template does
 
 demo: |-
     data <- 1:10
-    clickme(", snake_case(template_name), ", data)
+    clickme(\"%s\", data)
 
 scripts:
-    - $shared/d3.v3.2.7.js
+    - $shared/d3.v3.4.3.js
 
 styles:
     - $shared/clickme.css
@@ -150,5 +166,5 @@ require_packages:
 
 require_server: no
 
-")
+", snake_case(template_name))
 }

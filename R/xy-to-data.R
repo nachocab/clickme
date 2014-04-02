@@ -2,6 +2,7 @@
 #'
 #' @param x data object
 #'
+#' @export
 get_xy_rownames <- function(x) {
     UseMethod("get_xy_rownames", x)
 }
@@ -39,14 +40,15 @@ get_xy_rownames.default <- function(x) {
 # Convert x and y into a data.frame object with x, y and row names.
 #' @export
 xy_to_data <- function(x, y) {
-    if (is_character_or_factor(x) && is.null(y)){
-        stop("y cannot be NULL when x is a character vector or a factor")
-    }
+    if (is_character_or_factor(x) && is.null(y))
+        stop("y cannot be NULL when x is a character vector or a factor", call. = FALSE)
 
     if (is_data_frame_or_matrix(x)){
-        if (ncol(x) < 2){
-            stop("When x is a dataframe or a matrix, it must contain at least two columns")
-        } else if (ncol(x) == 2) {
+        if (ncol(x) < 2)
+            # That way we don't have to worry about 1-column dataframes
+            stop("When x is a dataframe or a matrix, it must contain at least two columns", call. = FALSE)
+
+        if (ncol(x) == 2) {
             data_x <- x[, 1]
             data_y <- x[, 2]
             rownames <- get_xy_rownames(x)
@@ -61,9 +63,12 @@ xy_to_data <- function(x, y) {
             rownames <- get_xy_rownames(x)
         }
     } else if (is.list(x)) {
-        if (length(x) < 2) stop("When x is a list, it must contain at least two elements")
+        if (length(x) < 2)
+            # That way we don't have to worry about 1-item lists
+            stop("When x is a list, it must contain at least two elements", call. = FALSE)
 
-        if (length(x[[1]]) != length(x[[2]])) stop("The first two elements of x have different lengths")
+        if (length(x[[1]]) != length(x[[2]]))
+            stop("The first two elements of x have different lengths", call. = FALSE)
 
         data_x <- x[[1]]
         data_y <- x[[2]]
@@ -75,16 +80,17 @@ xy_to_data <- function(x, y) {
             rownames <- get_xy_rownames(x)
         } else {
             if (is_data_frame_or_matrix(y)){
-                if (length(x) != ncol(y)) {
-                    stop(gettextf("x has %d elements, but y has %d columns", length(x), ncol(y)))
-                }
+                if (length(x) != ncol(y))
+                    stop(sprintf("x has %d elements, but y has %d columns",
+                         length(x), ncol(y)), call. = FALSE)
+
                 data_x <- rep(x, each = nrow(y))
                 data_y <- as.vector(as.matrix(y))
                 rownames <- get_xy_rownames(data_x)
             } else {
-                if (length(x) != length(y)){
-                    stop(gettextf("x has %d elements, but y has %d", length(x), length(y)))
-                }
+                if (length(x) != length(y))
+                    stop(sprintf("x has %d elements, but y has %d",
+                         length(x), length(y)), call. = FALSE)
 
                 data_x <- x
                 data_y <- y
@@ -93,7 +99,9 @@ xy_to_data <- function(x, y) {
         }
     }
 
-    data <- data.frame(x = data_x, y = data_y, row.names = rownames, stringsAsFactors = FALSE)
-
+    data <- data.frame(x = data_x,
+                       y = data_y,
+                       row.names = rownames,
+                       stringsAsFactors = FALSE)
     data
 }

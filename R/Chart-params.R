@@ -6,6 +6,7 @@ Chart$methods(
         params$font <<- params$font %or% "Rockwell, Helvetica, Arial, sans"
 
         params$title <<- params$title %or% params$main %or% internal$file$names$template # alias (main)
+        params$subtitle <<- params$subtitle %or% ""
 
         params$padding <<- validate_padding(params$padding)
 
@@ -23,7 +24,7 @@ Chart$methods(
 
         if (any(names(padding) %notin% valid_padding_names)){
             bad_padding_elements <- padding[names(padding) %notin% valid_padding_names]
-            stop(gettextf("\n\nWrong padding elements:\n%s", enumerate(bad_padding_elements)))
+            stop(sprintf("\nWrong padding elements:\n%s", enumerate(bad_padding_elements)), call. = FALSE)
         } else {
             padding$top <- padding$top       %or% 150
             padding$right <- padding$right   %or% 400
