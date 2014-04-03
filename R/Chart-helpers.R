@@ -47,7 +47,7 @@ Chart$methods(
         if (is.null(relative_path)){
             url <- internal$file$names$output_file
         } else {
-            url <- sprintf("%s/%s", relative_path, internal$file$names$output_file)
+            url <- file.path(relative_path, internal$file$names$output_file)
         }
 
         url
