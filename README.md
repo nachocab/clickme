@@ -1,19 +1,20 @@
 # Clickme
 
-**Clickme** is an R package that lets you create interactive visualizations in the browser directly from your R session.
+**Clickme** is an R package that lets you create interactive visualizations in the browser, directly from your R session.
 
-That means you don't have to generate boring static plots ever again.
+That means you can minimize your use of boring static plots.
 
 ## Install
 
-Run the following R code:
+Just run this in R to install Clickme:
 
 ```S
 install.packages("devtools") # you don't need to run this command if you already have the devtools package installed.
 
-library(devtools)
-install_github("clickme", "nachocab")
+devtools::install_github("clickme", "nachocab")
 ```
+
+If there is a new Clickme version a few days later, you can update by simply re-running that last command.
 
 ## Examples
 
