@@ -63,11 +63,12 @@ my_light_red = "#b90000"
     options.padding ?= {}
     options.padding.top ?= 20
     options.padding.right ?=150
-    options.padding.bottom ?= 30
+    options.padding.bottom ?= 50
     options.padding.left ?= 50
 
     options.width ?= 400
     options.height ?= 400
+
     options.total_height = options.height + options.padding.top + options.padding.bottom
     options.total_width = options.width + options.padding.left + options.padding.right
 
@@ -78,12 +79,14 @@ my_light_red = "#b90000"
 
     options.labels ?= {}
     options.labels.title ?= ""
-    options.labels.x ?= "x"
-    options.labels.y ?= "y"
+    options.labels.x_title ?= "x"
+    options.labels.y_title ?= "y"
 
-    options.rotate_label ?= {}
-    options.rotate_label.x ?= false
-    options.rotate_label.y ?= true
+    options.rotate ?= {}
+    options.rotate.x_title ?= false
+    options.rotate.y_title ?= true
+    options.rotate.x_labels ?= false
+    options.rotate.y_labels ?= false
 
     options.scale_limits ?= {}
     options.scale_limits.x ?= null
@@ -212,7 +215,15 @@ my_light_red = "#b90000"
                 "stroke-width": 2
             )
 
-        plot.add_x_axis_label(plot.labels.x)
+        plot.add_x_axis_title(plot.labels.x_title)
+
+        if plot.rotate.x_labels is true
+            plot.bottom_region.selectAll(".tick text")
+                .attr("dy", "-.15em")
+                .attr("dx", "-.8em")
+                .attr("transform", "rotate(-90)")
+                .style("text-anchor", "end");
+
         plot
 
     plot.add_y_axis = () ->
@@ -234,35 +245,43 @@ my_light_red = "#b90000"
                 "stroke-width": 2
             )
 
-        plot.add_y_axis_label(plot.labels.y)
+        plot.add_y_axis_title(plot.labels.y_title)
+
         plot
 
-    plot.add_x_axis_label = (text) ->
-        plot.bottom_region.append("text")
+    plot.add_x_axis_title = (text) ->
+
+        x_title = plot.bottom_region.append("text")
             .text(text)
             .attr(
-                "class": "x label"
+                "class": "x title"
                 "text-anchor": "middle"
-                "x": plot.width/2
-                "y": plot.padding.bottom - 5
             )
+        if plot.rotate.x_title is true
+            x_title.attr(
+                "text-anchor": "end"
+                "transform": "rotate(90) translate(#{plot.padding.bottom},-#{plot.width/2})"
+                "dx": "-.5em")
+        else
+            x_title.attr("transform": "translate(#{plot.width/2},#{plot.padding.bottom - 5})")
+
         plot
 
-    plot.add_y_axis_label = (text) ->
-        label = plot.left_region.append("text")
+    plot.add_y_axis_title = (text) ->
+        y_title = plot.left_region.append("text")
             .text(text)
             .attr(
-                "class": "y label"
+                "class": "y title"
                 "text-anchor": "middle"
                 "x": -plot.height/2)
 
-        if plot.rotate_label.y is true
-            label.attr(
+        if plot.rotate.y_title is true
+            y_title.attr(
                        "y": -plot.padding.left + 5
                        "dy": "1em"
                        "transform": "rotate(-90)")
         else
-            label.attr(
+            y_title.attr(
                        "dx": "1em"
                        "y": plot.padding.left - 5)
 

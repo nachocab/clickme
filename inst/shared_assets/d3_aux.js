@@ -47,7 +47,7 @@
   };
 
   this.new_plot = function(options) {
-    var key, plot, value, _base, _base1, _base10, _base11, _base12, _base2, _base3, _base4, _base5, _base6, _base7, _base8, _base9;
+    var key, plot, value, _base, _base1, _base10, _base11, _base12, _base13, _base14, _base2, _base3, _base4, _base5, _base6, _base7, _base8, _base9;
     if (options == null) {
       options = {};
     }
@@ -78,7 +78,7 @@
       _base3.right = 150;
     }
     if ((_base4 = options.padding).bottom == null) {
-      _base4.bottom = 30;
+      _base4.bottom = 50;
     }
     if ((_base5 = options.padding).left == null) {
       _base5.left = 50;
@@ -109,29 +109,35 @@
     if ((_base6 = options.labels).title == null) {
       _base6.title = "";
     }
-    if ((_base7 = options.labels).x == null) {
-      _base7.x = "x";
+    if ((_base7 = options.labels).x_title == null) {
+      _base7.x_title = "x";
     }
-    if ((_base8 = options.labels).y == null) {
-      _base8.y = "y";
+    if ((_base8 = options.labels).y_title == null) {
+      _base8.y_title = "y";
     }
-    if (options.rotate_label == null) {
-      options.rotate_label = {};
+    if (options.rotate == null) {
+      options.rotate = {};
     }
-    if ((_base9 = options.rotate_label).x == null) {
-      _base9.x = false;
+    if ((_base9 = options.rotate).x_title == null) {
+      _base9.x_title = false;
     }
-    if ((_base10 = options.rotate_label).y == null) {
-      _base10.y = true;
+    if ((_base10 = options.rotate).y_title == null) {
+      _base10.y_title = true;
+    }
+    if ((_base11 = options.rotate).x_labels == null) {
+      _base11.x_labels = false;
+    }
+    if ((_base12 = options.rotate).y_labels == null) {
+      _base12.y_labels = false;
     }
     if (options.scale_limits == null) {
       options.scale_limits = {};
     }
-    if ((_base11 = options.scale_limits).x == null) {
-      _base11.x = null;
+    if ((_base13 = options.scale_limits).x == null) {
+      _base13.x = null;
     }
-    if ((_base12 = options.scale_limits).y == null) {
-      _base12.y = null;
+    if ((_base14 = options.scale_limits).y == null) {
+      _base14.y = null;
     }
     plot = append_outer_svg({
       id: options.id,
@@ -219,7 +225,10 @@
         "shape-rendering": "crispEdges",
         "stroke-width": 2
       });
-      plot.add_x_axis_label(plot.labels.x);
+      plot.add_x_axis_title(plot.labels.x_title);
+      if (plot.rotate.x_labels === true) {
+        plot.bottom_region.selectAll(".tick text").attr("dy", "-.15em").attr("dx", "-.8em").attr("transform", "rotate(-90)").style("text-anchor", "end");
+      }
       return plot;
     };
     plot.add_y_axis = function() {
@@ -234,33 +243,43 @@
         "shape-rendering": "crispEdges",
         "stroke-width": 2
       });
-      plot.add_y_axis_label(plot.labels.y);
+      plot.add_y_axis_title(plot.labels.y_title);
       return plot;
     };
-    plot.add_x_axis_label = function(text) {
-      plot.bottom_region.append("text").text(text).attr({
-        "class": "x label",
-        "text-anchor": "middle",
-        "x": plot.width / 2,
-        "y": plot.padding.bottom - 5
+    plot.add_x_axis_title = function(text) {
+      var x_title;
+      x_title = plot.bottom_region.append("text").text(text).attr({
+        "class": "x title",
+        "text-anchor": "middle"
       });
+      if (plot.rotate.x_title === true) {
+        x_title.attr({
+          "text-anchor": "end",
+          "transform": "rotate(90) translate(" + plot.padding.bottom + ",-" + (plot.width / 2) + ")",
+          "dx": "-.5em"
+        });
+      } else {
+        x_title.attr({
+          "transform": "translate(" + (plot.width / 2) + "," + (plot.padding.bottom - 5) + ")"
+        });
+      }
       return plot;
     };
-    plot.add_y_axis_label = function(text) {
-      var label;
-      label = plot.left_region.append("text").text(text).attr({
-        "class": "y label",
+    plot.add_y_axis_title = function(text) {
+      var y_title;
+      y_title = plot.left_region.append("text").text(text).attr({
+        "class": "y title",
         "text-anchor": "middle",
         "x": -plot.height / 2
       });
-      if (plot.rotate_label.y === true) {
-        label.attr({
+      if (plot.rotate.y_title === true) {
+        y_title.attr({
           "y": -plot.padding.left + 5,
           "dy": "1em",
           "transform": "rotate(-90)"
         });
       } else {
-        label.attr({
+        y_title.attr({
           "dx": "1em",
           "y": plot.padding.left - 5
         });
