@@ -29,6 +29,8 @@ Points <- setRefClass("Points",
             params$xlab <<- params$xlab %or% "x"
             params$ylab <<- params$ylab %or% "y"
             params$color_title <<- params$color_title %or% "Group"
+            params$x_jitter <<- params$x_jitter %or% 0
+            params$y_jitter <<- params$y_jitter %or% 0
 
             params$palette <<- validate_palette(params$palette)
             params$color_domain <<- validate_color_domain(params$color_domain)
