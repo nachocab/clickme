@@ -62,14 +62,14 @@ Points$methods(
     # internal
     # TODO: maybe this should change the viewport but plot all the points
     apply_axes_limits = function(data) {
-        if (!is.null(params$xlim)){
-            data <- data[data$x >= params$xlim[1],]
-            data <- data[data$x <= params$xlim[2],]
+        if (!is.null(params$x_lim)){
+            data <- data[data$x >= params$x_lim[1],]
+            data <- data[data$x <= params$x_lim[2],]
         }
 
-        if (!is.null(params$ylim)){
-            data <- data[data$y >= params$ylim[1],]
-            data <- data[data$y <= params$ylim[2],]
+        if (!is.null(params$y_lim)){
+            data <- data[data$y >= params$y_lim[1],]
+            data <- data[data$y <= params$y_lim[2],]
         }
         data
     },

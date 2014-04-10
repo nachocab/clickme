@@ -37,7 +37,7 @@ test_that("get_tooltip_content", {
     params <- list(x = data.frame(x = c("a", "b", "c"),
                                   y = c(5.5,6,6.7),
                                   row.names = LETTERS[1:3]),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=c(10,20,30),
                                 extra2=c(100,200.3,300)))
     points <- Points$new(params)
@@ -68,10 +68,10 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra")
+    "), info = "y_title, extra")
 
     params <- list(x = data.frame(x = c("a", "b", "c"), y = c(5.5,6,6.7), row.names = LETTERS[1:3]),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=c(10,20,30), extra2=c(100,200.3,300)),
                    tooltip_formats = list(y = "s", extra1 = ".2f", extra2 = ".3f"))
     points <- Points$new(params)
@@ -102,12 +102,12 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra, tooltip_formats")
+    "), info = "y_title, extra, tooltip_formats")
 
     params <- list(x = data.frame(x = c("a", "b", "c"),
                                   y = c(5.5,6,6.7),
                                   row.names = LETTERS[1:3]),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=c(10,20,30),
                                 extra2=c(100,200.3,300)),
                    color_groups = c("A","A","B"),
@@ -144,7 +144,7 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra, color_groups, color_title")
+    "), info = "y_title, extra, color_groups, color_title")
 
 })
 

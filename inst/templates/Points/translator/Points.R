@@ -3,10 +3,10 @@
 # x
 # y [NULL]
 # names
-# xlab
-# ylab
-# xlim
-# ylim
+# x_title
+# y_title
+# x_lim
+# y_lim
 # jitter - number
 # radius - number
 # color_groups - can be a categorical or a continuous variable
@@ -26,8 +26,8 @@ Points <- setRefClass("Points",
             params$jitter <<- params$jitter %or% 0
             params$opacity <<- params$opacity %or% 1
             params$stroke_width <<- params$stroke_width %or% 0
-            params$xlab <<- params$xlab %or% "x"
-            params$ylab <<- params$ylab %or% "y"
+            params$x_title <<- params$x_title %or% "x"
+            params$y_title <<- params$y_title %or% "y"
             params$color_title <<- params$color_title %or% "Group"
             params$x_jitter <<- params$x_jitter %or% 0
             params$y_jitter <<- params$y_jitter %or% 0
@@ -182,8 +182,8 @@ Points <- setRefClass("Points",
 # point_names point names
 # title title of the plot
 # main alias for title
-# xlab,ylab x- and y-axis labels
-# xlim,ylim x- and y-axis limits
+# x_title,y_title x- and y-axis labels
+# x_lim,y_lim x- and y-axis limits
 # width,height width and height of the plot
 # radius the radius of the points
 # box draws a box around the plot

@@ -43,7 +43,7 @@ my_light_red = "#b90000"
 # - scales
 #       - type (linear, ordinal)
 #       - domain (quantitative, categorical)
-#       - range (xlim, ylim)
+#       - range (x_lim, y_lim)
 #       - jitter
 # - axes (ticks)
 # - labels (title, subtitle, x, y, rotation angles)

@@ -84,13 +84,13 @@ test_that("extra fields get added", {
 test_that("limits reduce the size of the data", {
     params <- list(x = 1:10,
                    y = 1:10,
-                   xlim = c(2,8))
+                   x_lim = c(2,8))
     points <- Points$new(params)
     points$get_params()
     points$get_data()
     expect_equal(points$data$x, 2:8)
 
-    params$ylim <- c(2,8)
+    params$y_lim <- c(2,8)
     points <- Points$new(params)
     points$get_params()
     points$get_data()

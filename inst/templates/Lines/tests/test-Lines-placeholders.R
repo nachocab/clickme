@@ -40,7 +40,7 @@ test_that("get_d3_color_scale", {
 test_that("get_tooltip_content", {
     params <- list(x = c("a", "b", "c"),
                    y = c(5.5,6,6.7),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=10,
                                 extra2=100.1))
     lines <- Lines$new(params)
@@ -71,11 +71,11 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra")
+    "), info = "y_title, extra")
 
     params <- list(x = c("a", "b", "c"),
                    y = c(5.5,6,6.7),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=10,
                                 extra2=100.2),
                    tooltip_formats = list(y = "s",
@@ -109,11 +109,11 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra, tooltip_formats")
+    "), info = "y_title, extra, tooltip_formats")
 
     params <- list(x = c("a", "b", "c"),
                    y = c(5.5, 6, 6.7),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=10,
                                 extra2=100.2),
                    color_groups = c("A","A","B"),
@@ -126,7 +126,7 @@ test_that("get_tooltip_content", {
                    y = data.frame.by.rows(c(5.5, 4, 3),
                                           c(6, 2, 1.3),
                                           c(6.7, 1, 6.2)),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1 = c(10,20,30),
                                 extra2 = c(100.1,200,300)),
                    color_groups = c("A","A","B"),
@@ -163,7 +163,7 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra, color_groups, color_title")
+    "), info = "y_title, extra, color_groups, color_title")
 
 })
 

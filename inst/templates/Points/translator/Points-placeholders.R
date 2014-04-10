@@ -62,11 +62,11 @@ Points$methods(
         variable_names <- get_tooltip_variable_names()
         tooltip_formats <- get_tooltip_formats(variable_names)
 
-        # x and y are always present, but they can have different names (xlab
-        # and ylab). color_groups is sometimes present, and it can have a
+        # x and y are always present, but they can have different names (x_title
+        # and y_title). color_groups is sometimes present, and it can have a
         # different name (color_title)
-        renamings <- c(x = params$xlab,
-                       y = params$ylab,
+        renamings <- c(x = params$x_title,
+                       y = params$y_title,
                        color_group = params$color_title)
         names(tooltip_formats)[names(tooltip_formats) %in% names(renamings)] <- renamings[names(renamings) %in% names(tooltip_formats)]
         tooltip_values <- setNames(sapply(variable_names, function(name) sprintf("d['%s']", name)),

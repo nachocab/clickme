@@ -31,7 +31,7 @@ data(microarray)
 clickme(points, x = microarray$significance, y = microarray$logFC,
         color_groups = ifelse(microarray$adj.P.Val < 1e-4, "Significant", "Noise"),
         names = microarray$gene_name,
-        xlab = "Significance (-log10)", ylab = "Fold-change (log2)",
+        x_title = "Significance (-log10)", y_title = "Fold-change (log2)",
         extra = list(Probe = microarray$probe_name))
 ```
 

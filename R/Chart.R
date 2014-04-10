@@ -15,7 +15,7 @@
 # file_name
 # dir
 # link_text
-# rotate_ylab
+# rotate_y_title
 # sidebar
 # iframe_width
 # iframe_height

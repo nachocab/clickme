@@ -424,12 +424,12 @@ test_that("order data by color_groups", {
 
 
 # test_that("limits reduce the size of the data", {
-#     params <- list(x = 1:10, y = 1:10, xlim = c(2,8))
+#     params <- list(x = 1:10, y = 1:10, x_lim = c(2,8))
 #     lines <- Lines$new(params)
 #     lines$get_data()
 #     expect_equal(lines$data$x, 2:8)
 
-#     params$ylim <- c(2,8)
+#     params$y_lim <- c(2,8)
 #     lines <- Lines$new(params)
 #     lines$get_data()
 #     expect_equal(lines$data$y, 2:8)

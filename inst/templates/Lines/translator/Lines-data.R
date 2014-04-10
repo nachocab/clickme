@@ -190,14 +190,14 @@ Lines$methods(
 
     # internal
     # apply_axes_limits = function() {
-    #    if (!is.null(params$xlim)){
-    #        data <<- data[data$x >= params$xlim[1],]
-    #        data <<- data[data$x <= params$xlim[2],]
+    #    if (!is.null(params$x_lim)){
+    #        data <<- data[data$x >= params$x_lim[1],]
+    #        data <<- data[data$x <= params$x_lim[2],]
     #    }
 
-    #    if (!is.null(params$ylim)){
-    #        data <<- data[data$y >= params$ylim[1],]
-    #        data <<- data[data$y <= params$ylim[2],]
+    #    if (!is.null(params$y_lim)){
+    #        data <<- data[data$y >= params$y_lim[1],]
+    #        data <<- data[data$y <= params$y_lim[2],]
     #    }
     #    return()
     # },
