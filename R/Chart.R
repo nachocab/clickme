@@ -3,8 +3,6 @@
 # height [default]
 # width [default]
 # padding [default]
-# box [FALSE]
-# coffee [FALSE]
 # title [template name]
 # main (alias for title)
 # extra

@@ -66,6 +66,10 @@
   overflow: hidden;
 }
 
+.tooltip-metric-name {
+  padding-right: 25px;
+}
+
 .tooltip-metric-value {
   text-align: right;
 }

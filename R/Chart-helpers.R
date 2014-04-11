@@ -55,7 +55,7 @@ Chart$methods(
 
     # dummy function to not open the current chart
     hide = function(){
-        invisible()
+        invisible(.self)
     }
 
 )
