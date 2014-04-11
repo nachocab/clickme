@@ -65,8 +65,10 @@ Points$methods(
         # x and y are always present, but they can have different names (x_title
         # and y_title). color_groups is sometimes present, and it can have a
         # different name (color_title)
-        renamings <- c(x = params$x_title,
-                       y = params$y_title,
+        x_title <- ifelse(params$x_title == "", "x", params$x_title)
+        y_title <- ifelse(params$y_title == "", "y", params$y_title)
+        renamings <- c(x = x_title,
+                       y = y_title,
                        color_group = params$color_title)
         names(tooltip_formats)[names(tooltip_formats) %in% names(renamings)] <- renamings[names(renamings) %in% names(tooltip_formats)]
         tooltip_values <- setNames(sapply(variable_names, function(name) sprintf("d['%s']", name)),
