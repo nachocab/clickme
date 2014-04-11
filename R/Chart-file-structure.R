@@ -52,21 +52,21 @@ Chart$methods(
 
     get_output_file_name = function() {
         if (is.null(params[["file_path"]])){
-            if (is.null(params[["file"]])){
+            if (is.null(params[["file_name"]])){
                 if (demo_mode()){
                     internal$file$names$output_file <<- sprintf("temp-%s.%s.html", internal$file$names$template, increase_demo_count())
                 } else {
                     internal$file$names$output_file <<- sprintf("temp-%s.html", internal$file$names$template)
                 }
             } else {
-                if (!grepl(".\\.html$", params[["file"]])) {
-                    internal$file$names$output_file <<- paste0(params[["file"]], ".html")
+                if (!grepl(".\\.html$", params[["file_name"]])) {
+                    internal$file$names$output_file <<- paste0(params[["file_name"]], ".html")
                 } else {
-                    internal$file$names$output_file <<- params[["file"]]
+                    internal$file$names$output_file <<- params[["file_name"]]
                 }
             }
         } else {
-            if (!is.null(params[["file"]])) {
+            if (!is.null(params[["file_name"]])) {
                 message(sprintf("The \"file\" argument was ignored because the \"file_path\" argument was present: %s", params[["file_path"]]), "\n")
             }
 
