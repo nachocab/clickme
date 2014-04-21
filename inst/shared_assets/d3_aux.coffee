@@ -263,7 +263,7 @@ my_light_red = "#b90000"
                 "transform": "rotate(90) translate(#{plot.padding.bottom},-#{plot.width/2})"
                 "dx": "-.5em")
         else
-            x_title.attr("transform": "translate(#{plot.width/2},#{plot.padding.bottom - 5})")
+            x_title.attr("transform": "translate(#{plot.width/2},#{plot.padding.bottom - 10})")
 
         plot
 

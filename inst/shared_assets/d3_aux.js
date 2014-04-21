@@ -260,7 +260,7 @@
         });
       } else {
         x_title.attr({
-          "transform": "translate(" + (plot.width / 2) + "," + (plot.padding.bottom - 5) + ")"
+          "transform": "translate(" + (plot.width / 2) + "," + (plot.padding.bottom - 10) + ")"
         });
       }
       return plot;
