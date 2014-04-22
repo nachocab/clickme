@@ -353,6 +353,7 @@ my_light_red = "#b90000"
     scale
 
 @random = () ->
+    # generates numbers between [-1,1] uniform distribution
     (Math.random() * 2) - 1
 
 @parent_of = (child)->

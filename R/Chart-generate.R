@@ -92,6 +92,7 @@ Chart$methods(
     # append .self in the template (as in {{ .self$my_method() }}) we load
     # them explicitely.
     force_use_methods = function(expressions){
+        # fields (like data or params) don't need to be forced
         methods <- extract_functions(expressions)
 
         # usingMethods(methods) doesn't work because it requires naming each

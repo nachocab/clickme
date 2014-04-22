@@ -34,6 +34,7 @@ Points$methods(
     get_tooltip_variable_names = function(){
         data_names <- colnames(data)
         # line_name gets special treatment because it is used as title
+        # TODO: maybe you could automatically ignore names that start with "_"
         ignore_names <- c("radius", "point_name")
         variable_names <- setdiff(data_names, ignore_names)
         variable_names
