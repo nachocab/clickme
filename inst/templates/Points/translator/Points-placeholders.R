@@ -105,13 +105,9 @@ Points$methods(
         # ifelse() can't return NULL
         x_categorical_domain <- if(scale_type(data$x) == "categorical") get_unique_elements(data$x) else NULL
         y_categorical_domain <- if(scale_type(data$y) == "categorical") get_unique_elements(data$y) else NULL
-
-        categorical_domains <- sprintf("{
-          x: %s,
-          y: %s
-        }", to_json(x_categorical_domain), to_json(y_categorical_domain))
-
-        categorical_domains
+        categorical_domains <- list(x = x_categorical_domain,
+                                    y = y_categorical_domain)
+        to_json(categorical_domains)
     },
 
     # I data is numeric, it returns the min/max. Otherwise, it returns unique elements.
@@ -136,12 +132,9 @@ Points$methods(
             y_data_range <- get_unique_elements(data$y)
         }
 
-        data_ranges <- sprintf("{
-          x: %s,
-          y: %s
-        }", to_json(x_data_range), to_json(y_data_range))
-
-        data_ranges
+        data_ranges <- list(x = x_data_range,
+                            y = y_data_range)
+        to_json(data_ranges)
     }
 )
 

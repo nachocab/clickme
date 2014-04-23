@@ -154,14 +154,14 @@ test_that("get_categorical_domains", {
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_categorical_domains()), "{x:null,y:null}")
+    expect_equal(no_whitespace(points$get_categorical_domains()), "{\"x\":null,\"y\":null}")
 
     params <- list(x = letters[1:10],
                    y = 1:10)
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_categorical_domains()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:null}")
+    expect_equal(no_whitespace(points$get_categorical_domains()), "{\"x\":[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],\"y\":null}")
 })
 
 test_that("get_data_ranges", {
@@ -170,25 +170,26 @@ test_that("get_data_ranges", {
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[1,10],y:[1,10]}", info = "numeric x")
+    expect_equal(no_whitespace(points$get_data_ranges()), "{\"x\":[1,10],\"y\":[1,10]}", info = "numeric x")
 
     params <- list(x = 1)
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[0,2],y:[0,2]}", info = "numeric x, single number")
+    expect_equal(no_whitespace(points$get_data_ranges()), "{\"x\":[0,2],\"y\":[0,2]}", info = "numeric x, single number")
 
     params <- list(x = factor(1:10, levels = 10:1),
                    y = 1:10)
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[\"10\",\"9\",\"8\",\"7\",\"6\",\"5\",\"4\",\"3\",\"2\",\"1\"],y:[1,10]}")
+    expect_equal(no_whitespace(points$get_data_ranges()), "{\"x\":[\"10\",\"9\",\"8\",\"7\",\"6\",\"5\",\"4\",\"3\",\"2\",\"1\"],\"y\":[1,10]}")
 
     params <- list(x = letters[1:10],
                    y = 1:10)
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:[1,10]}")
+    expect_equal(no_whitespace(points$get_data_ranges()), "{\"x\":[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],\"y\":[1,10]}")
+})
 })
