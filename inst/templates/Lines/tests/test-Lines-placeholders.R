@@ -35,6 +35,18 @@ test_that("get_d3_color_scale", {
     lines$get_params()
     lines$get_data()
     expect_equal(no_whitespace(lines$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\"]);", "blue", "black"), info = "categorical, color_groups")
+
+    params <- list(x = data.frame.by.rows(c(2, 3),
+                                          c(3, 4),
+                                          c(4, 5),
+                                          c(5, 6),
+                                          c(6, 7)),
+                   color_groups = c("10", "3", "3", "4", "4"),
+                   palette = c("3" = "black", "4" = "red", "10" = "blue"))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(no_whitespace(lines$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\",\"%s\"]);", "blue", "red", "black"), info = "categorical, color_groups")
 })
 
 test_that("get_tooltip_content", {

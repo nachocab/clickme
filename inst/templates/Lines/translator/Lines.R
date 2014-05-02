@@ -20,6 +20,19 @@ Lines <- setRefClass("Lines",
         get_params = function(){
             callSuper()
 
+            # convert params$color_groups to a factor to avoid color ordering issues
+            if (!is.null(params$color_groups) && length(unique(params$color_groups)) > 1 && !is.factor(params$color_groups) && scale_type(params$color_groups) == "categorical") {
+                if (!is.null(params$color_group_order)){
+                    palette_levels <- unique(params$color_group_order)
+                } else if (!is.null(names(params$palette))){
+                    palette_levels <- names(rev(params$palette))
+                } else {
+                    palette_levels <- unique(params$color_groups)
+                }
+                palette_levels <- palette_levels[palette_levels %in% unique(params$color_groups)]
+                params$color_groups <<- factor(params$color_groups, levels = palette_levels)
+            }
+
             params$out_width <<- params$out_width %or% 500
             params$out_height <<- params$out_height %or% 500
             params$interpolate <<- params$interpolate %or% "linear"

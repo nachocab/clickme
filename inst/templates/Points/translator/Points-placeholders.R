@@ -22,6 +22,9 @@ Points$methods(
             if (is.null(params$color_groups)){
                 color_range <- as.list(unname(params$palette))
             } else {
+                # TODO: this should be levels instead of unique (see Lines)
+                # it works now because we order data by color_group_order/palette_name/etc
+                # you should do it the same way in lines and points
                 color_range <- as.list(unname(params$palette[unique(data$color_group)]))
             }
             color_scale <- sprintf("d3.scale.ordinal().range(%s);", to_json(color_range))

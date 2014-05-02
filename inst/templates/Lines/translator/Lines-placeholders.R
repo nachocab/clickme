@@ -22,7 +22,7 @@ Lines$methods(
             if (is.null(params$color_groups)){
                 color_range <- as.list(unname(params$palette))
             } else {
-                color_range <- as.list(unname(params$palette[unique(params$color_groups)]))
+                color_range <- as.list(unname(params$palette[levels(params$color_groups)]))
             }
             color_scale <- sprintf("d3.scale.ordinal().range(%s);", to_json(color_range))
         }

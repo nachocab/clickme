@@ -30,7 +30,15 @@ test_that("get_d3_color_scale", {
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\"]);", "blue", "black"), info = "categorical, color_groups")
+    expect_equal(no_whitespace(points$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\"]);", "blue", "black"), info = "categorical, colors in palette but not color_group")
+
+    params <- list(x = 1:6,
+                   color_groups = c("4", "10", "10", "4", "5", "5"),
+                   palette = c("4" = "black", "5" = "red", "10" = "blue"))
+    points <- Points$new(params)
+    points$get_params()
+    points$get_data()
+    expect_equal(no_whitespace(points$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\",\"%s\"]);", "black", "red", "black"), info = "categorical, color_groups")
 })
 
 test_that("get_tooltip_content", {
