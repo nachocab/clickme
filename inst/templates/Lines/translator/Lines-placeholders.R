@@ -24,11 +24,19 @@ Lines$methods(
             } else {
                 color_range <- as.list(unname(params$palette[levels(params$color_groups)]))
             }
-            color_scale <- sprintf("d3.scale.ordinal()
-                                        .domain(%s)
+
+            if (is.null(names(params$palette))){
+                color_scale <- sprintf("d3.scale.ordinal()
                                         .range(%s);",
-                                        to_json(names(params$palette)),
                                         to_json(color_range))
+
+            } else {
+                color_scale <- sprintf("d3.scale.ordinal()
+                                            .domain(%s)
+                                            .range(%s);",
+                                            to_json(names(params$palette)),
+                                            to_json(color_range))
+            }
         }
 
         color_scale

@@ -85,7 +85,7 @@ points = g_points.append("svg:circle")
         "stroke": "black"
         "stroke-width": stroke_width
         "opacity": (d) -> d.point_opacity
-        "title": tooltip_content )
+        "title": tooltip_content)
     .on('mouseover', (d, i) ->
         point = clip.select('circle#point-'+i)
         d3.select(this.parentNode).classed("hover", true)
