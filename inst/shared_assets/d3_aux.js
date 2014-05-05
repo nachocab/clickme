@@ -333,7 +333,7 @@
     var band_width, jitter;
     band_width = d3.extent(plot.scale_ranges[scale_name])[1] / plot.scales[scale_name].domain().length;
     jitter = function() {
-      return band_width * plot.jitter * random();
+      return band_width * plot.jitter[scale_name] * random();
     };
     return jitter;
   };

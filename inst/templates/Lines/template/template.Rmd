@@ -47,7 +47,10 @@
                     x: {{ params$x_lim }},
                     y: {{ params$y_lim }}
                 },
-                jitter: {{ params$jitter }},
+                jitter: {
+                    x: {{ params$x_jitter }},
+                    y: {{ params$y_jitter }}
+                },
                 hide_x_tick_labels: {{ params$hide_x_tick_labels }},
                 ordinal_scale_padding: 1,
                 linear_scale_padding: 40
