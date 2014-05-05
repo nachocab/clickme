@@ -38,7 +38,7 @@ test_that("get_d3_color_scale", {
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\",\"%s\"]);", "black", "red", "black"), info = "categorical, color_groups")
+    expect_equal(no_whitespace(points$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\",\"%s\"]);", "blue", "red", "black"), info = "categorical, color_groups")
 })
 
 test_that("get_tooltip_content", {
@@ -199,5 +199,4 @@ test_that("get_data_ranges", {
     points$get_params()
     points$get_data()
     expect_equal(no_whitespace(points$get_data_ranges()), "{\"x\":[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],\"y\":[1,10]}")
-})
 })

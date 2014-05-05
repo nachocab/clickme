@@ -117,7 +117,7 @@ Lines <- setRefClass("Lines",
             }
 
             # Reverse so the last color group gets the last color
-            params$palette <<- rev(params$palette)
+            # palette <- rev(palette)
 
             palette
         },

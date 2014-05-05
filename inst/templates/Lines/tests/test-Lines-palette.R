@@ -9,7 +9,7 @@ test_that("categorical ordered_color_group_names", {
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "a"))
     lines <- Lines$new(params)
     lines$get_params()
-    expect_equal(lines$get_ordered_color_group_names(), c("a", "b"), info = "only color_groups, character")
+    expect_equal(lines$get_ordered_color_group_names(), c("b", "a"), info = "only color_groups, character") # decide if points should match this behavior
 
     params <- list(data = 1:5, color_groups = c(5,4,2,3,1))
     lines <- Lines$new(params)
@@ -19,7 +19,7 @@ test_that("categorical ordered_color_group_names", {
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "a"), palette = c("red", "blue"))
     lines <- Lines$new(params)
     lines$get_params()
-    expect_equal(lines$get_ordered_color_group_names(), c("a", "b"), info = "color groups, unnamed palette")
+    expect_equal(lines$get_ordered_color_group_names(), c("b", "a"), info = "color groups, unnamed palette") # decide if points should match this behavior
 
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "a"), palette = c(b = "red", a = "blue"))
     lines <- Lines$new(params)
@@ -29,7 +29,7 @@ test_that("categorical ordered_color_group_names", {
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "c"), palette = c(c = "red"))
     lines <- Lines$new(params)
     lines$get_params()
-    expect_equal(lines$get_ordered_color_group_names(), c("c", "a", "b"), info = "color groups, incomplete named palette")
+    expect_equal(lines$get_ordered_color_group_names(), c("b", "a", "c"), info = "color groups, incomplete named palette") # decide if points should match this behavior
 
     params <- list(data = 1:5, color_groups = c("b", "b", "a", "a", "c"), palette = c(c = "red", c = "blue"))
     lines <- Lines$new(params)

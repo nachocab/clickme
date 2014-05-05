@@ -89,7 +89,7 @@ Points <- setRefClass("Points",
             }
 
             # Reverse so the last color group gets the last color
-            params$palette <<- rev(params$palette)
+            # params$palette <<- rev(palette)
 
             palette
         },

@@ -27,7 +27,11 @@ Points$methods(
                 # you should do it the same way in lines and points
                 color_range <- as.list(unname(params$palette[unique(data$color_group)]))
             }
-            color_scale <- sprintf("d3.scale.ordinal().range(%s);", to_json(color_range))
+            color_scale <- sprintf("d3.scale.ordinal()
+                                        .domain(%s)
+                                        .range(%s);",
+                                        to_json(names(params$palette)),
+                                        to_json(color_range))
         }
 
         color_scale
