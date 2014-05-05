@@ -337,7 +337,7 @@ my_light_red = "#b90000"
 
 @get_jitter = (plot, scale_name) ->
     band_width = (d3.extent(plot.scale_ranges[scale_name])[1] / plot.scales[scale_name].domain().length)
-    jitter = ()-> band_width * plot.jitter[scale_name] * random()
+    jitter = ()-> band_width * plot.jitter * random() # at some point do plot.jitter[scale_name]
 
     jitter
 
