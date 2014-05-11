@@ -34,11 +34,12 @@ Points$methods(
                                         to_json(color_range))
 
             } else {
+                ordered_color_group_names <- names(params$palette)
                 color_scale <- sprintf("d3.scale.ordinal()
                                             .domain(%s)
                                             .range(%s);",
-                                            to_json(names(params$palette)),
-                                            to_json(color_range))
+                                            to_json(ordered_color_group_names),
+                                            to_json(unname(params$palette[unique(data$color_group)][ordered_color_group_names])))
             }
         }
 
