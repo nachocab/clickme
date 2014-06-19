@@ -5,7 +5,7 @@
   defs = plot.center.append("defs");
 
   defs.append("clipPath").attr("id", "clip-plot").append("rect").attr({
-    "width": plot.width + 40,
+    "width": plot.width + 100,
     "height": plot.height
   });
 

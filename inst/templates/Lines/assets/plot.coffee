@@ -2,11 +2,13 @@
 # Create the blank plot
 defs = plot.center.append("defs")
 
+# this defines the size of the plotting region (the thing that eats up
+# the name labels)
 defs.append("clipPath")
     .attr("id", "clip-plot")
   .append("rect")
     .attr(
-        "width": plot.width + 40
+        "width": plot.width + 100
         "height": plot.height)
 
 clip = plot.center.append("g")
