@@ -3,14 +3,14 @@
 #' @export
 #' @include utils.R
 clickme <- function(template, ...){
+
     if (missing(template))
-        return(getOption("clickme_current_template"))
+        template <- getOption("clickme_current_template")
 
     if (is.null(template)){
         options(clickme_current_template = NULL)
         return()
     }
-
     # Let's determine what template to use
     if (!(is.character(template) && length(template) == 1)) {
         x <- template
