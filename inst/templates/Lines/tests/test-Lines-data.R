@@ -377,14 +377,14 @@ test_that("order data by color_groups", {
                                           c(5, 6),
                                           c(6, 7)),
                    y = NULL,
-                   color_groups = c("c", "a", "b", "c", "b"))
+                   color_groups = c("c", "a", "b", "c", "b")) # creates a factor levels "c", "a", "b"
     lines <- Lines$new(params)
     lines$get_params()
     lines$get_data()
     line_names <- sapply(lines$data, function(line) line[[1]]$line_name)
     expect_equal(line_names,
-                 c("4", "1", "5", "3", "2"),
-                 info = "categorical color_groups, no palette") # c c b b a ("a" on top)
+                 c("5", "3", "2", "4", "1"),
+                 info = "categorical color_groups, no palette") # c c a b b
 
     params <- list(x = data.frame.by.rows(c(2, 3),
                                           c(3, 4),
@@ -399,8 +399,8 @@ test_that("order data by color_groups", {
     lines$get_data()
     line_names <- sapply(lines$data, function(line) line[[1]]$line_name)
     expect_equal(line_names,
-                 c("4", "1", "5", "3", "2"),
-                 info = "categorical color_groups, unnamed palette") # c c b b a ("a" on top)
+                 c("5", "3", "2", "4", "1"),
+                 info = "categorical color_groups, unnamed palette") # c c a b b ("a" on top)
 
     params <- list(x = data.frame.by.rows(c(2, 3),
                                           c(3, 4),
@@ -424,12 +424,12 @@ test_that("order data by color_groups", {
 
 
 # test_that("limits reduce the size of the data", {
-#     params <- list(x = 1:10, y = 1:10, xlim = c(2,8))
+#     params <- list(x = 1:10, y = 1:10, x_lim = c(2,8))
 #     lines <- Lines$new(params)
 #     lines$get_data()
 #     expect_equal(lines$data$x, 2:8)
 
-#     params$ylim <- c(2,8)
+#     params$y_lim <- c(2,8)
 #     lines <- Lines$new(params)
 #     lines$get_data()
 #     expect_equal(lines$data$y, 2:8)

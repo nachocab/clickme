@@ -3,8 +3,6 @@
 # height [default]
 # width [default]
 # padding [default]
-# box [FALSE]
-# coffee [FALSE]
 # title [template name]
 # main (alias for title)
 # extra
@@ -15,7 +13,7 @@
 # file_name
 # dir
 # link_text
-# rotate_ylab
+# rotate_y_title
 # sidebar
 # iframe_width
 # iframe_height

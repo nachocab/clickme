@@ -2,10 +2,10 @@
 # x
 # y [NULL]
 # names
-# xlab
-# ylab
-# xlim
-# ylim
+# x_title
+# y_title
+# x_lim
+# y_lim
 # jitter - number
 # radius - number
 # color_groups - can be a categorical or a continuous variable
@@ -20,13 +20,26 @@ Lines <- setRefClass("Lines",
         get_params = function(){
             callSuper()
 
+            # convert params$color_groups to a factor to avoid color ordering issues
+            if (!is.null(params$color_groups) && length(unique(params$color_groups)) > 1 && !is.factor(params$color_groups) && scale_type(params$color_groups) == "categorical") {
+                if (!is.null(params$color_group_order)){
+                    palette_levels <- unique(params$color_group_order)
+                } else if (!is.null(names(params$palette))){
+                    palette_levels <- names(rev(params$palette))
+                } else {
+                    palette_levels <- unique(params$color_groups)
+                }
+                palette_levels <- palette_levels[palette_levels %in% unique(params$color_groups)]
+                params$color_groups <<- factor(params$color_groups, levels = palette_levels)
+            }
+
             params$out_width <<- params$out_width %or% 500
             params$out_height <<- params$out_height %or% 500
             params$interpolate <<- params$interpolate %or% "linear"
             params$jitter <<- params$jitter %or% 0
             params$stroke_width <<- params$stroke_width %or% 0
-            params$xlab <<- params$xlab %or% "x"
-            params$ylab <<- params$ylab %or% "y"
+            params$x_title <<- params$x_title %or% "x"
+            params$y_title <<- params$y_title %or% "y"
             params$color_title <<- params$color_title %or% "Group"
 
             params$palette <<- validate_palette(params$palette)
@@ -104,7 +117,7 @@ Lines <- setRefClass("Lines",
             }
 
             # Reverse so the last color group gets the last color
-            params$palette <<- rev(params$palette)
+            # palette <- rev(palette)
 
             palette
         },
@@ -197,8 +210,8 @@ Lines <- setRefClass("Lines",
 # line_names line names
 # title title of the plot
 # main alias for title
-# xlab,ylab x- and y-axis labels
-# xlim,ylim x- and y-axis limits
+# x_title,y_title x- and y-axis labels
+# x_lim,y_lim x- and y-axis limits
 # width,height width and height of the plot
 # radius the radius of the lines
 # box draws a box around the plot

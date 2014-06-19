@@ -154,7 +154,7 @@ if show_sidebar
                 .on("click", ()-> deselect_color_groups())
 
         g_color_group_keys = sidebar.selectAll(".color_group_key")
-            .data(color_scale.domain().reverse())
+            .data(color_scale.domain())
           .enter().append("g")
             .attr(
                   "transform": (d, i) -> "translate(0, #{i * (static_radius * 2 + 15) + distance_between_show_names_and_color_groups + 30})"

@@ -43,7 +43,7 @@ my_light_red = "#b90000"
 # - scales
 #       - type (linear, ordinal)
 #       - domain (quantitative, categorical)
-#       - range (xlim, ylim)
+#       - range (x_lim, y_lim)
 #       - jitter
 # - axes (ticks)
 # - labels (title, subtitle, x, y, rotation angles)
@@ -63,11 +63,12 @@ my_light_red = "#b90000"
     options.padding ?= {}
     options.padding.top ?= 20
     options.padding.right ?=150
-    options.padding.bottom ?= 30
+    options.padding.bottom ?= 50
     options.padding.left ?= 50
 
     options.width ?= 400
     options.height ?= 400
+
     options.total_height = options.height + options.padding.top + options.padding.bottom
     options.total_width = options.width + options.padding.left + options.padding.right
 
@@ -78,12 +79,14 @@ my_light_red = "#b90000"
 
     options.labels ?= {}
     options.labels.title ?= ""
-    options.labels.x ?= "x"
-    options.labels.y ?= "y"
+    options.labels.x_title ?= "x"
+    options.labels.y_title ?= "y"
 
-    options.rotate_label ?= {}
-    options.rotate_label.x ?= false
-    options.rotate_label.y ?= true
+    options.rotate ?= {}
+    options.rotate.x_title ?= false
+    options.rotate.y_title ?= true
+    options.rotate.x_labels ?= false
+    options.rotate.y_labels ?= false
 
     options.scale_limits ?= {}
     options.scale_limits.x ?= null
@@ -194,11 +197,8 @@ my_light_red = "#b90000"
             .scale(plot.scales.x)
             .orient(plot.orientation_x)
 
-        if plot.hide_x_tick_labels is true
-            plot.axes.x.tickFormat("")
-
-        # if tick_values?
-            # plot.axes.x.tickValues(tick_values)
+        if plot.x_format?
+            plot.axes.x.tickFormat(d3.format(plot.x_format))
 
         plot.bottom_region.append("g")
             .attr("class", "x axis")
@@ -212,7 +212,15 @@ my_light_red = "#b90000"
                 "stroke-width": 2
             )
 
-        plot.add_x_axis_label(plot.labels.x)
+        plot.add_x_axis_title(plot.labels.x_title)
+
+        if plot.rotate.x_labels is true
+            plot.bottom_region.selectAll(".tick text")
+                .attr("dy", "-.15em")
+                .attr("dx", "-.8em")
+                .attr("transform", "rotate(-90)")
+                .style("text-anchor", "end");
+
         plot
 
     plot.add_y_axis = () ->
@@ -221,6 +229,9 @@ my_light_red = "#b90000"
         plot.axes.y = d3.svg.axis()
             .scale(plot.scales.y)
             .orient(plot.orientation_y)
+
+        if plot.y_format?
+            plot.axes.y.tickFormat(d3.format(plot.y_format))
 
         plot.left_region.append("g")
             .attr("class", "y axis")
@@ -234,35 +245,43 @@ my_light_red = "#b90000"
                 "stroke-width": 2
             )
 
-        plot.add_y_axis_label(plot.labels.y)
+        plot.add_y_axis_title(plot.labels.y_title)
+
         plot
 
-    plot.add_x_axis_label = (text) ->
-        plot.bottom_region.append("text")
+    plot.add_x_axis_title = (text) ->
+
+        x_title = plot.bottom_region.append("text")
             .text(text)
             .attr(
-                "class": "x label"
+                "class": "x title"
                 "text-anchor": "middle"
-                "x": plot.width/2
-                "y": plot.padding.bottom - 5
             )
+        if plot.rotate.x_title is true
+            x_title.attr(
+                "text-anchor": "end"
+                "transform": "rotate(90) translate(#{plot.padding.bottom},-#{plot.width/2})"
+                "dx": "-.5em")
+        else
+            x_title.attr("transform": "translate(#{plot.width/2},#{plot.padding.bottom - 10})")
+
         plot
 
-    plot.add_y_axis_label = (text) ->
-        label = plot.left_region.append("text")
+    plot.add_y_axis_title = (text) ->
+        y_title = plot.left_region.append("text")
             .text(text)
             .attr(
-                "class": "y label"
+                "class": "y title"
                 "text-anchor": "middle"
                 "x": -plot.height/2)
 
-        if plot.rotate_label.y is true
-            label.attr(
+        if plot.rotate.y_title is true
+            y_title.attr(
                        "y": -plot.padding.left + 5
                        "dy": "1em"
                        "transform": "rotate(-90)")
         else
-            label.attr(
+            y_title.attr(
                        "dx": "1em"
                        "y": plot.padding.left - 5)
 
@@ -317,11 +336,8 @@ my_light_red = "#b90000"
     scale
 
 @get_jitter = (plot, scale_name) ->
-    if plot.scale_types[scale_name] is "ordinal"
-        band_width = (d3.extent(plot.scale_ranges[scale_name])[1] / plot.scales[scale_name].domain().length)
-        jitter = ()-> band_width * plot.jitter * random()
-    else
-        jitter = ()-> 0
+    band_width = (d3.extent(plot.scale_ranges[scale_name])[1] / plot.scales[scale_name].domain().length)
+    jitter = ()-> band_width * plot.jitter[scale_name] * random()
 
     jitter
 
@@ -337,6 +353,7 @@ my_light_red = "#b90000"
     scale
 
 @random = () ->
+    # generates numbers between [-1,1] uniform distribution
     (Math.random() * 2) - 1
 
 @parent_of = (child)->

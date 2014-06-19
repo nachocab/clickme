@@ -30,14 +30,22 @@ test_that("get_d3_color_scale", {
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\"]);", "blue", "black"), info = "categorical, color_groups")
+    expect_equal(no_whitespace(points$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\"]);", "blue", "black"), info = "categorical, colors in palette but not color_group")
+
+    params <- list(x = 1:6,
+                   color_groups = c("4", "10", "10", "4", "5", "5"),
+                   palette = c("4" = "black", "5" = "red", "10" = "blue"))
+    points <- Points$new(params)
+    points$get_params()
+    points$get_data()
+    expect_equal(no_whitespace(points$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\",\"%s\"]);", "blue", "red", "black"), info = "categorical, color_groups")
 })
 
 test_that("get_tooltip_content", {
     params <- list(x = data.frame(x = c("a", "b", "c"),
                                   y = c(5.5,6,6.7),
                                   row.names = LETTERS[1:3]),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=c(10,20,30),
                                 extra2=c(100,200.3,300)))
     points <- Points$new(params)
@@ -68,10 +76,10 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra")
+    "), info = "y_title, extra")
 
     params <- list(x = data.frame(x = c("a", "b", "c"), y = c(5.5,6,6.7), row.names = LETTERS[1:3]),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=c(10,20,30), extra2=c(100,200.3,300)),
                    tooltip_formats = list(y = "s", extra1 = ".2f", extra2 = ".3f"))
     points <- Points$new(params)
@@ -102,12 +110,12 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra, tooltip_formats")
+    "), info = "y_title, extra, tooltip_formats")
 
     params <- list(x = data.frame(x = c("a", "b", "c"),
                                   y = c(5.5,6,6.7),
                                   row.names = LETTERS[1:3]),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=c(10,20,30),
                                 extra2=c(100,200.3,300)),
                    color_groups = c("A","A","B"),
@@ -144,7 +152,7 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra, color_groups, color_title")
+    "), info = "y_title, extra, color_groups, color_title")
 
 })
 
@@ -154,14 +162,14 @@ test_that("get_categorical_domains", {
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_categorical_domains()), "{x:null,y:null}")
+    expect_equal(no_whitespace(points$get_categorical_domains()), "{\"x\":null,\"y\":null}")
 
     params <- list(x = letters[1:10],
                    y = 1:10)
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_categorical_domains()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:null}")
+    expect_equal(no_whitespace(points$get_categorical_domains()), "{\"x\":[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],\"y\":null}")
 })
 
 test_that("get_data_ranges", {
@@ -170,25 +178,25 @@ test_that("get_data_ranges", {
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[1,10],y:[1,10]}", info = "numeric x")
+    expect_equal(no_whitespace(points$get_data_ranges()), "{\"x\":[1,10],\"y\":[1,10]}", info = "numeric x")
 
     params <- list(x = 1)
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[0,2],y:[0,2]}", info = "numeric x, single number")
+    expect_equal(no_whitespace(points$get_data_ranges()), "{\"x\":[0,2],\"y\":[0,2]}", info = "numeric x, single number")
 
     params <- list(x = factor(1:10, levels = 10:1),
                    y = 1:10)
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[\"10\",\"9\",\"8\",\"7\",\"6\",\"5\",\"4\",\"3\",\"2\",\"1\"],y:[1,10]}")
+    expect_equal(no_whitespace(points$get_data_ranges()), "{\"x\":[\"10\",\"9\",\"8\",\"7\",\"6\",\"5\",\"4\",\"3\",\"2\",\"1\"],\"y\":[1,10]}")
 
     params <- list(x = letters[1:10],
                    y = 1:10)
     points <- Points$new(params)
     points$get_params()
     points$get_data()
-    expect_equal(no_whitespace(points$get_data_ranges()), "{x:[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],y:[1,10]}")
+    expect_equal(no_whitespace(points$get_data_ranges()), "{\"x\":[\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\",\"i\",\"j\"],\"y\":[1,10]}")
 })

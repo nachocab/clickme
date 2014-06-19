@@ -22,9 +22,21 @@ Lines$methods(
             if (is.null(params$color_groups)){
                 color_range <- as.list(unname(params$palette))
             } else {
-                color_range <- as.list(unname(params$palette[unique(params$color_groups)]))
+                color_range <- as.list(unname(params$palette[levels(params$color_groups)]))
             }
-            color_scale <- sprintf("d3.scale.ordinal().range(%s);", to_json(color_range))
+
+            if (is.null(names(params$palette))){
+                color_scale <- sprintf("d3.scale.ordinal()
+                                        .range(%s);",
+                                        to_json(color_range))
+
+            } else {
+                color_scale <- sprintf("d3.scale.ordinal()
+                                            .domain(%s)
+                                            .range(%s);",
+                                            to_json(names(params$palette)),
+                                            to_json(color_range))
+            }
         }
 
         color_scale
@@ -74,11 +86,11 @@ Lines$methods(
             format
         })
 
-        # x and y are always present, but they can have different names (xlab
-        # and ylab). color_groups is sometimes present, and it can have a
+        # x and y are always present, but they can have different names (x_title
+        # and y_title). color_groups is sometimes present, and it can have a
         # different name (color_title)
-        renamings <- c(x = params$xlab,
-                       y = params$ylab,
+        renamings <- c(x = params$x_title,
+                       y = params$y_title,
                        color_group = params$color_title)
         names(tooltip_formats)[names(tooltip_formats) %in% names(renamings)] <- renamings[names(renamings) %in% names(tooltip_formats)]
 

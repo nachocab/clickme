@@ -31,19 +31,26 @@
                 labels: {
                     title: {{ params$title }},
                     subtitle: {{ params$subtitle }},
-                    x: {{ params$xlab }},
-                    y: {{ params$ylab }},
+                    x_title: {{ params$x_title }},
+                    y_title: {{ params$y_title }},
                     color_title: {{ params$color_title }}
                 },
-                rotate_label: {
-                    y: {{ params$rotate_ylab }}
+                rotate: {
+                    x_title: {{ params$rotate_x_title }},
+                    y_title: {{ params$rotate_y_title }},
+                    x_labels: {{ params$rotate_x_labels }},
+                    y_labels: {{ params$rotate_y_labels }},
                 },
                 scale_limits: {
-                    x: {{ params$xlim }},
-                    y: {{ params$ylim }}
+                    x: {{ params$x_lim }},
+                    y: {{ params$y_lim }}
                 },
-                jitter: {{ params$jitter }},
-                hide_x_tick_labels: {{ params$hide_x_tick_labels }},
+                jitter: {
+                    x: {{ params$x_jitter }},
+                    y: {{ params$y_jitter }}
+                },
+                x_format: {{ params$x_format }},
+                y_format: {{ params$y_format }},
                 ordinal_scale_padding: 1,
                 linear_scale_padding: 40
             });

@@ -5,7 +5,7 @@
   defs = plot.center.append("defs");
 
   defs.append("clipPath").attr("id", "clip-plot").append("rect").attr({
-    "width": plot.width + 40,
+    "width": plot.width + 100,
     "height": plot.height
   });
 
@@ -165,7 +165,7 @@
           return deselect_color_groups();
         });
       }
-      g_color_group_keys = sidebar.selectAll(".color_group_key").data(color_scale.domain().reverse()).enter().append("g").attr({
+      g_color_group_keys = sidebar.selectAll(".color_group_key").data(color_scale.domain()).enter().append("g").attr({
         "transform": function(d, i) {
           return "translate(0, " + (i * (static_line_width * 2 + 15) + distance_between_show_names_and_color_groups + 30) + ")";
         },

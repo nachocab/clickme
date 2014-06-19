@@ -22,9 +22,25 @@ Points$methods(
             if (is.null(params$color_groups)){
                 color_range <- as.list(unname(params$palette))
             } else {
+                # TODO: this should be levels instead of unique (see Lines)
+                # it works now because we order data by color_group_order/palette_name/etc
+                # you should do it the same way in lines and points
                 color_range <- as.list(unname(params$palette[unique(data$color_group)]))
             }
-            color_scale <- sprintf("d3.scale.ordinal().range(%s);", to_json(color_range))
+
+            if (is.null(names(params$palette))){
+                color_scale <- sprintf("d3.scale.ordinal()
+                                        .range(%s);",
+                                        to_json(color_range))
+
+            } else {
+                ordered_color_group_names <- names(params$palette)
+                color_scale <- sprintf("d3.scale.ordinal()
+                                            .domain(%s)
+                                            .range(%s);",
+                                            to_json(ordered_color_group_names),
+                                            to_json(unname(params$palette[unique(data$color_group)][ordered_color_group_names])))
+            }
         }
 
         color_scale
@@ -34,6 +50,7 @@ Points$methods(
     get_tooltip_variable_names = function(){
         data_names <- colnames(data)
         # line_name gets special treatment because it is used as title
+        # TODO: maybe you could automatically ignore names that start with "_"
         ignore_names <- c("radius", "point_name")
         variable_names <- setdiff(data_names, ignore_names)
         variable_names
@@ -62,11 +79,13 @@ Points$methods(
         variable_names <- get_tooltip_variable_names()
         tooltip_formats <- get_tooltip_formats(variable_names)
 
-        # x and y are always present, but they can have different names (xlab
-        # and ylab). color_groups is sometimes present, and it can have a
+        # x and y are always present, but they can have different names (x_title
+        # and y_title). color_groups is sometimes present, and it can have a
         # different name (color_title)
-        renamings <- c(x = params$xlab,
-                       y = params$ylab,
+        x_title <- ifelse(params$x_title == "", "x", params$x_title)
+        y_title <- ifelse(params$y_title == "", "y", params$y_title)
+        renamings <- c(x = x_title,
+                       y = y_title,
                        color_group = params$color_title)
         names(tooltip_formats)[names(tooltip_formats) %in% names(renamings)] <- renamings[names(renamings) %in% names(tooltip_formats)]
         tooltip_values <- setNames(sapply(variable_names, function(name) sprintf("d['%s']", name)),
@@ -102,13 +121,9 @@ Points$methods(
         # ifelse() can't return NULL
         x_categorical_domain <- if(scale_type(data$x) == "categorical") get_unique_elements(data$x) else NULL
         y_categorical_domain <- if(scale_type(data$y) == "categorical") get_unique_elements(data$y) else NULL
-
-        categorical_domains <- sprintf("{
-          x: %s,
-          y: %s
-        }", to_json(x_categorical_domain), to_json(y_categorical_domain))
-
-        categorical_domains
+        categorical_domains <- list(x = x_categorical_domain,
+                                    y = y_categorical_domain)
+        to_json(categorical_domains)
     },
 
     # I data is numeric, it returns the min/max. Otherwise, it returns unique elements.
@@ -133,12 +148,9 @@ Points$methods(
             y_data_range <- get_unique_elements(data$y)
         }
 
-        data_ranges <- sprintf("{
-          x: %s,
-          y: %s
-        }", to_json(x_data_range), to_json(y_data_range))
-
-        data_ranges
+        data_ranges <- list(x = x_data_range,
+                            y = y_data_range)
+        to_json(data_ranges)
     }
 )
 

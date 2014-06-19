@@ -45,6 +45,15 @@ test_that("order data by color_groups", {
                  c(5, 3, 4, 1 ,2),
                  info = "categorical color_groups, named palette") # b b c c a ("a" on top)
 
+    params <- list(x = c("a", "b"),
+                   y = data.frame(a = c(1,2,3), b = c(4,5,6)),
+                   color_groups = c("A", "B", "C"))
+    points <- Points$new(params)
+    points$get_params()
+    points$get_data()
+    expect_equal(points$data$color_group,
+                 c("C", "C", "B", "B", "A", "A"),
+                 info = "categorical color_groups, multiple of number of points")
 })
 
 test_that("extra fields get added", {
@@ -84,13 +93,13 @@ test_that("extra fields get added", {
 test_that("limits reduce the size of the data", {
     params <- list(x = 1:10,
                    y = 1:10,
-                   xlim = c(2,8))
+                   x_lim = c(2,8))
     points <- Points$new(params)
     points$get_params()
     points$get_data()
     expect_equal(points$data$x, 2:8)
 
-    params$ylim <- c(2,8)
+    params$y_lim <- c(2,8)
     points <- Points$new(params)
     points$get_params()
     points$get_data()

@@ -35,12 +35,24 @@ test_that("get_d3_color_scale", {
     lines$get_params()
     lines$get_data()
     expect_equal(no_whitespace(lines$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\"]);", "blue", "black"), info = "categorical, color_groups")
+
+    params <- list(x = data.frame.by.rows(c(2, 3),
+                                          c(3, 4),
+                                          c(4, 5),
+                                          c(5, 6),
+                                          c(6, 7)),
+                   color_groups = c("10", "3", "3", "4", "4"),
+                   palette = c("3" = "black", "4" = "red", "10" = "blue"))
+    lines <- Lines$new(params)
+    lines$get_params()
+    lines$get_data()
+    expect_equal(no_whitespace(lines$get_d3_color_scale()), sprintf("d3.scale.ordinal().range([\"%s\",\"%s\",\"%s\"]);", "blue", "red", "black"), info = "categorical, color_groups")
 })
 
 test_that("get_tooltip_content", {
     params <- list(x = c("a", "b", "c"),
                    y = c(5.5,6,6.7),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=10,
                                 extra2=100.1))
     lines <- Lines$new(params)
@@ -71,11 +83,11 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra")
+    "), info = "y_title, extra")
 
     params <- list(x = c("a", "b", "c"),
                    y = c(5.5,6,6.7),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=10,
                                 extra2=100.2),
                    tooltip_formats = list(y = "s",
@@ -109,11 +121,11 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra, tooltip_formats")
+    "), info = "y_title, extra, tooltip_formats")
 
     params <- list(x = c("a", "b", "c"),
                    y = c(5.5, 6, 6.7),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1=10,
                                 extra2=100.2),
                    color_groups = c("A","A","B"),
@@ -126,7 +138,7 @@ test_that("get_tooltip_content", {
                    y = data.frame.by.rows(c(5.5, 4, 3),
                                           c(6, 2, 1.3),
                                           c(6.7, 1, 6.2)),
-                   ylab = "This is the y axis",
+                   y_title = "This is the y axis",
                    extra = list(extra1 = c(10,20,30),
                                 extra2 = c(100.1,200,300)),
                    color_groups = c("A","A","B"),
@@ -163,7 +175,7 @@ test_that("get_tooltip_content", {
                 </tr>
             </table>\"
         };
-    "), info = "ylab, extra, color_groups, color_title")
+    "), info = "y_title, extra, color_groups, color_title")
 
 })
 

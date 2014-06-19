@@ -2,11 +2,13 @@
 # Create the blank plot
 defs = plot.center.append("defs")
 
+# this defines the size of the plotting region (the thing that eats up
+# the name labels)
 defs.append("clipPath")
     .attr("id", "clip-plot")
   .append("rect")
     .attr(
-        "width": plot.width + 40
+        "width": plot.width + 100
         "height": plot.height)
 
 clip = plot.center.append("g")
@@ -85,7 +87,7 @@ points = g_points.append("svg:circle")
         "stroke": "black"
         "stroke-width": stroke_width
         "opacity": (d) -> d.point_opacity
-        "title": tooltip_content )
+        "title": tooltip_content)
     .on('mouseover', (d, i) ->
         point = clip.select('circle#point-'+i)
         d3.select(this.parentNode).classed("hover", true)
@@ -150,7 +152,7 @@ if show_sidebar
                 .on("click", ()-> deselect_color_groups())
 
         g_color_group_keys = sidebar.selectAll(".color_group_key")
-            .data(color_scale.domain().reverse())
+            .data(color_scale.domain())
           .enter().append("g")
             .attr(
                   "transform": (d, i) -> "translate(0, #{i * (static_line_width * 2 + 15) + distance_between_show_names_and_color_groups + 30})"

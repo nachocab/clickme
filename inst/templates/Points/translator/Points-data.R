@@ -39,12 +39,6 @@ Points$methods(
     # group_order must have as many elements as groups, by default the order is
     # alphanumeric
     order_by_color_group = function(data){
-        if (length(internal$extra$color_group) != nrow(data)) {
-            stop(sprintf("The number of color_groups is %s, but the number of points is %s",
-                length(internal$extra$color_group),
-                length(data)), call. = FALSE)
-        }
-
         ordered_color_group_names <- get_ordered_color_group_names()
         data_names <- rownames(data)
         names_groups <- data.frame(names = data_names, groups = internal$extra$color_group)
@@ -62,14 +56,18 @@ Points$methods(
     # internal
     # TODO: maybe this should change the viewport but plot all the points
     apply_axes_limits = function(data) {
-        if (!is.null(params$xlim)){
-            data <- data[data$x >= params$xlim[1],]
-            data <- data[data$x <= params$xlim[2],]
+        if (!is.null(params$x_lim)){
+            if (length(params$x_lim) != 2)
+                stop("x_lim should specify a min and a max value\n", call. = FALSE)
+            data <- data[data$x >= params$x_lim[1],]
+            data <- data[data$x <= params$x_lim[2],]
         }
 
-        if (!is.null(params$ylim)){
-            data <- data[data$y >= params$ylim[1],]
-            data <- data[data$y <= params$ylim[2],]
+        if (!is.null(params$y_lim)){
+            if (length(params$y_lim) != 2)
+                stop("y_lim should specify a min and a max value\n", call. = FALSE)
+            data <- data[data$y >= params$y_lim[1],]
+            data <- data[data$y <= params$y_lim[2],]
         }
         data
     },
