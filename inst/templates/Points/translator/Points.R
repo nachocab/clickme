@@ -26,8 +26,8 @@ Points <- setRefClass("Points",
             params$jitter <<- params$jitter %or% 0
             params$opacity <<- params$opacity %or% 1
             params$stroke_width <<- params$stroke_width %or% 0
-            params$x_title <<- params$x_title %or% "x"
-            params$y_title <<- params$y_title %or% "y"
+            params$x_title <<- params$x_title %or% ""
+            params$y_title <<- params$y_title %or% ""
             params$color_title <<- params$color_title %or% "Group"
             params$x_jitter <<- params$x_jitter %or% 0
             params$y_jitter <<- params$y_jitter %or% 0
