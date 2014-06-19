@@ -215,8 +215,8 @@
         plot.orientation_x = "bottom";
       }
       plot.axes.x = d3.svg.axis().scale(plot.scales.x).orient(plot.orientation_x);
-      if (plot.hide_x_tick_labels === true) {
-        plot.axes.x.tickFormat("");
+      if (plot.x_format != null) {
+        plot.axes.x.tickFormat(d3.format(plot.x_format));
       }
       plot.bottom_region.append("g").attr("class", "x axis").call(plot.axes.x);
       plot.bottom_region.selectAll(".x.axis line, .x.axis path").style({
@@ -236,6 +236,9 @@
         plot.orientation_y = "left";
       }
       plot.axes.y = d3.svg.axis().scale(plot.scales.y).orient(plot.orientation_y);
+      if (plot.y_format != null) {
+        plot.axes.y.tickFormat(d3.format(plot.y_format));
+      }
       plot.left_region.append("g").attr("class", "y axis").call(plot.axes.y);
       plot.left_region.selectAll(".y.axis line, .y.axis path").style({
         "fill": "none",

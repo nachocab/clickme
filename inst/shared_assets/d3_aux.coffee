@@ -197,11 +197,8 @@ my_light_red = "#b90000"
             .scale(plot.scales.x)
             .orient(plot.orientation_x)
 
-        if plot.hide_x_tick_labels is true
-            plot.axes.x.tickFormat("")
-
-        # if tick_values?
-            # plot.axes.x.tickValues(tick_values)
+        if plot.x_format?
+            plot.axes.x.tickFormat(d3.format(plot.x_format))
 
         plot.bottom_region.append("g")
             .attr("class", "x axis")
@@ -232,6 +229,9 @@ my_light_red = "#b90000"
         plot.axes.y = d3.svg.axis()
             .scale(plot.scales.y)
             .orient(plot.orientation_y)
+
+        if plot.y_format?
+            plot.axes.y.tickFormat(d3.format(plot.y_format))
 
         plot.left_region.append("g")
             .attr("class", "y axis")
