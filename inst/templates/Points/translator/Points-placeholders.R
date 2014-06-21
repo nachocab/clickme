@@ -10,7 +10,6 @@ Points$methods(
     # to interpolate them into colors)
     get_d3_color_scale = function() {
         # we use as.list() so c("#000") gets converted to ["#000"] and not "#000"
-
         if (scale_type(params$color_groups) == "quantitative") {
             color_range <- as.list(unname(params$palette))
             color_scale <- sprintf("d3.scale.linear()

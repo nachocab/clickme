@@ -38,8 +38,8 @@ Lines <- setRefClass("Lines",
             params$interpolate <<- params$interpolate %or% "linear"
             params$jitter <<- params$jitter %or% 0
             params$stroke_width <<- params$stroke_width %or% 0
-            params$x_title <<- params$x_title %or% ""
-            params$y_title <<- params$y_title %or% ""
+            params$x_title <<- params$x_title %or% "x"
+            params$y_title <<- params$y_title %or% "y"
             params$color_title <<- params$color_title %or% "Group"
 
             params$palette <<- validate_palette(params$palette)
