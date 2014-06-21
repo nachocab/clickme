@@ -25,6 +25,8 @@ library(clickme)
 clickme("points", rnorm(100)) # try zooming in and out, click the Show names button, hover over points
 ```
 
+![points](http://imgur.com/rzpcxf3)
+
 Clickme remembers the most recently used template, so you don't need to specify it again
 
 ```S
@@ -41,6 +43,8 @@ clickme("points", x = microarray$significance, y = microarray$logFC,
         extra = list(Probe = microarray$probe_name))
 ```
 
+![microarray](http://imgur.com/4WPSKjP)
+
 You can also try lines
 
 ```S
@@ -48,6 +52,8 @@ xy_values <- list(line1 = data.frame(x = 1:4, y = 5:8),
                   line2 = data.frame(x = 1:5, y = 10:14))
 clickme("lines", xy_values, radius = 5)
 ```
+
+![lines](http://imgur.com/f82PXE0)
 
 ## Resources
 
