@@ -24,7 +24,6 @@ Lines$methods(
             } else {
                 color_range <- as.list(unname(params$palette[levels(params$color_groups)]))
             }
-
             if (is.null(names(params$palette))){
                 color_scale <- sprintf("d3.scale.ordinal()
                                         .range(%s);",
@@ -36,6 +35,7 @@ Lines$methods(
                                             .range(%s);",
                                             to_json(names(params$palette)),
                                             to_json(color_range))
+
             }
         }
 

@@ -22,19 +22,32 @@ Let's take it out for a spin.
 
 ```S
 library(clickme)
-clickme(points, rnorm(100)) # try zooming in and out, click the Show names button, hover over points
+clickme("points", rnorm(100)) # try zooming in and out, click the Show names button, hover over points
+```
+
+Clickme remembers the most recently used template, so you don't need to specify it again
+
+```S
+clickme(rnorm(50))
 ```
 
 A more interesting example
 ```S
 data(microarray)
-clickme(points, x = microarray$significance, y = microarray$logFC,
+clickme("points", x = microarray$significance, y = microarray$logFC,
         color_groups = ifelse(microarray$adj.P.Val < 1e-4, "Significant", "Noise"),
         names = microarray$gene_name,
         x_title = "Significance (-log10)", y_title = "Fold-change (log2)",
         extra = list(Probe = microarray$probe_name))
 ```
 
+You can also try lines
+
+```S
+xy_values <- list(line1 = data.frame(x = 1:4, y = 5:8),
+                  line2 = data.frame(x = 1:5, y = 10:14))
+clickme("lines", xy_values, radius = 5)
+```
 
 ## Resources
 
