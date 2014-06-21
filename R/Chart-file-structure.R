@@ -115,7 +115,7 @@ Chart$methods(
     validate_file_structure = function() {
 
         if (!file.exists(getOption("clickme_templates_path"))) {
-            stop(sprintf("getOption(\"clickme_templates_path\", call. = FALSE) doesn't contain a valid path: %s",
+            stop(sprintf("getOption(\"clickme_templates_path\") doesn't contain a valid path: %s",
                     getOption("clickme_templates_path")), call. = FALSE)
         }
 
@@ -145,7 +145,16 @@ Chart$methods(
         }
 
         if (!file.exists(internal$file$paths$output)){
-            dir.create(internal$file$paths$output)
+            creating_folder <- tryCatch(dir.create(internal$file$paths$output, recursive = TRUE),
+                           warning=function(x) x)
+            if (is(creating_folder, "warning")) {
+                stop(sprintf("Clickme is trying to create the output directory in '%s'
+but you don't have write permissions in this path.\n
+You can change the output directory by setting the clickme_output_path option
+in your .Rprofile: options(clickme_output_path = MY_FOLDER)
+or by specifying the directory manually: clickme(..., dir = getwd())\n\n",
+                     internal$file$paths$output), call. = FALSE)
+            }
         }
 
     }
