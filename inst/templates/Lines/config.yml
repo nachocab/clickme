@@ -8,7 +8,7 @@ demo: |-
 
 scripts:
     - $shared/d3.v3.4.3.js
-    - $shared/d3_aux.js
+    - $shared/clickme.js
     - $shared/d3_tip.js
 
 styles:

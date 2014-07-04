@@ -32,7 +32,9 @@ if plot.zoom
 
 # Create points
 transform_points = (d) ->
-    "translate(#{plot.scales.x(d.x) + plot.jitters.x()}, #{plot.scales.y(d.y) + plot.jitters.y()})"
+    # don't confuse plot.jitters (d3-defined function)
+    # with plot.jitter (user defined value)
+    "translate(#{plot.scales.x(d.x) + plot.jitters.x(d.color_group)}, #{plot.scales.y(d.y) + plot.jitters.y(d.color_group)})"
 
 g_points = clip.selectAll(".point")
     .data(plot.data)

@@ -29,7 +29,7 @@
   }
 
   transform_points = function(d) {
-    return "translate(" + (plot.scales.x(d.x) + plot.jitters.x()) + ", " + (plot.scales.y(d.y) + plot.jitters.y()) + ")";
+    return "translate(" + (plot.scales.x(d.x) + plot.jitters.x(d.color_group)) + ", " + (plot.scales.y(d.y) + plot.jitters.y(d.color_group)) + ")";
   };
 
   g_points = clip.selectAll(".point").data(plot.data).enter().append("g").attr({
