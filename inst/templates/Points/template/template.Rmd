@@ -33,7 +33,7 @@
                     subtitle: {{ params$subtitle }},
                     x_title: {{ params$x_title }},
                     y_title: {{ params$y_title }},
-                    color_title: {{ params$color_title }}
+                    color_title: {{ params$color_title }},
                 },
                 rotate: {
                     x_title: {{ params$rotate_x_title }},
@@ -43,16 +43,24 @@
                 },
                 scale_limits: {
                     x: {{ params$x_lim }},
-                    y: {{ params$y_lim }}
+                    y: {{ params$y_lim }},
                 },
                 jitter: {
                     x: {{ params$x_jitter }},
-                    y: {{ params$y_jitter }}
+                    y: {{ params$y_jitter }},
+                },
+                group_jitter: {
+                    x: {{ params$x_group_jitter }},
+                    y: {{ params$y_group_jitter }},
+                },
+                jitter_type: {
+                    x: {{ params$x_jitter_type }},
+                    y: {{ params$y_jitter_type }},
                 },
                 x_format: {{ params$x_format }},
                 y_format: {{ params$y_format }},
                 ordinal_scale_padding: 1,
-                linear_scale_padding: 40
+                linear_scale_padding: 40,
             });
 
             distance_between_show_names_and_color_groups = 80;

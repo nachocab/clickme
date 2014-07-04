@@ -33,17 +33,17 @@ Lines <- setRefClass("Lines",
                 params$color_groups <<- factor(params$color_groups, levels = palette_levels)
             }
 
-            params$out_width <<- params$out_width %or% 500
-            params$out_height <<- params$out_height %or% 500
-            params$interpolate <<- params$interpolate %or% "linear"
-            params$jitter <<- params$jitter %or% 0
-            params$stroke_width <<- params$stroke_width %or% 0
-            params$x_title <<- params$x_title %or% "x"
-            params$y_title <<- params$y_title %or% "y"
-            params$color_title <<- params$color_title %or% "Group"
+            params$out_width <<- params[["out_width"]] %or% 500
+            params$out_height <<- params[["out_height"]] %or% 500
+            params$interpolate <<- params[["interpolate"]] %or% "linear"
+            params$jitter <<- params[["jitter"]] %or% 0
+            params$stroke_width <<- params[["stroke_width"]] %or% 0
+            params$x_title <<- params[["x_title"]] %or% "x"
+            params$y_title <<- params[["y_title"]] %or% "y"
+            params$color_title <<- params[["color_title"]] %or% "Group"
 
-            params$palette <<- validate_palette(params$palette)
-            params$color_domain <<- validate_color_domain(params$color_domain)
+            params$palette <<- validate_palette(params[["palette"]])
+            params$color_domain <<- validate_color_domain(params[["color_domain"]])
 
             internal$extra <<- get_extra()
         },
@@ -51,14 +51,14 @@ Lines <- setRefClass("Lines",
         get_extra = function() {
             extra <- params$extra %or% list()
             # line-specific options
-            extra$line_name <- params$names
-            extra$line_stroke_width <- params$width %or% 3
-            extra$line_stroke_dasharray <- params$dash %or% "0"
-            extra$line_opacity <- params$opacity %or% 1
+            extra$line_name <- params[["names"]]
+            extra$line_stroke_width <- params[["width"]] %or% 3
+            extra$line_stroke_dasharray <- params[["dash"]] %or% "0"
+            extra$line_opacity <- params[["opacity"]] %or% 1
 
-            at_least_two_color_groups <- !is.null(params$color_groups) && length(unique(params$color_groups)) > 1
+            at_least_two_color_groups <- !is.null(params[["color_groups"]]) && length(unique(params[["color_groups"]])) > 1
             if (at_least_two_color_groups)
-                extra$color_group <- params$color_groups
+                extra$color_group <- params[["color_groups"]]
 
             # point-specific options
             if (is.null(params$radius)){
