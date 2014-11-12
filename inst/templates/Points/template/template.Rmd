@@ -16,7 +16,7 @@
     </head>
 
     <body>
-        <div class="g-search">
+        <div class="g-search hideable">
                 <input type="text" placeholder="Search…">
                 <button style="display:none;" class="g-search-clear">X</button>
         </div>
@@ -64,7 +64,7 @@
             });
 
             distance_between_show_names_and_color_groups = 80;
-            static_radius = 5;
+            static_radius = {{ params$radius[1] }};
 
             opacity = {{ params$opacity }};
             stroke_width = {{ params$stroke_width }};

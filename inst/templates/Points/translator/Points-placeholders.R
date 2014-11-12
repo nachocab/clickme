@@ -34,12 +34,18 @@ Points$methods(
                                         to_json(color_range))
 
             } else {
-                ordered_color_group_names <- names(params$palette)
+                # this version assumes that two groups can't have the same color
                 color_scale <- sprintf("d3.scale.ordinal()
                                             .domain(%s)
                                             .range(%s);",
-                                            to_json(ordered_color_group_names),
-                                            to_json(unname(params$palette[unique(data$color_group)][ordered_color_group_names])))
+                                            to_json(names(params$palette)),
+                                            to_json(unname(params$palette[unique(data$color_group)][names(params$palette)])))
+                # this version assumes that they can. TODO: choose one and test it
+                # color_scale <- sprintf("d3.scale.ordinal()
+                #                             .domain(%s)
+                #                             .range(%s);",
+                #                             to_json(names(params$palette)),
+                #                             to_json(fc_name <- "kidney_7"))
             }
         }
 

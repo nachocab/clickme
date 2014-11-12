@@ -25,6 +25,10 @@ body{
     font-size: 20px;
 }
 
+.hidden {
+    opacity: 0;
+}
+
 .hide {
     display: none;
 }

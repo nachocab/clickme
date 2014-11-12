@@ -81,7 +81,7 @@ test_that("output file name is added", {
     test_chart$get_file_structure()
     expect_equal(test_chart$internal$file$names$output_file, "my_file.html")
 
-    test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file1.html"), file = "my_file2.html"))
+    test_chart <- TestChart$new(list(file_path = file.path("my_folder", "my_file1.html"), file_name = "my_file2.html"))
     test_chart$get_params()
     expect_message(test_chart$get_file_structure(), "The \"file\" argument was ignored because the \"file_path\" argument was present: ")
     expect_equal(test_chart$internal$file$names$output_file, "my_file1.html")

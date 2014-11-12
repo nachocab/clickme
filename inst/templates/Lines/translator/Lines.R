@@ -25,7 +25,9 @@ Lines <- setRefClass("Lines",
                 if (!is.null(params$color_group_order)){
                     palette_levels <- unique(params$color_group_order)
                 } else if (!is.null(names(params$palette))){
-                    palette_levels <- names(rev(params$palette))
+                    # we reverse the names because we want the first color to show up on top
+                    # we might decouple z-index from palette at some point
+                    palette_levels <- names(params$palette)
                 } else {
                     palette_levels <- unique(params$color_groups)
                 }

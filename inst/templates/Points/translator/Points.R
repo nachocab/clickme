@@ -30,6 +30,7 @@ Points <- setRefClass("Points",
             params$color_title <<- params[["color_title"]] %or% "Group"
             params$x_jitter <<- params[["x_jitter"]] %or% 0
             params$y_jitter <<- params[["y_jitter"]] %or% 0
+            params$radius <<- params[["radius"]] %or% 5
 
             params$palette <<- validate_palette(params[["palette"]])
             params$color_domain <<- validate_color_domain(params[["color_domain"]])
@@ -40,7 +41,7 @@ Points <- setRefClass("Points",
         get_extra = function() {
             extra <- params[["extra"]] %or% list()
             extra$point_name <- params[["names"]]
-            extra$radius <- params[["radius"]] %or% 5
+            extra$radius <- params[["radius"]]
 
             at_least_two_color_groups <- !is.null(params[["color_groups"]]) && length(unique(params[["color_groups"]])) > 1
             if (at_least_two_color_groups)

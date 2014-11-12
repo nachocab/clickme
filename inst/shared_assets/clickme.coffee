@@ -155,20 +155,6 @@ my_light_red = "#b90000"
         plot.scales.y = get_scale(plot, "y")
         plot
 
-    plot.get_band_widths = ()->
-        plot.band_widths = {}
-        plot.band_widths.x = get_band_width(plot, "x")
-        plot.band_widths.y = get_band_width(plot, "y")
-        plot
-
-    plot.get_jitters = ()->
-        # don't confuse plot.jitters (d3-defined function)
-        # with plot.jitter (user defined value)
-        plot.jitters = {}
-        plot.jitters.x = get_jitter(plot, "x")
-        plot.jitters.y = get_jitter(plot, "y")
-        plot
-
     plot.add_title = () ->
         plot.top_region.append("text")
             .text(plot.labels.title)
@@ -302,10 +288,7 @@ my_light_red = "#b90000"
     if plot.scale_types.x is "ordinal" or plot.scale_types.y is "ordinal"
         plot.zoom = false
 
-    plot.get_band_widths()
-
-    plot.get_jitters()
-        .add_axes()
+    plot.add_axes()
 
     plot
 
@@ -344,38 +327,6 @@ my_light_red = "#b90000"
             .rangePoints(plot.scale_ranges[scale_name], plot.categorical_scale_padding)
 
     scale
-
-# size of bands (in pixels), useful for jitters
-@get_band_width = (plot, scale_name) ->
-    pixels = d3.extent(plot.scale_ranges[scale_name])[1]
-    number_of_bands = plot.scales[scale_name].domain().length
-    band_width = pixels / number_of_bands
-    band_width
-
-# n = 3, [-1,0,1]
-# n = 4, [-1.5,-.5,.5,1.5]
-@get_band_indeces = (n) ->
-    half_length = Math.floor(n/2)
-    half_length = half_length - .5 if n %% 2 == 0
-    indeces = [-half_length..half_length]
-    indeces
-
-@get_jitter = (plot, scale_name) ->
-    band_width = plot.band_widths[scale_name]
-    jitter_pct = plot.jitter[scale_name] # 1 is maximum dispersion, 0 is no dispersion.
-    group_jitter_pct = plot.group_jitter[scale_name] || jitter_pct # 1 is maximum dispersion, 0 is no dispersion.
-    if plot.jitter_type[scale_name] == "grouped" && plot.data[0].color_group?
-        # we're assuming that every element will have a color_group property
-        color_groups = (elem.color_group for elem in plot.data).unique().reverse()
-        group_band_width = band_width/color_groups.length
-        band_indeces = get_band_indeces(color_groups.length)
-        jitter = (color_group)->
-            color_group_index = color_groups.indexOf(color_group)
-            (group_band_width/2 * jitter_pct * random()) + (group_band_width * group_jitter_pct * band_indeces[color_group_index])
-    else
-        jitter = ()->
-            band_width/2 * jitter_pct * random()
-    jitter
 
 @add_scale_padding = (scale, padding) ->
     range = scale.range()

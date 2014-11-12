@@ -1,3 +1,55 @@
+
+
+plot.get_band_widths = ()->
+    plot.band_widths = {}
+    plot.band_widths.x = get_band_width(plot, "x")
+    plot.band_widths.y = get_band_width(plot, "y")
+    plot
+
+plot.get_jitters = ()->
+    # don't confuse plot.jitters (d3-defined function)
+    # with plot.jitter (user defined value)
+    plot.jitters = {}
+    plot.jitters.x = get_jitter(plot, "x")
+    plot.jitters.y = get_jitter(plot, "y")
+    plot
+
+get_jitter = (plot, scale_name) ->
+    band_width = plot.band_widths[scale_name]
+    jitter_pct = plot.jitter[scale_name] # 1 is maximum dispersion, 0 is no dispersion.
+    group_jitter_pct = plot.group_jitter[scale_name] || jitter_pct # 1 is maximum dispersion, 0 is no dispersion.
+    if plot.jitter_type[scale_name] == "grouped" && plot.data[0].color_group?
+        # we're assuming that every element will have a color_group property
+        color_groups = (elem.color_group for elem in plot.data).unique().reverse()
+        group_band_width = band_width/color_groups.length
+        band_indeces = get_band_indeces(color_groups.length)
+        jitter = (color_group)->
+            color_group_index = color_groups.indexOf(color_group)
+            (group_band_width/2 * jitter_pct * random()) + (group_band_width * group_jitter_pct * band_indeces[color_group_index])
+    else
+        jitter = ()->
+            band_width/2 * jitter_pct * random()
+    jitter
+
+# size of bands (in pixels), useful for jitters
+@get_band_width = (plot, scale_name) ->
+    pixels = d3.extent(plot.scale_ranges[scale_name])[1]
+    number_of_bands = plot.scales[scale_name].domain().length
+    band_width = pixels / number_of_bands
+    band_width
+
+# n = 3, [-1,0,1]
+# n = 4, [-1.5,-.5,.5,1.5]
+@get_band_indeces = (n) ->
+    half_length = Math.floor(n/2)
+    half_length = half_length - .5 if n %% 2 == 0
+    indeces = [-half_length..half_length]
+    indeces
+
+plot.get_band_widths()
+    .get_jitters()
+
+
 # Create the blank plot
 plot.center.append("defs").append("clipPath")
     .attr("id", "clip")
@@ -109,6 +161,7 @@ if show_sidebar
 
     g_toggle_names = sidebar.append("g")
         .style("cursor", "pointer")
+        .attr("class", "hideable")
         .style("font-size","22px")
         .on("click", ()-> toggle_names())
 
@@ -134,9 +187,9 @@ if show_sidebar
     if color_scale.range().length > 1
         g_color_title = sidebar.append("text")
             .attr(
-                  "x": -static_radius
+                  "x": -5
                   "y": distance_between_show_names_and_color_groups
-                  "dy": ".35em")
+                  "dy": ".35em") # Show one / Show all
 
         g_color_title.append("tspan")
             .style(
@@ -149,6 +202,7 @@ if show_sidebar
                 .attr(
                     "fill": "#949494"
                     "dx": "20px")
+                .attr("class", "hideable")
                 .style(
                     "font-size": "16px"
                     "font-weight": "bold")
@@ -159,7 +213,7 @@ if show_sidebar
             .data(color_scale.domain())
           .enter().append("g")
             .attr(
-                  "transform": (d, i) -> "translate(0, #{i * (static_radius * 2 + 15) + distance_between_show_names_and_color_groups + 30})"
+                  "transform": (d, i) -> "translate(0, #{i * (5 * 2 + 15) + distance_between_show_names_and_color_groups + 30})"
                   "class": "color_group_key")
             .style("cursor", "pointer")
 
@@ -171,7 +225,7 @@ if show_sidebar
 
         g_color_group_keys.append("text")
             .attr(
-                "x": static_radius + 10
+                "x": 5 + 10
                 "y": 0
                 "dy": ".35em")
             .text((d) -> "#{d} (#{color_legend_counts[d]})")
@@ -216,16 +270,15 @@ deselect_color_groups = ()->
     else
         show_all_colors()
 
-# TODO: add key shortcuts
-# d3.select(window).on("keydown", () ->
-#     # switch (d3.event.keyCode) {
-#       # case : year = Math.max(year0, year - 10); break;
-#       # case 39: year = Math.min(year1, year + 10); break;
-#     # }
+d3.select(window).on("keydown", () ->
+    switch d3.event.keyCode
+      when 72 # "h"
+        d3.selectAll(".hideable").classed("hidden", (d,i) -> !d3.select(this).classed("hidden"))
+)
+
 #     # console.log(d3.event.keyCode)
 #     if (d3.event.keyCode in [78, 32]) # 'n' or 'space bar'
 #         change()
-# )
 
 # search bar
 # TODO: replace this with an svg input form
@@ -277,11 +330,13 @@ mouseout = () ->
     tip.hide()
 
 search_input = d3.select(".g-search input")
-    .on("keyup", keyuped);
+    .on("keyup", () -> 
+        keyuped
+        d3.event.preventDefault()
+    ).on("keydown", () -> d3.event.stopPropagation()) # to allow hideable
 
 search_clear = d3.select(".g-search .g-search-clear")
     .on("click", () ->
         search_input.property("value", "")
         search()
     )
-

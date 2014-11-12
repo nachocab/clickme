@@ -1,4 +1,20 @@
 
+
+plot.get_jitters = ()->
+    # don't confuse plot.jitters (d3-defined function)
+    # with plot.jitter (user defined value)
+    plot.jitters = {}
+    plot.jitters.x = get_jitter(plot, "x")
+    plot.jitters.y = get_jitter(plot, "y")
+    plot
+
+
+get_jitter = (plot, scale_name) ->
+    band_width = (d3.extent(plot.scale_ranges[scale_name])[1] / plot.scales[scale_name].domain().length)
+    jitter = ()-> band_width * plot.jitter[scale_name] * random()
+
+plot.get_jitters()
+
 # Create the blank plot
 defs = plot.center.append("defs")
 
@@ -276,4 +292,3 @@ search_clear = d3.select(".g-search .g-search-clear")
         search_input.property("value", "")
         search()
     )
-
