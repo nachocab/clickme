@@ -303,11 +303,11 @@
     "left": "" + (g_toggle_names.node().getBoundingClientRect().left) + "px"
   });
 
-  keyuped = function() {
+  keyuped = function(that) {
     if (d3.event.keyCode === 27) {
-      this.value = "";
+      that.value = "";
     }
-    return search(this.value.trim());
+    return search(that.value.trim());
   };
 
   search = function(value) {
@@ -346,7 +346,7 @@
   };
 
   search_input = d3.select(".g-search input").on("keyup", function() {
-    keyuped;
+    keyuped(this);
     return d3.event.preventDefault();
   }).on("keydown", function() {
     return d3.event.stopPropagation();

@@ -287,11 +287,10 @@ d3.select(".g-search")
        "top": "#{g_toggle_names.node().getBoundingClientRect().top + distance_between_show_names_and_color_groups/2 }px"
        "left": "#{g_toggle_names.node().getBoundingClientRect().left}px")
 
-keyuped = () ->
+keyuped = (that) ->
     if (d3.event.keyCode == 27) # pressing Esc on search bar
-        this.value = ""
-
-    search(this.value.trim())
+        that.value = ""
+    search(that.value.trim())
 
 search = (value) ->
     if (value)
@@ -331,7 +330,7 @@ mouseout = () ->
 
 search_input = d3.select(".g-search input")
     .on("keyup", () -> 
-        keyuped
+        keyuped(this)
         d3.event.preventDefault()
     ).on("keydown", () -> d3.event.stopPropagation()) # to allow hideable
 
