@@ -180,7 +180,7 @@ if show_sidebar
     toggle_names = ()->
         showing_names = g_toggle_names.classed("show_names")
         point_names.attr("display", ()-> if showing_names then "none" else "inline")
-        g_toggle_names.attr("class", ()-> if showing_names then "" else "show_names")
+        g_toggle_names.classed("show_names", !showing_names)
             .select("circle").attr("fill", ()-> if showing_names then "white" else "black")
 
     # Draw color legend only when there is more than one color

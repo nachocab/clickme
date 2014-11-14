@@ -181,13 +181,7 @@
           return "inline";
         }
       });
-      return g_toggle_names.attr("class", function() {
-        if (showing_names) {
-          return "";
-        } else {
-          return "show_names";
-        }
-      }).select("circle").attr("fill", function() {
+      return g_toggle_names.classed("show_names", !showing_names).select("circle").attr("fill", function() {
         if (showing_names) {
           return "white";
         } else {
