@@ -1,5 +1,3 @@
-
-
 plot.get_band_widths = ()->
     plot.band_widths = {}
     plot.band_widths.x = get_band_width(plot, "x")
@@ -186,6 +184,7 @@ if show_sidebar
     # Draw color legend only when there is more than one color
     if color_scale.range().length > 1
         g_color_title = sidebar.append("text")
+            .attr("class", "hideable")
             .attr(
                   "x": -5
                   "y": distance_between_show_names_and_color_groups
@@ -195,14 +194,13 @@ if show_sidebar
             .style(
                   "font-size": "16px"
                   "font-weight": "bold")
-            .text(plot.color_title)
+            .text(plot.labels.color_title)
 
         if color_scale.range().length > 2
             single_group = g_color_title.append("tspan")
                 .attr(
                     "fill": "#949494"
                     "dx": "20px")
-                .attr("class", "hideable")
                 .style(
                     "font-size": "16px"
                     "font-weight": "bold")
@@ -287,10 +285,10 @@ d3.select(".g-search")
        "top": "#{g_toggle_names.node().getBoundingClientRect().top + distance_between_show_names_and_color_groups/2 }px"
        "left": "#{g_toggle_names.node().getBoundingClientRect().left}px")
 
-keyuped = (that) ->
+keyuped = () ->
     if (d3.event.keyCode == 27) # pressing Esc on search bar
-        that.value = ""
-    search(that.value.trim())
+        this.value = ""
+    search(this.value.trim())
 
 search = (value) ->
     if (value)
@@ -330,7 +328,7 @@ mouseout = () ->
 
 search_input = d3.select(".g-search input")
     .on("keyup", () -> 
-        keyuped(this)
+        keyuped.apply(this)
         d3.event.preventDefault()
     ).on("keydown", () -> d3.event.stopPropagation()) # to allow hideable
 

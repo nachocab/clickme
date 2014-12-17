@@ -190,7 +190,7 @@
       });
     };
     if (color_scale.range().length > 1) {
-      g_color_title = sidebar.append("text").attr({
+      g_color_title = sidebar.append("text").attr("class", "hideable").attr({
         "x": -5,
         "y": distance_between_show_names_and_color_groups,
         "dy": ".35em"
@@ -198,12 +198,12 @@
       g_color_title.append("tspan").style({
         "font-size": "16px",
         "font-weight": "bold"
-      }).text(plot.color_title);
+      }).text(plot.labels.color_title);
       if (color_scale.range().length > 2) {
         single_group = g_color_title.append("tspan").attr({
           "fill": "#949494",
           "dx": "20px"
-        }).attr("class", "hideable").style({
+        }).style({
           "font-size": "16px",
           "font-weight": "bold"
         }).text("Show one").on("click", function() {
@@ -297,11 +297,11 @@
     "left": "" + (g_toggle_names.node().getBoundingClientRect().left) + "px"
   });
 
-  keyuped = function(that) {
+  keyuped = function() {
     if (d3.event.keyCode === 27) {
-      that.value = "";
+      this.value = "";
     }
-    return search(that.value.trim());
+    return search(this.value.trim());
   };
 
   search = function(value) {
@@ -340,7 +340,7 @@
   };
 
   search_input = d3.select(".g-search input").on("keyup", function() {
-    keyuped(this);
+    keyuped.apply(this);
     return d3.event.preventDefault();
   }).on("keydown", function() {
     return d3.event.stopPropagation();

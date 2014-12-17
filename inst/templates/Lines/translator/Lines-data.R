@@ -173,7 +173,7 @@ Lines$methods(
         ordered_color_group_names <- get_ordered_color_group_names()
         names_groups <- data.frame(names = line_names, groups = internal$extra$color_group)
         data_order <- unlist(sapply(ordered_color_group_names, function(group_name) {
-            which(names_groups$group == group_name)
+            which(names_groups$groups == group_name)
         }))
 
         # Reverse so the first element is plotted last (and therefore

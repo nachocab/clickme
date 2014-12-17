@@ -62,7 +62,7 @@ my_light_red = "#b90000"
 
     options.padding ?= {}
     options.padding.top ?= 20
-    options.padding.right ?=150
+    options.padding.right ?= 150
     options.padding.bottom ?= 50
     options.padding.left ?= 50
 
