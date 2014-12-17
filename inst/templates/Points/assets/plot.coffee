@@ -160,6 +160,7 @@ if show_sidebar
     g_toggle_names = sidebar.append("g")
         .style("cursor", "pointer")
         .attr("class", "hideable")
+        .attr("id", "show_names")
         .style("font-size","22px")
         .on("click", ()-> toggle_names())
 

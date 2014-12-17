@@ -166,7 +166,7 @@
 
   if (show_sidebar) {
     sidebar = plot.right_region.append("g").attr("transform", "translate(60,0)");
-    g_toggle_names = sidebar.append("g").style("cursor", "pointer").attr("class", "hideable").style("font-size", "22px").on("click", function() {
+    g_toggle_names = sidebar.append("g").style("cursor", "pointer").attr("class", "hideable").attr("id", "show_names").style("font-size", "22px").on("click", function() {
       return toggle_names();
     });
     g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
