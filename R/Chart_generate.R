@@ -187,14 +187,16 @@ get_placeholder_regex <- function(spec) {
     num_repeats <- spec[2]
 
     if (opening_symbol == "{"){
-        opening_symbol <- "{"
-        closing_symbol <- "}"
+        opening_symbol <- "\\{"
+        closing_symbol <- "\\}"
     } else if (opening_symbol == "["){
         opening_symbol <- "\\["
         closing_symbol <- "\\]"
+    } else {
+        stop("Invalid opening symbol: ", opening_symbol, call. = FALSE)
     }
 
-    regex <- perl(paste0(
+    regex <- stringr::regex(paste0(
                   "(?<!", opening_symbol, ")",             # negative lookbehind
                   opening_symbol, "{", num_repeats, "}",   # match opening symbol exactly num_repeats times
                   "(?!", opening_symbol, ")",              # negative lookahead

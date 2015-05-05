@@ -1,7 +1,7 @@
 Package: clickme
 Maintainer: Nacho Caballero <nachocab@gmail.com>
 Author: Nacho Caballero <nachocab@gmail.com>
-Version: 0.5.4
+Version: 0.5.5
 License: GPL-3
 Title: Straight from R to JS: Create interactive visualizations from R
 URL: https://github.com/nachocab/clickme
@@ -22,16 +22,16 @@ Suggests:
 Collate:
     'utils.R'
     'Chart.R'
-    'Chart-config.R'
-    'Chart-data.R'
-    'Chart-file-structure.R'
-    'Chart-generate.R'
-    'Chart-helpers.R'
-    'Chart-params.R'
-    'Chart-placeholders.R'
-    'clickme-package.R'
+    'Chart_config.R'
+    'Chart_data.R'
+    'Chart_file_structure.R'
+    'Chart_generate.R'
+    'Chart_helpers.R'
+    'Chart_params.R'
+    'Chart_placeholders.R'
     'clickme.R'
+    'clickme_package.R'
     'json.R'
-    'new-template.R'
-    'reload-translators.R'
-    'xy-to-data.R'
+    'new_template.R'
+    'reload_translators.R'
+    'xy_to_data.R'

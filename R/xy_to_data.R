@@ -7,7 +7,7 @@ get_xy_rownames <- function(x) {
     UseMethod("get_xy_rownames", x)
 }
 
-#' @S3method get_xy_rownames data.frame
+#' @export get_xy_rownames
 get_xy_rownames.data.frame <- function(x) {
   if (!is.null(rownames(x))){
       rownames <- rownames(x)
@@ -17,12 +17,12 @@ get_xy_rownames.data.frame <- function(x) {
   rownames
 }
 
-#' @S3method get_xy_rownames matrix
+#' @export get_xy_rownames
 get_xy_rownames.matrix <- function(x){
     get_xy_rownames.data.frame(x)
 }
 
-#' @S3method get_xy_rownames character
+#' @export get_xy_rownames
 get_xy_rownames.character <- function(x){
     if (!is.null(names(x)) && !any(duplicated(names(x)))) {
         rownames <- names(x)
@@ -32,7 +32,7 @@ get_xy_rownames.character <- function(x){
     rownames
 }
 
-#' @S3method get_xy_rownames default
+#' @export get_xy_rownames
 get_xy_rownames.default <- function(x) {
     get_xy_rownames.character(x)
 }
