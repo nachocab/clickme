@@ -1,7 +1,7 @@
 Package: clickme
 Maintainer: Nacho Caballero <nachocab@gmail.com>
 Author: Nacho Caballero <nachocab@gmail.com>
-Version: 0.5.5
+Version: 0.5.6
 License: GPL-3
 Title: Straight from R to JS: Create interactive visualizations from R
 URL: https://github.com/nachocab/clickme

@@ -7,7 +7,7 @@ get_xy_rownames <- function(x) {
     UseMethod("get_xy_rownames", x)
 }
 
-#' @export get_xy_rownames
+#' @export get_xy_rownames.data.frame
 get_xy_rownames.data.frame <- function(x) {
   if (!is.null(rownames(x))){
       rownames <- rownames(x)
@@ -17,12 +17,12 @@ get_xy_rownames.data.frame <- function(x) {
   rownames
 }
 
-#' @export get_xy_rownames
+#' @export get_xy_rownames.matrix
 get_xy_rownames.matrix <- function(x){
     get_xy_rownames.data.frame(x)
 }
 
-#' @export get_xy_rownames
+#' @export get_xy_rownames.character
 get_xy_rownames.character <- function(x){
     if (!is.null(names(x)) && !any(duplicated(names(x)))) {
         rownames <- names(x)
@@ -32,7 +32,7 @@ get_xy_rownames.character <- function(x){
     rownames
 }
 
-#' @export get_xy_rownames
+#' @export get_xy_rownames.default
 get_xy_rownames.default <- function(x) {
     get_xy_rownames.character(x)
 }
