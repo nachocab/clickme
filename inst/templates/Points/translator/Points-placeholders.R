@@ -27,7 +27,6 @@ Points$methods(
                 # you should do it the same way in lines and points
                 color_range <- as.list(unname(params$palette[unique(data$color_group)]))
             }
-
             if (is.null(names(params$palette))){
                 color_scale <- sprintf("d3.scale.ordinal()
                                         .range(%s);",

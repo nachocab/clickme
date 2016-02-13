@@ -167,7 +167,6 @@ test_that("x is a list with only one element", {
 })
 
 test_that("x is a list with at least two elements and y is null", {
-
     data <- xy_to_data(x = list(a = 1:10, b = 11:20), y = NULL)
     expect_equal(data, data.frame(x = 1:10, y = 11:20, row.names = as.character(1:10)))
 

@@ -61,6 +61,9 @@ clickme <- function(template, ...){
                           getOption("clickme_templates_path")),
             call. = FALSE)
         }
+
+        # This is where the magic happens
+        # call the appropriate rendering function in inst/templates/Template/Template.R
         result <- clickme_helper[[snake_case_template]](...)
 
         if (demo_mode()){
