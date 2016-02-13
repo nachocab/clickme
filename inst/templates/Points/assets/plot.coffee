@@ -307,7 +307,6 @@ keyuped = () ->
 
 search = (value) ->
     if (value)
-        re = new RegExp("#{d3.requote(value)}", "i")
 
         clip.classed("g-searching", true)
 
@@ -316,8 +315,39 @@ search = (value) ->
             g_color_group_keys.classed("hide", false)
             g_points.classed("hide", false)
 
+        # Do the actual matching
+        value_elements = value.split(/, */)
+        console.log "value_elements:", value_elements
         g_points.classed("g-match", (d)->
-            re.test(d.point_name)
+            if value_elements.length > 1 or /:/.test(value_elements[0]) # more than one elem
+                matches = value_elements.map (element) ->
+                    if /:/.test(element) # :property logical_operator value:
+                        if element.match(/:/g).length == 2 # there is a closing ":"
+                            property = element.replace(/:/g, "")
+                            element = "d." + property
+                            if not element
+                                console.log "Invalid property.", console.dir(d)
+                            match = eval(element)
+                            # console.log "element.match(/:/g)eval", element, match
+                            match
+                    else # name or regex
+                        console.log element
+                        element = element.replace(/[" ]/g, "")
+                        if element.length
+                            re = new RegExp("^#{element}$", "i")
+                            match = re.test(d.point_name)
+                            console.log "perfect_match", element, match
+                            match
+                any_matches = matches.some((match) -> if match
+                    true
+                ) # any
+                # console.log "any_matches", any_matches, matches
+                any_matches
+            else # only one elementre = new RegExp("" + (d3.requote(element)), "i");
+                element = value.replace(/"/g, "")
+                re = new RegExp("#{element}", "i")
+                # console.log "partial_matches"
+                re.test(d.point_name)
         )
 
         matches = d3.selectAll(".g-match")
@@ -343,7 +373,11 @@ mouseout = () ->
 
 search_input = d3.select(".g-search input")
     .on("keyup", () -> 
-        keyuped.apply(this)
+        if (d3.selectAll(".point")[0].length < 10000)
+            keyuped.apply(this)
+        else
+            if d3.event.keyCode == 13 # Enter
+                keyuped.apply(this)
         d3.event.preventDefault()
     ).on("keydown", () -> d3.event.stopPropagation()) # to allow hideable
 
