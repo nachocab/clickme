@@ -33,12 +33,18 @@ Points$methods(
                                         to_json(color_range))
 
             } else {
+                all_names <- names(params$palette)
+                names_in_data <- unique(data$color_group)
+                current_range <- params$palette[names_in_data][all_names]
+                current_range <- unname(na.omit(current_range)) # TODO: you should create a test for this
+                  # this happens when one of the values in all_names is not in data
+
                 # this version assumes that two groups can't have the same color
                 color_scale <- sprintf("d3.scale.ordinal()
                                             .domain(%s)
                                             .range(%s);",
                                             to_json(names(params$palette)),
-                                            to_json(unname(params$palette[unique(data$color_group)][names(params$palette)])))
+                                            to_json(current_range))
                 # this version assumes that they can. TODO: choose one and test it
                 # color_scale <- sprintf("d3.scale.ordinal()
                 #                             .domain(%s)
@@ -112,7 +118,8 @@ Points$methods(
                   title_row,
                   sapply(names(tooltip_formatted_values), function(name) {
                       sprintf("<tr class='tooltip-metric'><td class='tooltip-metric-name'>%s</td><td class='tooltip-metric-value'>\" + %s + \"</td></tr>", name, tooltip_formatted_values[name])
-                  })
+                  }),
+                  title_row
                 )
         rows <- paste(rows, collapse = "")
         tooltip_contents <- sprintf("\"<table>%s</table>\"", rows)
