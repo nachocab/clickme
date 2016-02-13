@@ -156,13 +156,21 @@ my_light_red = "#b90000"
         plot
 
     plot.add_title = () ->
+        lines = plot.labels.title.split("\n").reverse()
         plot.top_region.append("text")
-            .text(plot.labels.title)
             .attr(
                 "class": "title"
                 "text-anchor": "middle"
                 "x": plot.width / 2
-                "y": plot.padding.top / 2
+                "y": plot.padding.top
+            ).selectAll("tspan")
+            .data(lines)
+          .enter().append("tspan")
+            .text((d) -> d)
+            .attr(
+                "x": plot.width / 2
+                "text-anchor": "middle"
+                "dy": "-1.5em"
             )
 
         plot
@@ -174,7 +182,7 @@ my_light_red = "#b90000"
                 "class": "subtitle"
                 "text-anchor": "middle"
                 "x": plot.width / 2
-                "y": plot.padding.top / 2 + 30
+                "y": plot.padding.top - 5
             )
         plot
 

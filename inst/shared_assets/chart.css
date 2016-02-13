@@ -47,6 +47,10 @@ g.hover circle, g.hover path, g.hover text {
     opacity: 1;
 }
 
+.g-searching .g-match > text.hidden{
+    opacity: 0;
+}
+
 .g-searching :not(.g-match) > circle{
     opacity: 0.2;
 }

@@ -181,11 +181,19 @@
       return plot;
     };
     plot.add_title = function() {
-      plot.top_region.append("text").text(plot.labels.title).attr({
+      var lines;
+      lines = plot.labels.title.split("\n").reverse();
+      plot.top_region.append("text").attr({
         "class": "title",
         "text-anchor": "middle",
         "x": plot.width / 2,
-        "y": plot.padding.top / 2
+        "y": plot.padding.top
+      }).selectAll("tspan").data(lines).enter().append("tspan").text(function(d) {
+        return d;
+      }).attr({
+        "x": plot.width / 2,
+        "text-anchor": "middle",
+        "dy": "-1.5em"
       });
       return plot;
     };
@@ -194,7 +202,7 @@
         "class": "subtitle",
         "text-anchor": "middle",
         "x": plot.width / 2,
-        "y": plot.padding.top / 2 + 30
+        "y": plot.padding.top - 5
       });
       return plot;
     };
