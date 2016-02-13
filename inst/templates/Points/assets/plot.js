@@ -118,7 +118,9 @@
       return color_scale(d.color_group);
     },
     "stroke": "black",
-    "stroke-width": stroke_width,
+    "stroke-width": function(d, i) {
+      return stroke_width;
+    },
     "opacity": function(d, i) {
       return opacity;
     },
@@ -165,8 +167,8 @@
   clip.call(tip);
 
   if (show_sidebar) {
-    sidebar = plot.right_region.append("g").attr("transform", "translate(60,0)");
-    g_toggle_names = sidebar.append("g").style("cursor", "pointer").attr("class", "hideable").attr("id", "show_names").style("font-size", "22px").on("click", function() {
+    sidebar = plot.right_region.append("g").attr("transform", "translate(60,20)");
+    g_toggle_names = sidebar.append("g").style("cursor", "pointer").attr("class", "hideable").attr("id", "show_names").style("font-size", "18px").on("click", function() {
       return toggle_names();
     });
     g_toggle_names.append("circle").attr("r", 7).attr("stroke", "black").attr("stroke-width", 2).attr("fill", "white");
@@ -284,11 +286,21 @@
   };
 
   d3.select(window).on("keydown", function() {
+    var all_matches;
     switch (d3.event.keyCode) {
       case 72:
         return d3.selectAll(".hideable").classed("hidden", function(d, i) {
           return !d3.select(this).classed("hidden");
         });
+      case 78:
+        all_matches = d3.selectAll(".g-match text");
+        if (all_matches.size() === 0) {
+          return d3.selectAll(".point text").classed("hidden", false);
+        } else {
+          return all_matches.classed("hidden", function(d, i) {
+            return !d3.select(this).classed("hidden");
+          });
+        }
     }
   });
 
@@ -305,16 +317,52 @@
   };
 
   search = function(value) {
-    var matches, re;
+    var matches, value_elements;
     if (value) {
-      re = new RegExp("" + (d3.requote(value)), "i");
       clip.classed("g-searching", true);
       if (sidebar.selectAll(".color_group_key").size() > 0) {
         g_color_group_keys.classed("hide", false);
         g_points.classed("hide", false);
       }
+      value_elements = value.split(/, */);
+      console.log("value_elements:", value_elements);
       g_points.classed("g-match", function(d) {
-        return re.test(d.point_name);
+        var any_matches, element, matches, re;
+        if (value_elements.length > 1 || /:/.test(value_elements[0])) {
+          matches = value_elements.map(function(element) {
+            var match, property, re;
+            if (/:/.test(element)) {
+              if (element.match(/:/g).length === 2) {
+                property = element.replace(/:/g, "");
+                element = "d." + property;
+                if (!element) {
+                  console.log("Invalid property.", console.dir(d));
+                }
+                match = eval(element);
+                return match;
+              }
+            } else {
+              console.log(element);
+              element = element.replace(/[" ]/g, "");
+              if (element.length) {
+                re = new RegExp("^" + element + "$", "i");
+                match = re.test(d.point_name);
+                console.log("perfect_match", element, match);
+                return match;
+              }
+            }
+          });
+          any_matches = matches.some(function(match) {
+            if (match) {
+              return true;
+            }
+          });
+          return any_matches;
+        } else {
+          element = value.replace(/"/g, "");
+          re = new RegExp("" + element, "i");
+          return re.test(d.point_name);
+        }
       });
       matches = d3.selectAll(".g-match");
       if (matches[0].length === 1) {
@@ -340,7 +388,13 @@
   };
 
   search_input = d3.select(".g-search input").on("keyup", function() {
-    keyuped.apply(this);
+    if (d3.selectAll(".point")[0].length < 10000) {
+      keyuped.apply(this);
+    } else {
+      if (d3.event.keyCode === 13) {
+        keyuped.apply(this);
+      }
+    }
     return d3.event.preventDefault();
   }).on("keydown", function() {
     return d3.event.stopPropagation();

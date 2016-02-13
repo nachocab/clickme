@@ -99,7 +99,7 @@ points = g_points.append("svg:circle")
         "id": (d,i) -> "point-#{i}"
         "fill": (d) -> color_scale(d.color_group)
         "stroke": "black"
-        "stroke-width": stroke_width
+        "stroke-width": (d,i) -> stroke_width
         "opacity": (d,i) -> opacity
         "title": tooltip_content )
     .on('mouseover', (d, i) ->
@@ -155,13 +155,13 @@ clip.call(tip);
 # Sidebar
 if show_sidebar
     sidebar = plot.right_region.append("g")
-        .attr("transform","translate(60,0)")
+        .attr("transform","translate(60,20)")
 
     g_toggle_names = sidebar.append("g")
         .style("cursor", "pointer")
         .attr("class", "hideable")
         .attr("id", "show_names")
-        .style("font-size","22px")
+        .style("font-size","18px")
         .on("click", ()-> toggle_names())
 
     g_toggle_names.append("circle")
@@ -269,10 +269,24 @@ deselect_color_groups = ()->
     else
         show_all_colors()
 
+# Behavior by pressing keys
 d3.select(window).on("keydown", () ->
     switch d3.event.keyCode
       when 72 # "h"
-        d3.selectAll(".hideable").classed("hidden", (d,i) -> !d3.select(this).classed("hidden"))
+        d3.selectAll(".hideable")
+          .classed("hidden", (d,i) -> 
+            !d3.select(this).classed("hidden")
+        )
+      when 78 # "n"
+        all_matches = d3.selectAll(".g-match text")
+        if all_matches.size() == 0
+            d3.selectAll(".point text")
+              .classed("hidden", false)
+        else
+            all_matches
+              .classed("hidden", (d,i) -> 
+                !d3.select(this).classed("hidden")
+            )
 )
 
 #     # console.log(d3.event.keyCode)
