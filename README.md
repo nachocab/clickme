@@ -1,4 +1,4 @@
-# Clickme
+# NOTE: Clickme is no longer in active development
 
 **Clickme** is an R package that lets you create interactive visualizations in the browser, directly from your R session.
 
